@@ -93,6 +93,12 @@ if (iv) {
     ev.preventDefault();
     const f = new FormData(iv);
     const unknown = f.get("time_unknown") === "on";
+    const place = (f.get("bplace") || "").trim();
+    if (place && !picked) {
+      document.getElementById("status").textContent =
+        "⚠ couldn\u2019t geocode \u2018" + place + "\u2019 — retype it (City, State, Country) and wait for the ✓ match before saving.";
+      return;
+    }
     const p = {
       name: f.get("name") || "friend",
       birth: {
@@ -109,6 +115,8 @@ if (iv) {
     };
     localStorage.setItem(KEY, JSON.stringify(p));
     chip();
+    const btn = iv.querySelector('button[type="submit"]');
+    if (btn) btn.textContent = "✅ Saved — profile lives in this browser";
     const blob = new Blob([JSON.stringify(p, null, 2)], { type: "application/json" });
     const dl = document.getElementById("download");
     dl.href = URL.createObjectURL(blob); dl.hidden = false;

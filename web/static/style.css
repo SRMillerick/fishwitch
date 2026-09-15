@@ -31,6 +31,7 @@ footer { border-top: 1px solid var(--line); margin-top: 3rem; padding: 1.2rem 1.
 button { font: inherit; background: var(--accent); color: #06131a; border: 0;
   border-radius: 6px; padding: .5rem 1.1rem; cursor: pointer; align-self: end; }
 button.ghost { background: none; color: var(--dim); border: 1px solid var(--line); }
+button:disabled { opacity: .45; cursor: not-allowed; }
 .cols { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2rem; }
 @media (max-width: 50rem) { .cols { grid-template-columns: 1fr; } }
 .plain { padding-left: 1.1rem; }

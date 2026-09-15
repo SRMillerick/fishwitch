@@ -91,11 +91,11 @@ for i, at in enumerate([datetime.now().replace(hour=18, minute=0, second=0, micr
 
 # interview placeholder (the real one needs the live app + custody API)
 iv = c.get("/interview").get_data(as_text=True)
-iv = iv.replace("</form>",
-                '<p class="fine">⚙ The live interview saves your profile to THIS '
-                'browser and geocodes your birth place — it needs the running app, '
-                'not a static snapshot. Everything else you see here is real output '
-                'of the same pipe.</p></form>', 1)
+iv = iv.replace("Save profile to this browser", "🔒 profile creation runs on the live app")
+iv = iv.replace('<div class="cta">',
+                '<p class="fine"><strong>Read-only snapshot:</strong> the save button is locked. '
+                'Profile creation and personal reports need the live app — '
+                'where your birth data stays in your browser and never touches a disk.</p>\n  <div class="cta">', 1)
 iv = iv.replace('<button type="submit">', '<button type="submit" disabled>')
 save("interview.html", iv)
 
