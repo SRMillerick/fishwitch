@@ -11,9 +11,11 @@
       "largemouth bass",
       "bluegill",
       "channel catfish",
-      "trout (winter stocking)"
+      "trout (winter stocking)",
+      "rainbow trout"
     ],
-    "county": "Lake"
+    "county": "Lake",
+    "stocking_pattern": "MAIN LAKE: trout planted annually Feb/March by HVLA (~$8-10.5k, Smith's Trout Farm) \u2014 bass spawn self-sustains, trout added for variety (HVLA board packets). SPILLWAY POND: ~300 trout each spring for the kids' derby. Not CDFW \u2014 no rows in the state planting feed, by design. When a plant happens, log it: stocking: [{date, species: rainbow trout}] \u2014 then the report lights up the stocker-forage window."
   },
   "lake-berryessa": {
     "name": "Lake Berryessa",
