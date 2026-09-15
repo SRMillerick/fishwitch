@@ -105,7 +105,7 @@ if (menu) {
       const p = vault()[name]; if (!p) return;
       const a = document.createElement("a");
       a.href = URL.createObjectURL(new Blob([JSON.stringify(p, null, 2)], { type: "application/json" }));
-      a.download = "fishwitch-profile-" + name.toLowerCase().replace(/[^a-z0-9]+/g, "-") + ".json";
+      a.download = "baromoon-profile-" + name.toLowerCase().replace(/[^a-z0-9]+/g, "-") + ".json";
       a.click(); URL.revokeObjectURL(a.href);
     } else if (act === "forget") {
       if (confirm(`Forget ${name}'s profile in this browser? (the downloaded file, if any, is untouched)`)) {
