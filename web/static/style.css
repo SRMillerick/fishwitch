@@ -1,0 +1,78 @@
+/* fishwitch web — dark water theme, no frameworks, no build step */
+:root {
+  --bg: #0b1116; --panel: #121b22; --line: #22323d; --ink: #d8e4ec;
+  --dim: #7f97a6; --accent: #57b3d4; --gold: #d4a94f; --ok: #6fbf73; --warn: #d4a94f;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink);
+  font: 16px/1.55 "Iowan Old Style", Georgia, serif; }
+main { max-width: 62rem; margin: 0 auto; padding: 1.2rem 1.4rem 3rem; }
+header { border-bottom: 1px solid var(--line); background: var(--panel); }
+nav { max-width: 62rem; margin: 0 auto; padding: .7rem 1.4rem; display: flex; gap: 1.1rem; align-items: center; flex-wrap: wrap; }
+nav a { color: var(--dim); text-decoration: none; }
+nav a:hover { color: var(--accent); }
+.brand { color: var(--ink); font-weight: 700; font-size: 1.15rem; }
+h1, h2 { font-weight: 600; line-height: 1.2; }
+h1 { font-size: 1.7rem; margin: 1.4rem 0 .6rem; }
+h2 { font-size: 1.2rem; margin: 1.6rem 0 .5rem; color: var(--accent); }
+a { color: var(--accent); }
+footer { border-top: 1px solid var(--line); margin-top: 3rem; padding: 1.2rem 1.4rem 2.4rem; color: var(--dim); font-size: .9rem; }
+.fine { color: var(--dim); font-size: .85rem; }
+.error { color: #e07a5f; }
+
+/* hero */
+.hero { padding: 2.2rem 0 1rem; }
+.hero h1 { font-size: 2rem; }
+.cta { display: flex; gap: .7rem; flex-wrap: wrap; margin-top: 1.2rem; }
+.btn { display: inline-block; padding: .55rem 1.1rem; border: 1px solid var(--accent);
+  border-radius: 6px; color: var(--accent); text-decoration: none; }
+.btn.ghost, button.ghost { border-color: var(--line); color: var(--dim); }
+.btn:hover { background: rgba(87,179,212,.12); }
+button { font: inherit; background: var(--accent); color: #06131a; border: 0;
+  border-radius: 6px; padding: .5rem 1.1rem; cursor: pointer; align-self: end; }
+button.ghost { background: none; color: var(--dim); border: 1px solid var(--line); }
+.cols { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2rem; }
+@media (max-width: 50rem) { .cols { grid-template-columns: 1fr; } }
+.plain { padding-left: 1.1rem; }
+.plain.lakes { list-style: none; padding-left: 0; }
+
+/* forms */
+.grid { display: flex; gap: .9rem; flex-wrap: wrap; align-items: end; margin: 1rem 0; }
+.grid label, .stack label { display: flex; flex-direction: column; gap: .25rem;
+  color: var(--dim); font-size: .85rem; }
+.stack { display: flex; flex-direction: column; gap: 1rem; max-width: 30rem; }
+input, select { background: var(--panel); border: 1px solid var(--line); color: var(--ink);
+  padding: .45rem .6rem; border-radius: 5px; font: inherit; }
+input:focus, select:focus { outline: 1px solid var(--accent); }
+label.inline { flex-direction: row; align-items: center; gap: .4rem; }
+
+/* report render */
+.report { margin-top: 1.4rem; }
+.report h1 { font-size: 1.35rem; } .report h2 { font-size: 1.05rem; color: var(--gold); }
+.report h3 { font-size: .95rem; color: var(--dim); font-weight: 400; }
+.scorebar { background: var(--panel); border: 1px solid var(--line); border-radius: 6px;
+  padding: .6rem .9rem; margin: .8rem 0; }
+.report table { border-collapse: collapse; margin: .8rem 0; width: 100%; }
+.report td, .report th { border: 1px solid var(--line); padding: .35rem .6rem;
+  font-size: .9rem; vertical-align: top; }
+.report ul { padding-left: 1.2rem; }
+.report hr { border: 0; border-top: 1px solid var(--line); margin: 1.2rem 0; }
+
+/* tables */
+table { border-collapse: collapse; width: 100%; margin: .8rem 0; }
+th { text-align: left; color: var(--dim); font-weight: 600; font-size: .8rem; }
+td, th { border-bottom: 1px solid var(--line); padding: .45rem .6rem; vertical-align: top; }
+
+/* badges + moon + marks */
+.badge { font-size: .7rem; border-radius: 4px; padding: .1rem .4rem; margin-right: .3rem; }
+.badge.ok { background: rgba(111,191,115,.15); color: var(--ok); border: 1px solid var(--ok); }
+.badge.pend { background: rgba(212,169,79,.12); color: var(--warn); border: 1px solid var(--warn); }
+.moonrow { display: flex; gap: .6rem; flex-wrap: wrap; }
+.moon { color: var(--dim); font-size: .85rem; }
+.moon.peak { color: var(--gold); }
+.mark.exact { color: var(--ok); } .mark.close, .mark.style { color: var(--warn); }
+.mark.miss { color: #e07a5f; } .mark.na, .mark.benched { color: var(--dim); }
+.chip { margin-left: auto; font-size: .8rem; color: var(--ok);
+  border: 1px solid var(--ok); border-radius: 10px; padding: .1rem .6rem; }
+code { background: var(--panel); padding: .05rem .35rem; border-radius: 4px; font-size: .85em; }
+.tackle { border-top: 1px dashed var(--line); margin-top: 1.5rem; padding-top: .5rem; }

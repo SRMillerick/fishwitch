@@ -1,0 +1,294 @@
+{
+  "_comment": "Seed sources for KB ingestion. status: live = verified deterministic fetch; todo = probe later. Hosts verified 2026-09-10: 6thsensefishing.com + zmanfishing.com are open Shopify; rapala.com (Vue SPA), strikeking.com, booyahbaits.com (Magento), yamamoto.baits.com (Woo), missilebaits.com (products.json disabled), river2seausa.com, roboworm.com, dirtyjigs.com, depsusa.com are NOT usable via /products.json.",
+  "bass": {
+    "chatterbait": [
+      {
+        "brand": "Z-Man",
+        "host": "www.zmanfishing.com",
+        "type": "shopify",
+        "search": "ChatterBait bladed jig",
+        "status": "live",
+        "title_excludes": [
+          "micro",
+          "finesse",
+          "barebonez"
+        ]
+      }
+    ],
+    "jig": [
+      {
+        "brand": "Z-Man",
+        "host": "www.zmanfishing.com",
+        "type": "shopify",
+        "search": "football jig",
+        "status": "wrong-match",
+        "note": "Z-Man carries no skirted football jig (only Football NedZ head) \u2014 this search matched ChatterBait Elite EVO HD, wrong product. Needs Strike King Tour Grade / Dirty Jigs (non-Shopify) or an agency source. Pending draft awaiting human reject."
+      }
+    ],
+    "swimbait": [
+      {
+        "brand": "Z-Man",
+        "host": "www.zmanfishing.com",
+        "type": "shopify",
+        "search": "DieZel MinnowZ",
+        "status": "live"
+      }
+    ],
+    "frog": [
+      {
+        "brand": "Z-Man",
+        "host": "www.zmanfishing.com",
+        "type": "shopify",
+        "search": "Pop FrogZ",
+        "status": "live"
+      }
+    ],
+    "jerkbait": [
+      {
+        "brand": "6th Sense",
+        "host": "6thsensefishing.com",
+        "type": "shopify",
+        "search": "Masterclass Jerkbait",
+        "status": "live"
+      }
+    ],
+    "squarebill": [
+      {
+        "brand": "6th Sense",
+        "host": "6thsensefishing.com",
+        "type": "shopify",
+        "search": "Crush Squarebill",
+        "status": "live",
+        "title_excludes": [
+          "magnum",
+          "minimag",
+          "curve"
+        ]
+      }
+    ],
+    "crank-mid": [
+      {
+        "brand": "6th Sense",
+        "host": "6thsensefishing.com",
+        "type": "shopify",
+        "search": "Curve 55",
+        "status": "live"
+      }
+    ],
+    "walker": [
+      {
+        "brand": "6th Sense",
+        "host": "6thsensefishing.com",
+        "type": "shopify",
+        "search": "CatWalk",
+        "status": "live",
+        "title_excludes": [
+          "magnum"
+        ]
+      }
+    ],
+    "popper": [
+      {
+        "brand": "6th Sense",
+        "host": "6thsensefishing.com",
+        "type": "shopify",
+        "search": "SplashBack Popper",
+        "status": "live"
+      }
+    ],
+    "buzz": [
+      {
+        "brand": "6th Sense",
+        "host": "6thsensefishing.com",
+        "type": "shopify",
+        "search": "The Buzz",
+        "status": "live",
+        "title_excludes": [
+          "buzzard",
+          "awareness",
+          "tee",
+          "hoodie",
+          "shirt",
+          "apparel"
+        ]
+      }
+    ],
+    "spinnerbait": [
+      {
+        "brand": "6th Sense",
+        "host": "6thsensefishing.com",
+        "type": "shopify",
+        "search": "Divine Spinnerbait",
+        "status": "live"
+      }
+    ],
+    "ned": [
+      {
+        "brand": "Z-Man",
+        "host": "www.zmanfishing.com",
+        "type": "shopify",
+        "search": "Finesse TRD",
+        "status": "live",
+        "title_excludes": [
+          "jig",
+          "fuzzy",
+          "drew",
+          "rod",
+          "fatty",
+          "goby",
+          "tube",
+          "crab"
+        ]
+      }
+    ],
+    "dropshot": [
+      {
+        "brand": "Z-Man",
+        "host": "www.zmanfishing.com",
+        "type": "shopify",
+        "search": "Finesse WormZ",
+        "status": "live",
+        "title_excludes": [
+          "micro"
+        ]
+      }
+    ],
+    "wacky": [
+      {
+        "brand": "Z-Man",
+        "host": "www.zmanfishing.com",
+        "type": "shopify",
+        "search": "ZinkerZ",
+        "status": "live"
+      }
+    ],
+    "neko": [
+      {
+        "brand": "6th Sense",
+        "host": "6thsensefishing.com",
+        "type": "shopify",
+        "search": "The Abstract",
+        "status": "live",
+        "title_excludes": [
+          "tee",
+          "rod",
+          "customs"
+        ]
+      }
+    ]
+  },
+  "trout": {
+    "spin-trout": [
+      {
+        "type": "agency",
+        "agency": "Iowa DNR",
+        "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+        "status": "live",
+        "quotes": [
+          {
+            "all_of": [
+              "small spinners"
+            ]
+          },
+          {
+            "all_of": [
+              "spinners that imitate minnows"
+            ]
+          }
+        ]
+      }
+    ],
+    "bait-trout": [
+      {
+        "type": "agency",
+        "agency": "Iowa DNR",
+        "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+        "status": "live",
+        "quotes": [
+          {
+            "all_of": [
+              "prepared trout bait"
+            ]
+          },
+          {
+            "all_of": [
+              "marshmallows"
+            ]
+          }
+        ]
+      }
+    ],
+    "fly-trout": [
+      {
+        "type": "agency",
+        "agency": "Iowa DNR",
+        "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+        "status": "live",
+        "quotes": [
+          {
+            "all_of": [
+              "trout flies imitate"
+            ]
+          },
+          {
+            "all_of": [
+              "fly-fishing since natural insect hatches"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "catfish": {
+    "cut-bait": [
+      {
+        "type": "agency",
+        "agency": "Iowa DNR",
+        "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/channel-catfish",
+        "status": "live",
+        "quotes": [
+          {
+            "all_of": [
+              "circle hooks"
+            ]
+          },
+          {
+            "all_of": [
+              "cut bait or dead minnows"
+            ]
+          },
+          {
+            "all_of": [
+              "water temperature is less than 60"
+            ]
+          }
+        ]
+      }
+    ],
+    "live-bait": [
+      {
+        "type": "agency",
+        "agency": "Iowa DNR",
+        "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/channel-catfish",
+        "status": "live",
+        "quotes": [
+          {
+            "all_of": [
+              "bait options range"
+            ]
+          },
+          {
+            "all_of": [
+              "slip sinker"
+            ]
+          },
+          {
+            "all_of": [
+              "ten-pound test"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

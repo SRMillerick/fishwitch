@@ -1,0 +1,15 @@
+{
+  "swimbait": [
+    {
+      "retailer": "zman",
+      "url": "https://www.zmanfishing.com/products/diezel-minnowz",
+      "kind": "manufacturer"
+    },
+    {
+      "retailer": "amazon",
+      "kind": "affiliate",
+      "asin": null,
+      "note": "add ASIN via PA-API lookup once Associates account qualifies"
+    }
+  ]
+}

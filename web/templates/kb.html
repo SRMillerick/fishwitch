@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}knowledge base{% endblock %}
+{% block content %}
+<h1>Knowledge base — {{ species }}</h1>
+<p>Every entry carries provenance. <span class="badge ok">sourced</span> means a
+manufacturer catalog or agency guide backs it (click through to the source);
+<span class="badge pend">editorial</span> means consensus text awaiting a
+citation — displayed with a 🟡 in the pipe until promoted by a human.</p>
+<form class="grid" method="get" action="/kb">
+  <label>Species
+    <select name="species">
+      {% for s in ['bass','trout','catfish','panfish'] %}
+      <option value="{{ s }}" {% if species == s %}selected{% endif %}>{{ s }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <button type="submit">Browse</button>
+</form>
+<table class="kb">
+  <tr><th>entry</th><th>style</th><th>depth</th><th>light</th><th>wind</th><th>water °F</th><th>source</th></tr>
+  {% for c in cats %}
+  <tr>
+    <td><strong>{{ c.label }}</strong><div class="fine">aka {{ c.aliases | join(', ') }}</div></td>
+    <td>{{ c.style }}</td>
+    <td>{{ c.depth }}</td>
+    <td>{{ c.light }}</td>
+    <td>{{ c.wind }}</td>
+    <td>{{ c.tlo }}–{{ c.thi }}</td>
+    <td>
+      {% if c.source_url %}
+        <span class="badge ok">sourced</span>
+        <a href="{{ c.source_url }}" target="_blank" rel="noopener">{{ c.source[:60] }}</a>
+        {% if c.verified_by %}<div class="fine">verified by {{ c.verified_by }}</div>{% endif %}
+      {% else %}
+        <span class="badge pend">editorial</span> <span class="fine">{{ c.source[:50] }}</span>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

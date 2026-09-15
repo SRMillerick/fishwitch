@@ -1,0 +1,91 @@
+# fishwitch
+
+The fishing report apparatus. MVP: questions asked in the terminal (or by your
+agent), report generated locally. UI comes later — `report.py::generate()`
+is the clean entry point for it.
+
+## Layers
+1. **Weather** — Open-Meteo: temps, wind, cloud, precipitation, barometer
+   trend, water-temp estimate.
+2. **Astronomy** — Swiss Ephemeris: sunrise/sunset, civil dusk, moonrise/set,
+   moon phase, solunar majors (moon overhead/underfoot) & minors (rise/set).
+3. **Astrology** — your natal chart (kerykeion/Swiss Ephemeris): transits
+   vs. your chart with aspect perfection times, void-of-course moon, planetary
+   days & hours, moon sign lore, lunar-phase resonance with your birth moon.
+   **The translation layer** (below) controls how this is presented.
+4. **Tactics** — a lure/rig knowledge base per species; only recommends what
+   you own, matched to light, wind, water temp, hour and solunar state.
+
+## The translation layer (voices)
+The same sky math always runs. `--voice` (or `astro_display` in the profile)
+chooses the vocabulary:
+
+| voice | presentation |
+|---|---|
+| `fisher` | zero astrology — events surface as neutral "activity windows" (peak-feed / aggressive-feed / quiet-feed); verified leak-free |
+| `almanac` | old-timers' almanac framing — moon phase & sign as lore, planetary hours by name (almanacs publish them), no natal chart |
+| `astro` | full disclosure — natal chart, transits, houses, dignities |
+
+Default: new profiles via interview default to `almanac`; `--voice` always wins.
+
+## Marine electronics meshing (`adapters/`)
+Get boat data **in**:
+- **GPX** — waypoints/tracks from any Garmin/Lowrance/Humminbird export
+  (universal interchange). `gpx.lake_intel_from_waypoints()` turns named
+  spots into registry structure notes.
+- **NMEA 0183** — live streams (serial/TCP/UDP from any NMEA gateway):
+  DPT/DBT depth, MTW real water temp, RMC/GGA position. `nmea.Stream`.
+- **Signal K** — open marine server (pairs with OpenCPN etc.): REST client
+  `signalk.SignalK` — pull live water temp, push waypoints.
+- **Lowrance SL2/SL3 sonar logs** — `sl2.Sl2Reader` (EXPERIMENTAL: community
+  reverse-engineered format; calibrate against a known-good log before
+  trusting depth/temp output). Humminbird .SON + Garmin Quickdraw follow the
+  same pattern (detect → calibrate → parse → bathymetry/temp history).
+
+Push fishwitch **out**:
+- `report --gpx out.gpx` — prime-window waypoints loadable on any MFD
+- the report model is a plain JSON-able dict — serialize for any UI/service
+- Signal K waypoint PUT (chartplotter-visible spots)
+
+## Usage
+```bash
+fishwitch interview                     # answer the questions → save a profile
+fishwitch report                        # tonight 6 PM, default profile + home lake
+fishwitch report --at "2026-09-10 18:00" --hours 3
+fishwitch report --voice fisher         # astrology fully translated away
+fishwitch report --gpx prime.gpx        # waypoints for the chartplotter
+fishwitch log --lure "110 walker"       # log a catch → empirical reports
+fishwitch review                        # grade the logbook vs blind model replays
+fishwitch review --angler Jack --since 2026-09-01
+./webapp                                 # web front door → http://127.0.0.1:7700
+FISHWITCH_LOCAL=1 ./webapp               # + /review calibration panel (self-host only)
+FISHWITCH_WEB_HOST=0.0.0.0 ./webapp     # public deploy (gunicorn+nginx in front)
+fishwitch report --profile config/profiles/sean.json --lake hidden-valley-lake-ca
+fishwitch report --birth "1988-01-18 17:35" --place "Santa Rosa, CA, US" \
+    --lake "Clear Lake, CA" --species bass \
+    --arsenal "drop shot, wacky senko, chatterbait, squarebill, whopper plopper"
+fishwitch lakes                         # registry of known water bodies
+fishwitch arsenal --species bass        # lure categories it understands
+```
+
+## Data flow for a future UI
+```python
+from fishwitch.report import generate, to_markdown
+profile = {...birth: {date, time, time_known, place, lat, lng, tz},
+           arsenal: [...], species: "largemouth bass", astro_display: "almanac"}
+lake     = {...name, region, lat, lng, alt_m, structure: [...], lore: [...]}
+model = generate(profile, lake, at_local=datetime(...), hours=2.5, voice="fisher")
+md = to_markdown(model)   # model is a plain dict — serialize for the UI
+```
+(the repo root is the `fishwitch` package — add its parent to PYTHONPATH)
+
+## Notes & limits
+- Forecast range ~3 days out (Open-Meteo free tier). Further = sky/astro only.
+- Water temp is an air-temp-lagged estimate unless NMEA/Signal K is live.
+- Solunar majors/minors follow the classic overhead/underfoot model.
+- Planetary hours use the unbroken Chaldean sequence from the sunrise ruler.
+- Birth time unknown → noon stand-in; Asc/house-dependent lines are hidden.
+- Add water bodies to `config/lakes.json` (structure notes + lore get woven
+  into decision rules).
+
+Runs on `~/.astro-venv` (shared with ~/astro — swisseph, kerykeion, requests).

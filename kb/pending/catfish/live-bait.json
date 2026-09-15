@@ -1,0 +1,46 @@
+{
+  "entry_id": "live-bait",
+  "species_kb": "catfish",
+  "status": "pending",
+  "source_type": "agency",
+  "proposed": {
+    "agency": "Iowa DNR",
+    "page_title": "Channel Catfish | Department of Natural Resources",
+    "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/channel-catfish",
+    "quotes": [
+      {
+        "all_of": [
+          "bait options range"
+        ],
+        "quote": "Bait options range from nightcrawlers, leeches, chicken blood, chicken liver, chicken or fish guts, crawdads, grasshoppers, water dogs, live and dead minnows, cut bait and a variety of prepared stink baits.",
+        "found": true
+      },
+      {
+        "all_of": [
+          "slip sinker"
+        ],
+        "quote": "Always use the lightest weight needed and a slip sinker.",
+        "found": true
+      },
+      {
+        "all_of": [
+          "ten-pound test"
+        ],
+        "quote": "Ten-pound test line is suggested over lighter weight line since the bait is fished on the bottom and often near underwater snags.",
+        "found": true
+      }
+    ]
+  },
+  "provenance": {
+    "seed_author": "agency-ingest/1.0",
+    "source": "Iowa DNR technique guide",
+    "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/channel-catfish",
+    "fetched_at": "2026-09-11T02:54:07+00:00",
+    "extractor": "fixed sentence match (all_of words)",
+    "confidence": "sourced"
+  },
+  "review": {
+    "verified_by": null,
+    "verified_at": null
+  }
+}

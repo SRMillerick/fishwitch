@@ -1,0 +1,40 @@
+{
+  "entry_id": "squarebill",
+  "species_kb": "bass",
+  "status": "pending",
+  "proposed": {
+    "manufacturer": "6th Sense Fishing (ET)",
+    "product_title": "Crush Squarebill",
+    "product_url": "https://6thsensefishing.com/products/crush-series",
+    "product_type": "Shallow Crankbait",
+    "variants": [
+      "Baby Bluegill / 25X (Silent)",
+      "Baby Shad / 25X (Silent)",
+      "Black Magic / 25X (Silent)",
+      "Boiled Crawfish / 25X (Silent)",
+      "Candy Citrus Shad / 25X (Silent)",
+      "Chartreuse Black-Back / 25X (Silent)",
+      "Chrome Threadfin / 25X (Silent)",
+      "Custom Bluegill / 25X (Silent)"
+    ],
+    "depth": null,
+    "retrieve": null,
+    "rigging": {
+      "quote": "Key Features Erratic hunting action imitates a fleeing baitfish Square bill deflects effectively around shallow cover Engineered buoyancy helps the bait rise and back away from obstructions Excels around rock, wood, grass, docks, riprap, stumps, and shoreline cover Three sizes help anglers match for",
+      "match": "Key Features Erratic hunting action imitates a fleeing baitfish Square bill defl"
+    }
+  },
+  "provenance": {
+    "seed_author": "kb-ingest/1.0",
+    "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
+    "source_url": "https://6thsensefishing.com/products/crush-series",
+    "fetched_at": "2026-09-11T02:38:47+00:00",
+    "catalog_sha256": "8c4f24d01a2dcd8d",
+    "extractor": "shopify-products-json + fixed regex",
+    "confidence": "sourced"
+  },
+  "review": {
+    "verified_by": null,
+    "verified_at": null
+  }
+}

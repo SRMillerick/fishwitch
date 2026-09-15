@@ -1,0 +1,100 @@
+{
+  "label": "Catfish",
+  "cats": [
+    {
+      "id": "cut-bait",
+      "label": "Cut bait / chicken liver on bottom",
+      "style": "finesse",
+      "depth": "deep",
+      "aliases": [
+        "cut bait",
+        "liver",
+        "anchovy",
+        "mackerel",
+        "stink bait",
+        "dip bait"
+      ],
+      "conditions": {
+        "light": [
+          "night",
+          "dusk/dawn",
+          "moderate day"
+        ],
+        "wind": [
+          "glass",
+          "chop",
+          "windy"
+        ],
+        "water_temp_f": [
+          55,
+          95
+        ]
+      },
+      "technique": "soak it on the bottom; rod in holder",
+      "colors": {},
+      "note": "night specialist \u2014 new-moon nights are prime",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v1",
+        "source": "editorial: channel-cat diel migration (hold deep by day, feed shallow at night) \u2014 REPLACE with state-agency catfish guide citation",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "zone split added 2026-09-10 after shallow/deep guidance gap surfaced"
+      },
+      "zones": {
+        "night": "SHORE-SHALLOW: flats & bank edges adjacent to deep water \u2014 cats feed shallow after dark",
+        "day": "DEEP: channel holes & cove mouths \u2014 daytime holding water"
+      }
+    },
+    {
+      "id": "live-bait",
+      "label": "Live bait (bluegill/worm) under bobber",
+      "style": "finesse",
+      "depth": "mid",
+      "aliases": [
+        "live bait",
+        "bluegill",
+        "nightcrawler",
+        "worm under bobber"
+      ],
+      "conditions": {
+        "light": [
+          "dusk/dawn",
+          "night",
+          "moderate day"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          55,
+          95
+        ]
+      },
+      "technique": "big bait, big bobber",
+      "colors": {},
+      "note": "trophy hunter",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v0",
+        "source": "editorial consensus (seeded from v0 code KB)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+      },
+      "zones": {
+        "night": "SHORE-SHALLOW: drop-off edges near bank \u2014 patrol routes",
+        "day": "DEEP: over the main basin and creek-channel drops"
+      }
+    }
+  ],
+  "provenance": {
+    "seed_author": "fishwitch-editorial-v0",
+    "source": "editorial consensus (seeded from v0 code KB)",
+    "source_url": null,
+    "confidence": "unverified-editorial",
+    "verified_by": null,
+    "note": "species note also needs citation"
+  }
+}

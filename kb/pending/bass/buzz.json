@@ -1,0 +1,30 @@
+{
+  "entry_id": "buzz",
+  "species_kb": "bass",
+  "status": "pending",
+  "proposed": {
+    "manufacturer": "6th Sense Fishing (NET)",
+    "product_title": "The Buzz",
+    "product_url": "https://6thsensefishing.com/products/the-buzz",
+    "product_type": "Decal",
+    "variants": [
+      "12\"W x 4.44\"H"
+    ],
+    "depth": null,
+    "retrieve": null,
+    "rigging": null
+  },
+  "provenance": {
+    "seed_author": "kb-ingest/1.0",
+    "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
+    "source_url": "https://6thsensefishing.com/products/the-buzz",
+    "fetched_at": "2026-09-11T02:38:47+00:00",
+    "catalog_sha256": "8c4f24d01a2dcd8d",
+    "extractor": "shopify-products-json + fixed regex",
+    "confidence": "sourced"
+  },
+  "review": {
+    "verified_by": null,
+    "verified_at": null
+  }
+}

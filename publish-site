@@ -1,0 +1,19 @@
+#!/bin/sh
+# publish-site — build the static snapshot and push it to gh-pages
+set -e
+DIR="$(dirname "$(readlink -f "$0")")"
+cd "$DIR"
+
+"$HOME/.astro-venv/bin/python" build_static.py
+
+WORK=$(mktemp -d)
+cp -r site/. "$WORK"/
+cd "$WORK"
+git init -q
+git checkout -q -b gh-pages
+git add -A
+git -c user.name="fishwitch snapshot bot" -c user.email="noreply@localhost" \
+    commit -qm "static snapshot $(date -u +%Y-%m-%dT%H:%MZ)"
+git remote add origin git@github.com:SRMillerick/fishwitch.git
+git push -q -f origin gh-pages
+echo "✅ gh-pages pushed"

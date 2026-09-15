@@ -1,0 +1,791 @@
+{
+  "label": "Largemouth bass",
+  "cats": [
+    {
+      "id": "walker",
+      "label": "Walking topwater (Spook/110)",
+      "style": "reaction",
+      "depth": "shallow",
+      "aliases": [
+        "walker",
+        "spook",
+        "zara",
+        "110",
+        "walking bait",
+        "mega dove",
+        "ripple"
+      ],
+      "conditions": {
+        "light": [
+          "night",
+          "dusk/dawn",
+          "golden",
+          "sunset/sunrise"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          58,
+          95
+        ]
+      },
+      "technique": "long casts over points/grass edges; walk-the-dog with hard 1\u20132s kills",
+      "colors": {
+        "night": "black \u2014 silhouette against the sky",
+        "overcast": "bone/shad"
+      },
+      "note": "the big-fish-after-dark signature",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v0",
+        "source": "editorial consensus (seeded from v0 code KB)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+      }
+    },
+    {
+      "id": "plopper",
+      "label": "Whopper Plopper / prop bait",
+      "style": "reaction",
+      "depth": "shallow",
+      "aliases": [
+        "plopper",
+        "whopper",
+        "prop",
+        "rip n slash"
+      ],
+      "conditions": {
+        "light": [
+          "dusk/dawn",
+          "golden",
+          "sunset/sunrise",
+          "night"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          60,
+          95
+        ]
+      },
+      "technique": "steady wake over flats & grass tops; pause on the blow-up point",
+      "colors": {
+        "night": "loon/black",
+        "overcast": "bone"
+      },
+      "note": "calls fish from distance in low light",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v0",
+        "source": "editorial consensus (seeded from v0 code KB)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+      }
+    },
+    {
+      "id": "popper",
+      "label": "Popper",
+      "style": "reaction",
+      "depth": "shallow",
+      "aliases": [
+        "popper",
+        "pop-r",
+        "pencil popper"
+      ],
+      "conditions": {
+        "light": [
+          "dusk/dawn",
+          "golden",
+          "sunset/sunrise"
+        ],
+        "wind": [
+          "glass"
+        ],
+        "water_temp_f": [
+          58,
+          92
+        ]
+      },
+      "technique": "pop-pop-pause around shade lines and dock edges",
+      "colors": {},
+      "note": "needs calm water \u2014 glass only",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v0",
+        "source": "editorial consensus (seeded from v0 code KB)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+      }
+    },
+    {
+      "id": "frog",
+      "label": "Hollow-body frog",
+      "style": "reaction",
+      "depth": "shallow",
+      "aliases": [
+        "frog",
+        "hollow body"
+      ],
+      "conditions": {
+        "light": [
+          "dusk/dawn",
+          "golden",
+          "night",
+          "moderate day"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          65,
+          95
+        ]
+      },
+      "technique": "walk it over matted grass, hold on 2 seconds on the strike",
+      "colors": {
+        "overcast": "white/chart"
+      },
+      "note": "vegetation only \u2014 worth it on this lake's grass mats",
+      "provenance": {
+        "seed_author": "kb-ingest/1.0",
+        "source": "Z-Man catalog (www.zmanfishing.com, Shopify products.json)",
+        "source_url": "https://www.zmanfishing.com/products/pop-frogz",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-10T04:34:06+00:00",
+        "note": "catalog sha ce729339c06fcbcb; technique text human-edited from spec quotes"
+      },
+      "manufacturer_specs": {
+        "manufacturer": "Z-Man Fishing Products",
+        "product_title": "Pop FrogZ\u2122",
+        "product_url": "https://www.zmanfishing.com/products/pop-frogz",
+        "product_type": "",
+        "variants": [
+          "4\" (4-pack) / White",
+          "4\" (4-pack) / Redbone",
+          "4\" (4-pack) / Mud Minnow",
+          "4\" (4-pack) / Green Pumpkin"
+        ],
+        "depth": null,
+        "retrieve": null,
+        "rigging": null
+      }
+    },
+    {
+      "id": "buzz",
+      "label": "Buzzbait",
+      "style": "reaction",
+      "depth": "shallow",
+      "aliases": [
+        "buzzbait",
+        "buzz"
+      ],
+      "conditions": {
+        "light": [
+          "dusk/dawn",
+          "night",
+          "sunset/sunrise"
+        ],
+        "wind": [
+          "glass",
+          "chop",
+          "windy"
+        ],
+        "water_temp_f": [
+          62,
+          92
+        ]
+      },
+      "technique": "burn it back through chop; pausing kills it",
+      "colors": {
+        "night": "black"
+      },
+      "note": "last-hour-of-light search bait",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v0",
+        "source": "editorial consensus (seeded from v0 code KB)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+      }
+    },
+    {
+      "id": "chatterbait",
+      "label": "Chatterbait (bladed jig)",
+      "style": "reaction",
+      "depth": "shallow",
+      "aliases": [
+        "chatterbait",
+        "chatter",
+        "bladed jig",
+        "vibrating jig"
+      ],
+      "conditions": {
+        "light": [
+          "dusk/dawn",
+          "golden",
+          "sunset/sunrise",
+          "moderate day"
+        ],
+        "wind": [
+          "chop",
+          "windy"
+        ],
+        "water_temp_f": [
+          55,
+          92
+        ]
+      },
+      "technique": "skim grass tops & wind lanes; snap-rip free of vegetation \u2014 half the bites come on the snap",
+      "colors": {
+        "overcast": "white/chart",
+        "clear": "shad"
+      },
+      "note": "the wind-lane weapon",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v0",
+        "source": "editorial consensus (seeded from v0 code KB)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+      }
+    },
+    {
+      "id": "spinnerbait",
+      "label": "Spinnerbait",
+      "style": "reaction",
+      "depth": "shallow",
+      "aliases": [
+        "spinnerbait",
+        "spinner bait",
+        "willow"
+      ],
+      "conditions": {
+        "light": [
+          "dusk/dawn",
+          "golden",
+          "moderate day"
+        ],
+        "wind": [
+          "chop",
+          "windy"
+        ],
+        "water_temp_f": [
+          52,
+          88
+        ]
+      },
+      "technique": "slow-roll the wind lane; burn it when fish chase",
+      "colors": {
+        "overcast": "white/chart"
+      },
+      "note": "steady producer in chop",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v0",
+        "source": "editorial consensus (seeded from v0 code KB)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+      }
+    },
+    {
+      "id": "squarebill",
+      "label": "Squarebill crankbait",
+      "style": "reaction",
+      "depth": "shallow",
+      "aliases": [
+        "squarebill",
+        "square bill",
+        "square",
+        "kvd"
+      ],
+      "conditions": {
+        "light": [
+          "golden",
+          "moderate day",
+          "bright day",
+          "sunset/sunrise"
+        ],
+        "wind": [
+          "chop",
+          "windy"
+        ],
+        "water_temp_f": [
+          55,
+          90
+        ]
+      },
+      "technique": "collide with wood/rock; deflect = strike",
+      "colors": {
+        "overcast": "craw/chart",
+        "clear": "shad"
+      },
+      "note": "bank-beater for wind-stacked points",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v0",
+        "source": "editorial consensus (seeded from v0 code KB)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+      }
+    },
+    {
+      "id": "crank-mid",
+      "label": "Mid-depth crankbait",
+      "style": "reaction",
+      "depth": "mid",
+      "aliases": [
+        "crankbait",
+        "crank",
+        "medium diver",
+        "dt6",
+        "dt10"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day",
+          "golden"
+        ],
+        "wind": [
+          "chop",
+          "windy",
+          "glass"
+        ],
+        "water_temp_f": [
+          50,
+          85
+        ]
+      },
+      "technique": "grind points & grass edges at the depth break",
+      "colors": {
+        "clear": "shad"
+      },
+      "note": "fills the mid-day gap",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v0",
+        "source": "editorial consensus (seeded from v0 code KB)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+      }
+    },
+    {
+      "id": "jerkbait",
+      "label": "Jerkbait",
+      "style": "reaction",
+      "depth": "mid",
+      "aliases": [
+        "jerkbait",
+        "jerk bait",
+        "vision 110",
+        "rouge"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day",
+          "golden"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          42,
+          72
+        ]
+      },
+      "technique": "twitch-twitch-long pause; coldwater king",
+      "colors": {
+        "clear": "ghost ayu/shad"
+      },
+      "note": "shines in clear water below 70\u00b0F",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v0",
+        "source": "editorial consensus (seeded from v0 code KB)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+      }
+    },
+    {
+      "id": "jig",
+      "label": "Jig (+craw trailer)",
+      "style": "power",
+      "depth": "mid",
+      "aliases": [
+        "jig",
+        "flipping jig",
+        "football jig",
+        "arkey"
+      ],
+      "conditions": {
+        "light": [
+          "night",
+          "dusk/dawn",
+          "golden",
+          "moderate day",
+          "sunset/sunrise",
+          "bright day"
+        ],
+        "wind": [
+          "glass",
+          "chop",
+          "windy"
+        ],
+        "water_temp_f": [
+          48,
+          92
+        ]
+      },
+      "technique": "pitch docks/wood, hop it down points; big-profile big-fish bait",
+      "colors": {
+        "night": "black/blue"
+      },
+      "note": "the confidence bait of dock lights",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v0",
+        "source": "editorial consensus (seeded from v0 code KB)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+      }
+    },
+    {
+      "id": "trig",
+      "label": "Texas-rigged worm",
+      "style": "finesse",
+      "depth": "mid",
+      "aliases": [
+        "texas rig",
+        "t-rig",
+        "texas",
+        "trig",
+        "worm"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day",
+          "dusk/dawn",
+          "golden",
+          "night"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          50,
+          95
+        ]
+      },
+      "technique": "drag/hop through cover; let the bait do the work",
+      "colors": {
+        "night": "black/blue",
+        "clear": "green pumpkin"
+      },
+      "note": "never wrong",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v0",
+        "source": "editorial consensus (seeded from v0 code KB)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+      }
+    },
+    {
+      "id": "dropshot",
+      "label": "Drop shot",
+      "style": "finesse",
+      "depth": "mid",
+      "aliases": [
+        "drop shot",
+        "dropshot",
+        "drop-shot",
+        "roboworm"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day",
+          "dusk/dawn",
+          "night",
+          "golden"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          45,
+          95
+        ]
+      },
+      "technique": "hover it \u2014 shake, never touch bottom; 12\u201324in leader",
+      "colors": {
+        "clear": "morning dawn / mmiii"
+      },
+      "note": "the finesse answer when they slap at reaction baits",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v0",
+        "source": "editorial consensus (seeded from v0 code KB)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+      }
+    },
+    {
+      "id": "wacky",
+      "label": "Wacky-rigged Senko",
+      "style": "finesse",
+      "depth": "mid",
+      "aliases": [
+        "senko",
+        "wacky",
+        "wacky rig"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day",
+          "dusk/dawn",
+          "golden",
+          "night"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          50,
+          95
+        ]
+      },
+      "technique": "skip it under docks, dead-stick the fall",
+      "colors": {
+        "clear": "green pumpkin"
+      },
+      "note": "skipping docks = uneaten pie",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v0",
+        "source": "editorial consensus (seeded from v0 code KB)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+      }
+    },
+    {
+      "id": "ned",
+      "label": "Ned rig",
+      "style": "finesse",
+      "depth": "shallow",
+      "aliases": [
+        "ned rig",
+        "ned",
+        "trd"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          40,
+          70
+        ]
+      },
+      "technique": "slow drag on bottom; neutral-to-cold water only",
+      "colors": {
+        "clear": "green pumpkin"
+      },
+      "note": "cold-water finesse \u2014 leave home above 75\u00b0F",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v0",
+        "source": "editorial consensus (seeded from v0 code KB)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+      }
+    },
+    {
+      "id": "carolina",
+      "label": "Carolina rig",
+      "style": "finesse",
+      "depth": "deep",
+      "aliases": [
+        "carolina rig",
+        "c-rig",
+        "carolina"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day"
+        ],
+        "wind": [
+          "chop",
+          "windy",
+          "glass"
+        ],
+        "water_temp_f": [
+          48,
+          88
+        ]
+      },
+      "technique": "long leaders across points & humps when fish are spread",
+      "colors": {
+        "clear": "green pumpkin"
+      },
+      "note": "deep-structure grinder",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v0",
+        "source": "editorial consensus (seeded from v0 code KB)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+      }
+    },
+    {
+      "id": "swimbait",
+      "label": "Swimbait",
+      "style": "power",
+      "depth": "mid",
+      "aliases": [
+        "swimbait",
+        "swim bait",
+        "huddleston",
+        "glide bait",
+        "glide"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "golden",
+          "dusk/dawn",
+          "night"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          48,
+          88
+        ]
+      },
+      "technique": "slow troll the edge; big fish, slow hunts",
+      "colors": {
+        "clear": "trout/natural"
+      },
+      "note": "one bite, the right bite",
+      "provenance": {
+        "seed_author": "kb-ingest/1.0",
+        "source": "Z-Man catalog (www.zmanfishing.com, Shopify products.json)",
+        "source_url": "https://www.zmanfishing.com/products/diezel-minnowz",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-10T04:34:06+00:00",
+        "note": "catalog sha ce729339c06fcbcb; technique text human-edited from spec quotes"
+      },
+      "manufacturer_specs": {
+        "manufacturer": "Z-Man Fishing Products",
+        "product_title": "DieZel MinnowZ\u2122",
+        "product_url": "https://www.zmanfishing.com/products/diezel-minnowz",
+        "product_type": "",
+        "variants": [
+          "4\" (5-pack) / Bad Shad",
+          "4\" (5-pack) / Gold Rush",
+          "4\" (5-pack) / Pearl Blue Glimmer",
+          "4\" (5-pack) / Opening Night",
+          "4\" (5-pack) / Houdini",
+          "4\" (5-pack) / Smoky Shad",
+          "4\" (5-pack) / Golden Boy",
+          "4\" (5-pack) / Nuked Chicken Glow"
+        ],
+        "depth": null,
+        "retrieve": null,
+        "rigging": {
+          "quote": "Inspired by Z-Man's renowned three-inch MinnowZ\u2122, fresh- and saltwater anglers alike will find that the hook slot and split dorsal fin provide easy weedless rigging and problem-free hooksets",
+          "match": "Inspired by Z-Man's renowned three-inch MinnowZ\u2122, fresh- and saltwater anglers a"
+        }
+      }
+    },
+    {
+      "id": "neko",
+      "label": "Neko rig (nail-weight finesse)",
+      "style": "finesse",
+      "depth": "mid",
+      "aliases": [
+        "neko",
+        "neko rig",
+        "nail weight",
+        "abstract",
+        "the abstract"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day",
+          "dusk/dawn",
+          "golden",
+          "night"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          50,
+          95
+        ]
+      },
+      "technique": "nail weight in one end, hook through mid-body; bottom stand-up quiver \u2014 shake, dead-stick, slow drag",
+      "colors": {
+        "clear": "green pumpkin"
+      },
+      "note": "weighted wacky: the nail weight stands the bait up; rods that shake it win",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v1 (session 2026-09-14)",
+        "source": "editorial consensus + 6th Sense Abstract design (pending promote)",
+        "source_url": "https://6thsensefishing.com/products/abstract",
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "Abstract copy: 'integrated weight slot simplifies rigging with Neko nail weights'; angler-reported rig 2026-09-13: 1/0 treble top + 3/16 oz VMC neko nail weight (7 fish, 36 lb incl 12 lb)"
+      }
+    }
+  ],
+  "provenance": {
+    "seed_author": "fishwitch-editorial-v0",
+    "source": "editorial consensus (seeded from v0 code KB)",
+    "source_url": null,
+    "confidence": "unverified-editorial",
+    "verified_by": null,
+    "note": "species note also needs citation"
+  }
+}

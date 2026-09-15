@@ -1,0 +1,39 @@
+{
+  "entry_id": "fly-trout",
+  "species_kb": "trout",
+  "status": "pending",
+  "source_type": "agency",
+  "proposed": {
+    "agency": "Iowa DNR",
+    "page_title": "Trout | Department of Natural Resources",
+    "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+    "quotes": [
+      {
+        "all_of": [
+          "trout flies imitate"
+        ],
+        "quote": "Most trout flies imitate some type of natural food, such as a mayfly, caddis fly, sculpin, minnow, stonefly, grasshopper or midge.",
+        "found": true
+      },
+      {
+        "all_of": [
+          "fly-fishing since natural insect hatches"
+        ],
+        "quote": "Summer is the best chance for fly-fishing since natural insect hatches are common and strong.",
+        "found": true
+      }
+    ]
+  },
+  "provenance": {
+    "seed_author": "agency-ingest/1.0",
+    "source": "Iowa DNR technique guide",
+    "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+    "fetched_at": "2026-09-11T02:54:07+00:00",
+    "extractor": "fixed sentence match (all_of words)",
+    "confidence": "sourced"
+  },
+  "review": {
+    "verified_by": null,
+    "verified_at": null
+  }
+}

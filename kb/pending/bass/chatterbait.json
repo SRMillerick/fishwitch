@@ -1,0 +1,37 @@
+{
+  "entry_id": "chatterbait",
+  "species_kb": "bass",
+  "status": "pending",
+  "proposed": {
+    "manufacturer": "Z-Man Fishing Products",
+    "product_title": "ChatterBait\u00ae Elite EVO\u2122 HD",
+    "product_url": "https://www.zmanfishing.com/products/chatterbait-elite-evo-hd",
+    "product_type": "",
+    "variants": [
+      "3/8 oz / Hot Snakes",
+      "3/8 oz / White",
+      "3/8 oz / Chartreuse/White",
+      "3/8 oz / Black/Blue",
+      "3/8 oz / Green Pumpkin",
+      "3/8 oz / Spot Remover",
+      "3/8 oz / Lava Craw",
+      "3/8 oz / Bluegill"
+    ],
+    "depth": null,
+    "retrieve": null,
+    "rigging": null
+  },
+  "provenance": {
+    "seed_author": "kb-ingest/1.0",
+    "source": "Z-Man catalog (www.zmanfishing.com, Shopify products.json)",
+    "source_url": "https://www.zmanfishing.com/products/chatterbait-elite-evo-hd",
+    "fetched_at": "2026-09-11T02:38:47+00:00",
+    "catalog_sha256": "ce729339c06fcbcb",
+    "extractor": "shopify-products-json + fixed regex",
+    "confidence": "sourced"
+  },
+  "review": {
+    "verified_by": null,
+    "verified_at": null
+  }
+}

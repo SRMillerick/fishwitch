@@ -1,0 +1,16 @@
+{
+  "name": "Angler",
+  "birth": {
+    "date": "1970-01-01",
+    "time": "12:00",
+    "time_known": false,
+    "place": "City, State, Country",
+    "lat": 0.0,
+    "lng": 0.0,
+    "tz": "UTC"
+  },
+  "species": "largemouth bass",
+  "arsenal": ["drop shot", "wacky senko", "chatterbait", "squarebill", "walking bait", "jig"],
+  "home_lake": "hidden-valley-lake-ca",
+  "astro_display": "almanac"
+}

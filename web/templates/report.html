@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}report{% endblock %}
+{% block content %}
+<h1>Session report</h1>
+<form id="report-form" class="grid" method="get" action="/report">
+  <label>Lake
+    <select name="lake">
+      {% for l in lakes %}<option value="{{ l.id }}" {% if q.lake == l.id %}selected{% endif %}>{{ l.name }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Date <input type="date" name="date" value="{{ q.date or '' }}"></label>
+  <label>Time <input type="time" name="time" value="{{ q.time or '18:00' }}"></label>
+  <label>Hours <input type="number" name="hours" min="0.5" max="8" step="0.5" value="{{ q.hours or '2.5' }}"></label>
+  <label>Voice
+    <select name="voice">
+      <option value="almanac" {% if q.voice == 'almanac' %}selected{% endif %}>almanac (moon lore)</option>
+      <option value="fisher" {% if q.voice == 'fisher' %}selected{% endif %}>fisher (no astrology)</option>
+      <option value="astro" {% if q.voice == 'astro' %}selected{% endif %}>astro (natal transits)</option>
+    </select>
+  </label>
+  <label>Species <input type="text" name="species" placeholder="largemouth bass" value="{{ q.species or '' }}"></label>
+  <button type="submit">Generate</button>
+</form>
+<p class="fine" id="profile-note">Rendering anonymously — with a profile (browser-only),
+reports add your natal transits and your arsenal. <a href="/interview">Build one →</a></p>
+
+<div id="report-out" class="report">
+{% if out %}
+  {% if out.error %}<p class="error">{{ out.error }}</p>
+  {% else %}
+    <div class="scorebar">overall <strong>{{ out.overall }}/10</strong> · {{ out.lake }} · {{ out.at.strftime('%a %b %-d, %-I:%M %p') }}</div>
+    {{ out.html | safe }}
+    {% include "_tackle.html" %}
+  {% endif %}
+{% endif %}
+</div>
+{% endblock %}

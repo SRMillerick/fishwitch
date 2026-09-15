@@ -1,0 +1,40 @@
+{
+  "entry_id": "walker",
+  "species_kb": "bass",
+  "status": "pending",
+  "proposed": {
+    "manufacturer": "6th Sense Fishing (ET)",
+    "product_title": "CatWalk",
+    "product_url": "https://6thsensefishing.com/products/catwalk",
+    "product_type": "Topwater",
+    "variants": [
+      "4K Bluegill",
+      "4K Gizzard",
+      "Bluegilla",
+      "Black Magic",
+      "Clearwater Rose",
+      "Ghost Bone Minnow",
+      "Royal Chrome",
+      "Sensory Shad"
+    ],
+    "depth": null,
+    "retrieve": {
+      "quote": "Its keel-shaped belly and balanced body create an effortless walk-the-dog action while letting the bait cut just beneath the surface on each turn, closely imitating a fleeing baitfish struggling to escape",
+      "match": "Its keel-shaped belly and balanced body create an effortless walk-the-dog action"
+    },
+    "rigging": null
+  },
+  "provenance": {
+    "seed_author": "kb-ingest/1.0",
+    "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
+    "source_url": "https://6thsensefishing.com/products/catwalk",
+    "fetched_at": "2026-09-11T02:38:47+00:00",
+    "catalog_sha256": "8c4f24d01a2dcd8d",
+    "extractor": "shopify-products-json + fixed regex",
+    "confidence": "sourced"
+  },
+  "review": {
+    "verified_by": null,
+    "verified_at": null
+  }
+}

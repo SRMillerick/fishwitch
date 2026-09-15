@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}fishwitch{% endblock %} — sky-to-tackle fishing reports</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <nav>
+    <a class="brand" href="/">🎣 fishwitch</a>
+    <a href="/report">Report</a>
+    <a href="/outlook">Outlook</a>
+    <a href="/kb">Knowledge Base</a>
+    <a href="/interview">Interview</a>
+    {% if local %}<a href="/review">Calibration</a>{% endif %}
+    <span id="profile-chip" class="chip" hidden></span>
+  </nav>
+</header>
+<main>
+{% block content %}{% endblock %}
+</main>
+<footer>
+  <p><strong>The pipe is deterministic.</strong> Same sky, same weather, same lake →
+  the same report, every time. No AI writes these facts; the knowledge base is
+  cited entry by entry, and humans verify every promotion.</p>
+  <p class="fine">Tackle links resolve at the end of the pipe and never influence
+  rankings. Manufacturer pages carry no commission; affiliate links, when present,
+  are always disclosed. Profile data (birth place/time) lives only in your browser —
+  <a href="/interview">read how</a>.</p>
+</footer>
+<script src="/static/app.js"></script>
+</body>
+</html>

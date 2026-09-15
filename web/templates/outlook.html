@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}outlook{% endblock %}
+{% block content %}
+<h1>Outlook</h1>
+<form class="grid" method="get" action="/outlook">
+  <label>Lake
+    <select name="lake">
+      {% for l in lakes %}<option value="{{ l.id }}" {% if lake and lake.name == l.name %}selected{% endif %}>{{ l.name }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Days <input type="number" name="days" min="1" max="16" value="{{ days }}"></label>
+  <label>Species <input type="text" name="species" placeholder="largemouth bass"></label>
+  <button type="submit">Scan</button>
+</form>
+{% if err %}<p class="error">{{ err }}</p>{% endif %}
+{% if rows %}
+<h2>Top windows of the horizon</h2>
+<table>
+  <tr><th>when</th><th>score</th><th>confidence</th><th>prime</th><th>approach</th></tr>
+  {% for r in rows %}
+  <tr>
+    <td>{{ r.start.strftime('%a %b %-d · %-I:%M %p') }}–{{ r.end.strftime('%-I %p') }}</td>
+    <td><strong>{{ r.overall }}/10</strong></td>
+    <td>{{ r.conf }}</td>
+    <td>{{ r.prime.strftime('%-I:%M %p') if r.prime else '—' }}</td>
+    <td>{{ ' + '.join(r.picks) }}</td>
+  </tr>
+  {% endfor %}
+</table>
+<p class="fine">Confidence: ≤3 days high · 4–7 medium · 8+ low (weather forecast
+range). Sky timing holds at all ranges. Windows scored anonymously; a profile
+re-ranks them against your natal chart and arsenal on the report page.</p>
+<h2>Moon over the horizon</h2>
+<p class="moonrow">
+{% for d, ph, il in moon %}<span class="moon {{ 'peak' if il < 8 or il > 92 else '' }}">{{ d[5:] }} {{ ph }} {{ il }}%</span> {% endfor %}
+</p>
+{% endif %}
+{% endblock %}

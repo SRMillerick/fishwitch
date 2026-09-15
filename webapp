@@ -1,0 +1,4 @@
+#!/bin/sh
+# fishwitch web — the front door (see webapp.py docstring for env flags)
+DIR="$(dirname "$(readlink -f "$0")")"
+exec env PYTHONPATH="$(dirname "$DIR")" "$HOME/.astro-venv/bin/python" "$DIR/webapp.py" "$@"

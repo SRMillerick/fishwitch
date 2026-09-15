@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.cache/
+
+# personal data — birth charts & catch logs stay out of version history
+# (copy config/profiles/example.json → default.json and fill in your own)
+config/profiles/*.json
+!config/profiles/example.json
+config/logbook.jsonl
+
+# static snapshot build output (lives on the gh-pages branch)
+site/
+
+# generated reports (astro renders can be natal-derived — never commit)
+reports/

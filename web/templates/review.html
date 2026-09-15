@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}calibration{% endblock %}
+{% block content %}
+<h1>Calibration ledger</h1>
+<p>Every logged trip replayed <strong>blind</strong>: the model is re-run as of
+each session — archived weather, logbook visible only up to that moment — then
+graded on whether it called the presentation, the timing, and the water.
+Read-only; the logbook itself never leaves this machine.</p>
+{% if rows %}
+<p class="scorebar">separation: catches vs skunks
+{% if sep is not none %} <strong>{{ '%+.1f'| format(sep) }}</strong>{% else %} — needs at least one of each{% endif %}
+· {{ n_catch }} catches · {{ n_skunk }} skunks</p>
+<table>
+  <tr><th>session</th><th>angler</th><th>result</th><th>model said</th><th>presentation</th><th>timing</th><th>zone</th></tr>
+  {% for r in rows %}
+  <tr>
+    <td>{{ r.ts }}</td>
+    <td>{{ r.angler }}</td>
+    <td>{% if r.skunk %}🦨 skunk{% else %}🎣 {{ r.n_fish }} fish{% if r.best_lb is not none %}, best {{ r.best_lb }} lb{% endif %}{% if r.total_lb is not none %}, {{ r.total_lb }} lb known{% endif %} on {{ r.lure }}{% endif %}
+      {% if r.notes %}<div class="fine">{{ r.notes }}</div>{% endif %}</td>
+    <td>{{ r.overall }}/10{% if r.prime %} · prime {{ r.prime.strftime('%-I:%M %p') }}{% endif %}
+      {% if r.state %}<div class="fine">{{ r.state }}</div>{% endif %}
+      {% if r.picks %}<div class="fine">{{ r.picks }}</div>{% endif %}</td>
+    <td class="mark {{ r.pres or 'na' }}">{{ r.pres or '·' }}</td>
+    <td class="mark {{ r.tim or 'na' }}">{% if r.tim %}{{ r.tim }}{% if r.tim != 'na' %} ({{ r.tim_d }}m){% endif %}{% else %}·{% endif %}</td>
+    <td class="mark {{ r.zon or 'na' }}">{{ r.zon or '·' }}</td>
+  </tr>
+  {% endfor %}
+</table>
+<p class="fine">presentation: exact = model's prime pick · style = right family ·
+benched = not in that angler's arsenal · n/a = lure not cataloged.
+timing: catch stamp vs prime moment (exact ≤30m, close ≤60m).
+zone: depth words in your notes vs the top pick's depth.</p>
+{% else %}
+<p>No sessions yet — log trips with <code>fishwitch log</code>.</p>
+{% endif %}
+{% if skipped %}<p class="fine">skipped: {{ skipped | length }}</p>{% endif %}
+{% endblock %}

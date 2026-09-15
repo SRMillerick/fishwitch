@@ -1,0 +1,40 @@
+{
+  "entry_id": "popper",
+  "species_kb": "bass",
+  "status": "pending",
+  "proposed": {
+    "manufacturer": "6th Sense Fishing (ET)",
+    "product_title": "SplashBack Popper",
+    "product_url": "https://6thsensefishing.com/products/splashback-popper",
+    "product_type": "Topwater",
+    "variants": [
+      "4K Shad / 70mm",
+      "4K Shad / 90mm",
+      "Black Magic / 70mm",
+      "Bluegill Fire / 70mm",
+      "Bluegill Spawn / 70mm",
+      "Bluegill Spawn / 90mm",
+      "Ghost Bone Minnow / 70mm",
+      "Ghost Hot Herring / 70mm"
+    ],
+    "depth": null,
+    "retrieve": {
+      "quote": "Its oversized cupped mouth gives anglers complete control over the presentation, allowing the bait to spit, chug, or push water depending on retrieve speed and rod cadence",
+      "match": "Its oversized cupped mouth gives anglers complete control over the presentation,"
+    },
+    "rigging": null
+  },
+  "provenance": {
+    "seed_author": "kb-ingest/1.0",
+    "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
+    "source_url": "https://6thsensefishing.com/products/splashback-popper",
+    "fetched_at": "2026-09-11T02:38:47+00:00",
+    "catalog_sha256": "8c4f24d01a2dcd8d",
+    "extractor": "shopify-products-json + fixed regex",
+    "confidence": "sourced"
+  },
+  "review": {
+    "verified_by": null,
+    "verified_at": null
+  }
+}

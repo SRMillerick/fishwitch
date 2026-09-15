@@ -1,0 +1,89 @@
+{
+  "label": "Panfish (bluegill/crappie)",
+  "cats": [
+    {
+      "id": "bobber-jig",
+      "label": "Bobber + jig (crappie tube)",
+      "style": "finesse",
+      "depth": "shallow",
+      "aliases": [
+        "bobber",
+        "jig",
+        "tube",
+        "crappie jig"
+      ],
+      "conditions": {
+        "light": [
+          "dusk/dawn",
+          "moderate day",
+          "golden"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          48,
+          90
+        ]
+      },
+      "technique": "dangle near docks & brush; 1\u20133ft down",
+      "colors": {},
+      "note": "kids-boat-saver and dinner-maker",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v0",
+        "source": "editorial consensus (seeded from v0 code KB)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+      }
+    },
+    {
+      "id": "spinner-pan",
+      "label": "Small spinner (roostertail)",
+      "style": "reaction",
+      "depth": "shallow",
+      "aliases": [
+        "roostertail",
+        "rooster tail",
+        "beetle spin",
+        "panther martin"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "golden",
+          "dusk/dawn"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          50,
+          90
+        ]
+      },
+      "technique": "slow roll near cover",
+      "colors": {},
+      "note": "search bait for schools",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v0",
+        "source": "editorial consensus (seeded from v0 code KB)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+      }
+    }
+  ],
+  "provenance": {
+    "seed_author": "fishwitch-editorial-v0",
+    "source": "editorial consensus (seeded from v0 code KB)",
+    "source_url": null,
+    "confidence": "unverified-editorial",
+    "verified_by": null,
+    "note": "species note also needs citation"
+  }
+}

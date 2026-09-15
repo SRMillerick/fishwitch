@@ -1,0 +1,4 @@
+#!/bin/sh
+# fishwitch — fishing report apparatus (swisseph + kerykeion + requests venv)
+DIR="$(dirname "$(readlink -f "$0")")"
+exec env PYTHONPATH="$(dirname "$DIR")" "$HOME/.astro-venv/bin/python" "$DIR/cli.py" "$@"

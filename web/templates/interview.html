@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}interview{% endblock %}
+{% block content %}
+<h1>The angler interview</h1>
+<p>Six questions. The answers become your <em>profile</em> — a small JSON file
+that lives <strong>in your browser only</strong>. Birth data is identity-grade
+personal data: fishwitch never stores it server-side, never logs it, and only
+uses it (in memory) to compute your transits when you ask for a report.</p>
+
+<form id="interview" class="stack">
+  <label>Your name <input name="name" required placeholder="e.g. Sean"></label>
+  <label>Birth date <input type="date" name="bdate" required></label>
+  <label>Birth time <input type="time" name="btime">
+    <label class="inline"><input type="checkbox" name="time_unknown"> time unknown (noon stand-in — houses hidden)</label>
+  </label>
+  <label>Birth place <input name="bplace" id="bplace" placeholder="City, State, Country" required>
+    <div id="geocode-out" class="fine"></div>
+  </label>
+  <label>Species you chase <input name="species" value="largemouth bass"></label>
+  <label>Your lures/rigs (comma-separated) <input name="arsenal" placeholder="drop shot, wacky senko, chatterbait, squarebill"></label>
+  <label>Home water
+    <select name="home_lake">
+      {% for l in lakes %}<option value="{{ l.id }}">{{ l.name }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Sky layer presentation
+    <select name="voice">
+      <option value="almanac">almanac — moon-sign lore (default)</option>
+      <option value="fisher">fisher — zero astrology</option>
+      <option value="astro">astro — full natal transits</option>
+    </select>
+  </label>
+  <div class="cta">
+    <button type="submit">Save profile to this browser</button>
+    <a class="btn ghost" id="download" download="fishwitch-profile.json" hidden>Download profile.json</a>
+    <button type="button" id="clear" class="ghost" hidden>Forget profile</button>
+  </div>
+</form>
+<p class="fine" id="status"></p>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% if out and out.rods %}
+<section class="tackle">
+  <h2>Tackle for this session — sources &amp; offers</h2>
+  <p class="fine">Ranking never sees these links. They attach after the pipe ends.</p>
+  <ul class="plain">
+  {% for r in out.rods %}
+    <li>
+      <span class="badge {% if r.verified %}ok{% else %}pend{% endif %}">{% if r.verified %}sourced{% else %}editorial{% endif %}</span>
+      <strong>{{ r.label }}</strong>
+      {% if r.product_url %}·
+        <a href="{{ r.product_url }}" target="_blank" rel="nofollow noopener">{{ r.product or 'manufacturer page' }}</a>
+      {% endif %}
+      {% if r.offers %}
+        {% for o in r.offers %}
+          {% if o.url %}·
+            <a href="{{ o.url }}" target="_blank" rel="sponsored noopener">{{ o.retailer }}</a>
+            <span class="fine">({{ o.disclosure }})</span>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+      <div class="fine">{{ r.source }}{% if r.source_url %} · <a href="{{ r.source_url }}" target="_blank" rel="noopener">source</a>{% endif %}</div>
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+{% endif %}

@@ -1,0 +1,128 @@
+{
+  "label": "Trout",
+  "cats": [
+    {
+      "id": "spin-trout",
+      "label": "Inline spinner / spoon (kastmaster)",
+      "style": "reaction",
+      "depth": "mid",
+      "aliases": [
+        "kastmaster",
+        "spinner",
+        "spoon",
+        "crocodile"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "golden",
+          "dusk/dawn"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          40,
+          68
+        ]
+      },
+      "technique": "cast & wind near stocking zones/inlets",
+      "colors": {
+        "clear": "silver/blue"
+      },
+      "note": "stocked-fish standard",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v0",
+        "source": "editorial consensus (seeded from v0 code KB)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+      }
+    },
+    {
+      "id": "bait-trout",
+      "label": "Powerbait / floating bait off bottom",
+      "style": "finesse",
+      "depth": "mid",
+      "aliases": [
+        "powerbait",
+        "power bait",
+        "dough bait",
+        "berkley"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day",
+          "dusk/dawn"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          40,
+          68
+        ]
+      },
+      "technique": "30in leader off a sliding sinker, wait",
+      "colors": {},
+      "note": "patience bait",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v0",
+        "source": "editorial consensus (seeded from v0 code KB)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+      }
+    },
+    {
+      "id": "fly-trout",
+      "label": "Fly (wooly bugger / midge)",
+      "style": "finesse",
+      "depth": "shallow",
+      "aliases": [
+        "fly",
+        "fly rod",
+        "wooly",
+        "bugger"
+      ],
+      "conditions": {
+        "light": [
+          "dusk/dawn",
+          "golden",
+          "moderate day"
+        ],
+        "wind": [
+          "glass"
+        ],
+        "water_temp_f": [
+          40,
+          68
+        ]
+      },
+      "technique": "slow strip near risers",
+      "colors": {},
+      "note": "match the hatch",
+      "provenance": {
+        "seed_author": "fishwitch-editorial-v0",
+        "source": "editorial consensus (seeded from v0 code KB)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+      }
+    }
+  ],
+  "provenance": {
+    "seed_author": "fishwitch-editorial-v0",
+    "source": "editorial consensus (seeded from v0 code KB)",
+    "source_url": null,
+    "confidence": "unverified-editorial",
+    "verified_by": null,
+    "note": "species note also needs citation"
+  }
+}

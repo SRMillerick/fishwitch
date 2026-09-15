@@ -1,0 +1,38 @@
+{
+  "hidden-valley-lake-ca": {
+    "name": "Hidden Valley Lake",
+    "region": "Middletown, Lake County, CA",
+    "lat": 38.8084,
+    "lng": -122.5665,
+    "alt_m": 335,
+    "tz": "America/Los_Angeles",
+    "type": "natural lake (private HOA)",
+    "species": [
+      "largemouth bass",
+      "bluegill",
+      "channel catfish",
+      "trout (winter stocking)"
+    ]
+  },
+  "lake-berryessa": {
+    "name": "Lake Berryessa",
+    "display": "Lake Berryessa, Napa County, California, United States",
+    "lat": 38.5958203,
+    "lng": -122.2382224,
+    "osm_type": "reservoir",
+    "area_m2": 77900000.0,
+    "area_source": "wikidata",
+    "alt_m": 135.0,
+    "wikidata_id": "Q771189",
+    "depth_class": "deep (60 ft+)",
+    "est_max_depth_ft": 120,
+    "area_acres": 19249,
+    "mixing": "warm-monomictic \u2014 one big fall turnover",
+    "turnover": {
+      "trigger_f": 64.0,
+      "surface_bias_f": 6.0,
+      "basis": "morphology estimate \u2014 override in registry"
+    },
+    "id": "lake-berryessa"
+  }
+}

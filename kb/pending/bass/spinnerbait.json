@@ -1,0 +1,43 @@
+{
+  "entry_id": "spinnerbait",
+  "species_kb": "bass",
+  "status": "pending",
+  "proposed": {
+    "manufacturer": "6th Sense Fishing (ET)",
+    "product_title": "Divine Spinnerbait",
+    "product_url": "https://6thsensefishing.com/products/divine-spinnerbait",
+    "product_type": "Spinnerbait",
+    "variants": [
+      "1/4oz. / Blue-Treuse Flash",
+      "3/8oz. / Blue-Treuse Flash",
+      "1/2oz. / Blue-Treuse Flash",
+      "3/4oz. / Blue-Treuse Flash",
+      "1oz. / Blue-Treuse Flash",
+      "1/4oz. / Bone-Treuse Pearl",
+      "3/8oz. / Bone-Treuse Pearl",
+      "1/2oz. / Bone-Treuse Pearl"
+    ],
+    "depth": null,
+    "retrieve": {
+      "quote": "Its combination of premium blade configurations, a balanced head, and heat-treated stainless-steel spring wire produces consistent flash and vibration while maintaining a natural baitfish profile throughout the retrieve",
+      "match": "Its combination of premium blade configurations, a balanced head, and heat-treat"
+    },
+    "rigging": {
+      "quote": "Key Features Heat-treated stainless-steel spring wire creates strong vibration while maintaining flexibility and durability Balanced head design tracks true and runs horizontally across a wide range of retrieve speeds Premium blades provide consistent flash and vibration in clear and stained water H",
+      "match": "Key Features Heat-treated stainless-steel spring wire creates strong vibration w"
+    }
+  },
+  "provenance": {
+    "seed_author": "kb-ingest/1.0",
+    "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
+    "source_url": "https://6thsensefishing.com/products/divine-spinnerbait",
+    "fetched_at": "2026-09-11T02:38:47+00:00",
+    "catalog_sha256": "8c4f24d01a2dcd8d",
+    "extractor": "shopify-products-json + fixed regex",
+    "confidence": "sourced"
+  },
+  "review": {
+    "verified_by": null,
+    "verified_at": null
+  }
+}
