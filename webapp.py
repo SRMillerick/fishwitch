@@ -228,7 +228,7 @@ def outlook_page():
 def _horizon(lake: dict, days: int, species: str | None):
     profile = dict(species=species or "bass", astro_display="almanac",
                    arsenal=[])
-    wx = shared_weather(lake["lat"], lake["lng"], forecast_days=days)
+    wx = shared_weather(lake["lat"], lake["lng"], days=days)
     hist = None
     try:
         hist = History(lake["lat"], lake["lng"], datetime.now())

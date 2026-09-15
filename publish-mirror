@@ -1,0 +1,49 @@
+#!/bin/sh
+# publish-mirror — sync a CLEAN snapshot of the working tree to the public repo.
+#
+# The public repo (SRMillerick/fishwitch) carries its own linear history of
+# mirror commits. NEVER push the private history (archive) to it — the archive
+# contains generated natal-derived reports in old commits. This script is the
+# only sanctioned path:
+#   1. git archive HEAD → tree (tracked files only, PII never tracked)
+#   2. strip: reports/, HANDOFF.md, STATE.md, START.md
+#   3. scrub: lakes.json lore/access/structure (club-lake intel stays local)
+#   4. commit as one mirror commit on top of public main, push
+set -e
+DIR="$(dirname "$(readlink -f "$0")")"
+SRC_SHA="$(git -C "$DIR" rev-parse --short HEAD)"
+PUB=git@github.com:SRMillerick/fishwitch.git
+
+WORK=$(mktemp -d)
+git clone -q "$PUB" "$WORK/repo"
+mkdir "$WORK/tree"
+git -C "$DIR" archive HEAD | tar -x -C "$WORK/tree" \
+    --exclude=reports --exclude=HANDOFF.md --exclude=STATE.md --exclude=START.md
+"$HOME/.astro-venv/bin/python" - "$WORK/tree/config/lakes.json" <<'EOF'
+import json, sys
+p = sys.argv[1]
+d = json.load(open(p))
+for k, v in d.items():
+    for f in ("lore", "access", "structure"):
+        v.pop(f, None)
+json.dump(d, open(p, "w"), indent=2)
+EOF
+cat > "$WORK/tree/PUBLIC-NOTES.md" <<EOF
+# Public mirror
+
+Clean public mirror of fishwitch — mirrored from the private development
+ledger by \`publish-mirror\` (mirror of archive@$SRC_SHA). Excluded from the
+mirror: session docs, generated reports, and home-lake intel. Profiles and
+logbooks are gitignored by policy in both repos (identity-grade PII).
+
+Rendered showcase: GitHub Pages (gh-pages branch), built by \`build_static.py\`
+(anonymous snapshots only — no profiles, no natal data, no logbook data).
+EOF
+rm -rf "$WORK/repo"/*
+cp -r "$WORK/tree"/. "$WORK/repo"/
+cd "$WORK/repo"
+git add -A
+git -c user.name="fishwitch mirror bot" -c user.email="noreply@localhost" \
+    commit -qm "mirror of archive@$SRC_SHA" || { echo "no changes to mirror"; exit 0; }
+git push -q origin main
+echo "✅ public main updated (mirror of archive@$SRC_SHA)"
