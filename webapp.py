@@ -50,6 +50,7 @@ CONFIG = ROOT / "config"
 app = Flask(__name__, template_folder=str(ROOT / "web" / "templates"),
             static_folder=str(ROOT / "web" / "static"))
 app.config["JSON_SORT_KEYS"] = False
+app.config["MAX_CONTENT_LENGTH"] = 64 * 1024  # profiles are small; bigger bodies are abuse
 
 
 # ── shared, cached data layers (one weather call serves many renders) ───────
@@ -121,19 +122,113 @@ def _clamp_at(s: str | None) -> datetime:
     return max(lo, min(hi, at))
 
 
-def _client_profile(payload: dict) -> dict:
-    """Accept only the documented profile shape from the POST body. The dict
-    is used in-memory by generate() and then discarded — never persisted."""
+def _client_profile(payload: dict) -> tuple[dict, list[str]]:
+    """Validate the documented profile shape from the POST body. Returns
+    (profile, errors) — never raises, never persists. The server treats every
+    incoming profile as untrusted input even though it originates in the
+    visitor's own browser."""
+    errs: list[str] = []
     p = payload.get("profile")
+    if p in (None, {}):
+        return {}, []
     if not isinstance(p, dict):
-        return {}
-    out = {k: p[k] for k in ("name", "species", "arsenal", "home_lake",
-                             "astro_display") if k in p}
+        return {}, ["profile must be a JSON object"]
+    out: dict = {}
+    name = p.get("name")
+    if name is not None:
+        if not isinstance(name, str) or not (1 <= len(name.strip()) <= 40):
+            errs.append("name: 1–40 characters")
+        else:
+            out["name"] = name.strip()
+    sp = p.get("species")
+    if sp is not None:
+        if not isinstance(sp, str) or len(sp) > 40:
+            errs.append("species: string ≤ 40 chars")
+        else:
+            out["species"] = sp
+    ars = p.get("arsenal")
+    if ars is not None:
+        if (not isinstance(ars, list) or len(ars) > 30
+                or not all(isinstance(a, str) and 0 < len(a) <= 60 for a in ars)):
+            errs.append("arsenal: list of ≤ 30 strings, each ≤ 60 chars")
+        else:
+            out["arsenal"] = ars
+    hl = p.get("home_lake")
+    if hl is not None:
+        if not isinstance(hl, str) or len(hl) > 60:
+            errs.append("home_lake: string ≤ 60 chars")
+        else:
+            out["home_lake"] = hl
+    ad = p.get("astro_display")
+    if ad is not None:
+        if ad not in ("fisher", "almanac", "astro"):
+            errs.append("astro_display: fisher | almanac | astro")
+        else:
+            out["astro_display"] = ad
     b = p.get("birth")
-    if isinstance(b, dict):
-        out["birth"] = {k: b[k] for k in ("date", "time", "time_known",
-                                          "place", "lat", "lng", "tz") if k in b}
-    return out
+    if b is not None:
+        if not isinstance(b, dict):
+            errs.append("birth: object")
+        else:
+            bd = {}
+            date = b.get("date")
+            try:
+                d = datetime.strptime(str(date), "%Y-%m-%d")
+                if not (1850 <= d.year <= 2100):
+                    raise ValueError
+                bd["date"] = str(date)
+            except (TypeError, ValueError):
+                errs.append("birth.date: YYYY-MM-DD between 1850 and 2100")
+            t = b.get("time")
+            try:
+                datetime.strptime(str(t), "%H:%M")
+                bd["time"] = str(t)
+            except (TypeError, ValueError):
+                errs.append("birth.time: HH:MM (24h)")
+            tk = b.get("time_known")
+            bd["time_known"] = bool(tk) if tk is not None else True
+            for k, lo, hi in (("lat", -90, 90), ("lng", -180, 180)):
+                v = b.get(k, 0)
+                try:
+                    v = float(v)
+                    if not (lo <= v <= hi):
+                        raise ValueError
+                    bd[k] = v
+                except (TypeError, ValueError):
+                    errs.append(f"birth.{k}: number {lo}…{hi}")
+            tz = b.get("tz")
+            if tz is not None:
+                if not isinstance(tz, str) or len(tz) > 64:
+                    errs.append("birth.tz: string ≤ 64 chars")
+                else:
+                    bd["tz"] = tz
+            pl = b.get("place")
+            if pl is not None:
+                if not isinstance(pl, str) or len(pl) > 120:
+                    errs.append("birth.place: string ≤ 120 chars")
+                else:
+                    bd["place"] = pl
+            out["birth"] = bd
+    return out, errs
+
+
+# ── tiny rate limiter (in-memory; per-IP token window) ──────────────────
+_HITS: dict[str, list] = {}
+
+
+def _rate_ok(bucket: str, limit: int, window_s: int = 3600) -> bool:
+    """Anonymous public deploys get 30 reports / 60 geocodes per visitor-hour;
+    FISHWITCH_LOCAL sessions are trusted (it's your own machine)."""
+    if LOCAL:
+        return True
+    now = time.time()
+    hits = [t for t in _HITS.get(bucket, []) if now - t < window_s]
+    if len(hits) >= limit:
+        _HITS[bucket] = hits
+        return False
+    hits.append(now)
+    _HITS[bucket] = hits
+    return True
 
 
 def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
@@ -173,8 +268,10 @@ def _report_response(payload: dict, anonymous: bool) -> dict:
     voice = payload.get("voice")
     if voice not in ("fisher", "almanac", "astro"):
         voice = None
-    species = (payload.get("species") or "").strip() or None
-    profile = {} if anonymous else _client_profile(payload)
+    species = (payload.get("species") or "").strip()[:40] or None
+    profile, errs = ({}, []) if anonymous else _client_profile(payload)
+    if errs:
+        return dict(error="profile rejected", details=errs)
 
     def run():
         return _render_report(profile, lake, at, hours, voice, species)
@@ -320,6 +417,8 @@ def review_page():
 # ── JSON API (for the browser layer; robots-discouraged) ─────────────────────
 @app.route("/api/report", methods=["POST"])
 def api_report():
+    if not _rate_ok(f"report:{request.remote_addr}", 30):
+        return jsonify(error="rate limit — 30 reports/hour per visitor"), 429
     payload = request.get_json(silent=True) or {}
     out = _report_response(payload, anonymous=False)
     if "error" in out:
@@ -329,6 +428,8 @@ def api_report():
 
 @app.route("/api/geocode", methods=["POST"])
 def api_geocode():
+    if not _rate_ok(f"geocode:{request.remote_addr}", 60):
+        return jsonify(error="rate limit"), 429
     q = ((request.get_json(silent=True) or {}).get("q") or "").strip()
     if not q or len(q) > 120:
         return jsonify([])

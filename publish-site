@@ -5,6 +5,7 @@ DIR="$(dirname "$(readlink -f "$0")")"
 cd "$DIR"
 
 "$HOME/.astro-venv/bin/python" build_static.py
+"$HOME/.astro-venv/bin/python" check_links.py
 
 WORK=$(mktemp -d)
 cp -r site/. "$WORK"/

@@ -54,6 +54,7 @@ def save(path: str, body: str):
     body = body.replace('src="/static/', 'src="static/')
     body = body.replace('href="/report?lake=hidden-valley-lake-ca&amp;at=', 'href="report-')
     body = re.sub(r'href="/report\?[^"]*"', 'href="report-tonight.html"', body)
+    body = body.replace('href="/report"', 'href="report-tonight.html"')  # nav + hero btn
     body = re.sub(r'href="/outlook\?[^"]*"', 'href="outlook.html"', body)
     body = body.replace('href="/outlook"', 'href="outlook.html"')
     body = re.sub(r'href="/kb\?species=(\w+)"', r'href="kb-\1.html"', body)
