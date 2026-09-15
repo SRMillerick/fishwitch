@@ -51,6 +51,7 @@ app = Flask(__name__, template_folder=str(ROOT / "web" / "templates"),
             static_folder=str(ROOT / "web" / "static"))
 app.config["JSON_SORT_KEYS"] = False
 app.config["MAX_CONTENT_LENGTH"] = 64 * 1024  # profiles are small; bigger bodies are abuse
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 300  # assets carry ?v= busts; keep stale-JS windows short
 
 
 # ── shared, cached data layers (one weather call serves many renders) ───────
