@@ -12,7 +12,8 @@
       "bluegill",
       "channel catfish",
       "trout (winter stocking)"
-    ]
+    ],
+    "county": "Lake"
   },
   "lake-berryessa": {
     "name": "Lake Berryessa",
@@ -44,7 +45,8 @@
       "channel catfish",
       "panfish"
     ],
-    "note": "species: CDFW-common list (editorial \u2014 verify locally)"
+    "note": "species: CDFW-common list (editorial \u2014 verify locally)",
+    "county": "Napa"
   },
   "lake-sonoma": {
     "name": "Lake Sonoma",
@@ -76,7 +78,8 @@
       "kokanee salmon",
       "king salmon"
     ],
-    "note": "species: CDFW-common list (editorial \u2014 verify locally); depth: USACE ~140 ft max at dam"
+    "note": "species: CDFW-common list (editorial \u2014 verify locally); depth: USACE ~140 ft max at dam",
+    "county": "Sonoma"
   },
   "lake-ralphine": {
     "name": "Lake Ralphine",
@@ -101,7 +104,8 @@
       "bluegill",
       "channel catfish"
     ],
-    "note": "species: CDFW-common list (editorial \u2014 verify locally)"
+    "note": "species: CDFW-common list (editorial \u2014 verify locally)",
+    "county": "Sonoma"
   },
   "lake-hennessey": {
     "name": "Lake Hennessey",
@@ -127,7 +131,8 @@
       "bluegill",
       "crappie"
     ],
-    "note": "species: CDFW-common list (editorial \u2014 verify locally)"
+    "note": "species: CDFW-common list (editorial \u2014 verify locally)",
+    "county": "Napa"
   },
   "clear-lake": {
     "name": "Clear Lake",
@@ -156,7 +161,8 @@
       "channel catfish",
       "carp"
     ],
-    "note": "species: CDFW-common list (editorial \u2014 verify locally); depth/mixing: manual override (agency/encyclopedic)"
+    "note": "species: CDFW-common list (editorial \u2014 verify locally); depth/mixing: manual override (agency/encyclopedic)",
+    "county": "Lake"
   },
   "indian-valley-reservoir": {
     "name": "Indian Valley Reservoir",
@@ -181,7 +187,8 @@
       "channel catfish",
       "spotted bass"
     ],
-    "note": "species: CDFW-common list (editorial \u2014 verify locally)"
+    "note": "species: CDFW-common list (editorial \u2014 verify locally)",
+    "county": "Lake"
   },
   "lake-pillsbury": {
     "name": "Lake Pillsbury",
@@ -207,7 +214,8 @@
       "channel catfish",
       "bluegill"
     ],
-    "note": "species: CDFW-common list (editorial \u2014 verify locally)"
+    "note": "species: CDFW-common list (editorial \u2014 verify locally)",
+    "county": "Lake"
   },
   "spring-lake": {
     "name": "Spring Lake",
@@ -236,7 +244,8 @@
       "bluegill",
       "channel catfish"
     ],
-    "note": "species: CDFW-common list (editorial \u2014 verify locally)"
+    "note": "species: CDFW-common list (editorial \u2014 verify locally)",
+    "county": "Sonoma"
   },
   "blue-lake": {
     "name": "Blue Lake (Upper Blue Lakes)",
@@ -264,7 +273,8 @@
       "channel catfish",
       "rainbow trout"
     ],
-    "note": "species: CDFW-common list (editorial \u2014 verify locally)"
+    "note": "species: CDFW-common list (editorial \u2014 verify locally)",
+    "county": "Lake"
   },
   "highland-springs-reservoir": {
     "id": "highland-springs-reservoir",
@@ -291,6 +301,7 @@
       "channel catfish",
       "rainbow trout"
     ],
-    "note": "hand-carded (geocode miss) \u2014 coords/area from Lake County Parks; verify locally"
+    "note": "hand-carded (geocode miss) \u2014 coords/area from Lake County Parks; verify locally",
+    "county": "Lake"
   }
 }
