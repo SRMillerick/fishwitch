@@ -33,6 +33,264 @@
       "surface_bias_f": 6.0,
       "basis": "morphology estimate \u2014 override in registry"
     },
-    "id": "lake-berryessa"
+    "id": "lake-berryessa",
+    "species": [
+      "largemouth bass",
+      "smallmouth bass",
+      "spotted bass",
+      "rainbow trout",
+      "kokanee salmon",
+      "king salmon",
+      "channel catfish",
+      "panfish"
+    ],
+    "note": "species: CDFW-common list (editorial \u2014 verify locally)"
+  },
+  "lake-sonoma": {
+    "name": "Lake Sonoma",
+    "display": "Lake Sonoma, Sonoma County, California, United States",
+    "lat": 38.7379866,
+    "lng": -123.0627632,
+    "osm_type": "lake",
+    "area_m2": 11331600,
+    "area_source": "corrected: USACE full pool ~2,800 acres",
+    "alt_m": 200,
+    "wikidata_id": null,
+    "depth_class": "deep (60 ft+ near dam)",
+    "est_max_depth_ft": 140,
+    "area_acres": 2800,
+    "mixing": "warm-monomictic \u2014 one big fall turnover",
+    "turnover": {
+      "trigger_f": 68.0,
+      "surface_bias_f": 4.0,
+      "basis": "morphology estimate \u2014 override in registry"
+    },
+    "id": "lake-sonoma",
+    "species": [
+      "largemouth bass",
+      "smallmouth bass",
+      "bluegill",
+      "crappie",
+      "channel catfish",
+      "rainbow trout",
+      "kokanee salmon",
+      "king salmon"
+    ],
+    "note": "species: CDFW-common list (editorial \u2014 verify locally); depth: USACE ~140 ft max at dam"
+  },
+  "lake-ralphine": {
+    "name": "Lake Ralphine",
+    "display": "Lake Ralphine, Santa Rosa, Sonoma County, California, United States",
+    "lat": 38.454972,
+    "lng": -122.6675119,
+    "osm_type": "reservoir",
+    "area_m2": null,
+    "alt_m": 73.0,
+    "depth_class": "unknown",
+    "est_max_depth_ft": null,
+    "mixing": "weakly stratified \u2014 fall mixing front-driven",
+    "turnover": {
+      "trigger_f": 68.0,
+      "surface_bias_f": 4.0,
+      "basis": "morphology estimate \u2014 override in registry"
+    },
+    "id": "lake-ralphine",
+    "species": [
+      "rainbow trout",
+      "largemouth bass",
+      "bluegill",
+      "channel catfish"
+    ],
+    "note": "species: CDFW-common list (editorial \u2014 verify locally)"
+  },
+  "lake-hennessey": {
+    "name": "Lake Hennessey",
+    "display": "Lake Hennessey, Napa County, California, United States",
+    "lat": 38.4918576,
+    "lng": -122.3769835,
+    "osm_type": "reservoir",
+    "area_m2": null,
+    "alt_m": 95.0,
+    "depth_class": "unknown",
+    "est_max_depth_ft": null,
+    "mixing": "weakly stratified \u2014 fall mixing front-driven",
+    "turnover": {
+      "trigger_f": 68.0,
+      "surface_bias_f": 4.0,
+      "basis": "morphology estimate \u2014 override in registry"
+    },
+    "id": "lake-hennessey",
+    "species": [
+      "largemouth bass",
+      "rainbow trout",
+      "channel catfish",
+      "bluegill",
+      "crappie"
+    ],
+    "note": "species: CDFW-common list (editorial \u2014 verify locally)"
+  },
+  "clear-lake": {
+    "name": "Clear Lake",
+    "display": "Clear Lake, Lakeport, Lake County, California, United States",
+    "lat": 39.0319478,
+    "lng": -122.7994776,
+    "osm_type": "lake",
+    "area_m2": 177197895,
+    "area_source": "corrected: ~43,785 acres (175 km\u00b2)",
+    "wikidata_id": "Q5130739",
+    "alt_m": 402,
+    "depth_class": "shallow (<20 ft avg \u2014 arms to ~30 ft)",
+    "est_max_depth_ft": 32,
+    "area_acres": 43787,
+    "mixing": "polymictic \u2014 shallow, wind-mixed year-round; no classic turnover",
+    "turnover": {
+      "trigger_f": 999,
+      "surface_bias_f": 0,
+      "basis": "manual override: Clear Lake is a large shallow polymictic lake \u2014 turnover logic does not apply"
+    },
+    "id": "clear-lake",
+    "species": [
+      "largemouth bass",
+      "crappie",
+      "bluegill",
+      "channel catfish",
+      "carp"
+    ],
+    "note": "species: CDFW-common list (editorial \u2014 verify locally); depth/mixing: manual override (agency/encyclopedic)"
+  },
+  "indian-valley-reservoir": {
+    "name": "Indian Valley Reservoir",
+    "display": "Indian Valley Reservoir, Lake County, California, United States",
+    "lat": 39.1236383,
+    "lng": -122.5431278,
+    "osm_type": "reservoir",
+    "area_m2": null,
+    "alt_m": 440.0,
+    "depth_class": "unknown",
+    "est_max_depth_ft": null,
+    "mixing": "weakly stratified \u2014 fall mixing front-driven",
+    "turnover": {
+      "trigger_f": 68.0,
+      "surface_bias_f": 4.0,
+      "basis": "morphology estimate \u2014 override in registry"
+    },
+    "id": "indian-valley-reservoir",
+    "species": [
+      "largemouth bass",
+      "rainbow trout",
+      "channel catfish",
+      "spotted bass"
+    ],
+    "note": "species: CDFW-common list (editorial \u2014 verify locally)"
+  },
+  "lake-pillsbury": {
+    "name": "Lake Pillsbury",
+    "display": "Lake Pillsbury, Lake County, California, United States",
+    "lat": 39.4152229,
+    "lng": -122.938334,
+    "osm_type": "reservoir",
+    "area_m2": null,
+    "alt_m": 554.0,
+    "wikidata_id": "Q7348517",
+    "depth_class": "unknown",
+    "est_max_depth_ft": null,
+    "mixing": "weakly stratified \u2014 fall mixing front-driven",
+    "turnover": {
+      "trigger_f": 68.0,
+      "surface_bias_f": 4.0,
+      "basis": "morphology estimate \u2014 override in registry"
+    },
+    "id": "lake-pillsbury",
+    "species": [
+      "largemouth bass",
+      "rainbow trout",
+      "channel catfish",
+      "bluegill"
+    ],
+    "note": "species: CDFW-common list (editorial \u2014 verify locally)"
+  },
+  "spring-lake": {
+    "name": "Spring Lake",
+    "display": "Spring Lake Swimming Lagoon, Santa Rosa, Sonoma County, California, United States",
+    "lat": 38.4527583,
+    "lng": -122.6504248,
+    "osm_type": "reservoir",
+    "area_m2": 291384,
+    "alt_m": 48,
+    "wikidata_id": "Q7361808",
+    "depth_class": "shallow (<20 ft)",
+    "est_max_depth_ft": 18,
+    "mixing": "polymictic \u2014 mixes on any strong front",
+    "turnover": {
+      "trigger_f": 72.0,
+      "surface_bias_f": 3.0,
+      "basis": "morphology estimate \u2014 override in registry"
+    },
+    "id": "spring-lake-swimming-lagoon",
+    "area_source": "corrected: ~72-acre city lagoon",
+    "region": "Sonoma County, CA, USA",
+    "area_acres": 72,
+    "species": [
+      "rainbow trout",
+      "largemouth bass",
+      "bluegill",
+      "channel catfish"
+    ],
+    "note": "species: CDFW-common list (editorial \u2014 verify locally)"
+  },
+  "blue-lake": {
+    "name": "Blue Lake (Upper Blue Lakes)",
+    "display": "Blue Lake, Midlakes, Lake County, California, United States",
+    "lat": 39.1758308,
+    "lng": -123.0156672,
+    "osm_type": "lake",
+    "area_m2": 222585,
+    "alt_m": 408,
+    "wikidata_id": "Q2790756",
+    "depth_class": "unknown",
+    "est_max_depth_ft": null,
+    "mixing": "weakly stratified \u2014 fall mixing front-driven",
+    "turnover": {
+      "trigger_f": 68.0,
+      "surface_bias_f": 4.0,
+      "basis": "morphology estimate \u2014 override in registry"
+    },
+    "id": "blue-lake",
+    "area_source": "corrected: ~55-acre natural lake",
+    "species": [
+      "largemouth bass",
+      "bluegill",
+      "crappie",
+      "channel catfish",
+      "rainbow trout"
+    ],
+    "note": "species: CDFW-common list (editorial \u2014 verify locally)"
+  },
+  "highland-springs-reservoir": {
+    "id": "highland-springs-reservoir",
+    "name": "Highland Springs Reservoir",
+    "region": "Lake County, CA, USA",
+    "display": "Highland Springs Reservoir, Lake County, CA",
+    "lat": 39.144,
+    "lng": -122.928,
+    "alt_m": 425,
+    "area_m2": 526110,
+    "area_source": "manual: ~130 acres (Lake County Parks)",
+    "depth_class": "shallow (<20 ft)",
+    "est_max_depth_ft": 25,
+    "mixing": "polymictic \u2014 small shallow reservoir, wind-mixed",
+    "turnover": {
+      "trigger_f": 999,
+      "surface_bias_f": 0,
+      "basis": "manual override: shallow polymictic"
+    },
+    "species": [
+      "largemouth bass",
+      "bluegill",
+      "crappie",
+      "channel catfish",
+      "rainbow trout"
+    ],
+    "note": "hand-carded (geocode miss) \u2014 coords/area from Lake County Parks; verify locally"
   }
 }
