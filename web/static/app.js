@@ -82,11 +82,11 @@ if (iv) {
         body: JSON.stringify({ q: place.value }),
       });
       const cands = await r.json();
-      if (!cands.length) { box.textContent = "no geocode match — coordinates can be edited by hand in the JSON later"; return; }
+      if (!cands.length) { box.textContent = "no match — try ‘City, State’ or ‘City, State, Country’ (e.g. Santa Rosa, CA)"; return; }
       picked = cands[0];
       box.textContent = "→ " + [picked.name, picked.region, picked.country].filter(Boolean).join(", ") +
         "  (" + picked.lat.toFixed(3) + ", " + picked.lng.toFixed(3) + ", " + picked.tz + ")";
-    } catch { box.textContent = "geocode failed"; }
+    } catch { box.textContent = "⚠ geocoding service unreachable — check the connection and try again"; }
   });
 
   iv.addEventListener("submit", (ev) => {

@@ -98,6 +98,10 @@ iv = iv.replace('<div class="cta">',
                 'Profile creation and personal reports need the live app — '
                 'where your birth data stays in your browser and never touches a disk.</p>\n  <div class="cta">', 1)
 iv = iv.replace('<button type="submit">', '<button type="submit" disabled>')
+# no live APIs on a static host: kill the geocode field + the script that would call them
+iv = iv.replace('<input name="bplace" id="bplace" placeholder="City, State, Country" required>',
+                '<input name="bplace" placeholder="City, State, Country — geocoding runs on the live app" readonly>')
+iv = iv.replace('<script src="/static/app.js"></script>', "")
 save("interview.html", iv)
 
 (OUT / "robots.txt").write_text("User-agent: *\nAllow: /\n")
