@@ -98,11 +98,17 @@ iv = iv.replace('<div class="cta">',
                 'Profile creation and personal reports need the live app — '
                 'where your birth data stays in your browser and never touches a disk.</p>\n  <div class="cta">', 1)
 iv = iv.replace('<button type="submit">', '<button type="submit" disabled>')
-# no live APIs on a static host: birth-place field goes readonly (its id is dropped so
-# the geocode listener safely no-ops; the vault menu itself still works — import/switch
-# are pure client-side, and stashed profiles carry over to the live app in this browser)
-iv = iv.replace('<input name="bplace" id="bplace" placeholder="City, State, Country" required>',
-                '<input name="bplace" placeholder="City, State, Country — geocoding runs on the live app" readonly>')
+# no live APIs on a static host: the wizard is inert — banner up top, readonly place,
+# locked save button with its reason (bplace's id is dropped so the geocode listener no-ops;
+# the vault menu still works — import/switch are pure client-side)
+iv = iv.replace('<h1>Three steps to your reports</h1>',
+                '<h1>Three steps to your reports</h1>'
+                '<p class="fine"><strong>Read-only snapshot</strong> — this page can’t geocode or save '
+                '(GitHub Pages runs no code). The live app does both.</p>')
+iv = iv.replace('<input name="bplace" id="bplace" placeholder="City, State — e.g. Santa Rosa, CA" required>',
+                '<input name="bplace" placeholder="City, State — geocoding runs on the live app" readonly>')
+iv = iv.replace('<button type="submit">Save profile to this browser</button>',
+                '<button type="submit" disabled>🔒 saving runs on the live app</button>')
 save("interview.html", iv)
 
 (OUT / "robots.txt").write_text("User-agent: *\nAllow: /\n")

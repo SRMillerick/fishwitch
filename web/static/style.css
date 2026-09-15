@@ -94,3 +94,34 @@ td, th { border-bottom: 1px solid var(--line); padding: .45rem .6rem; vertical-a
 .mhint { padding: .35rem .5rem; color: var(--dim); font-size: .75rem; line-height: 1.4; }
 code { background: var(--panel); padding: .05rem .35rem; border-radius: 4px; font-size: .85em; }
 .tackle { border-top: 1px dashed var(--line); margin-top: 1.5rem; padding-top: .5rem; }
+
+/* landing teaser */
+.teaser { display: flex; gap: 1.6rem; align-items: center; background: var(--panel);
+  border: 1px solid var(--line); border-radius: 10px; padding: .9rem 1.2rem; margin: 1.2rem 0; }
+.teaser .t-label { color: var(--dim); font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; }
+.teaser .t-score { font-size: 2.6rem; line-height: 1; color: var(--gold); }
+.teaser .t-score span { font-size: 1rem; color: var(--dim); }
+.teaser .t-side { display: flex; flex-direction: column; gap: .3rem; }
+
+/* wizard */
+.progress { display: flex; gap: .4rem; list-style: none; padding: 0; margin: 1.2rem 0 .8rem; }
+.progress li { flex: 1; text-align: center; font-size: .75rem; color: var(--dim);
+  border-bottom: 2px solid var(--line); padding: .3rem 0; }
+.progress li.on { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+.istep { border: 0; padding: 0; margin: 0; display: none; }
+.istep.on { display: flex; flex-direction: column; gap: 1rem; }
+.istep legend { color: var(--accent); font-weight: 600; padding: 0 0 .2rem; }
+.wiz-nav { display: flex; justify-content: space-between; gap: .8rem; }
+.voice-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; }
+@media (max-width: 40rem) { .voice-cards { grid-template-columns: 1fr; } }
+.vcard { display: flex; flex-direction: column; gap: .2rem; border: 1px solid var(--line);
+  border-radius: 8px; padding: .7rem .8rem; cursor: pointer; color: var(--ink); }
+.vcard:has(input:checked) { border-color: var(--accent); background: rgba(87,179,212,.1); }
+.vcard input { display: none; }
+.vcard span { color: var(--dim); font-size: .8rem; }
+
+/* report profile pill + wide tables on phones */
+.pill { display: inline-block; border: 1px solid var(--line); border-radius: 12px;
+  padding: .25rem .8rem; font-size: .85rem; color: var(--dim); margin: .6rem 0; }
+.pill.on { border-color: var(--ok); color: var(--ok); }
+.report table { display: block; overflow-x: auto; }

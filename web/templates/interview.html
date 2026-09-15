@@ -1,40 +1,81 @@
 {% extends "base.html" %}
 {% block title %}interview{% endblock %}
 {% block content %}
-<h1>The angler interview</h1>
-<p>Six questions. The answers become your <em>profile</em> — a small JSON file
-that lives <strong>in your browser only</strong>. Birth data is identity-grade
-personal data: fishwitch never stores it server-side, never logs it, and only
-uses it (in memory) to compute your transits when you ask for a report.</p>
+<h1>Three steps to your reports</h1>
+<p class="fine">About a minute. Everything you enter lives in <strong>this browser only</strong> —
+fishwitch's server never stores it; it's used in-memory to render your reports, then forgotten.</p>
+
+<ol class="progress" id="wiz-progress">
+  <li class="on" data-step="1"><span>The angler</span></li>
+  <li data-step="2"><span>The sky layer</span></li>
+  <li data-step="3"><span>The tackle box</span></li>
+</ol>
 
 <form id="interview" class="stack">
-  <label>Your name <input name="name" required placeholder="e.g. Sean"></label>
-  <label>Birth date <input type="date" name="bdate" required></label>
-  <label>Birth time <input type="time" name="btime">
-    <label class="inline"><input type="checkbox" name="time_unknown"> time unknown (noon stand-in — houses hidden)</label>
-  </label>
-  <label>Birth place <input name="bplace" id="bplace" placeholder="City, State, Country" required>
-    <div id="geocode-out" class="fine"></div>
-  </label>
-  <label>Species you chase <input name="species" value="largemouth bass"></label>
-  <label>Your lures/rigs (comma-separated) <input name="arsenal" placeholder="drop shot, wacky senko, chatterbait, squarebill"></label>
-  <label>Home water
-    <select name="home_lake">
-      {% for l in lakes %}<option value="{{ l.id }}">{{ l.name }}</option>{% endfor %}
-    </select>
-  </label>
-  <label>Sky layer presentation
-    <select name="voice">
-      <option value="almanac">almanac — moon-sign lore (default)</option>
-      <option value="fisher">fisher — zero astrology</option>
-      <option value="astro">astro — full natal transits</option>
-    </select>
-  </label>
-  <div class="cta">
-    <button type="submit">Save profile to this browser</button>
-    <a class="btn ghost" id="download" download="fishwitch-profile.json" hidden>Download profile.json</a>
-    <button type="button" id="clear" class="ghost" hidden>Forget profile</button>
-  </div>
+  <fieldset class="istep on" data-step="1">
+    <legend>1 · The angler</legend>
+    <label>Your name <input name="name" required placeholder="what your friends call you"></label>
+    <label>Species you're usually after
+      <input name="species" list="species-suggestions" value="largemouth bass">
+      <datalist id="species-suggestions">
+        <option value="largemouth bass"><option value="smallmouth bass">
+        <option value="trout"><option value="rainbow trout"><option value="brown trout">
+        <option value="catfish"><option value="channel catfish">
+        <option value="panfish"><option value="crappie"><option value="bluegill">
+      </datalist>
+    </label>
+    <label>Home water
+      <select name="home_lake">
+        {% for l in lakes %}<option value="{{ l.id }}">{{ l.name }}{% if l.region %} — {{ l.region }}{% endif %}</option>{% endfor %}
+      </select>
+    </label>
+    <div class="wiz-nav"><span></span><button type="button" class="next">Next →</button></div>
+  </fieldset>
+
+  <fieldset class="istep" data-step="2">
+    <legend>2 · The sky layer</legend>
+    <p class="fine">Birth data powers the astrology layer — solunar feeding windows are computed
+    from pure astronomy either way. This is identity-grade personal data, so it stays in your
+    browser and goes nowhere else. Prefer zero astrology? Choose the <em>fisher</em> voice and
+    everything birth-related is skipped at render time.</p>
+    <label>Birth date <input type="date" name="bdate" required></label>
+    <label>Birth time <input type="time" name="btime">
+      <label class="inline"><input type="checkbox" name="time_unknown"> time unknown (noon stand-in — houses/Asc hidden)</label>
+    </label>
+    <label>Birth place <input name="bplace" id="bplace" placeholder="City, State — e.g. Santa Rosa, CA" required>
+      <div id="geocode-out" class="fine"></div>
+    </label>
+    <div class="voice-cards" role="radiogroup" aria-label="sky layer presentation">
+      <label class="vcard"><input type="radio" name="voice" value="almanac" checked>
+        <strong>Almanac</strong><span>moon signs &amp; feeding windows, old-timer style</span></label>
+      <label class="vcard"><input type="radio" name="voice" value="fisher">
+        <strong>Fisher</strong><span>plain fishing English, zero astrology</span></label>
+      <label class="vcard"><input type="radio" name="voice" value="astro">
+        <strong>Astro</strong><span>full natal transits, for the initiated</span></label>
+    </div>
+    <div class="wiz-nav"><button type="button" class="back">← Back</button><button type="button" class="next">Next →</button></div>
+  </fieldset>
+
+  <fieldset class="istep" data-step="3">
+    <legend>3 · The tackle box</legend>
+    <label>Your lures/rigs — comma-separated, in your own words
+      <input name="arsenal" list="arsenal-suggestions"
+             placeholder="drop shot, wacky senko, chatterbait, squarebill">
+      <datalist id="arsenal-suggestions">
+        {% for c in suggestions %}<option value="{{ c }}">{% endfor %}
+      </datalist>
+      <div class="fine">Reports pick from what you actually own, matched against the
+      <a href="/kb">cited knowledge base</a>. Unknown names still work — they just won't get
+      condition-scored.</div>
+    </label>
+    <div class="wiz-nav"><button type="button" class="back">← Back</button><span></span></div>
+    <div class="cta">
+      <button type="submit">Save profile to this browser</button>
+      <a class="btn ghost" id="download" download="fishwitch-profile.json" hidden>Download profile.json</a>
+      <a class="btn ghost" id="first-report" href="/report" hidden>See your first report →</a>
+      <button type="button" id="clear" class="ghost" hidden>Forget profile</button>
+    </div>
+  </fieldset>
 </form>
 <p class="fine" id="status"></p>
 {% endblock %}

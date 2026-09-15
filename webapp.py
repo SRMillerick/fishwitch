@@ -244,6 +244,7 @@ def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
             voice=voice or profile.get("astro_display") or "almanac",
             wx=wx, hist=hist)
     body = _md.markdown(to_markdown(m), extensions=["tables"])
+    prime = m.get("prime")
     rods = []
     for c in m["rods"]:
         mfg = (c.get("manufacturer_specs") or {})
@@ -257,7 +258,10 @@ def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
                    offers=offers.resolve(c["id"]))
         rods.append(rod)
     return dict(html=body, overall=m["scores"]["overall"],
-                lake=lake["name"], at=at, rods=rods)
+                lake=lake["name"], at=at, rods=rods,
+                prime_t=prime["start"] if prime else None,
+                prime_lab=(prime["light"] if prime else ""),
+                picks=[c["label"] for c, _, _ in (prime["picks"] if prime else [])][:2])
 
 
 def _report_response(payload: dict, anonymous: bool) -> dict:
@@ -287,7 +291,17 @@ def _report_response(payload: dict, anonymous: bool) -> dict:
 # ── pages ────────────────────────────────────────────────────────────────────
 @app.route("/")
 def index():
-    return render_template("index.html", lakes=lakes_summary(), local=LOCAL)
+    teaser = None
+    try:
+        first = lakes_summary()[0]["id"] if lakes_summary() else None
+        tonight = datetime.now().replace(hour=18, minute=0, second=0, microsecond=0)
+        out = _report_response(dict(lake=first, at=tonight.strftime("%Y-%m-%d %H:%M"),
+                                     hours="2.5", voice="almanac"), anonymous=True)
+        if "error" not in out:
+            teaser = out
+    except Exception:
+        pass
+    return render_template("index.html", lakes=lakes_summary(), local=LOCAL, teaser=teaser)
 
 
 @app.route("/report")
@@ -383,7 +397,15 @@ def kb_page():
 
 @app.route("/interview")
 def interview_page():
-    return render_template("interview.html", lakes=lakes_summary(), local=LOCAL)
+    sugg: set[str] = set()
+    for sp in ("bass", "trout", "catfish", "panfish"):
+        for c in tx.catalog(sp):
+            sugg.add(c["label"])
+            for a in c.get("aliases", [])[:3]:
+                if len(a) > 3:
+                    sugg.add(a)
+    return render_template("interview.html", lakes=lakes_summary(),
+                           suggestions=sorted(sugg), local=LOCAL)
 
 
 @app.route("/review")

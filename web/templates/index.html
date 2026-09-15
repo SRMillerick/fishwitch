@@ -1,6 +1,19 @@
 {% extends "base.html" %}
 {% block title %}the front door{% endblock %}
 {% block content %}
+{% if teaser %}
+<section class="teaser">
+  <div class="t-main">
+    <div class="t-label">tonight · {{ teaser.lake }}</div>
+    <div class="t-score">{{ teaser.overall }}<span>/10</span></div>
+  </div>
+  <div class="t-side">
+    {% if teaser.prime_t %}<div>prime window ~{{ teaser.prime_t.strftime('%-I:%M %p') }} <span class="fine">({{ teaser.prime_lab }})</span></div>{% endif %}
+    {% if teaser.picks %}<div>first rod: <strong>{{ teaser.picks[0] }}</strong></div>{% endif %}
+    <a href="/report">full report →</a>
+  </div>
+</section>
+{% endif %}
 <section class="hero">
   <h1>The sky decides when.<br>The lake decides where.<br>The tackle box decides how.</h1>
   <p>fishwitch turns astronomy, weather history, and a cited lure knowledge base

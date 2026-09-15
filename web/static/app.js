@@ -128,11 +128,22 @@ if (menu) {
   document.addEventListener("click", (ev) => {  // close on outside click
     if (menu.open && !menu.contains(ev.target)) menu.open = false;
   });
+  document.addEventListener("keydown", (ev) => {  // and on Escape
+    if (ev.key === "Escape" && menu.open) menu.open = false;
+  });
 }
 
 // ── report form: POST the active profile with the query ────────────────────
 const form = document.getElementById("report-form");
 if (form) {
+  { // whose profile will this render use? say so up front
+    const note = document.getElementById("profile-note");
+    const p0 = getActive();
+    if (note) note.className = "pill " + (p0 ? "on" : "");
+    if (note) note.textContent = p0
+      ? "⚓ rendering as " + p0.name + " — transits + arsenal · profile stays in this browser"
+      : "rendering anonymously — build a profile for transits + your arsenal →";
+  }
   form.addEventListener("submit", async (ev) => {
     ev.preventDefault();
     const f = new FormData(form);
@@ -192,6 +203,15 @@ function renderTackle(rods) {
 const iv = document.getElementById("interview");
 if (iv) {
   let picked = null;
+  let step = 1;
+  const steps = [...iv.querySelectorAll(".istep")];
+
+  const showStep = (n) => {
+    step = n;
+    steps.forEach(s => s.classList.toggle("on", +s.dataset.step === n));
+    document.querySelectorAll("#wiz-progress li").forEach(li =>
+      li.classList.toggle("on", +li.dataset.step === n));
+  };
 
   // prefill from the active profile (edit mode)
   const cur = getActive();
@@ -238,6 +258,37 @@ if (iv) {
     }
   });
 
+  const stepValid = (n) => {
+    if (n === 1) {
+      if (!(iv.querySelector('[name="name"]').value || "").trim())
+        return "your name (first is fine) keeps profiles separate in this browser";
+    }
+    if (n === 2) {
+      const bd = iv.querySelector('[name="bdate"]').value;
+      const bt = iv.querySelector('[name="btime"]').value;
+      const unk = iv.querySelector('[name="time_unknown"]').checked;
+      const pl = (iv.querySelector('[name="bplace"]').value || "").trim();
+      if (!bd) return "birth date powers the sky layer — even a rough year works";
+      if (!bt && !unk) return "birth time — or tick ‘time unknown’";
+      if (pl && !picked) return "place not matched yet — wait for the → line, or retype (City, State)";
+    }
+    return null;
+  };
+  const tryNext = () => {
+    const err = stepValid(step);
+    if (err) { document.getElementById("status").textContent = "⚠ " + err; return; }
+    document.getElementById("status").textContent = "";
+    showStep(Math.min(step + 1, 3));
+  };
+  iv.querySelectorAll(".next").forEach(b => b.addEventListener("click", tryNext));
+  iv.querySelectorAll(".back").forEach(b => b.addEventListener("click", () =>
+    showStep(Math.max(step - 1, 1))));
+  iv.addEventListener("keydown", (ev) => {   // Enter advances instead of submitting early
+    if (ev.key === "Enter" && ev.target.tagName !== "BUTTON" && step < 3) {
+      ev.preventDefault(); tryNext();
+    }
+  });
+
   iv.addEventListener("submit", (ev) => {
     ev.preventDefault();
     const f = new FormData(iv);
@@ -269,12 +320,13 @@ if (iv) {
     const blob = new Blob([JSON.stringify(p, null, 2)], { type: "application/json" });
     const dl = document.getElementById("download");
     dl.href = URL.createObjectURL(blob); dl.hidden = false;
+    document.getElementById("first-report").hidden = false;
     document.getElementById("clear").hidden = false;
     const btn = iv.querySelector('button[type="submit"]');
     if (btn) btn.textContent = "✅ Saved — " + p.name + "'s profile lives in this browser";
     document.getElementById("status").textContent =
-      "✅ " + p.name + "'s profile saved to this browser's vault (and downloadable). " +
-      "It is sent only to render reports — never stored anywhere else. Switch anglers from the menu, top right.";
+      "✅ " + p.name + " is in this browser's vault (and downloadable). " +
+      "Your next report will use it automatically — nothing is stored anywhere else. Switch anglers from the menu, top right.";
   });
 
   const clearBtn = document.getElementById("clear");
