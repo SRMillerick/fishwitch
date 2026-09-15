@@ -75,5 +75,22 @@ td, th { border-bottom: 1px solid var(--line); padding: .45rem .6rem; vertical-a
 .mark.miss { color: #e07a5f; } .mark.na, .mark.benched { color: var(--dim); }
 .chip { margin-left: auto; font-size: .8rem; color: var(--ok);
   border: 1px solid var(--ok); border-radius: 10px; padding: .1rem .6rem; }
+
+/* profile vault menu */
+.menu { margin-left: auto; position: relative; font-size: .85rem; }
+.menu summary { cursor: pointer; color: var(--dim); border: 1px solid var(--line);
+  border-radius: 12px; padding: .15rem .7rem; list-style: none; user-select: none; }
+.menu summary::-webkit-details-marker { display: none; }
+.menu[open] summary { color: var(--accent); border-color: var(--accent); }
+.menu-body { position: absolute; right: 0; top: calc(100% + 6px); min-width: 15rem;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  padding: .4rem; z-index: 50; box-shadow: 0 8px 24px rgba(0,0,0,.45); }
+.mrow { display: flex; justify-content: space-between; align-items: center; gap: .6rem;
+  padding: .35rem .5rem; border-radius: 5px; cursor: pointer; color: var(--ink); }
+.mrow:hover { background: rgba(87,179,212,.12); }
+.mrow.on { color: var(--ok); }
+.micons a { color: var(--dim); text-decoration: none; margin-left: .45rem; font-size: .9rem; }
+.micons a:hover { color: var(--accent); }
+.mhint { padding: .35rem .5rem; color: var(--dim); font-size: .75rem; line-height: 1.4; }
 code { background: var(--panel); padding: .05rem .35rem; border-radius: 4px; font-size: .85em; }
 .tackle { border-top: 1px dashed var(--line); margin-top: 1.5rem; padding-top: .5rem; }

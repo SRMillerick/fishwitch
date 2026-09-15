@@ -98,10 +98,11 @@ iv = iv.replace('<div class="cta">',
                 'Profile creation and personal reports need the live app — '
                 'where your birth data stays in your browser and never touches a disk.</p>\n  <div class="cta">', 1)
 iv = iv.replace('<button type="submit">', '<button type="submit" disabled>')
-# no live APIs on a static host: kill the geocode field + the script that would call them
+# no live APIs on a static host: birth-place field goes readonly (its id is dropped so
+# the geocode listener safely no-ops; the vault menu itself still works — import/switch
+# are pure client-side, and stashed profiles carry over to the live app in this browser)
 iv = iv.replace('<input name="bplace" id="bplace" placeholder="City, State, Country" required>',
                 '<input name="bplace" placeholder="City, State, Country — geocoding runs on the live app" readonly>')
-iv = iv.replace('<script src="/static/app.js"></script>', "")
 save("interview.html", iv)
 
 (OUT / "robots.txt").write_text("User-agent: *\nAllow: /\n")
