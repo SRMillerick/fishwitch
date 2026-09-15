@@ -113,4 +113,5 @@ save("interview.html", iv)
 
 (OUT / "robots.txt").write_text("User-agent: *\nAllow: /\n")
 (OUT / ".nojekyll").write_text("")
+(OUT / "CNAME").write_text("baromoon.com\n")   # custom domain — survives every rebuild
 print("done — publish with: ./publish-site")
