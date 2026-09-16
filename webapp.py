@@ -488,6 +488,26 @@ def _ledger(home: dict, days: int, species: str | None, profile: dict | None,
     return rows[:limit]
 
 
+@app.route("/about")
+def about_page():
+    return render_template("about.html", local=LOCAL)
+
+
+@app.route("/privacy")
+def privacy_page():
+    return render_template("privacy.html", local=LOCAL)
+
+
+@app.route("/disclosure")
+def disclosure_page():
+    return render_template("disclosure.html", local=LOCAL)
+
+
+@app.route("/contact")
+def contact_page():
+    return render_template("contact.html", local=LOCAL)
+
+
 @app.route("/kb")
 def kb_page():
     species = tx.normalize_species(request.args.get("species") or "bass")

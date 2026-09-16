@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}privacy{% endblock %}
+{% block content %}
+<h1>Privacy</h1>
+<p class="smallcaps">the short version: we can't lose what we never keep</p>
+
+<h2 class="rule-double">What we store about you</h2>
+<p><strong>Nothing.</strong> baromoon has no accounts, no sign-ups, and no
+user database. Reports are computed on demand and discarded.</p>
+
+<h2 class="rule-double">Your profile (birth data)</h2>
+<p>If you personalize your reports, the profile — including birth date, time,
+and place, which power the astrology layer — is stored <strong>only in your
+own browser's local storage</strong>. It is sent to our server solely to
+compute a report you requested, in memory, and is never written to disk,
+never logged, and never shared. You can export it as a file, or delete it
+from the profile menu at any time. If you never create one, none of this
+exists.</p>
+
+<h2 class="rule-double">What the server sees</h2>
+<ul class="plain">
+  <li>Standard request logs (IP address, timestamp, page) for rate limiting
+  and abuse prevention. Rotated routinely.</li>
+  <li>The contents of report requests — lake, time window, and (if you send
+  one) your profile — held in memory for the duration of the render only.</li>
+</ul>
+
+<h2 class="rule-double">Third parties</h2>
+<ul class="plain">
+  <li><strong>Weather &amp; geocoding</strong> (Open-Meteo, OSM Nominatim):
+  called server-side by us; your browser never talks to them directly for
+  report data.</li>
+  <li><strong>Web fonts</strong>: pages load Cormorant Garamond from Google
+  Fonts, which will see your IP and requested URL. (We plan to self-host the
+  font to remove even this.)</li>
+  <li><strong>Retailer links</strong>: if you click a tackle link, you leave
+  for the retailer's site and their policies apply. Affiliate links, where
+  present, are labeled — see <a href="/disclosure">disclosure</a>.</li>
+</ul>
+
+<h2 class="rule-double">Cookies</h2>
+<p>None. Local storage holds your profile vault at your discretion; nothing
+tracks you across sites.</p>
+
+<h2 class="rule-double">Contact</h2>
+<p>Privacy questions: <a href="mailto:hello@baromoon.com">hello@baromoon.com</a>.</p>
+{% endblock %}
