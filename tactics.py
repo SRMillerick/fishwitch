@@ -76,12 +76,15 @@ def load_line() -> dict:
     return _LINE
 
 
-def knots_for(entry_id: str, limit: int = 2) -> list[dict]:
-    """Knots whose CITED use fits this KB entry. The pick→knot map lives in
-    kb/knots.json (recommend.by_entry) and is labelled editorial there; the knot
-    facts themselves are quoted from the cited guides."""
+def knots_for(entry_id: str, limit: int = 2, known: set | None = None) -> list[dict]:
+    """Knots whose CITED use fits this KB entry. If `known` (the knot ids this
+    angler actually ties) is given, their knots come first; any others the map
+    suggests are kept as "worth learning". The pick→knot map lives in
+    kb/knots.json (labelled editorial there); the knot facts are cited quotes."""
     d = load_knots()
     ids = (d.get("recommend", {}).get("by_entry", {}) or {}).get(entry_id, [])
+    if known:
+        ids = [i for i in ids if i in known] + [i for i in ids if i not in known]
     by_id = {k["id"]: k for k in d.get("knots", [])}
     out = []
     for i in ids:
@@ -89,6 +92,35 @@ def knots_for(entry_id: str, limit: int = 2) -> list[dict]:
             out.append(by_id[i])
         if len(out) >= limit:
             break
+    return out
+
+
+def match_knots(items: list[str]) -> list[dict]:
+    """Map an angler's free-text knot list to knot entities (exact first,
+    then substring — same two-pass rule as match_arsenal)."""
+    knots = load_knots().get("knots", [])
+    out = []
+    for item in items or []:
+        s = (item or "").strip().lower()
+        if not s:
+            continue
+        hit = None
+        for k in knots:
+            names = [k["id"].lower(), k["label"].lower()] + [a.lower() for a in k.get("aliases", [])]
+            if s in names:
+                hit = k
+                break
+        if hit is None:
+            for k in knots:
+                names = [k["id"].lower(), k["label"].lower()] + [a.lower() for a in k.get("aliases", [])]
+                for n in names:
+                    if n in s or s in n:
+                        hit = k
+                        break
+                if hit:
+                    break
+        if hit and hit["id"] not in [o["id"] for o in out]:
+            out.append(hit)
     return out
 
 

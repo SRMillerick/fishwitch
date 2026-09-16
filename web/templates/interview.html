@@ -70,6 +70,15 @@ baromoon's server never stores it; it's used in-memory to render your reports, t
       <a href="/kb">cited knowledge base</a>. Unknown names still work — they just won't get
       condition-scored.</div>
     </label>
+    <label>Knots you tie — comma-separated
+      <input name="knots" list="knot-suggestions"
+             placeholder="palomar, uni, snell, crazy alberto, san diego jam">
+      <datalist id="knot-suggestions">
+        {% for k in knot_suggestions %}<option value="{{ k }}">{% endfor %}
+      </datalist>
+      <div class="fine">Reports prefer the knots you tie (cited from the knot guides) and flag a
+      better fit you don't tie yet. Leave blank for the house defaults.</div>
+    </label>
     <div class="wiz-nav"><button type="button" class="back">← Back</button><span></span></div>
     <div class="cta">
       <button type="submit">Save profile to this browser</button>

@@ -170,6 +170,13 @@ def _client_profile(payload: dict) -> tuple[dict, list[str]]:
             errs.append("arsenal: list of ≤ 30 strings, each ≤ 60 chars")
         else:
             out["arsenal"] = ars
+    kn = p.get("knots")
+    if kn is not None:
+        if (not isinstance(kn, list) or len(kn) > 30
+                or not all(isinstance(a, str) and 0 < len(a) <= 60 for a in kn)):
+            errs.append("knots: list of ≤ 30 strings, each ≤ 60 chars")
+        else:
+            out["knots"] = kn
     hl = p.get("home_lake")
     if hl is not None:
         if not isinstance(hl, str) or len(hl) > 60:
@@ -537,7 +544,9 @@ def interview_page():
                 if len(a) > 3:
                     sugg.add(a)
     return render_template("interview.html", lakes=lakes_summary(),
-                           suggestions=sorted(sugg), local=LOCAL)
+                           suggestions=sorted(sugg),
+                           knot_suggestions=sorted({k["label"] for k in tx.load_knots().get("knots", [])}),
+                           local=LOCAL)
 
 
 @app.route("/review")

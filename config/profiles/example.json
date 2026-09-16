@@ -10,7 +10,21 @@
     "tz": "UTC"
   },
   "species": "largemouth bass",
-  "arsenal": ["drop shot", "wacky senko", "chatterbait", "squarebill", "walking bait", "jig"],
+  "arsenal": [
+    "drop shot",
+    "wacky senko",
+    "chatterbait",
+    "squarebill",
+    "walking bait",
+    "jig"
+  ],
   "home_lake": "hidden-valley-lake-ca",
-  "astro_display": "almanac"
+  "astro_display": "almanac",
+  "knots": [
+    "crazy alberto",
+    "snell",
+    "palomar",
+    "uni",
+    "san diego jam"
+  ]
 }

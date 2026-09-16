@@ -147,6 +147,11 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         match = tx.match_arsenal(["chatterbait", "squarebill", "drop shot", "senko",
                                   "jig", "walking bait"], species)
 
+    # the angler's knot repertoire (like the arsenal): their knots come first,
+    # and any better-fit knot they don't tie is surfaced as "worth learning"
+    angler_knots = tx.match_knots(profile.get("knots") or [])
+    known_knot_ids = {k["id"] for k in angler_knots}
+
     events = []
     events.append((start, "launch", "session"))
     events.append((end, "pack out", "session"))
@@ -243,12 +248,16 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
     cat_by_id = {c["id"]: c for c, _ in match["matched"]}
     rods = [cat_by_id[i] for i, _ in sorted(agg.items(), key=lambda kv: -kv[1])][:5]
 
-    # knots for the rods actually recommended (cited facts; see kb/knots.json)
+    # knots for the rods actually recommended (cited facts; see kb/knots.json);
+    # prefer the angler's own knots, surface better fits they don't tie
     knots, _seen_knots = [], set()
     for c in rods:
-        for k in tx.knots_for(c["id"], limit=2):
+        for k in tx.knots_for(c["id"], limit=2, known=known_knot_ids or None):
             if k["id"] not in _seen_knots:
-                _seen_knots.add(k["id"]); knots.append(k)
+                _seen_knots.add(k["id"])
+                kk = dict(k)
+                kk["mine"] = (not known_knot_ids) or (k["id"] in known_knot_ids)
+                knots.append(kk)
     knots = knots[:3]
     knot_notes = (tx.load_knots().get("repertoire", {}) or {}).get("practices", [])
 
@@ -300,7 +309,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         natal=natal, aspects=(aspects or [])[:8], perfecting=perfecting,
         voc=voc, moon_note=mn, resonance=resonance, match=match,
         blocks=blocks, rods=rods, prime=prime, prime_score=prime_s, utc_off=wx.utc_offset,
-        knots=knots, knot_notes=knot_notes, gap=gap,
+        knots=knots, knot_notes=knot_notes, angler_knots=angler_knots, gap=gap,
         logbook=lb.summary_for(lake.get("name", ""), angler=profile.get("name")),
         lake_state=lake_state, days_since_turnover=days_since_turnover,
         heat_streak=streak, state_basis=state_basis, access_note=acc_note,
@@ -538,15 +547,17 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
     L.append("")
 
     if m.get("knots"):
-        L.append(f"## {e('🪢 ')}Knots for these rigs")
+        head = "Your knots for these rigs" if m.get("angler_knots") else "Knots for these rigs"
+        L.append(f"## {e('🪢 ')}{head}")
         L.append("*Quoted from the cited knot guides — facts, not folklore.*")
         for k in m["knots"]:
             q = next((c["quote"] for c in k.get("citations", []) if c.get("quote")), "")
             src = next((c["source"] for c in k.get("citations", []) if c.get("quote")), "")
             conn = k.get("connection")
             conn = ", ".join(conn) if isinstance(conn, list) else (conn or "")
+            extra = "" if k.get("mine", True) else " — *not in your repertoire; worth learning*"
             L.append(f"- **{k['label']}**" + (f" ({conn})" if conn else "")
-                     + (f" — {q}" if q else "") + (f" *({src})*" if src else ""))
+                     + (f" — {q}" if q else "") + (f" *({src})*" if src else "") + extra)
         if m.get("knot_notes"):
             L.append("*Practice: " + "; ".join(m["knot_notes"]) + ".*")
         L.append("")

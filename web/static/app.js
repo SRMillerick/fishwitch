@@ -54,6 +54,9 @@ function profileError(p) {
   if (p.arsenal !== undefined && (!Array.isArray(p.arsenal) || p.arsenal.length > 30
       || p.arsenal.some(a => typeof a !== "string" || a.length > 60)))
     return "arsenal: list of ≤ 30 strings, each ≤ 60 chars";
+  if (p.knots !== undefined && (!Array.isArray(p.knots) || p.knots.length > 30
+      || p.knots.some(a => typeof a !== "string" || a.length > 60)))
+    return "knots: list of ≤ 30 strings, each ≤ 60 chars";
   if (p.astro_display !== undefined && !["fisher", "almanac", "astro"].includes(p.astro_display))
     return "astro_display: fisher | almanac | astro";
   return null;
@@ -293,6 +296,7 @@ if (iv) {
     }
     iv.querySelector('[name="species"]').value = cur.species || "largemouth bass";
     iv.querySelector('[name="arsenal"]').value = (cur.arsenal || []).join(", ");
+    iv.querySelector('[name="knots"]').value = (cur.knots || []).join(", ");
     if (cur.home_lake) iv.querySelector('[name="home_lake"]').value = cur.home_lake;
     iv.querySelector('[name="voice"]').value = cur.astro_display || "almanac";
   }
@@ -371,6 +375,7 @@ if (iv) {
       },
       species: f.get("species") || "largemouth bass",
       arsenal: (f.get("arsenal") || "").split(",").map(s => s.trim()).filter(Boolean),
+      knots: (f.get("knots") || "").split(",").map(s => s.trim()).filter(Boolean),
       home_lake: f.get("home_lake"),
       astro_display: f.get("voice") || "almanac",
       created: new Date().toISOString(),
