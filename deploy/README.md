@@ -25,8 +25,10 @@ ssh root@<VPS_IP> 'bash -s' < deploy/provision.sh
 ```
 
 Installs: python3-venv, git, Caddy (auto-HTTPS), clones the public repo into
-/srv/baromoon, creates the venv, installs deps, installs the systemd service
-(gunicorn on 127.0.0.1:7700, Caddy proxies 443 → 7700 with the domain).
+`/srv/fishwitch` — **the directory name is load-bearing**: the repo root is the
+`fishwitch` package and imports resolve relative to it, so `/srv/baromoon` (an
+earlier name) breaks the app. Then the venv, deps, systemd service (gunicorn on
+127.0.0.1:7700, Caddy proxies 443 → 7700).
 Caddy fetches the Let's Encrypt cert on first hit — no certbot config.
 
 ## 4. Deploy updates (any time, from ~/fishwitch)

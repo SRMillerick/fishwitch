@@ -315,7 +315,7 @@ def _perf_local(m: dict, a: dict) -> datetime:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-def to_markdown(m: dict, emoji: bool = True) -> str:
+def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
     def e(prefix: str) -> str:
         return prefix if emoji else ""
     voice = m["voice"]
@@ -528,17 +528,31 @@ def to_markdown(m: dict, emoji: bool = True) -> str:
         L.append(f"- *(no match in the KB for: {', '.join(unmatched)} — still bring them)*")
     L.append("")
 
-    if m.get("gap"):
-        L.append(f"## {e('🧭 ')}The gap in your tackle box")
-        L.append("*Scored by the same pipe for these exact conditions — you don't own these yet. "
-                 "Offers attach after ranking, never before.*")
-        for c, s, why in m["gap"]:
+    if show_gap and m.get("gap"):
+        products = [g for g in m["gap"] if g[0].get("kind", "product") != "rig"]
+        rigs = [g for g in m["gap"] if g[0].get("kind", "product") == "rig"]
+
+        def _gap_line(c, s, why):
             p = c["provenance"]
             badge = "✅" if p.get("confidence") in ("verified", "sourced") else "🟡"
-            L.append(f"- {badge} **{c['label']}** — scores {s:.1f} here"
-                     + (f" · {'; '.join(why)}" if why else "")
-                     + (f" · *{c['note']}*" if c.get("note") else ""))
-        L.append("")
+            return (f"- {badge} **{c['label']}** — scores {s:.1f} here"
+                    + (f" · {'; '.join(why)}" if why else "")
+                    + (f" · *{c['note']}*" if c.get("note") else ""))
+
+        if products:
+            L.append(f"## {e('🧭 ')}The gap in your tackle box")
+            L.append("*Scored by the same pipe for these exact conditions — you don't own these yet. "
+                     "Offers attach after ranking, never before.*")
+            for c, s, why in products:
+                L.append(_gap_line(c, s, why))
+            L.append("")
+        if rigs:
+            L.append(f"## {e('🧵 ')}Rig & technique gaps")
+            L.append("*Rigging patterns these conditions favor that aren't in your box — built "
+                     "from hooks, weights, and plastics you mostly own. A how-to, not a purchase.*")
+            for c, s, why in rigs:
+                L.append(_gap_line(c, s, why))
+            L.append("")
 
     ctx = dict(wind_mph=m["weather"]["start"]["wind_mph"], cloud=m["weather"]["start"]["cloud"],
                moon_fruitful=(m["moon_note"]["fruitful"] if m["moon_note"] else None),

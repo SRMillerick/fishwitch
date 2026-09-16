@@ -6,6 +6,7 @@
       "label": "Walking topwater (Spook/110)",
       "style": "reaction",
       "depth": "shallow",
+      "kind": "product",
       "aliases": [
         "walker",
         "spook",
@@ -51,6 +52,7 @@
       "label": "Whopper Plopper / prop bait",
       "style": "reaction",
       "depth": "shallow",
+      "kind": "product",
       "aliases": [
         "plopper",
         "whopper",
@@ -93,6 +95,7 @@
       "label": "Popper",
       "style": "reaction",
       "depth": "shallow",
+      "kind": "product",
       "aliases": [
         "popper",
         "pop-r",
@@ -129,6 +132,7 @@
       "label": "Hollow-body frog",
       "style": "reaction",
       "depth": "shallow",
+      "kind": "product",
       "aliases": [
         "frog",
         "hollow body"
@@ -184,6 +188,7 @@
       "label": "Buzzbait",
       "style": "reaction",
       "depth": "shallow",
+      "kind": "product",
       "aliases": [
         "buzzbait",
         "buzz"
@@ -223,6 +228,7 @@
       "label": "Chatterbait (bladed jig)",
       "style": "reaction",
       "depth": "shallow",
+      "kind": "product",
       "aliases": [
         "chatterbait",
         "chatter",
@@ -265,6 +271,7 @@
       "label": "Spinnerbait",
       "style": "reaction",
       "depth": "shallow",
+      "kind": "product",
       "aliases": [
         "spinnerbait",
         "spinner bait",
@@ -304,6 +311,7 @@
       "label": "Squarebill crankbait",
       "style": "reaction",
       "depth": "shallow",
+      "kind": "product",
       "aliases": [
         "squarebill",
         "square bill",
@@ -346,6 +354,7 @@
       "label": "Mid-depth crankbait",
       "style": "reaction",
       "depth": "mid",
+      "kind": "product",
       "aliases": [
         "crankbait",
         "crank",
@@ -388,6 +397,7 @@
       "label": "Jerkbait",
       "style": "reaction",
       "depth": "mid",
+      "kind": "product",
       "aliases": [
         "jerkbait",
         "jerk bait",
@@ -428,6 +438,7 @@
       "label": "Jig (+craw trailer)",
       "style": "power",
       "depth": "mid",
+      "kind": "product",
       "aliases": [
         "jig",
         "flipping jig",
@@ -472,6 +483,7 @@
       "label": "Texas-rigged worm",
       "style": "finesse",
       "depth": "mid",
+      "kind": "rig",
       "aliases": [
         "texas rig",
         "t-rig",
@@ -516,6 +528,7 @@
       "label": "Drop shot",
       "style": "finesse",
       "depth": "mid",
+      "kind": "rig",
       "aliases": [
         "drop shot",
         "dropshot",
@@ -558,6 +571,7 @@
       "label": "Wacky-rigged Senko",
       "style": "finesse",
       "depth": "mid",
+      "kind": "rig",
       "aliases": [
         "senko",
         "wacky",
@@ -599,6 +613,7 @@
       "label": "Ned rig",
       "style": "finesse",
       "depth": "shallow",
+      "kind": "rig",
       "aliases": [
         "ned rig",
         "ned",
@@ -637,6 +652,7 @@
       "label": "Carolina rig",
       "style": "finesse",
       "depth": "deep",
+      "kind": "rig",
       "aliases": [
         "carolina rig",
         "c-rig",
@@ -676,6 +692,7 @@
       "label": "Swimbait",
       "style": "power",
       "depth": "mid",
+      "kind": "product",
       "aliases": [
         "swimbait",
         "swim bait",
@@ -741,6 +758,7 @@
       "label": "Neko rig (nail-weight finesse)",
       "style": "finesse",
       "depth": "mid",
+      "kind": "rig",
       "aliases": [
         "neko",
         "neko rig",

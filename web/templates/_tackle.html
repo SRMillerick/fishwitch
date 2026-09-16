@@ -25,12 +25,15 @@
 </section>
 {% endif %}
 {% if out and out.gap %}
+{% set gap_products = out.gap | rejectattr('kind', 'equalto', 'rig') | list %}
+{% set gap_rigs = out.gap | selectattr('kind', 'equalto', 'rig') | list %}
+{% if gap_products %}
 <section class="tackle">
   <h2>🧭 The gap in your tackle box</h2>
   <p class="fine">Scored by the same pipe for these exact conditions — you don't own these yet.
   Links attach after ranking, never before.</p>
   <ul class="plain">
-  {% for g in out.gap %}
+  {% for g in gap_products %}
     <li>
       <span class="badge {% if g.verified %}ok{% else %}pend{% endif %}">{% if g.verified %}sourced{% else %}editorial{% endif %}</span>
       <strong>{{ g.label }}</strong> — scores {{ g.score }} here{% if g.why %} · <span class="fine">{{ g.why }}</span>{% endif %}
@@ -49,4 +52,17 @@
   {% endfor %}
   </ul>
 </section>
+{% endif %}
+{% if gap_rigs %}
+<section class="tackle">
+  <h2>🧵 Rig &amp; technique gaps</h2>
+  <p class="fine">Rigging patterns these conditions favor that aren't in your box — built from
+  hooks, weights, and plastics you mostly own. A how-to, not a purchase.</p>
+  <ul class="plain">
+  {% for g in gap_rigs %}
+    <li><span class="badge">rig</span> <strong>{{ g.label }}</strong> — scores {{ g.score }} here{% if g.why %} · <span class="fine">{{ g.why }}</span>{% endif %}</li>
+  {% endfor %}
+  </ul>
+</section>
+{% endif %}
 {% endif %}

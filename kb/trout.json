@@ -6,6 +6,7 @@
       "label": "Inline spinner / spoon (kastmaster)",
       "style": "reaction",
       "depth": "mid",
+      "kind": "product",
       "aliases": [
         "kastmaster",
         "spinner",
@@ -46,6 +47,7 @@
       "label": "Powerbait / floating bait off bottom",
       "style": "finesse",
       "depth": "mid",
+      "kind": "product",
       "aliases": [
         "powerbait",
         "power bait",
@@ -84,6 +86,7 @@
       "label": "Fly (wooly bugger / midge)",
       "style": "finesse",
       "depth": "shallow",
+      "kind": "product",
       "aliases": [
         "fly",
         "fly rod",

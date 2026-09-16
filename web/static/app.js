@@ -203,7 +203,7 @@ if (form) {
         : "Rendering anonymously — pick or create a profile for transits + arsenal.";
       out.innerHTML =
         '<div class="scorebar">overall <strong>' + j.overall + "/10</strong> · " + esc(j.lake) + "</div>"
-        + j.html + renderTackle(j.rods);
+        + j.html + renderTackle(j.rods) + renderGap(j.gap);
     } catch (e) {
       out.innerHTML = '<p class="error">render failed: ' + esc(String(e)) + "</p>";
     }
@@ -230,21 +230,37 @@ function renderTackle(rods) {
 
 function renderGap(gap) {
   if (!gap || !gap.length) return "";
-  let h = '<section class="tackle"><h2>🧭 The gap in your tackle box</h2>' +
-    '<p class="fine">Scored by the same pipe for these exact conditions — you don’t own these yet. ' +
-    'Links attach after ranking, never before.</p><ul class="plain">';
-  for (const g of gap) {
-    h += "<li><span class='badge " + (g.verified ? "ok" : "pend") + "'>" +
-      (g.verified ? "sourced" : "editorial") + "</span> <strong>" + esc(g.label) + "</strong> — scores " +
-      g.score + " here" + (g.why ? " · <span class='fine'>" + esc(g.why) + "</span>" : "");
-    if (g.product_url) h += " · <a href='" + g.product_url + "' target='_blank' rel='nofollow noopener'>" +
-      esc(g.product || "manufacturer page") + "</a>";
-    for (const o of (g.offers || [])) if (o.url)
-      h += " · <a href='" + o.url + "' target='_blank' rel='sponsored noopener'>" + esc(o.retailer) +
-        "</a> <span class='fine'>(" + esc(o.disclosure) + ")</span>";
-    h += "</li>";
+  const products = gap.filter(g => g.kind !== "rig");
+  const rigs = gap.filter(g => g.kind === "rig");
+  let h = "";
+  if (products.length) {
+    h += '<section class="tackle"><h2>🧭 The gap in your tackle box</h2>' +
+      '<p class="fine">Scored by the same pipe for these exact conditions — you don’t own these yet. ' +
+      'Links attach after ranking, never before.</p><ul class="plain">';
+    for (const g of products) {
+      h += "<li><span class='badge " + (g.verified ? "ok" : "pend") + "'>" +
+        (g.verified ? "sourced" : "editorial") + "</span> <strong>" + esc(g.label) + "</strong> — scores " +
+        g.score + " here" + (g.why ? " · <span class='fine'>" + esc(g.why) + "</span>" : "");
+      if (g.product_url) h += " · <a href='" + g.product_url + "' target='_blank' rel='nofollow noopener'>" +
+        esc(g.product || "manufacturer page") + "</a>";
+      for (const o of (g.offers || [])) if (o.url)
+        h += " · <a href='" + o.url + "' target='_blank' rel='sponsored noopener'>" + esc(o.retailer) +
+          "</a> <span class='fine'>(" + esc(o.disclosure) + ")</span>";
+      h += "</li>";
+    }
+    h += "</ul></section>";
   }
-  return h + "</ul></section>";
+  if (rigs.length) {
+    h += '<section class="tackle"><h2>🧵 Rig &amp; technique gaps</h2>' +
+      '<p class="fine">Rigging patterns these conditions favor that aren’t in your box — built from ' +
+      'hooks, weights, and plastics you mostly own. A how-to, not a purchase.</p><ul class="plain">';
+    for (const g of rigs) {
+      h += "<li><span class='badge'>rig</span> <strong>" + esc(g.label) + "</strong> — scores " +
+        g.score + " here" + (g.why ? " · <span class='fine'>" + esc(g.why) + "</span>" : "") + "</li>";
+    }
+    h += "</ul></section>";
+  }
+  return h;
 }
 const iv = document.getElementById("interview");
 if (iv) {

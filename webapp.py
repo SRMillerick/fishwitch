@@ -255,7 +255,7 @@ def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
     m = gen(profile, lake, at, hours=hours, species=species,
             voice=voice or profile.get("astro_display") or "almanac",
             wx=wx, hist=hist)
-    body = _md.markdown(to_markdown(m, emoji=False), extensions=["tables"])
+    body = _md.markdown(to_markdown(m, emoji=False, show_gap=False), extensions=["tables"])
     body = (body.replace("<table>", '<div class="table-scroll"><table>')
                 .replace("</table>", "</table></div>"))
     prime = m.get("prime")
@@ -275,6 +275,7 @@ def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
     for c, s, why in (m.get("gap") or []):
         mfg = (c.get("manufacturer_specs") or {})
         gap.append(dict(label=c["label"], score=round(s, 1),
+                        kind=c.get("kind", "product"),
                         why="; ".join(why),
                         verified=c["provenance"].get("confidence") in ("verified", "sourced"),
                         product=mfg.get("product_title"),

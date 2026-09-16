@@ -6,6 +6,7 @@
       "label": "Cut bait / chicken liver on bottom",
       "style": "finesse",
       "depth": "deep",
+      "kind": "rig",
       "aliases": [
         "cut bait",
         "liver",
@@ -51,6 +52,7 @@
       "label": "Live bait (bluegill/worm) under bobber",
       "style": "finesse",
       "depth": "mid",
+      "kind": "rig",
       "aliases": [
         "live bait",
         "bluegill",

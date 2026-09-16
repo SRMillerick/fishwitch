@@ -23,6 +23,24 @@ Every entry in `kb/<species>.json` carries `provenance`:
    `confidence != "verified"` shows 🟡 in reports and kb listings until a
    human checks it against the cited source.
 
+## Entry kind: product vs rig
+
+Every entry also carries `kind`:
+
+```json
+"kind": "product"   // product | rig
+```
+
+- **`product`** — a discrete purchasable item (crankbait, spinnerbait, skirted
+  jig, swimbait, spoon, fly). This is the affiliate surface: a gap here is
+  something to buy.
+- **`rig`** — a rigging pattern built from hooks, weights and plastics the
+  angler mostly owns (Texas, drop shot, wacky, Carolina, Neko, Ned; catfish
+  bait rigs). A gap here is a how-to/content opportunity, **not** a purchase.
+
+The report's gap lane renders the two separately and attaches no offers to
+`rig` entries.
+
 ## Candidate sources of truth to wire in (deterministic ingestion)
 - **Manufacturer product pages** (Rapala, Zoom, Yamamoto, Roboworm, Z-Man…):
   stated retrieve, depth range, rigging — the primary source for

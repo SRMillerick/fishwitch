@@ -6,6 +6,7 @@
       "label": "Bobber + jig (crappie tube)",
       "style": "finesse",
       "depth": "shallow",
+      "kind": "rig",
       "aliases": [
         "bobber",
         "jig",
@@ -44,6 +45,7 @@
       "label": "Small spinner (roostertail)",
       "style": "reaction",
       "depth": "shallow",
+      "kind": "product",
       "aliases": [
         "roostertail",
         "rooster tail",
