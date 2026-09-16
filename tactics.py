@@ -62,14 +62,24 @@ def match_arsenal(items: list[str], species="bass") -> dict:
     for item in items:
         s = item.strip().lower()
         hit = None
+        # pass 1: exact match (id / label / alias == item) — substring matching
+        # alone mis-binds short items ('jig' belongs to the jig entry, not to
+        # chatterbait's 'bladed jig' alias)
         for c in cats:
             names = [c["label"].lower(), c["id"]] + [a.lower() for a in c["aliases"]]
-            for n in names:
-                if n in s or s in n:
-                    hit = c
-                    break
-            if hit:
+            if s in names:
+                hit = c
                 break
+        # pass 2: substring fallback ('110 walker' → walker, 'abstract 24' → neko)
+        if hit is None:
+            for c in cats:
+                names = [c["label"].lower(), c["id"]] + [a.lower() for a in c["aliases"]]
+                for n in names:
+                    if n in s or s in n:
+                        hit = c
+                        break
+                if hit:
+                    break
         if hit:
             if hit["id"] not in [m[0]["id"] for m in matched]:
                 matched.append((hit, item.strip()))
