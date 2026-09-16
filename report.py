@@ -260,6 +260,28 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
     prime = max(blocks, key=prime_score) if blocks else None
     prime_s = round(prime_score(prime), 1) if prime else None
 
+    # ── the gap lane: high scorers the angler DOESN'T own ────────────────
+    # Display/monetization surface only — computed after all ranking is done,
+    # never fed back into picks or scores (principle 4). Skipped for anonymous
+    # renders (a gap against the generic fallback arsenal means nothing).
+    gap = []
+    if profile.get("arsenal") and prime is not None:
+        pblk = prime
+        pmid = pblk["start"] + (pblk["end"] - pblk["start"]) / 2
+        pw = wx.at(pmid)
+        gap_ctx = dict(light=pblk["light"], cloud=pw["cloud"], wind_mph=pw["wind_mph"],
+                       temp_f=pw["temp_f"], water_f=water_f, hour_ruler=pblk["hour"]["ruler"],
+                       solunar=pblk["solunar"], moon_fruitful=(mn["fruitful"] if mn else None),
+                       pressure_word=wscore["trend"]["word"],
+                       structure_notes=lake.get("structure", []), lake_state=lake_state)
+        owned = {c["id"] for c, _ in match["matched"]}
+        full = [(c, s, why) for c, s, why in
+                tx.recommend(gap_ctx, [(c, c["label"]) for c in tx.catalog(species)
+                                       if c["id"] not in owned], top_n=5)
+                if s >= 5.0]
+        gap = full[:3]
+
+
     return dict(
         profile=profile, lake=lake, start=start, end=end, hours=hours,
         species=species, voice=voice, sun=sun,
@@ -269,6 +291,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         natal=natal, aspects=(aspects or [])[:8], perfecting=perfecting,
         voc=voc, moon_note=mn, resonance=resonance, match=match,
         blocks=blocks, rods=rods, prime=prime, prime_score=prime_s, utc_off=wx.utc_offset,
+        gap=gap,
         logbook=lb.summary_for(lake.get("name", ""), angler=profile.get("name")),
         lake_state=lake_state, days_since_turnover=days_since_turnover,
         heat_streak=streak, state_basis=state_basis, access_note=acc_note,
@@ -504,6 +527,18 @@ def to_markdown(m: dict, emoji: bool = True) -> str:
     if unmatched:
         L.append(f"- *(no match in the KB for: {', '.join(unmatched)} — still bring them)*")
     L.append("")
+
+    if m.get("gap"):
+        L.append(f"## {e('🧭 ')}The gap in your tackle box")
+        L.append("*Scored by the same pipe for these exact conditions — you don't own these yet. "
+                 "Offers attach after ranking, never before.*")
+        for c, s, why in m["gap"]:
+            p = c["provenance"]
+            badge = "✅" if p.get("confidence") in ("verified", "sourced") else "🟡"
+            L.append(f"- {badge} **{c['label']}** — scores {s:.1f} here"
+                     + (f" · {'; '.join(why)}" if why else "")
+                     + (f" · *{c['note']}*" if c.get("note") else ""))
+        L.append("")
 
     ctx = dict(wind_mph=m["weather"]["start"]["wind_mph"], cloud=m["weather"]["start"]["cloud"],
                moon_fruitful=(m["moon_note"]["fruitful"] if m["moon_note"] else None),

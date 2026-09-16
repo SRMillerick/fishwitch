@@ -228,7 +228,24 @@ function renderTackle(rods) {
   return h + "</ul></section>";
 }
 
-// ── interview: geocode + build profile + save into the vault ────────────────
+function renderGap(gap) {
+  if (!gap || !gap.length) return "";
+  let h = '<section class="tackle"><h2>🧭 The gap in your tackle box</h2>' +
+    '<p class="fine">Scored by the same pipe for these exact conditions — you don’t own these yet. ' +
+    'Links attach after ranking, never before.</p><ul class="plain">';
+  for (const g of gap) {
+    h += "<li><span class='badge " + (g.verified ? "ok" : "pend") + "'>" +
+      (g.verified ? "sourced" : "editorial") + "</span> <strong>" + esc(g.label) + "</strong> — scores " +
+      g.score + " here" + (g.why ? " · <span class='fine'>" + esc(g.why) + "</span>" : "");
+    if (g.product_url) h += " · <a href='" + g.product_url + "' target='_blank' rel='nofollow noopener'>" +
+      esc(g.product || "manufacturer page") + "</a>";
+    for (const o of (g.offers || [])) if (o.url)
+      h += " · <a href='" + o.url + "' target='_blank' rel='sponsored noopener'>" + esc(o.retailer) +
+        "</a> <span class='fine'>(" + esc(o.disclosure) + ")</span>";
+    h += "</li>";
+  }
+  return h + "</ul></section>";
+}
 const iv = document.getElementById("interview");
 if (iv) {
   let picked = null;

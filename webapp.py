@@ -271,8 +271,17 @@ def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
                    product_url=mfg.get("product_url"),
                    offers=offers.resolve(c["id"]))
         rods.append(rod)
+    gap = []
+    for c, s, why in (m.get("gap") or []):
+        mfg = (c.get("manufacturer_specs") or {})
+        gap.append(dict(label=c["label"], score=round(s, 1),
+                        why="; ".join(why),
+                        verified=c["provenance"].get("confidence") in ("verified", "sourced"),
+                        product=mfg.get("product_title"),
+                        product_url=mfg.get("product_url"),
+                        offers=offers.resolve(c["id"])))
     return dict(html=body, overall=m["scores"]["overall"],
-                lake=lake["name"], at=at, rods=rods,
+                lake=lake["name"], at=at, rods=rods, gap=gap,
                 prime_t=prime["start"] if prime else None,
                 prime_lab=(prime["light"] if prime else ""),
                 moon=m.get("moon") or {},

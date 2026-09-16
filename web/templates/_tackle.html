@@ -24,3 +24,29 @@
   </ul>
 </section>
 {% endif %}
+{% if out and out.gap %}
+<section class="tackle">
+  <h2>🧭 The gap in your tackle box</h2>
+  <p class="fine">Scored by the same pipe for these exact conditions — you don't own these yet.
+  Links attach after ranking, never before.</p>
+  <ul class="plain">
+  {% for g in out.gap %}
+    <li>
+      <span class="badge {% if g.verified %}ok{% else %}pend{% endif %}">{% if g.verified %}sourced{% else %}editorial{% endif %}</span>
+      <strong>{{ g.label }}</strong> — scores {{ g.score }} here{% if g.why %} · <span class="fine">{{ g.why }}</span>{% endif %}
+      {% if g.product_url %}·
+        <a href="{{ g.product_url }}" target="_blank" rel="nofollow noopener">{{ g.product or 'manufacturer page' }}</a>
+      {% endif %}
+      {% if g.offers %}
+        {% for o in g.offers %}
+          {% if o.url %}·
+            <a href="{{ o.url }}" target="_blank" rel="sponsored noopener">{{ o.retailer }}</a>
+            <span class="fine">({{ o.disclosure }})</span>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+{% endif %}
