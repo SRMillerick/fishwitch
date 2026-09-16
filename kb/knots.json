@@ -329,109 +329,209 @@
         "verified_by": "sean",
         "verified_at": "2026-09-16T23:43:51+00:00"
       }
+    },
+    {
+      "id": "snell",
+      "label": "Snell knot",
+      "kind": "knot",
+      "aliases": [
+        "snell",
+        "snell knot",
+        "snelling"
+      ],
+      "connection": "line-to-hook-shank",
+      "citations": [
+        {
+          "claim": "identity & geometry",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Snell knot",
+          "url": "https://en.wikipedia.org/wiki/Snell_knot",
+          "quote": "The snell knot is a hitch knot used in angling to attach a fishing line to the shank (instead of the eye) of a fishing hook.",
+          "fetched_at": "2026-09-16T23:46:39+00:00",
+          "sha256": "93632999f644f479"
+        },
+        {
+          "claim": "straight-line pull",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Snell knot",
+          "url": "https://en.wikipedia.org/wiki/Snell_knot",
+          "quote": "Hooks tied with a snell knot provide an even, straight-line pull to the fish.",
+          "fetched_at": "2026-09-16T23:46:39+00:00",
+          "sha256": "93632999f644f479"
+        },
+        {
+          "claim": "leader-only use",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Snell knot",
+          "url": "https://en.wikipedia.org/wiki/Snell_knot",
+          "quote": "It is a very secure knot, but because it is easily tied using only the near end as the working end, it is used to attach a hook only to a leader, rather than directly to the main line.",
+          "fetched_at": "2026-09-16T23:46:39+00:00",
+          "sha256": "93632999f644f479"
+        },
+        {
+          "claim": "modern use",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 How to Tie a Snell Knot",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/how-to-tie-a-snell-knot/",
+          "quote": "The snell knot was originally invented for use with eyeless hooks, but it's still widely used today.",
+          "fetched_at": "2026-09-16T23:46:39+00:00",
+          "sha256": "0e7165a829d843b5"
+        },
+        {
+          "claim": "hookset advantage",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 How to Tie a Snell Knot",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/how-to-tie-a-snell-knot/",
+          "quote": "this type of knot stays in line with the shank of the hook, making it stronger and easier to obtain a good hook set.",
+          "fetched_at": "2026-09-16T23:46:39+00:00",
+          "sha256": "8bfd0d746c3510b3"
+        }
+      ],
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:46:39+00:00"
+      }
+    },
+    {
+      "id": "san-diego-jam",
+      "label": "San Diego jam knot",
+      "kind": "knot",
+      "aliases": [
+        "san diego jam",
+        "san diego knot",
+        "reverse clinch",
+        "heiliger knot"
+      ],
+      "connection": "line-to-terminal",
+      "citations": [
+        {
+          "claim": "identity & use",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 San Diego Jam knot",
+          "url": "https://en.wikipedia.org/wiki/San_Diego_Jam_knot",
+          "quote": "The San Diego jam knot is a common fishing knot used to tie a line to the hook, swivel, clip, or artificial fly. This knot is also known as the San Diego knot, reverse clinch knot or Heiliger knot.",
+          "fetched_at": "2026-09-16T23:46:39+00:00",
+          "sha256": "72873a3af3b9d8f2"
+        },
+        {
+          "claim": "line types",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 San Diego Jam knot",
+          "url": "https://en.wikipedia.org/wiki/San_Diego_Jam_knot",
+          "quote": "This is a common knot used by fishermen because it is simple to tie, is strong and can be used with many kinds of line including mono-filament, fluorocarbon, and braided fishing line.",
+          "fetched_at": "2026-09-16T23:46:39+00:00",
+          "sha256": "72873a3af3b9d8f2"
+        }
+      ],
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:46:39+00:00"
+      }
     }
   ],
   "recommend": {
-    "_note": "Editorial recommendation rule, not a sourced fact. Maps a session pick (KB entry id) to knots whose CITED use fits. The knot facts themselves are quoted in the entries above.",
+    "_note": "Editorial pick\u2192knot map tuned to the owner's repertoire: snell = drop shot, crazy alberto = braid\u2192leader, palomar = braid\u2192tackle, uni = fluoro\u2192tackle, san diego jam = heavy mono/hybrid\u2192topwater. Knot facts remain quoted from the cited guides.",
     "by_entry": {
       "dropshot": [
-        "drop-shot",
+        "snell",
         "palomar"
       ],
       "trig": [
-        "palomar",
-        "improved-clinch"
+        "uni",
+        "palomar"
       ],
       "wacky": [
-        "palomar",
-        "improved-clinch"
+        "uni",
+        "palomar"
       ],
       "neko": [
-        "palomar",
-        "improved-clinch"
+        "uni",
+        "palomar"
       ],
       "ned": [
-        "palomar",
-        "improved-clinch"
+        "uni",
+        "palomar"
       ],
       "carolina": [
-        "palomar",
         "alberto",
-        "double-surgeons"
+        "palomar"
       ],
       "jig": [
         "palomar",
-        "improved-clinch"
+        "uni"
       ],
       "walker": [
-        "surgeons-loop",
+        "san-diego-jam",
         "palomar"
       ],
       "popper": [
-        "surgeons-loop",
+        "san-diego-jam",
         "palomar"
       ],
       "plopper": [
-        "surgeons-loop",
+        "san-diego-jam",
         "palomar"
       ],
       "buzz": [
-        "surgeons-loop",
+        "san-diego-jam",
         "palomar"
       ],
       "frog": [
+        "san-diego-jam",
         "palomar"
       ],
       "spinnerbait": [
         "palomar",
-        "improved-clinch"
+        "uni"
       ],
       "chatterbait": [
         "palomar",
-        "improved-clinch"
+        "uni"
       ],
       "squarebill": [
-        "improved-clinch",
+        "uni",
         "palomar"
       ],
       "crank-mid": [
-        "improved-clinch",
+        "uni",
         "palomar"
       ],
       "jerkbait": [
-        "improved-clinch",
+        "uni",
         "palomar"
       ],
       "swimbait": [
         "palomar",
-        "improved-clinch"
+        "uni"
       ],
       "spin-trout": [
-        "palomar",
-        "improved-clinch"
+        "uni",
+        "palomar"
       ],
       "bait-trout": [
-        "improved-clinch",
+        "uni",
         "palomar"
       ],
       "fly-trout": [
         "nail"
       ],
       "cut-bait": [
-        "improved-clinch",
+        "uni",
         "palomar"
       ],
       "live-bait": [
-        "improved-clinch",
+        "uni",
         "palomar"
       ],
       "bobber-jig": [
-        "palomar",
-        "improved-clinch"
+        "uni",
+        "palomar"
       ],
       "spinner-pan": [
-        "palomar",
-        "improved-clinch"
+        "uni",
+        "palomar"
       ]
     },
     "line_joining": [
@@ -439,6 +539,31 @@
       "albright",
       "double-surgeons",
       "uni"
+    ]
+  },
+  "repertoire": {
+    "_note": "Owner's stated knot usage (Sean, 2026-09-16) \u2014 first-hand ground truth from the angler, outranks the generic pick\u2192knot map for this angler.",
+    "knots": [
+      {
+        "id": "alberto",
+        "use": "braid to leader"
+      },
+      {
+        "id": "snell",
+        "use": "drop shot"
+      },
+      {
+        "id": "palomar",
+        "use": "braid to tackle"
+      },
+      {
+        "id": "uni",
+        "use": "fluorocarbon to most tackle"
+      },
+      {
+        "id": "san-diego-jam",
+        "use": "heavy hybrid or mono to topwater"
+      }
     ]
   }
 }
