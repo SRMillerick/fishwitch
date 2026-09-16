@@ -259,16 +259,25 @@ def promote(species: str, entry_id: str, verified_by: str) -> Path | None:
     for c in kb["cats"]:
         if c["id"] == entry_id:
             c[specs_field] = draft["proposed"]
+            prov = draft["provenance"]
+            bits = []
+            if prov.get("catalog_sha256"):
+                bits.append(f"catalog sha {prov['catalog_sha256']}")
+            if prov.get("fetched_at"):
+                bits.append(f"fetched {prov['fetched_at']}")
+            if prov.get("extractor"):
+                bits.append(prov["extractor"])
+            note = (("; ".join(bits) + "; ") if bits else "") + \
+                   "technique text human-edited from spec quotes"
             c["provenance"] = dict(
-                seed_author=draft["provenance"]["seed_author"],
-                source=draft["provenance"]["source"],
-                source_url=draft["provenance"]["source_url"],
+                seed_author=prov["seed_author"],
+                source=prov["source"],
+                source_url=prov["source_url"],
                 confidence="sourced",
                 verified_by=verified_by,
                 verified_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
-                note=f"catalog sha {draft['provenance']['catalog_sha256']}; "
-                     "technique text human-edited from spec quotes")
+                note=note)
             break
-    kb_file.write_text(json.dumps(kb, indent=2))
+    kb_file.write_text(json.dumps(kb, indent=2) + "\n")
     p.unlink()
     return kb_file

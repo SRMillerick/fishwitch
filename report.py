@@ -260,6 +260,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
                 knots.append(kk)
     knots = knots[:3]
     knot_notes = (tx.load_knots().get("repertoire", {}) or {}).get("practices", [])
+    line = tx.recommend_line(rods)
 
     def prime_score(blk):
         s = sum(p[1] for p in blk["picks"]) or 0
@@ -309,7 +310,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         natal=natal, aspects=(aspects or [])[:8], perfecting=perfecting,
         voc=voc, moon_note=mn, resonance=resonance, match=match,
         blocks=blocks, rods=rods, prime=prime, prime_score=prime_s, utc_off=wx.utc_offset,
-        knots=knots, knot_notes=knot_notes, angler_knots=angler_knots, gap=gap,
+        knots=knots, knot_notes=knot_notes, angler_knots=angler_knots, line=line, gap=gap,
         logbook=lb.summary_for(lake.get("name", ""), angler=profile.get("name")),
         lake_state=lake_state, days_since_turnover=days_since_turnover,
         heat_streak=streak, state_basis=state_basis, access_note=acc_note,
@@ -546,10 +547,14 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
         L.append(f"- *(no match in the KB for: {', '.join(unmatched)} — still bring them)*")
     L.append("")
 
-    if m.get("knots"):
-        head = "Your knots for these rigs" if m.get("angler_knots") else "Knots for these rigs"
+    if m.get("knots") or m.get("line"):
+        head = ("Line & your knots for these rigs" if m.get("angler_knots")
+                else "Line & knots for these rigs")
         L.append(f"## {e('🪢 ')}{head}")
-        L.append("*Quoted from the cited knot guides — facts, not folklore.*")
+        if m.get("line"):
+            L.append(f"- **{m['line']['label']}** — {m['line']['why']}")
+        if m.get("knots"):
+            L.append("*Knots quoted from the cited guides — facts, not folklore.*")
         for k in m["knots"]:
             q = next((c["quote"] for c in k.get("citations", []) if c.get("quote")), "")
             src = next((c["source"] for c in k.get("citations", []) if c.get("quote")), "")

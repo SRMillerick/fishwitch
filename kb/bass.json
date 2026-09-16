@@ -39,12 +39,35 @@
       },
       "note": "the big-fish-after-dark signature",
       "provenance": {
-        "seed_author": "fishwitch-editorial-v0",
-        "source": "editorial consensus (seeded from v0 code KB)",
-        "source_url": null,
-        "confidence": "unverified-editorial",
-        "verified_by": null,
-        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+        "seed_author": "kb-ingest/1.0",
+        "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
+        "source_url": "https://6thsensefishing.com/products/catwalk",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:56:46+00:00",
+        "note": "catalog sha 8c4f24d01a2dcd8d; technique text human-edited from spec quotes"
+      },
+      "manufacturer_specs": {
+        "manufacturer": "6th Sense Fishing (ET)",
+        "product_title": "CatWalk",
+        "product_url": "https://6thsensefishing.com/products/catwalk",
+        "product_type": "Topwater",
+        "variants": [
+          "4K Bluegill",
+          "4K Gizzard",
+          "Bluegilla",
+          "Black Magic",
+          "Clearwater Rose",
+          "Ghost Bone Minnow",
+          "Royal Chrome",
+          "Sensory Shad"
+        ],
+        "depth": null,
+        "retrieve": {
+          "quote": "Its keel-shaped belly and balanced body create an effortless walk-the-dog action while letting the bait cut just beneath the surface on each turn, closely imitating a fleeing baitfish struggling to escape",
+          "match": "Its keel-shaped belly and balanced body create an effortless walk-the-dog action"
+        },
+        "rigging": null
       }
     },
     {
@@ -119,12 +142,35 @@
       "colors": {},
       "note": "needs calm water \u2014 glass only",
       "provenance": {
-        "seed_author": "fishwitch-editorial-v0",
-        "source": "editorial consensus (seeded from v0 code KB)",
-        "source_url": null,
-        "confidence": "unverified-editorial",
-        "verified_by": null,
-        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+        "seed_author": "kb-ingest/1.0",
+        "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
+        "source_url": "https://6thsensefishing.com/products/splashback-popper",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:56:46+00:00",
+        "note": "catalog sha 8c4f24d01a2dcd8d; technique text human-edited from spec quotes"
+      },
+      "manufacturer_specs": {
+        "manufacturer": "6th Sense Fishing (ET)",
+        "product_title": "SplashBack Popper",
+        "product_url": "https://6thsensefishing.com/products/splashback-popper",
+        "product_type": "Topwater",
+        "variants": [
+          "4K Shad / 70mm",
+          "4K Shad / 90mm",
+          "Black Magic / 70mm",
+          "Bluegill Fire / 70mm",
+          "Bluegill Spawn / 70mm",
+          "Bluegill Spawn / 90mm",
+          "Ghost Bone Minnow / 70mm",
+          "Ghost Hot Herring / 70mm"
+        ],
+        "depth": null,
+        "retrieve": {
+          "quote": "Its oversized cupped mouth gives anglers complete control over the presentation, allowing the bait to spit, chug, or push water depending on retrieve speed and rod cadence",
+          "match": "Its oversized cupped mouth gives anglers complete control over the presentation,"
+        },
+        "rigging": null
       }
     },
     {
@@ -258,12 +304,32 @@
       },
       "note": "the wind-lane weapon",
       "provenance": {
-        "seed_author": "fishwitch-editorial-v0",
-        "source": "editorial consensus (seeded from v0 code KB)",
-        "source_url": null,
-        "confidence": "unverified-editorial",
-        "verified_by": null,
-        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+        "seed_author": "kb-ingest/1.0",
+        "source": "Z-Man catalog (www.zmanfishing.com, Shopify products.json)",
+        "source_url": "https://www.zmanfishing.com/products/chatterbait-elite-evo-hd",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:56:47+00:00",
+        "note": "catalog sha ce729339c06fcbcb; technique text human-edited from spec quotes"
+      },
+      "manufacturer_specs": {
+        "manufacturer": "Z-Man Fishing Products",
+        "product_title": "ChatterBait\u00ae Elite EVO\u2122 HD",
+        "product_url": "https://www.zmanfishing.com/products/chatterbait-elite-evo-hd",
+        "product_type": "",
+        "variants": [
+          "3/8 oz / Hot Snakes",
+          "3/8 oz / White",
+          "3/8 oz / Chartreuse/White",
+          "3/8 oz / Black/Blue",
+          "3/8 oz / Green Pumpkin",
+          "3/8 oz / Spot Remover",
+          "3/8 oz / Lava Craw",
+          "3/8 oz / Bluegill"
+        ],
+        "depth": null,
+        "retrieve": null,
+        "rigging": null
       }
     },
     {
@@ -298,12 +364,38 @@
       },
       "note": "steady producer in chop",
       "provenance": {
-        "seed_author": "fishwitch-editorial-v0",
-        "source": "editorial consensus (seeded from v0 code KB)",
-        "source_url": null,
-        "confidence": "unverified-editorial",
-        "verified_by": null,
-        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+        "seed_author": "kb-ingest/1.0",
+        "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
+        "source_url": "https://6thsensefishing.com/products/divine-spinnerbait",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:56:46+00:00",
+        "note": "catalog sha 8c4f24d01a2dcd8d; technique text human-edited from spec quotes"
+      },
+      "manufacturer_specs": {
+        "manufacturer": "6th Sense Fishing (ET)",
+        "product_title": "Divine Spinnerbait",
+        "product_url": "https://6thsensefishing.com/products/divine-spinnerbait",
+        "product_type": "Spinnerbait",
+        "variants": [
+          "1/4oz. / Blue-Treuse Flash",
+          "3/8oz. / Blue-Treuse Flash",
+          "1/2oz. / Blue-Treuse Flash",
+          "3/4oz. / Blue-Treuse Flash",
+          "1oz. / Blue-Treuse Flash",
+          "1/4oz. / Bone-Treuse Pearl",
+          "3/8oz. / Bone-Treuse Pearl",
+          "1/2oz. / Bone-Treuse Pearl"
+        ],
+        "depth": null,
+        "retrieve": {
+          "quote": "Its combination of premium blade configurations, a balanced head, and heat-treated stainless-steel spring wire produces consistent flash and vibration while maintaining a natural baitfish profile throughout the retrieve",
+          "match": "Its combination of premium blade configurations, a balanced head, and heat-treat"
+        },
+        "rigging": {
+          "quote": "Key Features Heat-treated stainless-steel spring wire creates strong vibration while maintaining flexibility and durability Balanced head design tracks true and runs horizontally across a wide range of retrieve speeds Premium blades provide consistent flash and vibration in clear and stained water H",
+          "match": "Key Features Heat-treated stainless-steel spring wire creates strong vibration w"
+        }
       }
     },
     {
@@ -341,12 +433,35 @@
       },
       "note": "bank-beater for wind-stacked points",
       "provenance": {
-        "seed_author": "fishwitch-editorial-v0",
-        "source": "editorial consensus (seeded from v0 code KB)",
-        "source_url": null,
-        "confidence": "unverified-editorial",
-        "verified_by": null,
-        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+        "seed_author": "kb-ingest/1.0",
+        "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
+        "source_url": "https://6thsensefishing.com/products/crush-series",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:56:45+00:00",
+        "note": "catalog sha 8c4f24d01a2dcd8d; technique text human-edited from spec quotes"
+      },
+      "manufacturer_specs": {
+        "manufacturer": "6th Sense Fishing (ET)",
+        "product_title": "Crush Squarebill",
+        "product_url": "https://6thsensefishing.com/products/crush-series",
+        "product_type": "Shallow Crankbait",
+        "variants": [
+          "Baby Bluegill / 25X (Silent)",
+          "Baby Shad / 25X (Silent)",
+          "Black Magic / 25X (Silent)",
+          "Boiled Crawfish / 25X (Silent)",
+          "Candy Citrus Shad / 25X (Silent)",
+          "Chartreuse Black-Back / 25X (Silent)",
+          "Chrome Threadfin / 25X (Silent)",
+          "Custom Bluegill / 25X (Silent)"
+        ],
+        "depth": null,
+        "retrieve": null,
+        "rigging": {
+          "quote": "Key Features Erratic hunting action imitates a fleeing baitfish Square bill deflects effectively around shallow cover Engineered buoyancy helps the bait rise and back away from obstructions Excels around rock, wood, grass, docks, riprap, stumps, and shoreline cover Three sizes help anglers match for",
+          "match": "Key Features Erratic hunting action imitates a fleeing baitfish Square bill defl"
+        }
       }
     },
     {
@@ -384,12 +499,38 @@
       },
       "note": "fills the mid-day gap",
       "provenance": {
-        "seed_author": "fishwitch-editorial-v0",
-        "source": "editorial consensus (seeded from v0 code KB)",
-        "source_url": null,
-        "confidence": "unverified-editorial",
-        "verified_by": null,
-        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+        "seed_author": "kb-ingest/1.0",
+        "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
+        "source_url": "https://6thsensefishing.com/products/curve",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:56:46+00:00",
+        "note": "catalog sha 8c4f24d01a2dcd8d; technique text human-edited from spec quotes"
+      },
+      "manufacturer_specs": {
+        "manufacturer": "6th Sense Fishing (ET)",
+        "product_title": "Curve 55",
+        "product_url": "https://6thsensefishing.com/products/curve",
+        "product_type": "Medium Crankbait",
+        "variants": [
+          "4K Shad",
+          "Black N' Red Craw",
+          "Black Magic",
+          "Bluegill Spawn",
+          "Blue-Treuse Shad",
+          "Boiled Crawfish",
+          "Crackle Craw",
+          "Crimson Craw"
+        ],
+        "depth": null,
+        "retrieve": {
+          "quote": "Use a steady retrieve to bring out its natural wandering action, or drive it into rock, grass, and hard cover to create abrupt changes in direction",
+          "match": "Use a steady retrieve to bring out its natural wandering action, or drive it int"
+        },
+        "rigging": {
+          "quote": "Its specialized internal weight chamber creates a tight wobble with sudden directional changes, imitating a distressed baitfish trying to escape",
+          "match": "Its specialized internal weight chamber creates a tight wobble with sudden direc"
+        }
       }
     },
     {
@@ -425,12 +566,38 @@
       },
       "note": "shines in clear water below 70\u00b0F",
       "provenance": {
-        "seed_author": "fishwitch-editorial-v0",
-        "source": "editorial consensus (seeded from v0 code KB)",
-        "source_url": null,
-        "confidence": "unverified-editorial",
-        "verified_by": null,
-        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+        "seed_author": "kb-ingest/1.0",
+        "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
+        "source_url": "https://6thsensefishing.com/products/masterclass-jerkbait-107",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:56:45+00:00",
+        "note": "catalog sha 8c4f24d01a2dcd8d; technique text human-edited from spec quotes"
+      },
+      "manufacturer_specs": {
+        "manufacturer": "6th Sense Fishing (ET)",
+        "product_title": "Masterclass Jerkbait 107",
+        "product_url": "https://6thsensefishing.com/products/masterclass-jerkbait-107",
+        "product_type": "Jerkbait",
+        "variants": [
+          "107 DD / HASU",
+          "107 X / HASU",
+          "107 DD / Gizzard Hologram",
+          "107 X / Gizzard Hologram",
+          "107 DD / Monkey Blood",
+          "107 X / Monkey Blood",
+          "107 DD / Pro Crystal Blue",
+          "107 X / Pro Crystal Blue"
+        ],
+        "depth": null,
+        "retrieve": {
+          "quote": "An internal tungsten weight-transfer system shifts during the cast for added distance and accuracy, then settles into position to keep the bait balanced through the retrieve",
+          "match": "An internal tungsten weight-transfer system shifts during the cast for added dis"
+        },
+        "rigging": {
+          "quote": "An internal tungsten weight-transfer system shifts during the cast for added distance and accuracy, then settles into position to keep the bait balanced through the retrieve",
+          "match": "An internal tungsten weight-transfer system shifts during the cast for added dis"
+        }
       }
     },
     {
@@ -558,12 +725,35 @@
       },
       "note": "the finesse answer when they slap at reaction baits",
       "provenance": {
-        "seed_author": "fishwitch-editorial-v0",
-        "source": "editorial consensus (seeded from v0 code KB)",
-        "source_url": null,
-        "confidence": "unverified-editorial",
-        "verified_by": null,
-        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+        "seed_author": "kb-ingest/1.0",
+        "source": "Z-Man catalog (www.zmanfishing.com, Shopify products.json)",
+        "source_url": "https://www.zmanfishing.com/products/finesse-wormz",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:56:47+00:00",
+        "note": "catalog sha ce729339c06fcbcb; technique text human-edited from spec quotes"
+      },
+      "manufacturer_specs": {
+        "manufacturer": "Z-Man Fishing Products",
+        "product_title": "Finesse WormZ\u2122",
+        "product_url": "https://www.zmanfishing.com/products/finesse-wormz",
+        "product_type": "",
+        "variants": [
+          "4\" (10-pack) / Coppertreuse",
+          "4\" (10-pack) / Watermelon Red",
+          "4\" (10-pack) / PB&J",
+          "4\" (10-pack) / Pumpkin",
+          "4\" (10-pack) / June Bug",
+          "4\" (10-pack) / Green Pumpkin",
+          "7\" (8-pack) / Coppertreuse",
+          "7\" (8-pack) / Watermelon Red"
+        ],
+        "depth": null,
+        "retrieve": null,
+        "rigging": {
+          "quote": "When rigged Texas style, on a drop shot rig, or on a shaky head, the ultra-soft body and natural action make the salt-impregnated Finesse WormZ ideal for virtually all finesse presentations",
+          "match": "When rigged Texas style, on a drop shot rig, or on a shaky head, the ultra-soft "
+        }
       }
     },
     {
@@ -600,12 +790,35 @@
       },
       "note": "skipping docks = uneaten pie",
       "provenance": {
-        "seed_author": "fishwitch-editorial-v0",
-        "source": "editorial consensus (seeded from v0 code KB)",
-        "source_url": null,
-        "confidence": "unverified-editorial",
-        "verified_by": null,
-        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+        "seed_author": "kb-ingest/1.0",
+        "source": "Z-Man catalog (www.zmanfishing.com, Shopify products.json)",
+        "source_url": "https://www.zmanfishing.com/products/zinkerz",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:56:47+00:00",
+        "note": "catalog sha ce729339c06fcbcb; technique text human-edited from spec quotes"
+      },
+      "manufacturer_specs": {
+        "manufacturer": "Z-Man Fishing Products",
+        "product_title": "ZinkerZ\u2122",
+        "product_url": "https://www.zmanfishing.com/products/zinkerz",
+        "product_type": "",
+        "variants": [
+          "5\" (6-pack) / Bama Craw",
+          "5\" (6-pack) / Dirt",
+          "5\" (6-pack) / New Money",
+          "5\" (6-pack) / Coppertreuse",
+          "5\" (6-pack) / Ez Money",
+          "5\" (6-pack) / Purple Haze",
+          "5\" (6-pack) / Watermelon",
+          "5\" (6-pack) / Watermelon Red"
+        ],
+        "depth": null,
+        "retrieve": null,
+        "rigging": {
+          "quote": "Equally effective when fished on a Texas rig with a pegged worm weight, on our SMH\u2122 Jighead, or with our Neko ShroomZ\u2122, ZinkerZ\u2122 outfish other soft stick baits due to their incredibly soft and limber composition",
+          "match": "Equally effective when fished on a Texas rig with a pegged worm weight, on our S"
+        }
       }
     },
     {
@@ -639,12 +852,35 @@
       },
       "note": "cold-water finesse \u2014 leave home above 75\u00b0F",
       "provenance": {
-        "seed_author": "fishwitch-editorial-v0",
-        "source": "editorial consensus (seeded from v0 code KB)",
-        "source_url": null,
-        "confidence": "unverified-editorial",
-        "verified_by": null,
-        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+        "seed_author": "kb-ingest/1.0",
+        "source": "Z-Man catalog (www.zmanfishing.com, Shopify products.json)",
+        "source_url": "https://www.zmanfishing.com/products/finesse-trd",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:56:47+00:00",
+        "note": "catalog sha ce729339c06fcbcb; technique text human-edited from spec quotes"
+      },
+      "manufacturer_specs": {
+        "manufacturer": "Z-Man Fishing Products",
+        "product_title": "Finesse TRD\u2122",
+        "product_url": "https://www.zmanfishing.com/products/finesse-trd",
+        "product_type": "",
+        "variants": [
+          "2.75\" (8-pack) / Black/Blue Flake",
+          "2.75\" (8-pack) / New Money",
+          "2.75\" (8-pack) / Coppertreuse",
+          "2.75\" (8-pack) / PB&J",
+          "2.75\" (8-pack) / Bubble Gum",
+          "2.75\" (8-pack) / California Craw",
+          "2.75\" (8-pack) / Mud Minnow",
+          "2.75\" (8-pack) / Smelt"
+        ],
+        "depth": null,
+        "retrieve": null,
+        "rigging": {
+          "quote": "The Finesse TRD\u2122 (The Real Deal) is designed specifically for the Midwest finesse style of fishing, more commonly known as the Ned Rig, which has been gaining momentum nationwide as a subtle and easy-to-master, yet amazingly effective, presentation",
+          "match": "The Finesse TRD\u2122 (The Real Deal) is designed specifically for the Midwest finess"
+        }
       }
     },
     {
@@ -789,12 +1025,38 @@
       },
       "note": "weighted wacky: the nail weight stands the bait up; rods that shake it win",
       "provenance": {
-        "seed_author": "fishwitch-editorial-v1 (session 2026-09-14)",
-        "source": "editorial consensus + 6th Sense Abstract design (pending promote)",
+        "seed_author": "kb-ingest/1.0",
+        "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
         "source_url": "https://6thsensefishing.com/products/abstract",
-        "confidence": "unverified-editorial",
-        "verified_by": null,
-        "note": "Abstract copy: 'integrated weight slot simplifies rigging with Neko nail weights'; angler-reported rig 2026-09-13: 1/0 treble top + 3/16 oz VMC neko nail weight (7 fish, 36 lb incl 12 lb)"
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:56:47+00:00",
+        "note": "catalog sha 1a7fd4d872a0eaab; technique text human-edited from spec quotes"
+      },
+      "manufacturer_specs": {
+        "manufacturer": "6th Sense Fishing (ET)",
+        "product_title": "The Abstract",
+        "product_url": "https://6thsensefishing.com/products/abstract",
+        "product_type": "Soft Plastic",
+        "variants": [
+          "12mm / Blood Apple",
+          "12mm / Ghost",
+          "12mm / Watermelon Candy",
+          "12mm / Rose Dust",
+          "12mm / Black N' Blue",
+          "12mm / Green Pumpkin Blue",
+          "12mm / Green Pumpkin",
+          "12mm / Gill Dust"
+        ],
+        "depth": null,
+        "retrieve": {
+          "quote": "Snap it aggressively, shake it in place, swim it steadily, or let it fall on slack line\u2014the legs quiver, pulse, and flow around the body",
+          "match": "Snap it aggressively, shake it in place, swim it steadily, or let it fall on sla"
+        },
+        "rigging": {
+          "quote": "The Abstract Description The Abstract takes the proven urchin-style profile and pushes it further with increased water displacement, responsive appendage action, and exceptional rigging versatility",
+          "match": "The Abstract Description The Abstract takes the proven urchin-style profile and "
+        }
       }
     }
   ],

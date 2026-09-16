@@ -51,7 +51,7 @@ app = Flask(__name__, template_folder=str(ROOT / "web" / "templates"),
             static_folder=str(ROOT / "web" / "static"))
 app.config["JSON_SORT_KEYS"] = False
 app.config["MAX_CONTENT_LENGTH"] = 64 * 1024  # profiles are small; bigger bodies are abuse
-app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 300  # assets carry ?v= busts; keep stale-JS windows short
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 31536000  # static assets are URL-versioned (?v=), cache hard
 
 
 # ── shared, cached data layers (one weather call serves many renders) ───────
@@ -646,6 +646,12 @@ def robots():
 def resp_headers(resp):
     resp.headers["Referrer-Policy"] = "no-referrer"
     resp.headers["X-Content-Type-Options"] = "nosniff"
+    # Anonymous, deterministic HTML renders — let browsers reuse them so the $6
+    # droplet serves repeat views without re-rendering. /api is never cached.
+    if (request.method == "GET" and resp.status_code == 200
+            and not request.path.startswith(("/api/", "/static/"))):
+        resp.headers.setdefault("Cache-Control",
+                                "public, max-age=300, stale-while-revalidate=900")
     return resp
 
 

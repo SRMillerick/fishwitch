@@ -1,6 +1,6 @@
 {
   "label": "Line",
-  "_note": "DRAFT 2026-09-16 \u2014 every claim below is a verbatim quote from the cited live Wikipedia article (plain-text extract API) and was verified by substring match; provenance.verified_by is null pending human promotion. Not yet read by tactics.py.",
+  "_note": "Promoted 2026-09-16 (verified_by sean). Every claim is a verbatim quote from the cited live Wikipedia article, verified by substring match. Selection rule is editorial (labelled).",
   "types": [
     {
       "id": "monofilament",
@@ -62,8 +62,8 @@
       "kind": "line",
       "provenance": {
         "confidence": "sourced",
-        "verified_by": null,
-        "verified_at": null
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:57:22+00:00"
       }
     },
     {
@@ -127,8 +127,8 @@
       "kind": "line",
       "provenance": {
         "confidence": "sourced",
-        "verified_by": null,
-        "verified_at": null
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:57:22+00:00"
       }
     },
     {
@@ -192,8 +192,8 @@
       "kind": "line",
       "provenance": {
         "confidence": "sourced",
-        "verified_by": null,
-        "verified_at": null
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:57:22+00:00"
       }
     },
     {
@@ -227,8 +227,8 @@
       "kind": "line",
       "provenance": {
         "confidence": "sourced",
-        "verified_by": null,
-        "verified_at": null
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:57:22+00:00"
       }
     }
   ],
@@ -242,5 +242,46 @@
         "fetched_at": "2026-09-16T23:43:27+00:00"
       }
     ]
+  },
+  "recommend": {
+    "_note": "Editorial pick\u2192line rule, grounded in each type's CITED properties (quoted above); the rule itself is not a sourced fact. Per-entry overrides beat the style fallback.",
+    "by_entry": {
+      "dropshot": "fluorocarbon",
+      "trig": "fluorocarbon",
+      "wacky": "fluorocarbon",
+      "neko": "fluorocarbon",
+      "ned": "fluorocarbon",
+      "carolina": "fluorocarbon",
+      "jerkbait": "fluorocarbon",
+      "crank-mid": "copolymer",
+      "squarebill": "copolymer",
+      "jig": "braid",
+      "frog": "braid",
+      "swimbait": "braid",
+      "buzz": "braid",
+      "walker": "monofilament",
+      "popper": "monofilament",
+      "plopper": "monofilament",
+      "spinnerbait": "copolymer",
+      "chatterbait": "copolymer",
+      "spin-trout": "monofilament",
+      "bait-trout": "monofilament",
+      "fly-trout": "monofilament",
+      "cut-bait": "monofilament",
+      "live-bait": "monofilament",
+      "bobber-jig": "monofilament",
+      "spinner-pan": "monofilament"
+    },
+    "by_style": {
+      "finesse": "fluorocarbon",
+      "reaction": "monofilament",
+      "power": "braid"
+    },
+    "why": {
+      "fluorocarbon": "sinks, is less visible (refractive index near water), and has less stretch/memory for direct contact",
+      "monofilament": "buoyant and stretches under load, which damps the surge on a hooked fish",
+      "braid": "small diameter, lack of stretch, and high strength-to-diameter for cover and solid hooksets",
+      "copolymer": "a nylon-based blend \u2014 between mono and fluoro"
+    }
   }
 }

@@ -124,6 +124,26 @@ def match_knots(items: list[str]) -> list[dict]:
     return out
 
 
+def recommend_line(picks: list[dict]) -> dict | None:
+    """Editorial pick→line rule, grounded in the CITED line properties (kb/line.json).
+    `picks` are KB entries with id/style. Returns {id, label, why} or None."""
+    d = load_line()
+    rec = d.get("recommend", {}) or {}
+    by_entry = rec.get("by_entry", {}) or {}
+    by_style = rec.get("by_style", {}) or {}
+    types = {t["id"]: t for t in d.get("types", [])}
+    votes: dict[str, int] = {}
+    for c in picks or []:
+        lid = by_entry.get(c.get("id")) or by_style.get(c.get("style"))
+        if lid:
+            votes[lid] = votes.get(lid, 0) + 1
+    if not votes:
+        return None
+    lid = max(votes, key=lambda k: votes[k])
+    return dict(id=lid, label=types.get(lid, {}).get("label", lid),
+                why=(rec.get("why", {}) or {}).get(lid, ""))
+
+
 # ── arsenal matching (deterministic) ────────────────────────────────────────
 def match_arsenal(items: list[str], species="bass") -> dict:
     cats = catalog(species)

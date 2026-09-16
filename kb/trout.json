@@ -34,12 +34,34 @@
       },
       "note": "stocked-fish standard",
       "provenance": {
-        "seed_author": "fishwitch-editorial-v0",
-        "source": "editorial consensus (seeded from v0 code KB)",
-        "source_url": null,
-        "confidence": "unverified-editorial",
-        "verified_by": null,
-        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+        "seed_author": "agency-ingest/1.0",
+        "source": "Iowa DNR technique guide",
+        "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:57:03+00:00",
+        "note": "fetched 2026-09-11T02:54:07+00:00; fixed sentence match (all_of words); technique text human-edited from spec quotes"
+      },
+      "agency_guidance": {
+        "agency": "Iowa DNR",
+        "page_title": "Trout | Department of Natural Resources",
+        "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+        "quotes": [
+          {
+            "all_of": [
+              "small spinners"
+            ],
+            "quote": "Use small spinners, plugs or jigs (one-sixteenth to one-sixty/fourth ounce in weight) fished upstream with a flexible speed retrieve.",
+            "found": true
+          },
+          {
+            "all_of": [
+              "spinners that imitate minnows"
+            ],
+            "quote": "Fishing with spinners that imitate minnows is at its peak because natural minnow abundance is highest at this time.",
+            "found": true
+          }
+        ]
       }
     },
     {
@@ -73,12 +95,34 @@
       "colors": {},
       "note": "patience bait",
       "provenance": {
-        "seed_author": "fishwitch-editorial-v0",
-        "source": "editorial consensus (seeded from v0 code KB)",
-        "source_url": null,
-        "confidence": "unverified-editorial",
-        "verified_by": null,
-        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+        "seed_author": "agency-ingest/1.0",
+        "source": "Iowa DNR technique guide",
+        "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:57:04+00:00",
+        "note": "fetched 2026-09-11T02:54:07+00:00; fixed sentence match (all_of words); technique text human-edited from spec quotes"
+      },
+      "agency_guidance": {
+        "agency": "Iowa DNR",
+        "page_title": "Trout | Department of Natural Resources",
+        "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+        "quotes": [
+          {
+            "all_of": [
+              "prepared trout bait"
+            ],
+            "quote": "Prepared trout bait ranges from commercial products to homemade creations.",
+            "found": true
+          },
+          {
+            "all_of": [
+              "marshmallows"
+            ],
+            "quote": "Other popular baits include whole kernel corn and marshmallows.",
+            "found": true
+          }
+        ]
       }
     },
     {
@@ -111,12 +155,34 @@
       "colors": {},
       "note": "match the hatch",
       "provenance": {
-        "seed_author": "fishwitch-editorial-v0",
-        "source": "editorial consensus (seeded from v0 code KB)",
-        "source_url": null,
-        "confidence": "unverified-editorial",
-        "verified_by": null,
-        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+        "seed_author": "agency-ingest/1.0",
+        "source": "Iowa DNR technique guide",
+        "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:57:04+00:00",
+        "note": "fetched 2026-09-11T02:54:07+00:00; fixed sentence match (all_of words); technique text human-edited from spec quotes"
+      },
+      "agency_guidance": {
+        "agency": "Iowa DNR",
+        "page_title": "Trout | Department of Natural Resources",
+        "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+        "quotes": [
+          {
+            "all_of": [
+              "trout flies imitate"
+            ],
+            "quote": "Most trout flies imitate some type of natural food, such as a mayfly, caddis fly, sculpin, minnow, stonefly, grasshopper or midge.",
+            "found": true
+          },
+          {
+            "all_of": [
+              "fly-fishing since natural insect hatches"
+            ],
+            "quote": "Summer is the best chance for fly-fishing since natural insect hatches are common and strong.",
+            "found": true
+          }
+        ]
       }
     }
   ],
