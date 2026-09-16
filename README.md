@@ -79,6 +79,15 @@ md = to_markdown(model)   # model is a plain dict — serialize for the UI
 ```
 (the repo root is the `fishwitch` package — add its parent to PYTHONPATH)
 
+## Monetization (offers)
+
+Tackle links resolve at the very end of the pipe (`offers.py`) and never
+influence ranking. Every offer carries a disclosure, and only promoted, cited
+KB entries get links. Affiliate tags live in the environment
+(`FISHWITCH_AMZ_TAG`), never in code. Manufacturer pages carry no commission;
+affiliate links (Amazon among them) are always labeled. See the site's
+`/disclosure` and `/privacy` pages.
+
 ## Notes & limits
 - Forecast range ~3 days out (Open-Meteo free tier). Further = sky/astro only.
 - Water temp is an air-temp-lagged estimate unless NMEA/Signal K is live.

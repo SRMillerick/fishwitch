@@ -18,7 +18,8 @@ WORK=$(mktemp -d)
 git clone -q "$PUB" "$WORK/repo"
 mkdir "$WORK/tree"
 git -C "$DIR" archive HEAD | tar -x -C "$WORK/tree" \
-    --exclude=reports --exclude=HANDOFF.md --exclude=STATE.md --exclude=START.md
+    --exclude=reports --exclude=HANDOFF.md --exclude=STATE.md --exclude=START.md \
+    --exclude=ASSOCIATES.md
 "$HOME/.astro-venv/bin/python" - "$WORK/tree/config/lakes.json" <<'EOF'
 import json, sys
 p = sys.argv[1]
