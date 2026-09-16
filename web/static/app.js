@@ -133,6 +133,35 @@ if (menu) {
   });
 }
 
+// ── landing: personalize the tier ledger when a profile is active ──────────
+const ledgerRows = document.getElementById("ledger-rows");
+if (ledgerRows) {
+  const p = getActive();
+  if (p) {
+    const scope = document.getElementById("ledger-scope");
+    const note = document.getElementById("ledger-note");
+    if (scope) scope.textContent = "⚓ " + p.name + "’s waters · next 5 days";
+    if (note) note.textContent = "casting the windows for " + p.name + "…";
+    ledgerRows.innerHTML = '<li class="fine">casting…</li>';
+    fetch("/api/outlook", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ days: 5, profile: p }),
+    }).then(r => r.json()).then(j => {
+      if (j.error || !j.rows) { ledgerRows.innerHTML = ""; return; }
+      ledgerRows.innerHTML = j.rows.map(r =>
+        `<li><a class="trow ${r.tier}" href="/report?lake=${encodeURIComponent(r.lake_id)}&at=${encodeURIComponent(r.start)}&hours=2&voice=${p.astro_display || 'almanac'}">` +
+        `<span class="tier">${r.tier}</span>` +
+        `<span class="when">${r.day} · ${r.clock} <span class="lune">${r.moon}</span>` +
+        ` <span class="score">${r.overall}/10</span>` +
+        `<span class="where">${esc(r.lake)}${r.prime ? " · prime " + r.prime : ""} · ${r.conf} confidence</span></span>` +
+        `<span class="rig">${esc(r.rig)}</span></a></li>`).join("");
+      if (note) note.textContent = j.rows.length
+        ? `Best upcoming windows for ${p.name} — transits + arsenal, nearest waters.`
+        : "no scorable windows in range";
+    }).catch(() => { ledgerRows.innerHTML = ""; });
+  }
+}
+
 // ── report form: POST the active profile with the query ────────────────────
 const form = document.getElementById("report-form");
 if (form) {

@@ -1,6 +1,19 @@
 {% extends "base.html" %}
-{% block title %}the front door{% endblock %}
+{% block title %}the moon-ledger{% endblock %}
 {% block content %}
+<section class="hero">
+  <p class="smallcaps">the moon-ledger for anglers</p>
+  <h1>When do the fish feed <em>near you?</em></h1>
+  <p>baromoon reads moon, barometer, and water — the two signals that survive
+  calibration, plus everything your lake's sky is doing — and hands you the
+  <strong>when</strong>, the <strong>where</strong>, and the <strong>rig</strong>.
+  Deterministic math. No mysticism required, though the moon gets a vote.</p>
+  <p class="cta">
+    <a class="btn primary" href="#ledger">Open the ledger</a>
+    <a class="btn ghost" href="/interview">Make it yours · 3 steps</a>
+  </p>
+</section>
+
 {% if teaser %}
 <section class="teaser">
   <div class="t-main">
@@ -14,22 +27,34 @@
   </div>
 </section>
 {% endif %}
-<section class="hero">
-  <h1>The sky decides when.<br>The lake decides where.<br>The tackle box decides how.</h1>
-  <p>baromoon turns astronomy, weather history, and a cited lure knowledge base
-  into scored, time-blocked fishing reports — deterministic math, zero mysticism
-  required, with three voices: <em>fisher</em> (no astrology), <em>almanac</em>
-  (moon lore), and <em>astro</em> (your natal transits).</p>
-  <p class="cta">
-    <a class="btn" href="/report">Get a report</a>
-    <a class="btn ghost" href="/outlook">Scan the next 16 days</a>
-    <a class="btn ghost" href="/interview">Build an angler profile</a>
-  </p>
+
+<section class="ledger" id="ledger">
+  <div class="ledger-head">
+    <h2 class="rule-double" style="border:0;padding:0;margin:0">The ledger</h2>
+    <span class="smallcaps" id="ledger-scope">home water · next 3 days</span>
+  </div>
+  <p class="fine" id="ledger-note">Best upcoming windows, tiered — open a line for the
+  full report.{% if not ledger %} (casting the windows…){% endif %}</p>
+  <ul class="tier-rows" id="ledger-rows">
+    {% for r in ledger or [] %}
+    <li><a class="trow {{ r.tier }}" href="/report?lake={{ r.lake_id }}&at={{ r.start.strftime('%Y-%m-%d %H:%M') }}&hours=2&voice=almanac">
+      <span class="tier">{{ r.tier }}</span>
+      <span class="when">{{ r.day }} · {{ r.start.strftime('%-I:%M %p') }}–{{ r.end.strftime('%-I %p') }} <span class="lune">{{ r.moon }}</span>
+        <span class="score">{{ r.overall }}/10</span>
+        <span class="where">{{ r.lake }}{% if r.prime %} · prime {{ r.prime.strftime('%-I:%M %p') }}{% endif %} · {{ r.conf }} confidence</span>
+      </span>
+      <span class="rig">{{ r.rig }}</span>
+    </a></li>
+    {% endfor %}
+  </ul>
+  <div class="divider"><span class="triskele" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M12 12c0-3.2 2.2-5.2 5-5.2"/><path d="M12 12c0 3.2-2.2 5.2-5 5.2" transform="rotate(120 12 12)"/><path d="M12 12c0-3.2 2.2-5.2 5-5.2" transform="rotate(240 12 12)"/></svg></span></div>
+  <p class="fine">S — drop everything · A — plan around it · B — worth being out ·
+  C — the fish have other plans. Confidence: ≤3 days high · 4–7 medium.</p>
 </section>
 
 <section class="cols">
   <div>
-    <h2>How it works</h2>
+    <h2 class="rule-double">How it works</h2>
     <ol class="plain">
       <li><strong>Weather + history</strong> — forecast for the window, a 75-day
       archive behind it: heat streaks, water-temp estimate, and turnover
@@ -38,16 +63,14 @@
       solunar majors/minors, planetary hours; optionally transits to your
       natal chart.</li>
       <li><strong>Knowledge base</strong> — every lure category carries
-      conditions (light, wind, water temp), provenance, and where it came
-      from: manufacturer catalogs or state-agency guides.
-      <a href="/kb">Read the citations →</a></li>
-      <li><strong>Scoring</strong> — fixed arithmetic over all of it. The
-      output is a ranked set of windows, prime moments, and the two rods that
-      fit. Deterministic: you can re-derive every number.</li>
+      conditions, provenance, and where it came from: manufacturer catalogs
+      or state-agency guides. <a href="/kb">Read the citations →</a></li>
+      <li><strong>Scoring</strong> — fixed arithmetic over all of it, ranked
+      into the ledger. Deterministic: you can re-derive every number.</li>
     </ol>
   </div>
   <div>
-    <h2>Lakes in the registry</h2>
+    <h2 class="rule-double">Waters in the registry</h2>
     <ul class="plain lakes">
       {% for l in lakes %}
       <li><a href="/report?lake={{ l.id }}">{{ l.name }}</a>

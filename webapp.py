@@ -292,6 +292,7 @@ def _report_response(payload: dict, anonymous: bool) -> dict:
 @app.route("/")
 def index():
     teaser = None
+    ledger = None
     try:
         first = lakes_summary()[0]["id"] if lakes_summary() else None
         tonight = datetime.now().replace(hour=18, minute=0, second=0, microsecond=0)
@@ -301,7 +302,14 @@ def index():
             teaser = out
     except Exception:
         pass
-    return render_template("index.html", lakes=lakes_summary(), local=LOCAL, teaser=teaser)
+    try:
+        home = resolve_lake(None)
+        ledger = _cached("ledger:anon:home:3",
+                         lambda: _ledger(home, 3, None, None, span=0))
+    except Exception:
+        pass
+    return render_template("index.html", lakes=lakes_summary(), local=LOCAL,
+                           teaser=teaser, ledger=ledger)
 
 
 @app.route("/report")
@@ -337,9 +345,9 @@ def outlook_page():
                            days=days, rows=rows, moon=moon, err=err, local=LOCAL)
 
 
-def _horizon(lake: dict, days: int, species: str | None):
-    profile = dict(species=species or "bass", astro_display="almanac",
-                   arsenal=[])
+def _horizon(lake: dict, days: int, species: str | None, profile: dict | None = None):
+    profile = profile or dict(species=species or "bass", astro_display="almanac",
+                              arsenal=[])
     wx = shared_weather(lake["lat"], lake["lng"], days=days)
     hist = None
     try:
@@ -356,7 +364,8 @@ def _horizon(lake: dict, days: int, species: str | None):
             start = day.replace(hour=h, minute=30 if h == 17 else 0)
             try:
                 m = gen(profile, lake, start, hours=2.0,
-                        species=species, voice="fisher", wx=wx, hist=hist)
+                        species=species, voice=profile.get("astro_display") or "fisher",
+                        wx=wx, hist=hist)
             except Exception:
                 continue
             if not m["blocks"]:
@@ -375,6 +384,58 @@ def _horizon(lake: dict, days: int, species: str | None):
         ms = sky.moon_state(sky.jd(dd.replace(hour=12)))
         moon.append((dd.date().isoformat(), ms["phase"], round(ms["illum"])))
     return results[:10], moon
+
+
+# ── the tier ledger: best upcoming windows across nearby waters ────────────
+import math
+
+
+def _nearest_lakes(home: dict, n: int = 3) -> list[dict]:
+    def dist(a, b):
+        la1, lo1, la2, lo2 = map(math.radians, (a["lat"], a["lng"], b["lat"], b["lng"]))
+        return 6371 * math.acos(min(1, math.sin(la1) * math.sin(la2) +
+                                    math.cos(la1) * math.cos(la2) * math.cos(lo2 - lo1)))
+    reg = registry()
+    home_key = home.get("id") or home["name"]
+    ranked = sorted((v for v in reg.values()
+                     if (v.get("id") or v["name"]) != home_key),
+                    key=lambda v: dist(home, v))
+    return [home] + ranked[:n]
+
+
+def _tier(overall: float) -> str:
+    return "S" if overall >= 7.5 else "A" if overall >= 7.0 else "B" if overall >= 6.5 else "C"
+
+
+def _moon_glyph(illum: float) -> str:
+    return ("●" if illum < 6 or illum > 94 else "☽" if illum < 45 else
+            "◐" if illum < 55 else "◑" if illum < 95 else "●")
+
+
+def _ledger(home: dict, days: int, species: str | None, profile: dict | None,
+            span: int = 3) -> list[dict]:
+    """Tier-ranked windows across the home water + `span` nearest. Deterministic
+    scans; caller caches. span=0 = home water only (fast landing render)."""
+    rows = []
+    lakes = [home] if span == 0 else _nearest_lakes(home, span)
+    for lk in _nearest_lakes(home):
+        try:
+            wins, moon = _horizon(lk, days, species, profile)
+        except Exception:
+            continue
+        moonmap = {d: il for d, ph, il in moon}
+        for w in wins:
+            rows.append(dict(
+                tier=_tier(w["overall"]), overall=w["overall"],
+                day=w["start"].strftime("%a %b %-d"),
+                start=w["start"], end=w["end"], prime=w["prime"],
+                lake=lk["name"], lake_id=lk.get("id") or lk["name"],
+                rig=w["picks"][0] if w["picks"] else "",
+                conf=w["conf"], moon=_moon_glyph(moonmap.get(w["day"], 50))
+            ))
+    order = {"S": 0, "A": 1, "B": 2, "C": 3}
+    rows.sort(key=lambda r: (order[r["tier"]], -r["overall"]))
+    return rows[:12]
 
 
 @app.route("/kb")
@@ -438,6 +499,39 @@ def review_page():
 
 
 # ── JSON API (for the browser layer; robots-discouraged) ─────────────────────
+@app.route("/api/outlook", methods=["POST"])
+def api_outlook():
+    """Personalized tier ledger: profile + optional lake → best upcoming
+    windows across the home water and its 3 nearest registry neighbors."""
+    if not _rate_ok(f"outlook:{request.remote_addr}", 20):
+        return jsonify(error="rate limit — 20 ledger builds/hour"), 429
+    payload = request.get_json(silent=True) or {}
+    days = max(1, min(7, int(payload.get("days") or 5)))
+    profile, errs = ({}, []) if not payload.get("profile") else _client_profile(payload)
+    if errs:
+        return jsonify(error="profile rejected", details=errs), 400
+    home = resolve_lake(payload.get("lake") or profile.get("home_lake"))
+    if home is None:
+        return jsonify(error="unknown lake"), 400
+    species = profile.get("species")
+    import hashlib as _h
+    ph = _h.sha256(json.dumps(profile, sort_keys=True).encode()).hexdigest()[:10]
+    try:
+        rows = _cached(f"ledger:{home['name']}:{days}:{species}:{ph}",
+                       lambda: _ledger(home, days, species, profile or None))
+    except Exception as ex:
+        return jsonify(error=f"ledger failed: {ex}"), 500
+    out = []
+    for r in rows:
+        d = dict(r)  # never mutate the cached row objects
+        s, e = d["start"], d["end"]
+        d["start"] = s.strftime("%Y-%m-%d %H:%M")
+        d["clock"] = f"{s:%-I:%M %p}–{e:%-I %p}"
+        d["prime"] = d["prime"].strftime("%-I:%M %p") if d["prime"] else None
+        out.append(d)
+    return jsonify(rows=out, personalized=bool(profile))
+
+
 @app.route("/api/report", methods=["POST"])
 def api_report():
     if not _rate_ok(f"report:{request.remote_addr}", 30):
