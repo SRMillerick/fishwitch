@@ -55,6 +55,43 @@ def normalize_species(name: str) -> str:
     return "bass"
 
 
+# ── cross-species knowledge: knots & line (kb/knots.json, kb/line.json) ─────
+_KNOTS: dict | None = None
+_LINE: dict | None = None
+
+
+def load_knots() -> dict:
+    global _KNOTS
+    if _KNOTS is None:
+        p = KB_DIR / "knots.json"
+        _KNOTS = json.loads(p.read_text()) if p.exists() else {"knots": [], "recommend": {}}
+    return _KNOTS
+
+
+def load_line() -> dict:
+    global _LINE
+    if _LINE is None:
+        p = KB_DIR / "line.json"
+        _LINE = json.loads(p.read_text()) if p.exists() else {"types": []}
+    return _LINE
+
+
+def knots_for(entry_id: str, limit: int = 2) -> list[dict]:
+    """Knots whose CITED use fits this KB entry. The pick→knot map lives in
+    kb/knots.json (recommend.by_entry) and is labelled editorial there; the knot
+    facts themselves are quoted from the cited guides."""
+    d = load_knots()
+    ids = (d.get("recommend", {}).get("by_entry", {}) or {}).get(entry_id, [])
+    by_id = {k["id"]: k for k in d.get("knots", [])}
+    out = []
+    for i in ids:
+        if i in by_id:
+            out.append(by_id[i])
+        if len(out) >= limit:
+            break
+    return out
+
+
 # ── arsenal matching (deterministic) ────────────────────────────────────────
 def match_arsenal(items: list[str], species="bass") -> dict:
     cats = catalog(species)

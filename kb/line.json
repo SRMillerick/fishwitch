@@ -1,0 +1,246 @@
+{
+  "label": "Line",
+  "_note": "DRAFT 2026-09-16 \u2014 every claim below is a verbatim quote from the cited live Wikipedia article (plain-text extract API) and was verified by substring match; provenance.verified_by is null pending human promotion. Not yet read by tactics.py.",
+  "types": [
+    {
+      "id": "monofilament",
+      "label": "Monofilament (nylon)",
+      "aliases": [
+        "mono",
+        "monofilament",
+        "nylon"
+      ],
+      "material": "nylon",
+      "construction": "single strand",
+      "citations": [
+        {
+          "claim": "construction",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Monofilament fishing line",
+          "url": "https://en.wikipedia.org/wiki/Monofilament_fishing_line",
+          "quote": "Monofilament fishing line (shortened to just mono) is fishing line made from a single fiber of plastic material, as opposed to multifilament or braided fishing lines constructed from multiple strands of fibers.",
+          "fetched_at": "2026-09-16T23:43:27+00:00",
+          "sha256": "28c4f3e39b7598c4"
+        },
+        {
+          "claim": "material & cost",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Monofilament fishing line",
+          "url": "https://en.wikipedia.org/wiki/Monofilament_fishing_line",
+          "quote": "Most fishing lines are now nylon monofilament because they are cheap to manufacture and can be produced in a range of diameters which have different tensile strengths",
+          "fetched_at": "2026-09-16T23:43:27+00:00",
+          "sha256": "28c4f3e39b7598c4"
+        },
+        {
+          "claim": "buoyancy & stretch",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Fishing line",
+          "url": "https://en.wikipedia.org/wiki/Fishing_line",
+          "quote": "Fishermen often use monofilament because of its buoyant characteristics and its ability to stretch under load.",
+          "fetched_at": "2026-09-16T23:43:27+00:00",
+          "sha256": "634a681a938d6528"
+        },
+        {
+          "claim": "stretch advantage",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Fishing line",
+          "url": "https://en.wikipedia.org/wiki/Fishing_line",
+          "quote": "The line stretch has advantages, such as damping the force when setting the hook and when fighting strong fish.",
+          "fetched_at": "2026-09-16T23:43:27+00:00",
+          "sha256": "634a681a938d6528"
+        },
+        {
+          "claim": "colors",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Monofilament fishing line",
+          "url": "https://en.wikipedia.org/wiki/Monofilament_fishing_line",
+          "quote": "Monofilament line is also available in different colors, such as clear, white, green, blue, red, and fluorescent.",
+          "fetched_at": "2026-09-16T23:43:27+00:00",
+          "sha256": "28c4f3e39b7598c4"
+        }
+      ],
+      "kind": "line",
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": null,
+        "verified_at": null
+      }
+    },
+    {
+      "id": "fluorocarbon",
+      "label": "Fluorocarbon (PVDF)",
+      "aliases": [
+        "fluoro",
+        "fluorocarbon",
+        "fc",
+        "pvdf"
+      ],
+      "material": "polyvinylidene fluoride (PVDF)",
+      "construction": "single strand",
+      "citations": [
+        {
+          "claim": "material & visibility",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Fishing line",
+          "url": "https://en.wikipedia.org/wiki/Fishing_line",
+          "quote": "Fluorocarbon fishing line is made of the fluoropolymer PVDF and it is valued for its refractive index, which is similar to that of water, making it less visible to fish.",
+          "fetched_at": "2026-09-16T23:43:27+00:00",
+          "sha256": "634a681a938d6528"
+        },
+        {
+          "claim": "sink rate",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Monofilament fishing line",
+          "url": "https://en.wikipedia.org/wiki/Monofilament_fishing_line",
+          "quote": "It is denser than nylon, too, which makes it sink faster.",
+          "fetched_at": "2026-09-16T23:43:27+00:00",
+          "sha256": "28c4f3e39b7598c4"
+        },
+        {
+          "claim": "stretch / sensitivity",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Monofilament fishing line",
+          "url": "https://en.wikipedia.org/wiki/Monofilament_fishing_line",
+          "quote": "Because the elastic stretching is only a fraction of that of nylon monofilament, the contact with fish or bait is more direct.",
+          "fetched_at": "2026-09-16T23:43:27+00:00",
+          "sha256": "28c4f3e39b7598c4"
+        },
+        {
+          "claim": "abrasion & leader use",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Monofilament fishing line",
+          "url": "https://en.wikipedia.org/wiki/Monofilament_fishing_line",
+          "quote": "Fluorocarbon lines have greater surface hardness than nylon lines and are more abrasion-resistant against underwater rocks and snags, yet are more shock-resilient than braided lines when fighting fish, thus making them ideal to use as leader lines",
+          "fetched_at": "2026-09-16T23:43:27+00:00",
+          "sha256": "28c4f3e39b7598c4"
+        },
+        {
+          "claim": "memory & sensitivity",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Monofilament fishing line",
+          "url": "https://en.wikipedia.org/wiki/Monofilament_fishing_line",
+          "quote": "They also have less memory, stretch and moisture expansion than nylon lines, making it easier to keep the line taut and transmit vibrations, which is essential in lure fishing where the angler is very reliant on tactile sensitivity.",
+          "fetched_at": "2026-09-16T23:43:27+00:00",
+          "sha256": "28c4f3e39b7598c4"
+        }
+      ],
+      "kind": "line",
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": null,
+        "verified_at": null
+      }
+    },
+    {
+      "id": "braid",
+      "label": "Braid (PE / superline)",
+      "aliases": [
+        "braid",
+        "braided",
+        "pe",
+        "superline"
+      ],
+      "material": "polyethylene (gelspun)",
+      "construction": "braided multifilament",
+      "citations": [
+        {
+          "claim": "strengths",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Braided fishing line",
+          "url": "https://en.wikipedia.org/wiki/Braided_fishing_line",
+          "quote": "Braided line was one of the earliest types of fishing line, and in its modern incarnations it is still very popular in some situations because of its high knot strength, lack of stretch, and great overall power in relation to its diameter.",
+          "fetched_at": "2026-09-16T23:43:27+00:00",
+          "sha256": "05b696d388e95327"
+        },
+        {
+          "claim": "diameter",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Braided fishing line",
+          "url": "https://en.wikipedia.org/wiki/Braided_fishing_line",
+          "quote": "Braided lines often have 1/3 to 1/4 the diameter of mono or fluorocarbon lines at a given test breaking strength.",
+          "fetched_at": "2026-09-16T23:43:27+00:00",
+          "sha256": "05b696d388e95327"
+        },
+        {
+          "claim": "sensitivity",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Braided fishing line",
+          "url": "https://en.wikipedia.org/wiki/Braided_fishing_line",
+          "quote": "Braided lines have very little stretch, making fishing rigs very sensitive to fish bites; This is very important for both deep sea fishing and when targeting fish with a gentle bite.",
+          "fetched_at": "2026-09-16T23:43:27+00:00",
+          "sha256": "05b696d388e95327"
+        },
+        {
+          "claim": "knotting caution",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Braided fishing line",
+          "url": "https://en.wikipedia.org/wiki/Braided_fishing_line",
+          "quote": "Due to their flexibility, lack of stretch and most important, slippery surface, braided lines are hard to knot properly.",
+          "fetched_at": "2026-09-16T23:43:27+00:00",
+          "sha256": "05b696d388e95327"
+        },
+        {
+          "claim": "shock caution",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Braided fishing line",
+          "url": "https://en.wikipedia.org/wiki/Braided_fishing_line",
+          "quote": "Due to the minimal stretch of braided line, hard-hitting fish will frequently cause the line to break.",
+          "fetched_at": "2026-09-16T23:43:27+00:00",
+          "sha256": "05b696d388e95327"
+        }
+      ],
+      "kind": "line",
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": null,
+        "verified_at": null
+      }
+    },
+    {
+      "id": "copolymer",
+      "label": "Copolymer",
+      "aliases": [
+        "copolymer",
+        "copoly",
+        "tripolymer"
+      ],
+      "citations": [
+        {
+          "claim": "what it is",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Fishing line",
+          "url": "https://en.wikipedia.org/wiki/Fishing_line",
+          "quote": "Recently, other alternatives to standard nylon monofilament lines have been introduced made of copolymers or fluorocarbon, or a combination of the two materials.",
+          "fetched_at": "2026-09-16T23:43:27+00:00",
+          "sha256": "634a681a938d6528"
+        },
+        {
+          "claim": "construction",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Monofilament fishing line",
+          "url": "https://en.wikipedia.org/wiki/Monofilament_fishing_line",
+          "quote": "Most copolymer lines are nylon-based polymer blends fusing a blend of nylon with another higher-density one, although recently \"tripolymer\" lines that fuse three different blends of nylon have also appeared on the market.",
+          "fetched_at": "2026-09-16T23:43:27+00:00",
+          "sha256": "28c4f3e39b7598c4"
+        }
+      ],
+      "kind": "line",
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": null,
+        "verified_at": null
+      }
+    }
+  ],
+  "general": {
+    "notes": [
+      {
+        "tier": "T3",
+        "source": "Wikipedia \u2014 Fishing line",
+        "url": "https://en.wikipedia.org/wiki/Fishing_line",
+        "quote": "Other factors relevant to certain fishing practices include breaking strength, knot strength, UV resistance, castability, limpness, stretch, memory, abrasion resistance, and visibility.",
+        "fetched_at": "2026-09-16T23:43:27+00:00"
+      }
+    ]
+  }
+}

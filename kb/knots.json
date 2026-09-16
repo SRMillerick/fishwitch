@@ -1,0 +1,444 @@
+{
+  "label": "Knots",
+  "_note": "Promoted 2026-09-16 (verified_by sean). Every claim is a verbatim quote from the cited live page, verified by substring match; fetched_at + page sha256 per citation. Read by tactics.py.",
+  "knots": [
+    {
+      "id": "palomar",
+      "label": "Palomar knot",
+      "aliases": [
+        "palomar",
+        "double palomar"
+      ],
+      "connection": "line-to-terminal",
+      "citations": [
+        {
+          "claim": "identity & use",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Palomar knot",
+          "url": "https://en.wikipedia.org/wiki/Palomar_knot",
+          "quote": "The Palomar knot is a knot that is used for securing a fishing line to a fishing lure, hook, or swivel. It is strong and easy to tie and with practice can even be tied in the dark.",
+          "fetched_at": "2026-09-16T23:41:09+00:00",
+          "sha256": "f9f78e9052b7a7b5",
+          "source_url": "https://en.wikipedia.org/wiki/Palomar_knot"
+        },
+        {
+          "claim": "braid suitability",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Double Palomar Knot",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/double-palomar-knot/",
+          "quote": "both are good knots for braided line because they will not slip",
+          "fetched_at": "2026-09-16T23:41:09+00:00",
+          "sha256": "128aafd1016e690e",
+          "source_url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/double-palomar-knot/"
+        }
+      ],
+      "kind": "knot",
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:43:51+00:00"
+      }
+    },
+    {
+      "id": "improved-clinch",
+      "label": "Improved clinch knot",
+      "aliases": [
+        "fisherman's knot",
+        "salmon knot",
+        "clinch knot"
+      ],
+      "connection": "line-to-terminal",
+      "citations": [
+        {
+          "claim": "identity & use",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Improved clinch knot",
+          "url": "https://en.wikipedia.org/wiki/Improved_clinch_knot",
+          "quote": "used for securing a fishing line to the fishing lure, but can also affix fishing line to a swivel, clip, or artificial fly.",
+          "fetched_at": "2026-09-16T23:41:09+00:00",
+          "sha256": "034cba37be4daf43",
+          "source_url": "https://en.wikipedia.org/wiki/Improved_clinch_knot"
+        },
+        {
+          "claim": "line types",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Improved clinch knot",
+          "url": "https://en.wikipedia.org/wiki/Improved_clinch_knot",
+          "quote": "It can be used with many kinds of line including mono-filament, fluorocarbon, and braided fishing line.",
+          "fetched_at": "2026-09-16T23:41:09+00:00",
+          "sha256": "034cba37be4daf43",
+          "source_url": "https://en.wikipedia.org/wiki/Improved_clinch_knot"
+        },
+        {
+          "claim": "mono/fluoro terminal knot",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 How to Tie a Clinch Knot",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/how-to-tie-a-clinch-knot/",
+          "quote": "The clinch or clinch knot is a good fishing knot to use when tying monofilament or fluorocarbon fishing line to a hook, lure, or swivel.",
+          "fetched_at": "2026-09-16T23:41:09+00:00",
+          "sha256": "9bbe1174e4bb3784",
+          "source_url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/how-to-tie-a-clinch-knot/"
+        },
+        {
+          "claim": "strength",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Best Fishing Knots",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/best-fishing-knots/",
+          "quote": "it retains up to 95% of the original line strength",
+          "fetched_at": "2026-09-16T23:41:09+00:00",
+          "sha256": "40e75b179fd6a97e",
+          "source_url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/best-fishing-knots/"
+        }
+      ],
+      "kind": "knot",
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:43:51+00:00"
+      }
+    },
+    {
+      "id": "uni",
+      "label": "Uni knot",
+      "aliases": [
+        "uni",
+        "uni knot",
+        "double uni"
+      ],
+      "connection": [
+        "line-to-terminal",
+        "line-to-line",
+        "reel-spool"
+      ],
+      "citations": [
+        {
+          "claim": "identity, use & strength",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Uni knot",
+          "url": "https://en.wikipedia.org/wiki/Uni_knot",
+          "quote": "The uni knot is a multi-purpose fishing knot used in angling that can be used for attaching the fishing line to the spool of a reel, for joining main line to leader/backing lines, and for attaching lures, swivels and snaps.",
+          "fetched_at": "2026-09-16T23:41:09+00:00",
+          "sha256": "2d210a07c42c9d72",
+          "source_url": "https://en.wikipedia.org/wiki/Uni_knot"
+        },
+        {
+          "claim": "braid wrap guidance",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Double Uni Knot",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/how-to-tie-a-double-uni-knot/",
+          "quote": "if using braided line, double the number of wraps from four to eight to ensure strength",
+          "fetched_at": "2026-09-16T23:41:09+00:00",
+          "sha256": "e3d1c1f8bc0536c7",
+          "source_url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/how-to-tie-a-double-uni-knot/"
+        }
+      ],
+      "kind": "knot",
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:43:51+00:00"
+      }
+    },
+    {
+      "id": "alberto",
+      "label": "Alberto knot",
+      "aliases": [
+        "alberto",
+        "crazy alberto"
+      ],
+      "connection": "line-to-line",
+      "citations": [
+        {
+          "claim": "best line-to-line for heavy leader to braid",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Alberto Fishing Knot",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/alberto-fishing-knot/",
+          "quote": "Many consider this to be the best line to line fishing knot to learn when attaching heavy monofilament or fluorocarbon leader to braided line.",
+          "fetched_at": "2026-09-16T23:41:09+00:00",
+          "sha256": "3c45c582d128e00c",
+          "source_url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/alberto-fishing-knot/"
+        },
+        {
+          "claim": "origin",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Alberto Fishing Knot",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/alberto-fishing-knot/",
+          "quote": "created this stronger variation of the Albright knot",
+          "fetched_at": "2026-09-16T23:41:09+00:00",
+          "sha256": "3c45c582d128e00c",
+          "source_url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/alberto-fishing-knot/"
+        }
+      ],
+      "kind": "knot",
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:43:51+00:00"
+      }
+    },
+    {
+      "id": "albright",
+      "label": "Albright special",
+      "aliases": [
+        "albright",
+        "albright knot"
+      ],
+      "connection": "line-to-line",
+      "citations": [
+        {
+          "claim": "identity & use",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Albright special",
+          "url": "https://en.wikipedia.org/wiki/Albright_special",
+          "quote": "It is a strong knot used to tie two different diameters of line together, for instance to tie monofilament to braid.",
+          "fetched_at": "2026-09-16T23:41:09+00:00",
+          "sha256": "7b40a920ad9d0994",
+          "source_url": "https://en.wikipedia.org/wiki/Albright_special"
+        }
+      ],
+      "kind": "knot",
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:43:51+00:00"
+      }
+    },
+    {
+      "id": "double-surgeons",
+      "label": "Double surgeon's knot",
+      "aliases": [
+        "surgeon's knot",
+        "surgeons knot"
+      ],
+      "connection": "line-to-line",
+      "citations": [
+        {
+          "claim": "unequal diameters",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Double Surgeon's Knot",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/double-surgeons-knot/",
+          "quote": "The double surgeon's knot, also known as the surgeon's knot, can be used to join lines of either equal or unequal diameters.",
+          "fetched_at": "2026-09-16T23:41:09+00:00",
+          "sha256": "a21afe0352408ac6",
+          "source_url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/double-surgeons-knot/"
+        },
+        {
+          "claim": "strength",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Double Surgeon's Knot",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/double-surgeons-knot/",
+          "quote": "this is one of the best fishing knots you can use because the double surgeon's knot strength is very high",
+          "fetched_at": "2026-09-16T23:41:09+00:00",
+          "sha256": "a21afe0352408ac6",
+          "source_url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/double-surgeons-knot/"
+        }
+      ],
+      "kind": "knot",
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:43:51+00:00"
+      }
+    },
+    {
+      "id": "nail",
+      "label": "Nail knot",
+      "aliases": [
+        "tube knot",
+        "gryp knot"
+      ],
+      "connection": "fly-line-to-leader",
+      "citations": [
+        {
+          "claim": "identity & use",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Nail knot",
+          "url": "https://en.wikipedia.org/wiki/Nail_knot",
+          "quote": "The nail knot, also known as the tube knot or gryp knot, is used in fly fishing to attach the leader to the main fishing line.",
+          "fetched_at": "2026-09-16T23:41:09+00:00",
+          "sha256": "1fd034f2c2023917",
+          "source_url": "https://en.wikipedia.org/wiki/Nail_knot"
+        }
+      ],
+      "kind": "knot",
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:43:51+00:00"
+      }
+    },
+    {
+      "id": "drop-shot",
+      "label": "Drop shot knot",
+      "aliases": [
+        "drop shot knot"
+      ],
+      "connection": "line-to-terminal",
+      "citations": [
+        {
+          "claim": "rig construction",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Drop Shot Knot",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/drop-shot-knot/",
+          "quote": "A drop shot rig consists of line connected to a hook (point facing up) with a trailing leader and weight at the very end.",
+          "fetched_at": "2026-09-16T23:41:09+00:00",
+          "sha256": "3c1101bd6f7e3e31",
+          "source_url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/drop-shot-knot/"
+        },
+        {
+          "claim": "when to use",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Drop Shot Knot",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/drop-shot-knot/",
+          "quote": "works particularly well for fish that are suspended",
+          "fetched_at": "2026-09-16T23:41:09+00:00",
+          "sha256": "3c1101bd6f7e3e31",
+          "source_url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/drop-shot-knot/"
+        }
+      ],
+      "kind": "knot",
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:43:51+00:00"
+      }
+    },
+    {
+      "id": "surgeons-loop",
+      "label": "Surgeon's loop",
+      "aliases": [
+        "surgeon's loop",
+        "loop knot"
+      ],
+      "connection": "loop",
+      "citations": [
+        {
+          "claim": "purpose",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Fishing Loop Knots",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/fishing-loop-knots/",
+          "quote": "A fishing loop knot is used so the line or leader won\u2019t impair the action of the lure",
+          "fetched_at": "2026-09-16T23:41:09+00:00",
+          "sha256": "9ab02cd29424ddbb",
+          "source_url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/fishing-loop-knots/"
+        }
+      ],
+      "kind": "knot",
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-16T23:43:51+00:00"
+      }
+    }
+  ],
+  "recommend": {
+    "_note": "Editorial recommendation rule, not a sourced fact. Maps a session pick (KB entry id) to knots whose CITED use fits. The knot facts themselves are quoted in the entries above.",
+    "by_entry": {
+      "dropshot": [
+        "drop-shot",
+        "palomar"
+      ],
+      "trig": [
+        "palomar",
+        "improved-clinch"
+      ],
+      "wacky": [
+        "palomar",
+        "improved-clinch"
+      ],
+      "neko": [
+        "palomar",
+        "improved-clinch"
+      ],
+      "ned": [
+        "palomar",
+        "improved-clinch"
+      ],
+      "carolina": [
+        "palomar",
+        "alberto",
+        "double-surgeons"
+      ],
+      "jig": [
+        "palomar",
+        "improved-clinch"
+      ],
+      "walker": [
+        "surgeons-loop",
+        "palomar"
+      ],
+      "popper": [
+        "surgeons-loop",
+        "palomar"
+      ],
+      "plopper": [
+        "surgeons-loop",
+        "palomar"
+      ],
+      "buzz": [
+        "surgeons-loop",
+        "palomar"
+      ],
+      "frog": [
+        "palomar"
+      ],
+      "spinnerbait": [
+        "palomar",
+        "improved-clinch"
+      ],
+      "chatterbait": [
+        "palomar",
+        "improved-clinch"
+      ],
+      "squarebill": [
+        "improved-clinch",
+        "palomar"
+      ],
+      "crank-mid": [
+        "improved-clinch",
+        "palomar"
+      ],
+      "jerkbait": [
+        "improved-clinch",
+        "palomar"
+      ],
+      "swimbait": [
+        "palomar",
+        "improved-clinch"
+      ],
+      "spin-trout": [
+        "palomar",
+        "improved-clinch"
+      ],
+      "bait-trout": [
+        "improved-clinch",
+        "palomar"
+      ],
+      "fly-trout": [
+        "nail"
+      ],
+      "cut-bait": [
+        "improved-clinch",
+        "palomar"
+      ],
+      "live-bait": [
+        "improved-clinch",
+        "palomar"
+      ],
+      "bobber-jig": [
+        "palomar",
+        "improved-clinch"
+      ],
+      "spinner-pan": [
+        "palomar",
+        "improved-clinch"
+      ]
+    },
+    "line_joining": [
+      "alberto",
+      "albright",
+      "double-surgeons",
+      "uni"
+    ]
+  }
+}
