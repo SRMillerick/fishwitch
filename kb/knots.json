@@ -422,6 +422,15 @@
           "quote": "This is a common knot used by fishermen because it is simple to tie, is strong and can be used with many kinds of line including mono-filament, fluorocarbon, and braided fishing line.",
           "fetched_at": "2026-09-16T23:46:39+00:00",
           "sha256": "72873a3af3b9d8f2"
+        },
+        {
+          "claim": "wrap count vs line weight",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 San Diego Jam knot",
+          "url": "https://en.wikipedia.org/wiki/San_Diego_Jam_knot",
+          "quote": "wraps the free end around the doubled main line five times (more turns may be recommended for light line or fewer for heavy line)",
+          "fetched_at": "2026-09-16T23:47:54+00:00",
+          "sha256": "72873a3af3b9d8f2"
         }
       ],
       "provenance": {
@@ -564,6 +573,21 @@
         "id": "san-diego-jam",
         "use": "heavy hybrid or mono to topwater"
       }
+    ],
+    "practices": [
+      "always wet knots before tightening, regardless of line material",
+      "fluoro under 10 lb: 10 wraps when tying the snell or uni"
     ]
-  }
+  },
+  "practice": [
+    {
+      "claim": "wet before tightening",
+      "tier": "T2",
+      "source": "Take Me Fishing \u2014 Double Uni Knot",
+      "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/how-to-tie-a-double-uni-knot/",
+      "quote": "remember to moisten your knots before tightening in order to prevent line damage caused by friction",
+      "fetched_at": "2026-09-16T23:47:54+00:00",
+      "sha256": "e5dc21e445810c9e"
+    }
+  ]
 }

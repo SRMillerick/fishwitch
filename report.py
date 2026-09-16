@@ -250,6 +250,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
             if k["id"] not in _seen_knots:
                 _seen_knots.add(k["id"]); knots.append(k)
     knots = knots[:3]
+    knot_notes = (tx.load_knots().get("repertoire", {}) or {}).get("practices", [])
 
     def prime_score(blk):
         s = sum(p[1] for p in blk["picks"]) or 0
@@ -299,7 +300,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         natal=natal, aspects=(aspects or [])[:8], perfecting=perfecting,
         voc=voc, moon_note=mn, resonance=resonance, match=match,
         blocks=blocks, rods=rods, prime=prime, prime_score=prime_s, utc_off=wx.utc_offset,
-        knots=knots, gap=gap,
+        knots=knots, knot_notes=knot_notes, gap=gap,
         logbook=lb.summary_for(lake.get("name", ""), angler=profile.get("name")),
         lake_state=lake_state, days_since_turnover=days_since_turnover,
         heat_streak=streak, state_basis=state_basis, access_note=acc_note,
@@ -546,6 +547,8 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
             conn = ", ".join(conn) if isinstance(conn, list) else (conn or "")
             L.append(f"- **{k['label']}**" + (f" ({conn})" if conn else "")
                      + (f" — {q}" if q else "") + (f" *({src})*" if src else ""))
+        if m.get("knot_notes"):
+            L.append("*Practice: " + "; ".join(m["knot_notes"]) + ".*")
         L.append("")
 
     if show_gap and m.get("gap"):
