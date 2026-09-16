@@ -9,5 +9,5 @@ HOST="${BAROMOON_HOST:-root@$(cat deploy/host.txt 2>/dev/null || echo SET-BAROMO
 echo "→ mirroring public repo…"
 ./publish-mirror
 echo "→ pulling on $HOST and restarting…"
-ssh "$HOST" 'cd /srv/baromoon && git pull -q && systemctl restart baromoon && systemctl is-active baromoon'
+ssh "$HOST" 'cd /srv/fishwitch && git pull -q && systemctl restart baromoon && systemctl is-active baromoon'
 echo "✅ live"

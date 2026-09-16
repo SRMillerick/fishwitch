@@ -3,7 +3,7 @@
 set -euo pipefail
 
 DOMAIN=baromoon.com
-APPDIR=/srv/baromoon
+APPDIR=/srv/fishwitch
 
 apt-get update -qq
 apt-get install -y -qq python3-venv python3-pip git curl >/dev/null
@@ -20,7 +20,7 @@ if [ ! -d "$APPDIR" ]; then
 fi
 cd "$APPDIR"
 python3 -m venv venv
-venv/bin/pip install -q flask markdown gunicorn requests kerykeion pyswisseph
+venv/bin/pip install -q -r requirements.txt
 
 # systemd service — public mode (no FISHWITCH_LOCAL: /review stays off)
 cat > /etc/systemd/system/baromoon.service <<EOF
