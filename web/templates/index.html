@@ -2,57 +2,64 @@
 {% block title %}the moon-ledger{% endblock %}
 {% block content %}
 <section class="hero">
-  <p class="smallcaps">the moon-ledger for anglers</p>
-  <h1>When do the fish feed <em>near you?</em></h1>
-  <p>baromoon reads moon, barometer, and water — the two signals that survive
-  calibration, plus everything your lake's sky is doing — and hands you the
-  <strong>when</strong>, the <strong>where</strong>, and the <strong>rig</strong>.
-  Deterministic math. No mysticism required, though the moon gets a vote.</p>
-  <p class="cta">
-    <a class="btn primary" href="#ledger">Open the ledger</a>
-    <a class="btn ghost" href="/interview">Make it yours · 3 steps</a>
-  </p>
-</section>
-
-{% if teaser %}
-<section class="teaser">
-  <div class="t-main">
-    <div class="t-label">tonight · {{ teaser.lake }}</div>
-    <div class="t-score">{{ teaser.overall }}<span>/10</span></div>
+  <div class="hero-copy">
+    <span class="eyebrow">the moon-ledger · North Bay</span>
+    <h1>When do the fish <em>feed?</em></h1>
+    <p class="lede">baromoon reads moon, barometer, and water — the signals that survive
+    calibration, plus everything your lake's sky is doing — and hands you the
+    <strong>when</strong>, the <strong>where</strong>, and the <strong>rig</strong>.
+    Deterministic math. No mysticism required, though the moon gets a vote.</p>
+    <p class="cta">
+      <a class="btn primary" href="#ledger">Open the ledger</a>
+      <a class="btn ghost" href="/interview">Make it yours · 3 steps</a>
+    </p>
   </div>
-  <div class="t-side">
-    {% if teaser.prime_t %}<div>prime window ~{{ teaser.prime_t.strftime('%-I:%M %p') }} <span class="fine">({{ teaser.prime_lab }})</span></div>{% endif %}
-    {% if teaser.picks %}<div>first rod: <strong>{{ teaser.picks[0] }}</strong></div>{% endif %}
-    <a href="/report">full report →</a>
-  </div>
+  {% if teaser %}
+  <aside class="readout">
+    <div class="r-label">Tonight · {{ teaser.lake }}</div>
+    <div class="r-score">{{ teaser.overall }}<span>/10</span></div>
+    <dl class="r-meta">
+      {% if teaser.moon %}
+      <div><dt>Moon</dt><dd><span class="lune">{{ teaser.moon_svg | safe }}</span> {{ teaser.moon.phase }} · {{ teaser.moon.illum | round | int }}%</dd></div>
+      {% endif %}
+      {% if teaser.prime_t %}
+      <div><dt>Prime window</dt><dd>{{ teaser.prime_t.strftime('%-I:%M %p') }}</dd></div>
+      {% endif %}
+      {% if teaser.picks %}
+      <div><dt>First rod</dt><dd>{{ teaser.picks[0] }}</dd></div>
+      {% endif %}
+    </dl>
+    <a class="r-link" href="/report">Full report →</a>
+  </aside>
+  {% endif %}
 </section>
-{% endif %}
 
 <section class="ledger" id="ledger">
-  <div class="ledger-head">
-    <h2 class="rule-double" style="border:0;padding:0;margin:0">The ledger</h2>
-    <span class="smallcaps" id="ledger-scope">home water · next 3 days</span>
+  <div class="section-head">
+    <h2>The ledger</h2>
+    <span class="smallcaps" id="ledger-scope">Home water · next three days</span>
   </div>
-  <p class="fine" id="ledger-note">Best upcoming windows, tiered — open a line for the
-  full report.{% if not ledger %} (casting the windows…){% endif %}</p>
+  <p class="fine ledger-note" id="ledger-note">The best upcoming windows, tiered — open a
+  line for the full report. With a profile, this becomes your waters and your sky.</p>
   <ul class="tier-rows" id="ledger-rows">
     {% for r in ledger or [] %}
     <li><a class="trow {{ r.tier }}" href="/report?lake={{ r.lake_id }}&at={{ r.start.strftime('%Y-%m-%d %H:%M') }}&hours=2&voice=almanac">
       <span class="tier">{{ r.tier }}</span>
-      <span class="when">{{ r.day }} · {{ r.start.strftime('%-I:%M %p') }}–{{ r.end.strftime('%-I %p') }} <span class="lune">{{ r.moon }}</span>
-        <span class="score">{{ r.overall }}/10</span>
-        <span class="where">{{ r.lake }}{% if r.prime %} · prime {{ r.prime.strftime('%-I:%M %p') }}{% endif %} · {{ r.conf }} confidence</span>
-      </span>
+      <span class="when"><span class="day">{{ r.day }}</span><span class="clock">{{ r.start.strftime('%-I:%M %p') }}–{{ r.end.strftime('%-I %p') }}</span> <span class="lune">{{ r.moon | safe }}</span></span>
+      <span class="where">{{ r.lake }}</span>
       <span class="rig">{{ r.rig }}</span>
+      <span class="score">{{ r.overall }}<i>/10</i></span>
     </a></li>
     {% endfor %}
   </ul>
-  <div class="divider"><span class="triskele" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M12 12c0-3.2 2.2-5.2 5-5.2"/><path d="M12 12c0 3.2-2.2 5.2-5 5.2" transform="rotate(120 12 12)"/><path d="M12 12c0-3.2 2.2-5.2 5-5.2" transform="rotate(240 12 12)"/></svg></span></div>
-  <p class="fine">S — drop everything · A — plan around it · B — worth being out ·
-  C — the fish have other plans. Confidence: ≤3 days high · 4–7 medium.</p>
+  {% if not ledger %}<p class="fine">Casting the windows…</p>{% endif %}
+  <p class="fine" style="margin-top:1.1rem">S — drop everything · A — plan around it ·
+  B — worth being out · C — the fish have other plans.</p>
 </section>
 
-<section class="cols">
+<div class="divider"><span class="triskele" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M12 12c0-3.2 2.2-5.2 5-5.2"/><path d="M12 12c0 3.2-2.2 5.2-5 5.2" transform="rotate(120 12 12)"/><path d="M12 12c0-3.2 2.2-5.2 5-5.2" transform="rotate(240 12 12)"/></svg></span></div>
+
+<section class="band cols">
   <div>
     <h2 class="rule-double">How it works</h2>
     <ol class="plain">
@@ -77,8 +84,8 @@
           <span class="fine">{{ l.region }}</span></li>
       {% endfor %}
     </ul>
-    <p class="fine">Any water body can be characterized from public data
-    (OSM + Wikidata) and added to the registry.</p>
+    <p class="fine" style="margin-top:1.1rem">Any water body can be characterized from
+    public data (OSM + Wikidata) and added to the registry.</p>
   </div>
 </section>
 {% endblock %}

@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block title %}report{% endblock %}
 {% block content %}
+<div class="narrow">
+<span class="eyebrow">the deep read</span>
 <h1>Session report</h1>
 <form id="report-form" class="grid" method="get" action="/report">
   <label>Lake
@@ -33,5 +35,6 @@ reports add your natal transits and your arsenal. <a href="/interview">Build one
     {% include "_tackle.html" %}
   {% endif %}
 {% endif %}
+</div>
 </div>
 {% endblock %}

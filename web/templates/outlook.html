@@ -15,6 +15,7 @@
 {% if err %}<p class="error">{{ err }}</p>{% endif %}
 {% if rows %}
 <h2>Top windows of the horizon</h2>
+<div class="table-scroll wide">
 <table>
   <tr><th>when</th><th>score</th><th>confidence</th><th>prime</th><th>approach</th></tr>
   {% for r in rows %}
@@ -27,12 +28,13 @@
   </tr>
   {% endfor %}
 </table>
+</div>
 <p class="fine">Confidence: ≤3 days high · 4–7 medium · 8+ low (weather forecast
 range). Sky timing holds at all ranges. Windows scored anonymously; a profile
 re-ranks them against your natal chart and arsenal on the report page.</p>
 <h2>Moon over the horizon</h2>
 <p class="moonrow">
-{% for d, ph, il in moon %}<span class="moon {{ 'peak' if il < 8 or il > 92 else '' }}">{{ d[5:] }} {{ ph }} {{ il }}%</span> {% endfor %}
+{% for d, ph, il, svg in moon %}<span class="moon {{ 'peak' if il < 8 or il > 92 else '' }}">{{ svg | safe }} {{ d[5:] }} {{ ph }} {{ il }}%</span> {% endfor %}
 </p>
 {% endif %}
 {% endblock %}

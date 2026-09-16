@@ -39,7 +39,7 @@ webapp.registry = lambda: {
 }
 
 STAMP = datetime.now().strftime("%A %b %-d, %-I:%M %p")
-BANNER = (f'<p class="fine snap">📸 static snapshot — built {STAMP}. '
+BANNER = (f'<p class="fine snap">Static snapshot — built {STAMP}. '
           'The live pipe re-renders these in real time.</p>')
 
 c = webapp.app.test_client()
@@ -92,7 +92,7 @@ for i, at in enumerate([datetime.now().replace(hour=18, minute=0, second=0, micr
 
 # interview placeholder (the real one needs the live app + custody API)
 iv = c.get("/interview").get_data(as_text=True)
-iv = iv.replace("Save profile to this browser", "🔒 profile creation runs on the live app")
+iv = iv.replace("Save profile to this browser", "profile creation runs on the live app")
 iv = iv.replace('<div class="cta">',
                 '<p class="fine"><strong>Read-only snapshot:</strong> the save button is locked. '
                 'Profile creation and personal reports need the live app — '
@@ -108,7 +108,7 @@ iv = iv.replace('<h1>Three steps to your reports</h1>',
 iv = iv.replace('<input name="bplace" id="bplace" placeholder="City, State — e.g. Santa Rosa, CA" required>',
                 '<input name="bplace" placeholder="City, State — geocoding runs on the live app" readonly>')
 iv = iv.replace('<button type="submit">Save profile to this browser</button>',
-                '<button type="submit" disabled>🔒 saving runs on the live app</button>')
+                '<button type="submit" disabled>saving runs on the live app</button>')
 save("interview.html", iv)
 
 (OUT / "robots.txt").write_text("User-agent: *\nAllow: /\n")

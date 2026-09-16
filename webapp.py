@@ -68,6 +68,22 @@ def shared_weather(lat: float, lng: float, days: int = 7) -> Weather:
     return w
 
 
+_HIST: dict[tuple, tuple] = {}
+
+
+def shared_history(lat: float, lng: float, at: datetime) -> History | None:
+    key = (round(lat, 3), round(lng, 3), at.date().isoformat())
+    hit = _HIST.get(key)
+    if hit and time.time() - hit[1] < 3600:
+        return hit[0]
+    try:
+        h = History(lat, lng, at)
+    except Exception:
+        return None
+    _HIST[key] = (h, time.time())
+    return h
+
+
 _RCACHE: dict[str, tuple] = {}
 
 
@@ -235,15 +251,13 @@ def _rate_ok(bucket: str, limit: int, window_s: int = 3600) -> bool:
 def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
                    voice: str | None, species: str | None) -> dict:
     wx = shared_weather(lake["lat"], lake["lng"])
-    hist = None
-    try:
-        hist = History(lake["lat"], lake["lng"], at)
-    except Exception:
-        pass
+    hist = shared_history(lake["lat"], lake["lng"], at)
     m = gen(profile, lake, at, hours=hours, species=species,
             voice=voice or profile.get("astro_display") or "almanac",
             wx=wx, hist=hist)
-    body = _md.markdown(to_markdown(m), extensions=["tables"])
+    body = _md.markdown(to_markdown(m, emoji=False), extensions=["tables"])
+    body = (body.replace("<table>", '<div class="table-scroll"><table>')
+                .replace("</table>", "</table></div>"))
     prime = m.get("prime")
     rods = []
     for c in m["rods"]:
@@ -261,6 +275,9 @@ def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
                 lake=lake["name"], at=at, rods=rods,
                 prime_t=prime["start"] if prime else None,
                 prime_lab=(prime["light"] if prime else ""),
+                moon=m.get("moon") or {},
+                moon_svg=_moon_svg((m.get("moon") or {}).get("illum", 0),
+                                   (m.get("moon") or {}).get("elong", 0) < 180, size=17),
                 picks=[c["label"] for c, _, _ in (prime["picks"] if prime else [])][:2])
 
 
@@ -304,8 +321,8 @@ def index():
         pass
     try:
         home = resolve_lake(None)
-        ledger = _cached("ledger:anon:home:3",
-                         lambda: _ledger(home, 3, None, None, span=0))
+        ledger = _cached("ledger:anon:home:3:v2",
+                         lambda: _ledger(home, 3, None, None, span=0, limit=6))
     except Exception:
         pass
     return render_template("index.html", lakes=lakes_summary(), local=LOCAL,
@@ -349,11 +366,7 @@ def _horizon(lake: dict, days: int, species: str | None, profile: dict | None = 
     profile = profile or dict(species=species or "bass", astro_display="almanac",
                               arsenal=[])
     wx = shared_weather(lake["lat"], lake["lng"], days=days)
-    hist = None
-    try:
-        hist = History(lake["lat"], lake["lng"], datetime.now())
-    except Exception:
-        pass
+    hist = shared_history(lake["lat"], lake["lng"], datetime.now())
     from skycalc import Sky
     sky = Sky(lake["lng"], lake["lat"], lake.get("alt_m", 300), wx.utc_offset)
     results = []
@@ -382,7 +395,8 @@ def _horizon(lake: dict, days: int, species: str | None, profile: dict | None = 
     for d in range(1, days + 1):
         dd = (today + timedelta(days=d))
         ms = sky.moon_state(sky.jd(dd.replace(hour=12)))
-        moon.append((dd.date().isoformat(), ms["phase"], round(ms["illum"])))
+        moon.append((dd.date().isoformat(), ms["phase"], round(ms["illum"]),
+                     _moon_svg(ms["illum"], ms["elong"] < 180, size=14)))
     return results[:10], moon
 
 
@@ -407,35 +421,62 @@ def _tier(overall: float) -> str:
     return "S" if overall >= 7.5 else "A" if overall >= 7.0 else "B" if overall >= 6.5 else "C"
 
 
-def _moon_glyph(illum: float) -> str:
-    return ("●" if illum < 6 or illum > 94 else "☽" if illum < 45 else
-            "◐" if illum < 55 else "◑" if illum < 95 else "●")
+def _moon_svg(illum: float, waxing: bool, size: int = 15) -> str:
+    """Vector moon for the illuminated fraction. Drawn, never a font glyph,
+    so it renders identically on every system."""
+    r, c = 8.0, 10.0
+    f = max(0.0, min(1.0, float(illum) / 100.0))
+    outer = 1 if waxing else 0
+    if waxing:
+        term = 0 if f < 0.5 else 1
+    else:
+        term = 1 if f < 0.5 else 0
+    rx = abs(1.0 - 2.0 * f) * r
+    d = (f"M{c:g},{c - r:g} A{r:g},{r:g} 0 0,{outer} {c:g},{c + r:g} "
+         f"A{rx:.3f},{r:g} 0 0,{term} {c:g},{c - r:g} Z")
+    return (f'<svg class="moon-svg" width="{size}" height="{size}" viewBox="0 0 20 20" '
+            f'aria-hidden="true" focusable="false">'
+            f'<circle cx="{c:g}" cy="{c:g}" r="{r:g}" fill="none" stroke="currentColor" '
+            f'stroke-width="1" opacity=".32"/>'
+            f'<path d="{d}" fill="currentColor"/></svg>')
 
 
 def _ledger(home: dict, days: int, species: str | None, profile: dict | None,
-            span: int = 3) -> list[dict]:
+            span: int = 3, limit: int = 8) -> list[dict]:
     """Tier-ranked windows across the home water + `span` nearest. Deterministic
-    scans; caller caches. span=0 = home water only (fast landing render)."""
-    rows = []
+    scans; caller caches. span=0 = home water only (fast landing render).
+    Windows are deduped by clock — best-scoring water wins each slot — so the
+    ledger reads as an edit, not a dump."""
     lakes = [home] if span == 0 else _nearest_lakes(home, span)
-    for lk in _nearest_lakes(home):
+    best: dict[tuple, dict] = {}
+    for lk in lakes:
         try:
             wins, moon = _horizon(lk, days, species, profile)
         except Exception:
             continue
-        moonmap = {d: il for d, ph, il in moon}
+        moonmap = {d: svg for d, ph, il, svg in moon}
         for w in wins:
-            rows.append(dict(
+            key = (w["day"], w["start"])
+            cand = dict(
                 tier=_tier(w["overall"]), overall=w["overall"],
                 day=w["start"].strftime("%a %b %-d"),
                 start=w["start"], end=w["end"], prime=w["prime"],
                 lake=lk["name"], lake_id=lk.get("id") or lk["name"],
                 rig=w["picks"][0] if w["picks"] else "",
-                conf=w["conf"], moon=_moon_glyph(moonmap.get(w["day"], 50))
-            ))
+                conf=w["conf"], moon=moonmap.get(w["day"], ""),
+                others=0)
+            cur = best.get(key)
+            if cur is None:
+                best[key] = cand
+            elif cand["overall"] > cur["overall"]:
+                cand["others"] = cur.get("others", 0) + 1
+                best[key] = cand
+            else:
+                cur["others"] = cur.get("others", 0) + 1
     order = {"S": 0, "A": 1, "B": 2, "C": 3}
-    rows.sort(key=lambda r: (order[r["tier"]], -r["overall"]))
-    return rows[:12]
+    rows = sorted(best.values(),
+                  key=lambda r: (order[r["tier"]], -r["overall"], r["start"]))
+    return rows[:limit]
 
 
 @app.route("/kb")

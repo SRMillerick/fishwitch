@@ -5,7 +5,7 @@
 <p>Every entry carries provenance. <span class="badge ok">sourced</span> means a
 manufacturer catalog or agency guide backs it (click through to the source);
 <span class="badge pend">editorial</span> means consensus text awaiting a
-citation — displayed with a 🟡 in the pipe until promoted by a human.</p>
+citation — shown as unverified in the pipe until promoted by a human.</p>
 <form class="grid" method="get" action="/kb">
   <label>Species
     <select name="species">
@@ -16,6 +16,7 @@ citation — displayed with a 🟡 in the pipe until promoted by a human.</p>
   </label>
   <button type="submit">Browse</button>
 </form>
+<div class="table-scroll wide">
 <table class="kb">
   <tr><th>entry</th><th>style</th><th>depth</th><th>light</th><th>wind</th><th>water °F</th><th>source</th></tr>
   {% for c in cats %}
@@ -38,4 +39,5 @@ citation — displayed with a 🟡 in the pipe until promoted by a human.</p>
   </tr>
   {% endfor %}
 </table>
+</div>
 {% endblock %}

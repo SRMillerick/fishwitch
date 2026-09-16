@@ -57,14 +57,18 @@ def planet_lon(jd: float, name: str) -> tuple[float, float]:
     return lon % 360, lsp
 
 
-def fmt_sign(lon: float) -> str:
+def fmt_sign(lon: float, symbols: bool = True) -> str:
     lon %= 360
     i = int(lon // 30)
     d = lon - i * 30
-    return f"{SYM[i]} {ABBR[i]} {int(d):2d}°{int(round((d - int(d)) * 60)):02d}"
+    sym = f"{SYM[i]} " if symbols else ""
+    return f"{sym}{ABBR[i]} {int(d):2d}°{int(round((d - int(d)) * 60)):02d}"
 
 
 class Sky:
+    _sun_cache: dict = {}
+    _ph_cache: dict = {}
+
     def __init__(self, lng: float, lat: float, alt_m: float, utc_offset_sec: int):
         self.geo = (lng, lat, alt_m)
         self.off = utc_offset_sec / 86400.0
@@ -94,15 +98,24 @@ class Sky:
         return swe.azalt(jd, swe.ECL2HOR, self.geo, 0, 0, (lon, 0.0, 1.0))[1]
 
     def sun_events_for_day(self, local_date: datetime) -> dict:
-        """Sunrise/sunset/civil-twilights for the local date containing local_date."""
+        """Sunrise/sunset/civil-twilights for the local date containing local_date.
+        Memoized per (site, local day): the ledger scans the same day many times."""
         midnight = local_date.replace(hour=0, minute=0, second=0, microsecond=0)
+        key = (self.geo, round(self.off, 9), midnight)
+        hit = Sky._sun_cache.get(key)
+        if hit is not None:
+            return hit
         jd0 = self.jd(midnight)
         rise = swe.rise_trans(jd0, swe.SUN, swe.CALC_RISE, self.geo)[1][0]
         sett = swe.rise_trans(jd0, swe.SUN, swe.CALC_SET, self.geo)[1][0]
         cd = self._alt_crossing(jd0, -6.0, downward=True)      # evening civil dusk
         cn = self._alt_crossing(jd0, -6.0, downward=False)     # morning civil dawn
-        return dict(sunrise=self.loc(rise), sunset=self.loc(sett),
-                    civil_dusk=self.loc(cd), civil_dawn=self.loc(cn))
+        out = dict(sunrise=self.loc(rise), sunset=self.loc(sett),
+                   civil_dusk=self.loc(cd), civil_dawn=self.loc(cn))
+        if len(Sky._sun_cache) > 1024:
+            Sky._sun_cache.clear()
+        Sky._sun_cache[key] = out
+        return out
 
     def _alt_crossing(self, jd_start: float, target: float, downward: bool) -> float:
         step = 1 / 48  # 30 min
@@ -214,8 +227,12 @@ class Sky:
     # ── planetary hours ──────────────────────────────────────────────────
     def planetary_hours(self, date_local: datetime) -> list[dict]:
         """Hour spans covering date_local's day ±1 day (unbroken Chaldean
-        sequence; day ruler rules hour 1 at sunrise)."""
+        sequence; day ruler rules hour 1 at sunrise). Memoized per (site, day)."""
         d0 = date_local.replace(hour=0, minute=0, second=0, microsecond=0)
+        key = (self.geo, round(self.off, 9), d0)
+        hit = Sky._ph_cache.get(key)
+        if hit is not None:
+            return hit
         spans = []
         for delta in (-1, 0, 1):
             d = d0 + timedelta(days=delta)
@@ -237,12 +254,15 @@ class Sky:
                                   end=ss + timedelta(seconds=(i + 1) * night_len),
                                   ruler=r, kind="night", number=i + 1))
         spans.sort(key=lambda s: s["start"])
+        if len(Sky._ph_cache) > 512:
+            Sky._ph_cache.clear()
+        Sky._ph_cache[key] = spans
         return spans
 
     def hour_at(self, dt_local: datetime) -> dict:
         for h in self.planetary_hours(dt_local):
             if h["start"] <= dt_local < h["end"]:
-                return h
+                return dict(h)   # copy — cached spans are shared
         return dict(start=dt_local, end=dt_local + timedelta(hours=1), ruler="?",
                     kind="night", number=0)
 

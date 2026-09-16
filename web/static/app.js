@@ -68,24 +68,24 @@ const menu = document.getElementById("profile-menu");
 function renderMenu() {
   if (!menu) return;
   const v = vault(), active = localStorage.getItem(ACTIVE_KEY);
-  const sum = menu.querySelector("summary");
-  sum.textContent = (active && v[active]) ? "⚓ " + v[active].name
-                 : (Object.keys(v).length ? "👤 profiles" : "👤 anonymous");
+  const who = menu.querySelector("summary .who");
+  if (who) who.textContent = (active && v[active]) ? v[active].name
+                 : (Object.keys(v).length ? "Profiles" : "Anonymous");
   const body = menu.querySelector(".menu-body");
   let h = "";
   for (const name of Object.keys(v)) {
     const on = name === active ? " on" : "";
     h += `<div class="mrow${on}" data-act="use" data-name="${esc(name)}">
-            <span>${on ? "⚓ " : ""}${esc(name)}</span>
+            <span>${esc(name)}</span>
             <span class="micons">
-              <a href="#" data-act="export" data-name="${esc(name)}" title="download profile.json">⤓</a>
-              <a href="#" data-act="forget" data-name="${esc(name)}" title="forget this profile in this browser">✕</a>
+              <a href="#" data-act="export" data-name="${esc(name)}" title="download profile.json">download</a>
+              <a href="#" data-act="forget" data-name="${esc(name)}" title="forget this profile in this browser">forget</a>
             </span></div>`;
   }
-  if (!Object.keys(v).length) h += `<div class="mhint">no profiles stored in this browser</div>`;
-  h += `<div class="mrow" data-act="import">＋ import profile.json</div>`;
-  if (active) h += `<div class="mrow" data-act="anon">🚫 browse anonymously</div>`;
-  h += `<div class="mhint">profiles stay in this browser — never sent anywhere except to render your reports</div>`;
+  if (!Object.keys(v).length) h += `<div class="mhint">No profiles in this browser yet.</div>`;
+  h += `<div class="mrow" data-act="import">Import profile.json…</div>`;
+  if (active) h += `<div class="mrow" data-act="anon">Browse anonymously</div>`;
+  h += `<div class="mhint">Profiles stay in this browser — sent nowhere except to render your reports.</div>`;
   body.innerHTML = h;
 }
 
@@ -140,7 +140,7 @@ if (ledgerRows) {
   if (p) {
     const scope = document.getElementById("ledger-scope");
     const note = document.getElementById("ledger-note");
-    if (scope) scope.textContent = "⚓ " + p.name + "’s waters · next 5 days";
+    if (scope) scope.textContent = p.name + "’s waters · next 5 days";
     if (note) note.textContent = "casting the windows for " + p.name + "…";
     ledgerRows.innerHTML = '<li class="fine">casting…</li>';
     fetch("/api/outlook", {
@@ -151,10 +151,10 @@ if (ledgerRows) {
       ledgerRows.innerHTML = j.rows.map(r =>
         `<li><a class="trow ${r.tier}" href="/report?lake=${encodeURIComponent(r.lake_id)}&at=${encodeURIComponent(r.start)}&hours=2&voice=${p.astro_display || 'almanac'}">` +
         `<span class="tier">${r.tier}</span>` +
-        `<span class="when">${r.day} · ${r.clock} <span class="lune">${r.moon}</span>` +
-        ` <span class="score">${r.overall}/10</span>` +
-        `<span class="where">${esc(r.lake)}${r.prime ? " · prime " + r.prime : ""} · ${r.conf} confidence</span></span>` +
-        `<span class="rig">${esc(r.rig)}</span></a></li>`).join("");
+        `<span class="when"><span class="day">${esc(r.day)}</span><span class="clock">${esc(r.clock)}</span> <span class="lune">${r.moon}</span></span>` +
+        `<span class="where">${esc(r.lake)}</span>` +
+        `<span class="rig">${esc(r.rig)}</span>` +
+        `<span class="score">${r.overall}<i>/10</i></span></a></li>`).join("");
       if (note) note.textContent = j.rows.length
         ? `Best upcoming windows for ${p.name} — transits + arsenal, nearest waters.`
         : "no scorable windows in range";
@@ -170,8 +170,8 @@ if (form) {
     const p0 = getActive();
     if (note) note.className = "pill " + (p0 ? "on" : "");
     if (note) note.textContent = p0
-      ? "⚓ rendering as " + p0.name + " — transits + arsenal · profile stays in this browser"
-      : "rendering anonymously — build a profile for transits + your arsenal →";
+      ? "Rendering as " + p0.name + " — transits + arsenal · profile stays in this browser"
+      : "Rendering anonymously — build a profile for transits + your arsenal →";
   }
   form.addEventListener("submit", async (ev) => {
     ev.preventDefault();
@@ -283,7 +283,7 @@ if (iv) {
       box.textContent = "→ " + [picked.name, picked.region, picked.country].filter(Boolean).join(", ") +
         "  (" + picked.lat.toFixed(3) + ", " + picked.lng.toFixed(3) + ", " + picked.tz + ")";
     } catch {
-      box.textContent = "⚠ geocoding service unreachable — check the connection and try again";
+      box.textContent = "Geocoding service unreachable — check the connection and try again";
     }
   });
 
@@ -305,7 +305,7 @@ if (iv) {
   };
   const tryNext = () => {
     const err = stepValid(step);
-    if (err) { document.getElementById("status").textContent = "⚠ " + err; return; }
+    if (err) { document.getElementById("status").textContent = err; return; }
     document.getElementById("status").textContent = "";
     showStep(Math.min(step + 1, 3));
   };
@@ -325,7 +325,7 @@ if (iv) {
     const placeStr = (f.get("bplace") || "").trim();
     if (placeStr && !picked) {
       document.getElementById("status").textContent =
-        "⚠ couldn’t geocode ‘" + placeStr + "’ — retype it (City, State, Country) and wait for the ✓ match before saving.";
+        "couldn’t geocode ‘" + placeStr + "’ — retype it (City, State, Country) and wait for the match before saving.";
       return;
     }
     const p = {
@@ -343,7 +343,7 @@ if (iv) {
       created: new Date().toISOString(),
     };
     const err = profileError(p);
-    if (err) { document.getElementById("status").textContent = "⚠ " + err; return; }
+    if (err) { document.getElementById("status").textContent = err; return; }
     saveProfile(p);
     renderMenu();
     const blob = new Blob([JSON.stringify(p, null, 2)], { type: "application/json" });
@@ -352,9 +352,9 @@ if (iv) {
     document.getElementById("first-report").hidden = false;
     document.getElementById("clear").hidden = false;
     const btn = iv.querySelector('button[type="submit"]');
-    if (btn) btn.textContent = "✅ Saved — " + p.name + "'s profile lives in this browser";
+    if (btn) btn.textContent = "Saved — " + p.name + "'s profile lives in this browser";
     document.getElementById("status").textContent =
-      "✅ " + p.name + " is in this browser's vault (and downloadable). " +
+      p.name + " is in this browser's vault (and downloadable). " +
       "Your next report will use it automatically — nothing is stored anywhere else. Switch anglers from the menu, top right.";
   });
 
@@ -368,3 +368,32 @@ if (iv) {
 
 migrateLegacy();
 renderMenu();
+
+// ── navigation progress ─────────────────────────────────────────────────────
+// Some full-page renders (the 7-day outlook scan) take a moment. Show that a
+// click registered immediately, so a slow render never reads as a dead link.
+(function () {
+  const bar = document.createElement("div");
+  bar.className = "nav-progress";
+  bar.setAttribute("aria-hidden", "true");
+  document.body.appendChild(bar);
+  let loading = false;
+  const arm = () => {
+    if (loading) return;
+    loading = true;
+    document.body.classList.add("is-loading");
+  };
+  document.addEventListener("click", (ev) => {
+    const a = ev.target.closest && ev.target.closest("a[href]");
+    if (!a || a.target === "_blank" || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
+    const href = a.getAttribute("href") || "";
+    if (!href || href.charAt(0) === "#" || /^(mailto|tel):/.test(href)) return;
+    try { if (new URL(a.href, location.href).origin !== location.origin) return; } catch { return; }
+    arm();
+  });
+  document.addEventListener("submit", (ev) => { if (!ev.defaultPrevented) arm(); });
+  window.addEventListener("pageshow", () => {
+    loading = false;
+    document.body.classList.remove("is-loading");
+  });
+})();

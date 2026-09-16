@@ -292,7 +292,9 @@ def _perf_local(m: dict, a: dict) -> datetime:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-def to_markdown(m: dict) -> str:
+def to_markdown(m: dict, emoji: bool = True) -> str:
+    def e(prefix: str) -> str:
+        return prefix if emoji else ""
     voice = m["voice"]
     L = []
     wk = m["start"].strftime("%A").upper()
@@ -309,8 +311,9 @@ def to_markdown(m: dict) -> str:
             head += f" | Moon in {m['moon_note']['sign']}"
         if m["perfecting"]:
             a = m["perfecting"][0]
-            head += f" | {a['transit']} {a['sym']} natal {a['natal']}"
-    L.append(f"# 🎣 {wk} {date} — {_fmt_ampm(m['start'])} SESSION")
+            amark = f"{a['sym']} " if emoji else ""
+            head += f" | {a['transit']} {amark}{a['aspect']} natal {a['natal']}"
+    L.append(f"# {e('🎣 ')}{wk} {date} — {_fmt_ampm(m['start'])} SESSION")
     L.append(f"### {m['lake']['name']}" +
              (f", {m['lake']['region']}" if m["lake"].get("region") else "") + " | " + head)
     L.append("")
@@ -334,13 +337,14 @@ def to_markdown(m: dict) -> str:
     lake_sp = [s.lower() for s in m["lake"].get("species", [])]
     sp_word = m["species"].split()[0]
     if lake_sp and not any(sp_word in s for s in lake_sp):
-        rows.append(("Species check", f"⚠️ lake registry does not list {m['species']} for this water — verify before trusting the tactics"))
+        rows.append(("Species check", f"{e('⚠️ ')}lake registry does not list {m['species']} for this water — verify before trusting the tactics"))
     elif lake_sp:
         logged = any(sp_word in (str(r.get("species") or "")).lower()
                      for r in lb.load() if r.get("result") != "skunk"
                      and (r.get("lake") or "").lower() in m["lake"]["name"].lower())
-        rows.append(("Species presence", "listed in registry · ✅ angler-verified in logbook" if logged
-                     else "listed in registry · 🟡 never verified by a logged catch"))
+        presence = (("✅ " if emoji else "") + "angler-verified in logbook") if logged \
+            else (("🟡 " if emoji else "") + "not yet confirmed by a logged catch")
+        rows.append(("Species presence", "listed in registry · " + presence))
     if m.get("stocking"):
         s = m["stocking"][-1]
         rows.append(("Stocking", f"{s['species']} planted {s['date']:%b %-d} — fresh stockers = shallow forage event"))
@@ -357,7 +361,7 @@ def to_markdown(m: dict) -> str:
     if ls_bits:
         rows.append(("Lake state", " · ".join(ls_bits) + " — fish position altered, see rules"))
     if m.get("access_note"):
-        rows.append(("Lake hours 🚤", m["access_note"]))
+        rows.append((("Lake hours 🚤" if emoji else "Lake hours"), m["access_note"]))
     rows.append(("Sky/wind", f"{w['cloud']}% cloud, {w['wind_mph']:.0f} mph wind, "
                  f"{m['weather']['score']['trend']['word']} barometer ({m['weather']['score']['trend']['now']:.0f} hPa)"))
     if m["solunar"]:
@@ -370,27 +374,39 @@ def to_markdown(m: dict) -> str:
     rows.append(("Scores", f"weather {m['scores']['weather']:.0f}/10 · solunar {m['scores']['solunar']:.0f}/10 · "
                  f"{score_name} {m['scores']['astro']:.0f}/10 → **overall {m['scores']['overall']}/10**"))
     # data completeness — which tiers this report actually had
-    tiers = []
-    tiers.append("✅ sky+weather")
-    tiers.append("✅ history→lake-state" if m.get("state_basis") or m.get("lake_state")
-                 else "⚠️ no lake state (manual flag?)")
-    tiers.append("✅ gauge water temp" if m.get("water_temp_source") else "🟡 est. water temp")
-    tiers.append("✅ stocking data" if m.get("stocking") else "🟡 no stocking intel")
-    tiers.append(f"{'✅' if (m.get('logbook')) else '🟡'} logbook"
-                 + (f" ({m['logbook']['n']})" if m.get("logbook") else ""))
-    tiers.append("🟡 bathymetry (registry notes only)")
+    if emoji:
+        tiers = [
+            "✅ sky+weather",
+            "✅ history→lake-state" if (m.get("state_basis") or m.get("lake_state"))
+            else "⚠️ no lake state (manual flag?)",
+            "✅ gauge water temp" if m.get("water_temp_source") else "🟡 est. water temp",
+            "✅ stocking data" if m.get("stocking") else "🟡 no stocking intel",
+            ('✅' if m.get('logbook') else '🟡') + " logbook"
+            + (f" ({m['logbook']['n']})" if m.get("logbook") else ""),
+            "🟡 bathymetry (registry notes only)",
+        ]
+    else:
+        tiers = [
+            "sky + weather",
+            "history → lake-state" if (m.get("state_basis") or m.get("lake_state"))
+            else "no lake-state inference",
+            "gauge water temp" if m.get("water_temp_source") else "water temp estimated",
+            "stocking data" if m.get("stocking") else "no stocking intel",
+            "logbook" + (f" ({m['logbook']['n']})" if m.get("logbook") else " (none)"),
+            "bathymetry: registry notes only",
+        ]
     rows.append(("Data layers", " · ".join(tiers)))
-    L.append("## 🔒 The locked numbers")
+    L.append(f"## {e('🔒 ')}The locked numbers")
     L.append("| | |"); L.append("|---|---|")
     for k, v in rows:
         L.append(f"| {k} | {v} |")
     L.append("")
 
-    L.append("## 🌤 Weather layer")
+    L.append(f"## {e('🌤 ')}Weather layer")
     for n in m["weather"]["score"]["notes"]:
         L.append(f"- {n}")
     if m.get("lake_state"):
-        L.append(f"- ⚠️ **Lake state: {m['lake_state']}** — turnover redistributes oxygen and bait;"
+        L.append(f"- {e('⚠️ ')}**Lake state: {m['lake_state']}** — turnover redistributes oxygen and bait;"
                  " deep presentations lead until the lake re-stratifies")
     # species thermal fit: is the water inside the KB band of the top picks?
     if m["weather"]["water_f"] and m["rods"]:
@@ -398,13 +414,13 @@ def to_markdown(m: dict) -> str:
         lo = min(c["conditions"]["water_temp_f"][0] for c in m["rods"])
         wf = m["weather"]["water_f"]
         if wf > hi + 3:
-            L.append(f"- ⚠️ water ~{wf:.0f}°F is **above the comfort band** for this species' tactics (KB tops out {hi}°F) — expect deep, dormant, or absent fish")
+            L.append(f"- {e('⚠️ ')}water ~{wf:.0f}°F is **above the comfort band** for this species' tactics (KB tops out {hi}°F) — expect deep, dormant, or absent fish")
         elif wf < lo - 3:
-            L.append(f"- ⚠️ water ~{wf:.0f}°F is **below the band** for these tactics (KB floor {lo}°F) — slow presentations only")
+            L.append(f"- {e('⚠️ ')}water ~{wf:.0f}°F is **below the band** for these tactics (KB floor {lo}°F) — slow presentations only")
     L.append("")
 
     if voice == "fisher":
-        L.append("## 🫧 Activity windows")
+        L.append(f"## {e('🫧 ')}Activity windows")
         L.append("- computed from lunar/solar position and feeding-window models — no mysticism required")
         if m["prime"]:
             L.append(f"- **prime window: {_fmt_ampm(m['prime']['start'])}–{_fmt_ampm(m['prime']['end'])}** ({m['prime']['light']})")
@@ -413,31 +429,31 @@ def to_markdown(m: dict) -> str:
         for s in dict.fromkeys(spikes):
             L.append(f"- {s}")
     elif voice == "almanac":
-        L.append("## 🌙 Almanac layer (the old-timers' calendar)")
+        L.append(f"## {e('🌙 ')}Almanac layer (the old-timers' calendar)")
         mn = m["moon_note"]
         if mn:
             L.append(f"- **Moon in {mn['sign']}** — {mn['quip']} *(almanac tradition, honored as lore)*")
         L.append(f"- {m['moon']['phase_quality'].capitalize()} — the almanac rates this a strong-feeding stretch")
         if m["voc"]:
-            L.append(f"- {'⚠️ ' if m['voc']['void'] else ''}{_t_event(m['voc']['note'].split(' — ')[0], voice)}"
+            L.append(f"- {e('⚠️ ') if m['voc']['void'] else ''}{_t_event(m['voc']['note'].split(' — ')[0], voice)}"
                      + (" — quiet hours, almanacs say fish pick at baits" if m["voc"]["void"] else ""))
         h0 = m["blocks"][0]["hour"] if m["blocks"] else None
         if h0:
             L.append(f"- Planetary hour at launch: **{h0['ruler']}** — {HOUR_MEANINGS[h0['ruler']]} *(published in almanacs for centuries)*")
     elif m["natal"]:
-        L.append("## 🌙 Astrology layer (vs. your chart)")
+        L.append(f"## {e('🌙 ')}Astrology layer (vs. your chart)")
         mn = m["moon_note"]
-        L.append(f"- **Moon {mn['fmt']} — in natal house {m['natal'].house_of(mn['lon'])}** · {mn['lore']}: {mn['quip']}")
+        L.append(f"- **Moon {mn['fmt'] if emoji else mn.get('fmt_plain', mn['fmt'])} — in natal house {m['natal'].house_of(mn['lon'])}** · {mn['lore']}: {mn['quip']}")
         if m["resonance"]:
             L.append(f"- **{m['resonance']}**")
         L.append(f"- Chart: {m['natal'].sect} chart · natal lunar phase {m['natal'].natal_phase}")
-        for d in m["natal"].dignity_notes()[:4]:
+        for d in m["natal"].dignity_notes(emoji)[:4]:
             L.append(f"- {d}")
         hour0 = m["blocks"][0]["hour"] if m["blocks"] else None
         if hour0:
             L.append(f"- Planetary day/hour at launch: **{hour0['ruler']}** — {HOUR_MEANINGS[hour0['ruler']]}")
         if m["voc"]:
-            L.append(f"- Moon: {'⚠️ ' + m['voc']['note'] if m['voc']['void'] else '✅ ' + m['voc']['note']}")
+            L.append(f"- Moon: {e('⚠️ ') if m['voc']['void'] else e('✅ ')}{m['voc']['note']}")
         if m["aspects"]:
             L.append("")
             L.append("| Transit | Aspect | Natal point | Orb | Perfects |")
@@ -447,15 +463,16 @@ def to_markdown(m: dict) -> str:
                     perf = f"**{_fmt_ampm(_perf_local(m, a))}**"
                 else:
                     perf = "applying" if a["applying"] else "separating"
-                L.append(f"| {a['transit']} | {a['sym']} {a['aspect']} | {a['natal']} | "
+                asym = f"{a['sym']} {a['aspect']}" if emoji else a["aspect"]
+                L.append(f"| {a['transit']} | {asym} | {a['natal']} | "
                          f"{a['orb']:.2f}° | {perf} |")
     L.append("")
 
-    L.append("## ⏱ The session, hour-by-hour")
+    L.append(f"## {e('⏱ ')}The session, hour-by-hour")
     L.append("| Time | Window | Sky | Do this |")
     L.append("|---|---|---|---|")
     for b in m["blocks"]:
-        stars = "⭐ " if b is m["prime"] else ""
+        stars = e("⭐ ") if b is m["prime"] else ""
         astro = []
         if b["hour"]:
             astro.append(HOUR_FISHER[b["hour"]["ruler"]] if voice == "fisher"
@@ -470,7 +487,7 @@ def to_markdown(m: dict) -> str:
             + (f" ({tx.color_hint(c, dict(light=b['light'], cloud=b['wx']['cloud']))})"
                if tx.color_hint(c, dict(light=b['light'], cloud=b['wx']['cloud'])) else "")
             for c, s, why in b["picks"]) or "keep casting — transition block"
-        zone = ("🎯 deep water / first break, slow"
+        zone = (f"{e('🎯 ')}deep water / first break, slow"
                 if m.get("lake_state") and "post-turnover" in m["lake_state"]
                 and b["light"] != "night" else None)
         if zone:
@@ -480,7 +497,7 @@ def to_markdown(m: dict) -> str:
                  f"{LIGHT_LABELS.get(b['light'], b['light'])} | {pick_txt} |")
     L.append("")
 
-    L.append("## 🎣 Rods tied")
+    L.append(f"## {e('🎣 ')}Rods tied")
     for c in m["rods"]:
         L.append(f"- {c['label']}" + (f" — {c['note']}" if c.get("note") else ""))
     unmatched = m["match"]["unmatched"]
@@ -493,7 +510,7 @@ def to_markdown(m: dict) -> str:
                pressure_word=m["weather"]["score"]["trend"]["word"],
                structure_notes=m["lake"].get("structure", []),
                lake_state=m.get("lake_state"))
-    L.append("## 🧠 Decision rules")
+    L.append(f"## {e('🧠 ')}Decision rules")
     for r in tx.decision_rules(ctx, [c["label"] for c in m["rods"]]):
         if voice == "fisher":
             r = r.replace("barren-sign evenings backload — the payoff window is late",
@@ -503,7 +520,7 @@ def to_markdown(m: dict) -> str:
         L.append(f"- Lake lore: {lore}")
     L.append("")
 
-    L.append("## 🎯 One-paragraph version")
+    L.append(f"## {e('🎯 ')}One-paragraph version")
     parts = [f"Launch at **{_fmt_ampm(m['start'])}**"]
     if m["blocks"]:
         h0 = m["blocks"][0]["hour"]
@@ -517,8 +534,9 @@ def to_markdown(m: dict) -> str:
             parts.append(f"parked on the **{top[0]['label'].lower()}**")
     if m["perfecting"]:
         a = m["perfecting"][0]
+        amark = f"{a['sym']} " if emoji else ""
         parts.append(("with the activity spike landing mid-session" if voice == "fisher"
-                      else f"while {a['transit']} {a['sym']} natal {a['natal']} perfects on the water"))
+                      else f"while {a['transit']} {amark}{a['aspect']} natal {a['natal']} perfects on the water"))
     sc = m["scores"]["overall"]
     if sc >= 7.5:
         parts.append(f"Overall **{sc}/10** — a genuinely good hand; cash it")

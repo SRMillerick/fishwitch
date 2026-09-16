@@ -101,12 +101,13 @@ class NatalChart:
         self.sect = "day" if self.sun_alt_birth > 0 else "night"
         self.time_known = birth.get("time_known", True)
 
-    def dignity_notes(self) -> list[str]:
+    def dignity_notes(self, symbols: bool = True) -> list[str]:
         out = []
         for p in ("Sun", "Moon", "Venus", "Jupiter"):
             sign = SIGNS[int(self.points[p] // 30)]
             if DIGNITY.get((p, sign)) in ("domicile", "exalted"):
-                out.append(f"natal {p} {DIGNITY[(p, sign)]} in {sign} ({SYM[SIGNS.index(sign)]}) — a chart strength")
+                mark = f" ({SYM[SIGNS.index(sign)]})" if symbols else ""
+                out.append(f"natal {p} {DIGNITY[(p, sign)]} in {sign}{mark} — a chart strength")
         for p in ("Sun", "Moon", "Venus"):
             sign = SIGNS[int(self.points[p] // 30)]
             if DETRIMENT_OF.get(sign) == p:
@@ -228,6 +229,7 @@ def moon_note(jd: float) -> dict:
     sign = SIGNS[int(lon // 30)]
     fruit = FRUITFUL.get(sign, "barren")
     return dict(sign=sign, sym=SYM[SIGNS.index(sign)], lon=lon, fmt=fmt_sign(lon),
+                fmt_plain=fmt_sign(lon, symbols=False),
                 fruitful=fruit,
                 quip=SIGN_QUIPS[sign],
                 lore=f"{sign} is a {fruit} sign in the almanac tradition")
