@@ -756,8 +756,14 @@ def main():
         if not rows:
             print(f"  no offers registered for '{args.entry}' — add with --add-url")
         for o in rows:
-            print(f"  [{o['retailer']:14s}] {o.get('url') or '(pending)'}")
-            print(f"                  {o['disclosure']}")
+            print(f"  [{o['retailer_label']:16s}] {o.get('url') or '(pending)'}")
+            print(f"                    {o['disclosure']}")
+        comps = offers.components(args.entry)
+        if comps:
+            print(f"  components ({len(comps)}):")
+            for c in comps:
+                linked = [o for o in c.get("offers", []) if o.get("url")]
+                print(f"    {c['label']:34s} " + (f"{len(linked)} live link(s)" if linked else "(no links yet)"))
 
     elif args.cmd == "clicks":
         from collections import Counter

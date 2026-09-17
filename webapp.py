@@ -293,7 +293,8 @@ def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
                    source_url=c["provenance"].get("source_url"),
                    product=mfg.get("product_title"),
                    product_url=mfg.get("product_url"),
-                   offers=offers.resolve(c["id"]))
+                   offers=offers.resolve(c["id"]),
+                   components=offers.components(c["id"]))
         rods.append(rod)
     gap = []
     for c, s, why in (m.get("gap") or []):
@@ -304,7 +305,8 @@ def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
                         verified=c["provenance"].get("confidence") in ("verified", "sourced"),
                         product=mfg.get("product_title"),
                         product_url=mfg.get("product_url"),
-                        offers=offers.resolve(c["id"])))
+                        offers=offers.resolve(c["id"]),
+                        components=offers.components(c["id"])))
     return dict(html=body, overall=m["scores"]["overall"],
                 lake=lake["name"], at=at, rods=rods, gap=gap,
                 prime_t=prime["start"] if prime else None,
@@ -668,13 +670,22 @@ def out_click(entry, retailer):
     retailer = re.sub(r"[^a-z0-9_-]", "", retailer.lower())[:24]
     src = re.sub(r"[^a-z0-9_-]", "", (request.args.get("src") or "").lower())[:16]
     entry = re.sub(r"[^a-z0-9_-]", "", entry.lower())[:40]
+    comp = re.sub(r"[^a-z0-9_-]", "", (request.args.get("comp") or "").lower())[:32]
     target, kind = None, "manufacturer"
-    if retailer == "manufacturer":
+    if retailer == "manufacturer" and not comp:
         cat = tx.find_entry(entry)
         if cat:
             target = (cat.get("manufacturer_specs") or {}).get("product_url")
     else:
-        for o in offers.resolve(entry):
+        if comp:
+            pool = []
+            for c in offers.components(entry):
+                if c["id"] == comp:
+                    pool = c.get("offers", [])
+                    break
+        else:
+            pool = offers.resolve(entry)
+        for o in pool:
             if o.get("retailer") == retailer and o.get("url"):
                 target, kind = o["url"], o.get("kind", "offer")
                 break
@@ -683,9 +694,11 @@ def out_click(entry, retailer):
     try:
         LOG.parent.mkdir(parents=True, exist_ok=True)
         with LOG.open("a") as f:
-            f.write(json.dumps(dict(
-                ts=datetime.now(timezone.utc).isoformat(timespec="seconds"),
-                entry=entry, retailer=retailer, kind=kind, src=src)) + "\n")
+            row = dict(ts=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                       entry=entry, retailer=retailer, kind=kind, src=src)
+            if comp:
+                row["comp"] = comp
+            f.write(json.dumps(row) + "\n")
     except Exception:
         pass
     return redirect(target, code=302)

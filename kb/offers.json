@@ -1,15 +1,587 @@
 {
-  "swimbait": [
-    {
-      "retailer": "zman",
-      "url": "https://www.zmanfishing.com/products/diezel-minnowz",
+  "_schema": "v2",
+  "_note": "Offers resolve at the END of the pipe only. Retailers are a registry; every entry lists offers per retailer, and rig entries list the COMPONENTS they are built from. Affiliate tags/IDs live in env (see tag_env), never in code. Every link routes via /out/ for counting.",
+  "retailers": {
+    "zman": {
+      "label": "Z-Man",
       "kind": "manufacturer"
     },
-    {
-      "retailer": "amazon",
+    "6thsense": {
+      "label": "6th Sense",
+      "kind": "manufacturer"
+    },
+    "river2sea": {
+      "label": "River2Sea",
+      "kind": "manufacturer"
+    },
+    "amazon": {
+      "label": "Amazon",
       "kind": "affiliate",
-      "asin": null,
-      "note": "add ASIN via PA-API lookup once Associates account qualifies"
+      "dp_template": "https://www.amazon.com/dp/{asin}",
+      "tag_env": "FISHWITCH_AMZ_TAG",
+      "subtag": true
+    },
+    "tacklewarehouse": {
+      "label": "Tackle Warehouse",
+      "kind": "affiliate"
+    },
+    "tackledirect": {
+      "label": "TackleDirect",
+      "kind": "affiliate"
+    },
+    "discounttackle": {
+      "label": "Discount Tackle",
+      "kind": "affiliate"
+    },
+    "basspro": {
+      "label": "Bass Pro Shops",
+      "kind": "affiliate"
     }
-  ]
+  },
+  "entries": {
+    "swimbait": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "zman",
+          "url": "https://www.zmanfishing.com/products/diezel-minnowz"
+        },
+        {
+          "retailer": "amazon",
+          "asin": null,
+          "note": "ASIN pending PA-API access"
+        },
+        {
+          "retailer": "tacklewarehouse",
+          "url": null,
+          "note": "tracked link pending program approval"
+        }
+      ]
+    },
+    "trig": {
+      "kind": "rig",
+      "components": [
+        {
+          "id": "offset-hook",
+          "label": "Offset EWG worm hook",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "bullet-weight",
+          "label": "Bullet weight (tungsten or lead)",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "soft-plastic",
+          "label": "Soft-plastic worm or creature bait",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "bead",
+          "label": "Optional glass bead",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        }
+      ]
+    },
+    "carolina": {
+      "kind": "rig",
+      "components": [
+        {
+          "id": "offset-hook",
+          "label": "Offset EWG worm hook",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "egg-sinker",
+          "label": "Egg sinker",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "swivel",
+          "label": "Swivel",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "bead",
+          "label": "Glass bead",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "soft-plastic",
+          "label": "Soft-plastic worm",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        }
+      ]
+    },
+    "dropshot": {
+      "kind": "rig",
+      "components": [
+        {
+          "id": "dropshot-hook",
+          "label": "Drop shot hook (point-up)",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "dropshot-weight",
+          "label": "Drop shot weight (only if not snelled)",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "soft-plastic",
+          "label": "Finesse worm",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        }
+      ]
+    },
+    "wacky": {
+      "kind": "rig",
+      "components": [
+        {
+          "id": "wacky-hook",
+          "label": "Wacky / octopus hook",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "o-ring",
+          "label": "O-ring (optional)",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "soft-plastic",
+          "label": "Soft-plastic stick bait",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        }
+      ]
+    },
+    "neko": {
+      "kind": "rig",
+      "components": [
+        {
+          "id": "wacky-hook",
+          "label": "Wacky / Neko hook",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "nail-weight",
+          "label": "Nail weight",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "o-ring",
+          "label": "O-ring",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "soft-plastic",
+          "label": "Soft-plastic stick bait",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        }
+      ]
+    },
+    "ned": {
+      "kind": "rig",
+      "components": [
+        {
+          "id": "ned-head",
+          "label": "Mushroom / Ned head",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "soft-plastic",
+          "label": "Ned bait (TRD style)",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        }
+      ]
+    },
+    "cut-bait": {
+      "kind": "rig",
+      "components": [
+        {
+          "id": "circle-hook",
+          "label": "Circle hook",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "slip-sinker",
+          "label": "Slip sinker",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "cut-bait",
+          "label": "Cut bait",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        }
+      ]
+    },
+    "live-bait": {
+      "kind": "rig",
+      "components": [
+        {
+          "id": "hook",
+          "label": "Bait hook",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "slip-sinker",
+          "label": "Slip sinker",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "bobber",
+          "label": "Bobber",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        }
+      ]
+    },
+    "bobber-jig": {
+      "kind": "rig",
+      "components": [
+        {
+          "id": "bobber",
+          "label": "Small bobber",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "jig-head",
+          "label": "Lead-head jig",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "soft-plastic",
+          "label": "Tube or small plastic",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tacklewarehouse",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        }
+      ]
+    }
+  }
 }

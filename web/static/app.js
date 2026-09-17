@@ -213,6 +213,17 @@ if (form) {
   });
 }
 
+function buildList(entryId, comps, src) {
+  const rows = comps.map(c => {
+    const links = (c.offers || []).filter(o => o.url).map(o =>
+      " <a href='/out/" + encodeURIComponent(entryId) + "/" + encodeURIComponent(o.retailer) +
+      "?comp=" + encodeURIComponent(c.id) + "&src=" + src + "' target='_blank' rel='sponsored noopener'>" +
+      esc(o.retailer_label || o.retailer) + "</a>").join("");
+    return esc(c.label) + links;
+  }).join(" · ");
+  return "<div class='fine build'><span class='sc'>build it:</span> " + rows + "</div>";
+}
+
 function renderTackle(rods) {
   if (!rods || !rods.length) return "";
   let h = '<section class="tackle"><h2>Tackle for this session — sources & offers</h2>' +
@@ -223,8 +234,9 @@ function renderTackle(rods) {
     if (r.product_url) h += " · <a href='/out/" + encodeURIComponent(r.id) + "/manufacturer?src=tackle' target='_blank' rel='nofollow noopener'>" +
       esc(r.product || "manufacturer page") + "</a>";
     for (const o of (r.offers || [])) if (o.url)
-      h += " · <a href='/out/" + encodeURIComponent(r.id) + "/" + encodeURIComponent(o.retailer) + "?src=tackle' target='_blank' rel='sponsored noopener'>" + esc(o.retailer) +
+      h += " · <a href='/out/" + encodeURIComponent(r.id) + "/" + encodeURIComponent(o.retailer) + "?src=tackle' target='_blank' rel='sponsored noopener'>" + esc(o.retailer_label || o.retailer) +
         "</a> <span class='fine'>(" + esc(o.disclosure) + ")</span>";
+    if (r.components && r.components.length) h += buildList(r.id, r.components, "tackle");
     h += "<div class='fine'>" + esc(r.source) +
       (r.source_url ? " · <a href='" + r.source_url + "' target='_blank' rel='noopener'>source</a>" : "") + "</div></li>";
   }
@@ -247,7 +259,7 @@ function renderGap(gap) {
       if (g.product_url) h += " · <a href='/out/" + encodeURIComponent(g.id) + "/manufacturer?src=gap' target='_blank' rel='nofollow noopener'>" +
         esc(g.product || "manufacturer page") + "</a>";
       for (const o of (g.offers || [])) if (o.url)
-        h += " · <a href='/out/" + encodeURIComponent(g.id) + "/" + encodeURIComponent(o.retailer) + "?src=gap' target='_blank' rel='sponsored noopener'>" + esc(o.retailer) +
+        h += " · <a href='/out/" + encodeURIComponent(g.id) + "/" + encodeURIComponent(o.retailer) + "?src=gap' target='_blank' rel='sponsored noopener'>" + esc(o.retailer_label || o.retailer) +
           "</a> <span class='fine'>(" + esc(o.disclosure) + ")</span>";
       h += "</li>";
     }
@@ -259,7 +271,9 @@ function renderGap(gap) {
       'hooks, weights, and plastics you mostly own. A how-to, not a purchase.</p><ul class="plain">';
     for (const g of rigs) {
       h += "<li><span class='badge'>rig</span> <strong>" + esc(g.label) + "</strong> — scores " +
-        g.score + " here" + (g.why ? " · <span class='fine'>" + esc(g.why) + "</span>" : "") + "</li>";
+        g.score + " here" + (g.why ? " · <span class='fine'>" + esc(g.why) + "</span>" : "");
+      if (g.components && g.components.length) h += buildList(g.id, g.components, "gap");
+      h += "</li>";
     }
     h += "</ul></section>";
   }

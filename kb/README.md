@@ -41,6 +41,27 @@ Every entry also carries `kind`:
 The report's gap lane renders the two separately and attaches no offers to
 `rig` entries.
 
+## Offers schema v2 (`kb/offers.json`)
+
+Retailers are a registry; entries list offers per retailer; rigs list the
+components they are built from.
+
+- **`retailers`** — `{id: {label, kind: manufacturer|affiliate, dp_template?, tag_env?, subtag?}}`.
+  Amazon-style links are built from `dp_template` + the env tag
+  (`FISHWITCH_AMZ_TAG`, plus `ascsubtag=<entry>` for attribution); network
+  retailers (Tackle Warehouse, TackleDirect…) store their tracked URL per entry.
+- **`entries`** — `{entry_id: {kind: product|rig, offers: [...], components: [...]}}`
+  - `offers`: `{retailer, url | asin, note}` — **multi-retailer by design**, so a
+    pick can offer Amazon *and* a tackle retailer side by side.
+  - `components`: `{id, label, offers: [...]}` — what it takes to build a rig
+    (hooks, weights, beads, plastics). This monetizes the **rig gap** through
+    parts without pretending the rig itself is a product.
+- Every link resolves through `/out/<entry>/<retailer>[?comp=<component>]` for
+  aggregate click counting; destinations are resolved server-side (no open redirect).
+- `fishwitch offers --entry <id>` prints offers + components. `--add-url` /
+  `--asin` register **data only** — links go live with no code change.
+- Affiliate tags/IDs live in env, never in code. Ranking never sees any of this.
+
 ## Candidate sources of truth to wire in (deterministic ingestion)
 - **Manufacturer product pages** (Rapala, Zoom, Yamamoto, Roboworm, Z-Man…):
   stated retrieve, depth range, rigging — the primary source for

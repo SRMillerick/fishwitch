@@ -373,6 +373,9 @@ tbody tr:last-child td { border-bottom: 0; }
 .tackle { margin-top: 3rem; padding-top: 1.6rem; border-top: 1px solid var(--line); }
 .tackle h2 { font-size: 1.25rem; color: var(--ink); }
 .tackle ul.plain > li { padding: .85rem 0; }
+.build { margin-top: .3rem; }
+.build .sc { color: var(--faint); text-transform: uppercase; letter-spacing: .1em;
+  font-size: .66rem; }
 
 /* ── wizard ─────────────────────────────────────────────────────────────── */
 .progress { display: flex; list-style: none; padding: 0; margin: 1.8rem 0 1.4rem; }
