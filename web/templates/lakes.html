@@ -10,7 +10,7 @@ tiles are © OpenStreetMap contributors / CARTO.</p>
 <div id="map" class="map" role="img" aria-label="Map of the waters in the registry"></div>
 <ul class="plain lakes">
   {% for l in lakes %}
-  <li><a href="/report?lake={{ l.id }}">{{ l.name }}</a>
+  <li><a href="/lake/{{ l.id }}">{{ l.name }}</a>
       <span class="fine">{{ l.region }}</span></li>
   {% endfor %}
 </ul>
@@ -32,7 +32,7 @@ and added to the registry.</p>
     if (w.lat == null) continue;
     L.marker([w.lat, w.lng]).addTo(map).bindPopup(
       '<strong>' + w.name + '</strong><br>' + w.region +
-      '<br><a href="/report?lake=' + encodeURIComponent(w.id) + '">report &rarr;</a>');
+      '<br><a href="/lake/' + encodeURIComponent(w.id) + '">water &rarr;</a>');
   }
 })();
 </script>

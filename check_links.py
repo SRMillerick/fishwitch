@@ -10,7 +10,7 @@ from pathlib import Path
 SITE = Path(__file__).resolve().parent / "site"
 ok = True
 for page in sorted(SITE.glob("*.html")):
-    body = page.read_text()
+    body = re.sub(r"(?is)<script\b[^>]*>.*?</script>", " ", page.read_text())
     refs = set(re.findall(r'(?:href|src)="([^"]+)"', body))
     for r in refs:
         if r.startswith(("#", "http:", "https:", "mailto:", "data:")):

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}{{ lake.name }} fishing report{% endblock %}
+{% block head %}
+<meta name="description" content="{{ lake.name }} ({{ lake.region }}) — conditions, upcoming windows, and what to tie on. Deterministic fishing report from baromoon.">
+<link rel="canonical" href="https://baromoon.com/lake/{{ lake.id }}">
+<link rel="stylesheet" href="/static/leaflet/leaflet.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Place","name":{{ lake.name | tojson }},"url":"https://baromoon.com/lake/{{ lake.id }}"{% if lake.lat %}, "geo":{"@type":"GeoCoordinates","latitude":{{ lake.lat }},"longitude":{{ lake.lng }}}{% endif %}}
+</script>
+{% endblock %}
+{% block content %}
+<p class="smallcaps">water · {{ lake.region }}</p>
+<h1>{{ lake.name }}</h1>
+
+<dl class="stats">
+  {% if lake.county %}<div><dt>County</dt><dd>{{ lake.county }}, CA</dd></div>{% endif %}
+  {% if lake.area_acres %}<div><dt>Surface</dt><dd>{{ lake.area_acres }} acres</dd></div>{% endif %}
+  {% if lake.est_max_depth_ft %}<div><dt>Max depth</dt><dd>~{{ lake.est_max_depth_ft }} ft</dd></div>{% endif %}
+  {% if lake.mixing %}<div><dt>Mixing</dt><dd>{{ lake.mixing }}</dd></div>{% endif %}
+  {% if lake.depth_class %}<div><dt>Character</dt><dd>{{ lake.depth_class }}</dd></div>{% endif %}
+  <div><dt>Location</dt><dd><a href="https://www.openstreetmap.org/?mlat={{ lake.lat }}&mlon={{ lake.lng }}#map=12/{{ lake.lat }}/{{ lake.lng }}" target="_blank" rel="noopener">OpenStreetMap</a></dd></div>
+</dl>
+
+{% if lake.species %}
+<p class="fine"><strong>Species:</strong> {{ lake.species | join(' · ') }}</p>
+{% endif %}
+
+<div id="map" class="map" role="img" aria-label="Map of {{ lake.name }}"></div>
+
+<div class="section-head">
+  <h2>The engine's read</h2>
+  <span class="smallcaps">next three days · home-water scan</span>
+</div>
+{% if windows %}
+<ul class="tier-rows">
+  {% for r in windows %}
+  <li><a class="trow {{ r.tier }}" href="/report?lake={{ r.lake_id }}&at={{ r.start.strftime('%Y-%m-%d %H:%M') }}&hours=2&voice=almanac">
+    <span class="tier">{{ r.tier }}</span>
+    <span class="when"><span class="day">{{ r.day }}</span><span class="clock">{{ r.start.strftime('%-I:%M %p') }}–{{ r.end.strftime('%-I %p') }}</span> <span class="lune">{{ r.moon | safe }}</span></span>
+    <span class="where">{% if r.prime %}prime {{ r.prime.strftime('%-I:%M %p') }} · {% endif %}{{ r.conf }} confidence</span>
+    <span class="rig">{{ r.rig }}</span>
+    <span class="score">{{ r.overall }}<i>/10</i></span>
+  </a></li>
+  {% endfor %}
+</ul>
+<p class="fine" style="margin-top:1rem">S — drop everything · A — plan around it · B — worth being out ·
+C — the fish have other plans.</p>
+{% else %}
+<p class="fine">No scorable windows in the next three days — seasonal quiet or forecast gap.</p>
+{% endif %}
+
+<p class="cta">
+  <a class="btn primary" href="/report?lake={{ lake.id }}">Full report →</a>
+  <a class="btn ghost" href="/outlook?lake={{ lake.id }}">10-day outlook</a>
+</p>
+
+{% if nearby %}
+<div class="section-head">
+  <h2>Waters nearby</h2>
+</div>
+<ul class="plain lakes">
+  {% for l in nearby %}
+  <li><a href="/lake/{{ l.id }}">{{ l.name }}</a> <span class="fine">{{ l.region }}</span></li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<script src="/static/leaflet/leaflet.js"></script>
+<script>
+(function () {
+  const lat = {{ lake.lat or 39 }}, lng = {{ lake.lng or -122.6 }};
+  const map = L.map('map').setView([lat, lng], {{ 11 if lake.lat else 7 }});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+  }).addTo(map);
+  L.marker([lat, lng]).addTo(map).bindPopup('<strong>{{ lake.name | e }}</strong><br>{{ lake.region | e }}');
+})();
+</script>
+{% endblock %}

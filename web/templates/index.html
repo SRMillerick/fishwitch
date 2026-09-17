@@ -80,7 +80,7 @@
     <h2 class="rule-double">Waters in the registry</h2>
     <ul class="plain lakes">
       {% for l in lakes %}
-      <li><a href="/report?lake={{ l.id }}">{{ l.name }}</a>
+      <li><a href="/lake/{{ l.id }}">{{ l.name }}</a>
           <span class="fine">{{ l.region }}{% if l.lat %} ·
             <a href="https://www.openstreetmap.org/?mlat={{ l.lat }}&mlon={{ l.lng }}#map=13/{{ l.lat }}/{{ l.lng }}" target="_blank" rel="noopener">map</a>{% endif %}</span></li>
       {% endfor %}

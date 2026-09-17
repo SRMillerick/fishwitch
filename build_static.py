@@ -35,7 +35,8 @@ import webapp  # noqa: E402  (after scrub: generate() reads patched lb)
 
 _reg = webapp.registry()
 webapp.registry = lambda: {
-    k: {kk: vv for kk, vv in v.items() if kk != "lore"} for k, v in _reg.items()
+    k: {kk: vv for kk, vv in v.items() if kk not in ("lore", "access", "structure")}
+    for k, v in _reg.items()
 }
 
 STAMP = datetime.now().strftime("%A %b %-d, %-I:%M %p")
@@ -82,6 +83,7 @@ def save(path: str, body: str):
     body = body.replace('href="/kb"', 'href="kb-bass.html"')
     body = body.replace('href="/interview"', 'href="interview.html"')
     body = body.replace('href="/lakes"', 'href="lakes.html"')
+    body = re.sub(r'href="/lake/([\w-]+)"', r'href="lake-\1.html"', body)
     body = body.replace('href="/about"', 'href="about.html"')
     body = body.replace('href="/privacy"', 'href="privacy.html"')
     body = body.replace('href="/disclosure"', 'href="disclosure.html"')
@@ -108,6 +110,8 @@ save("index.html", c.get("/").get_data(as_text=True))
 for pg in ("about", "privacy", "disclosure", "contact"):
     save(f"{pg}.html", c.get(f"/{pg}").get_data(as_text=True))
 save("lakes.html", c.get("/lakes").get_data(as_text=True))
+for _lk in _reg:
+    save(f"lake-{_lk}.html", c.get(f"/lake/{_lk}").get_data(as_text=True))
 for sp in ("bass", "trout", "catfish", "panfish"):
     save(f"kb-{sp}.html", c.get(f"/kb?species={sp}").get_data(as_text=True))
 save("outlook.html", c.get("/outlook?lake=hidden-valley-lake-ca&days=10")

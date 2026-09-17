@@ -31,7 +31,7 @@ import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from flask import Flask, abort, jsonify, redirect, render_template, request
+from flask import Flask, Response, abort, jsonify, redirect, render_template, request
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))          # script-style imports (import logbook)
@@ -120,7 +120,10 @@ def _cached(key: str, fn):
 # ── helpers ──────────────────────────────────────────────────────────────────
 def registry() -> dict:
     p = CONFIG / "lakes.json"
-    return json.loads(p.read_text()) if p.exists() else {}
+    d = json.loads(p.read_text()) if p.exists() else {}
+    for k, v in d.items():
+        v["id"] = k   # the registry key is canonical; stored ids can be OSM labels
+    return d
 
 
 def _region(v: dict) -> str:
@@ -556,6 +559,28 @@ def contact_page():
     return render_template("contact.html", local=LOCAL)
 
 
+@app.route("/lake/<lake_id>")
+def lake_page(lake_id):
+    """One water: location, map, registry facts, the engine's next windows, nearby
+    waters. Unique long-tail content ("<lake> fishing report"), cacheable."""
+    lake = registry().get(lake_id)
+    if not lake:
+        abort(404)
+    lake = dict(lake, id=lake_id, region=_region(lake))
+    try:
+        windows = _cached(f"lake:{lake_id}:ledger:v1",
+                          lambda: _ledger(lake, 3, None, None, span=0, limit=4))
+    except Exception:
+        windows = []
+    nearby = []
+    by_name = {v.get("name"): k for k, v in registry().items()}
+    for v in _nearest_lakes(lake, 3)[1:]:
+        nid = v.get("id") or by_name.get(v.get("name"))
+        if nid:
+            nearby.append(dict(id=nid, name=v.get("name", nid), region=_region(v)))
+    return render_template("lake.html", lake=lake, windows=windows, nearby=nearby, local=LOCAL)
+
+
 @app.route("/lakes")
 def lakes_page():
     """The registry, on a map. Client-side tiles only — one cacheable page."""
@@ -689,7 +714,22 @@ def api_geocode():
 
 @app.route("/robots.txt")
 def robots():
-    return "User-agent: *\nDisallow: /api/\nAllow: /\n", 200, {"Content-Type": "text/plain"}
+    return ("User-agent: *\nDisallow: /api/\nAllow: /\n"
+            "Sitemap: https://baromoon.com/sitemap.xml\n", 200,
+            {"Content-Type": "text/plain"})
+
+
+@app.route("/sitemap.xml")
+def sitemap():
+    base = "https://baromoon.com"
+    urls = ["/", "/report", "/outlook", "/lakes", "/kb", "/interview",
+            "/about", "/contact", "/privacy", "/disclosure"]
+    urls += [f"/lake/{l['id']}" for l in lakes_summary()]
+    body = ['<?xml version="1.0" encoding="UTF-8"?>',
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    body += [f"<url><loc>{base}{u}</loc></url>" for u in urls]
+    body.append("</urlset>")
+    return Response("\n".join(body), mimetype="application/xml")
 
 
 @app.route("/out/<entry>/<retailer>")
