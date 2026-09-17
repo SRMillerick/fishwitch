@@ -1,0 +1,454 @@
+{
+  "label": "Terminal tackle",
+  "kind": "terminal",
+  "_note": "Terminal tackle entities (hooks, weights, jig heads, hardware). Sourced claims are verbatim quotes from the cited live page (fetched_at + sha256); editorial entries are labelled. Rig components in kb/offers.json reuse these ids.",
+  "terminal": [
+    {
+      "id": "offset-hook",
+      "label": "Offset worm hook (EWG)",
+      "kind": "terminal",
+      "category": "hook",
+      "citations": [
+        {
+          "claim": "weedless soft-plastic rigging",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Bass Fishing Rigs",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/bass-fishing-rigs/",
+          "quote": "you\u2019ll want to start with an offset shank worm hook",
+          "fetched_at": "2026-09-17T03:04:47+00:00",
+          "sha256": "0fc20cae687ba6f6"
+        }
+      ],
+      "editorial": false,
+      "note": null,
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T03:04:47+00:00"
+      }
+    },
+    {
+      "id": "circle-hook",
+      "label": "Circle hook",
+      "kind": "terminal",
+      "category": "hook",
+      "citations": [
+        {
+          "claim": "shape & hookset mechanism",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Circle hook",
+          "url": "https://en.wikipedia.org/wiki/Circle_hook",
+          "quote": "The hook is designed to slide out of the throat and rotate into the corner of the fish's mouth",
+          "fetched_at": "2026-09-17T03:04:47+00:00",
+          "sha256": "cd9fd92eb39a250d"
+        },
+        {
+          "claim": "catch-and-release benefit",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Catch and Release Hooks",
+          "url": "https://www.takemefishing.org/how-to-fish/fishing-gear-and-tackle/catch-and-release-hooks/",
+          "quote": "The use of circle hooks instead of J-hooks can significantly decrease the chances of fish becoming gut-hooked.",
+          "fetched_at": "2026-09-17T03:04:47+00:00",
+          "sha256": "c993495fa2cf58ee"
+        },
+        {
+          "claim": "no hookset needed",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Channel Catfish",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/channel-catfish",
+          "quote": "There is no need to \u201cset the hook\u201d as they are designed to hook the fish themselves.",
+          "fetched_at": "2026-09-17T03:04:47+00:00",
+          "sha256": "1a65596d60a82c52"
+        }
+      ],
+      "editorial": false,
+      "note": null,
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T03:04:47+00:00"
+      }
+    },
+    {
+      "id": "dropshot-hook",
+      "label": "Drop shot hook (point-up)",
+      "kind": "terminal",
+      "category": "hook",
+      "citations": [
+        {
+          "claim": "rig geometry",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Drop Shot Knot",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/drop-shot-knot/",
+          "quote": "A drop shot rig consists of line connected to a hook (point facing up) with a trailing leader and weight at the very end.",
+          "fetched_at": "2026-09-17T03:04:47+00:00",
+          "sha256": "2fd504b3f8e02966"
+        }
+      ],
+      "editorial": false,
+      "note": null,
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T03:04:47+00:00"
+      }
+    },
+    {
+      "id": "bait-hook",
+      "label": "Bait hook (small)",
+      "kind": "terminal",
+      "category": "hook",
+      "citations": [
+        {
+          "claim": "size for panfish",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Bluegill",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/bluegill",
+          "quote": "Bluegill have small mouths, so hook size is essential",
+          "fetched_at": "2026-09-17T03:04:47+00:00",
+          "sha256": "a501c108a0a8e8f0"
+        },
+        {
+          "claim": "thin wire for live bait",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Bluegill",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/bluegill",
+          "quote": "Thin wire hooks work best with live bait because the bait stays alive longer and is more tempting to fish as it squirms on the hook.",
+          "fetched_at": "2026-09-17T03:04:47+00:00",
+          "sha256": "a501c108a0a8e8f0"
+        }
+      ],
+      "editorial": false,
+      "note": null,
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T03:04:47+00:00"
+      }
+    },
+    {
+      "id": "treble-hook",
+      "label": "Treble hook",
+      "kind": "terminal",
+      "category": "hook",
+      "citations": [
+        {
+          "claim": "use on lures",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Fish hook",
+          "url": "https://en.wikipedia.org/wiki/Fish_hook",
+          "quote": "Treble hooks are used on all sorts of artificial lures as well as for a wide variety of bait applications.",
+          "fetched_at": "2026-09-17T03:04:47+00:00",
+          "sha256": "5ace232427549221"
+        }
+      ],
+      "editorial": false,
+      "note": null,
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T03:04:47+00:00"
+      }
+    },
+    {
+      "id": "wacky-hook",
+      "label": "Wacky / octopus hook",
+      "kind": "terminal",
+      "category": "hook",
+      "citations": [],
+      "editorial": true,
+      "note": "wide-gap hook for wacky/Neko; no authoritative source wired yet",
+      "provenance": {
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "verified_at": "2026-09-17T03:04:47+00:00"
+      }
+    },
+    {
+      "id": "bullet-weight",
+      "label": "Bullet / worm weight",
+      "kind": "terminal",
+      "category": "weight",
+      "citations": [
+        {
+          "claim": "Texas-rig use",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Fishing sinker",
+          "url": "https://en.wikipedia.org/wiki/Fishing_sinker",
+          "quote": "Bullet sinkers are bullet-shaped and used widely on largemouth bass fishing for rigging plastic worms",
+          "fetched_at": "2026-09-17T03:04:47+00:00",
+          "sha256": "57771e3ba76deca5"
+        }
+      ],
+      "editorial": false,
+      "note": null,
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T03:04:47+00:00"
+      }
+    },
+    {
+      "id": "egg-sinker",
+      "label": "Egg / barrel sinker",
+      "kind": "terminal",
+      "category": "weight",
+      "citations": [
+        {
+          "claim": "construction",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Fishing sinker",
+          "url": "https://en.wikipedia.org/wiki/Fishing_sinker",
+          "quote": "Barrel or egg sinkers are rounded and often bead-like with a narrow hole through which fishing line is threaded.",
+          "fetched_at": "2026-09-17T03:04:47+00:00",
+          "sha256": "57771e3ba76deca5"
+        },
+        {
+          "claim": "Carolina rig use",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Bass Fishing Rigs",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/bass-fishing-rigs/",
+          "quote": "A Carolina rig works with egg sinkers up to 3 or 4 ounces.",
+          "fetched_at": "2026-09-17T03:04:47+00:00",
+          "sha256": "1738f639b7784732"
+        }
+      ],
+      "editorial": false,
+      "note": null,
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T03:04:47+00:00"
+      }
+    },
+    {
+      "id": "slip-sinker",
+      "label": "Slip sinker",
+      "kind": "terminal",
+      "category": "weight",
+      "citations": [
+        {
+          "claim": "lightest weight rule",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Channel Catfish",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/channel-catfish",
+          "quote": "Always use the lightest weight needed and a slip sinker.",
+          "fetched_at": "2026-09-17T03:04:47+00:00",
+          "sha256": "1a65596d60a82c52"
+        },
+        {
+          "claim": "why it works",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Channel Catfish",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/channel-catfish",
+          "quote": "The slip sinker rig lets a catfish pick up the bait without feeling the weight of the sinker.",
+          "fetched_at": "2026-09-17T03:04:47+00:00",
+          "sha256": "1a65596d60a82c52"
+        }
+      ],
+      "editorial": false,
+      "note": null,
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T03:04:47+00:00"
+      }
+    },
+    {
+      "id": "dropshot-weight",
+      "label": "Drop shot weight",
+      "kind": "terminal",
+      "category": "weight",
+      "citations": [
+        {
+          "claim": "position",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Drop Shot Knot",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/drop-shot-knot/",
+          "quote": "A drop shot rig consists of line connected to a hook (point facing up) with a trailing leader and weight at the very end.",
+          "fetched_at": "2026-09-17T03:04:47+00:00",
+          "sha256": "3895c553caa8f80b"
+        }
+      ],
+      "editorial": false,
+      "note": null,
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T03:04:47+00:00"
+      }
+    },
+    {
+      "id": "ned-head",
+      "label": "Mushroom / Ned head",
+      "kind": "terminal",
+      "category": "jighead",
+      "citations": [
+        {
+          "claim": "use",
+          "tier": "T2",
+          "source": "6th Sense \u2014 Divine Ned Rig Football Heads",
+          "url": "https://6thsensefishing.com/products/divine-ned-rig-football-heads-new",
+          "quote": "The Divine Ned Football Jig Head is an all-purpose finesse option for working soft plastics along the bottom.",
+          "fetched_at": "2026-09-17T03:04:47+00:00",
+          "sha256": "cc578ce99e2eb974"
+        }
+      ],
+      "editorial": false,
+      "note": null,
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T03:04:47+00:00"
+      }
+    },
+    {
+      "id": "jig-head",
+      "label": "Lead-head jig",
+      "kind": "terminal",
+      "category": "jighead",
+      "citations": [
+        {
+          "claim": "type",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 How to Jig",
+          "url": "https://www.takemefishing.org/how-to-fish/fishing-with-lures/how-to-jig/",
+          "quote": "painted lead-headed hook and feather combo jigs called buck tails",
+          "fetched_at": "2026-09-17T03:04:47+00:00",
+          "sha256": "ff18b90e557178c3"
+        }
+      ],
+      "editorial": false,
+      "note": null,
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T03:04:47+00:00"
+      }
+    },
+    {
+      "id": "ball-sinker",
+      "label": "Ball sinker",
+      "kind": "terminal",
+      "category": "weight",
+      "citations": [
+        {
+          "claim": "versatility",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 How to Use Ball Sinkers",
+          "url": "https://www.takemefishing.org/how-to-fish/fishing-gear-and-tackle/how-to-use-ball-sinkers/",
+          "quote": "The ball sinker comes in many different sizes and weights, which makes it a popular choice among anglers.",
+          "fetched_at": "2026-09-17T03:04:47+00:00",
+          "sha256": "0b904564e3396679"
+        }
+      ],
+      "editorial": false,
+      "note": null,
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T03:04:47+00:00"
+      }
+    },
+    {
+      "id": "split-shot",
+      "label": "Split shot",
+      "kind": "terminal",
+      "category": "weight",
+      "citations": [
+        {
+          "claim": "light weight option",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Fishing Weights & Bobbers",
+          "url": "https://www.takemefishing.org/how-to-fish/fishing-gear-and-tackle/fishing-weights-bobbers/",
+          "quote": "Oftentimes, just a single split shot will provide all the weight you need to get a bait to the bottom.",
+          "fetched_at": "2026-09-17T03:04:47+00:00",
+          "sha256": "0ad95b08619ea946"
+        }
+      ],
+      "editorial": false,
+      "note": null,
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T03:04:47+00:00"
+      }
+    },
+    {
+      "id": "bead",
+      "label": "Glass bead",
+      "kind": "terminal",
+      "category": "terminal",
+      "citations": [],
+      "editorial": true,
+      "note": "protects the knot and adds a little click; no authoritative source wired yet",
+      "provenance": {
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "verified_at": "2026-09-17T03:04:47+00:00"
+      }
+    },
+    {
+      "id": "swivel",
+      "label": "Swivel",
+      "kind": "terminal",
+      "category": "terminal",
+      "citations": [
+        {
+          "claim": "why use one",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 How to Use Ball Sinkers",
+          "url": "https://www.takemefishing.org/how-to-fish/fishing-gear-and-tackle/how-to-use-ball-sinkers/",
+          "quote": "The use of a swivel allows the fish to take your bait without feeling the weight of the sinker because when your rig hits the water, the sinker will move up and away from the bait.",
+          "fetched_at": "2026-09-17T03:04:47+00:00",
+          "sha256": "d31372527c8f8756"
+        }
+      ],
+      "editorial": false,
+      "note": null,
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T03:04:47+00:00"
+      }
+    },
+    {
+      "id": "o-ring",
+      "label": "O-ring (wacky tool)",
+      "kind": "terminal",
+      "category": "terminal",
+      "citations": [],
+      "editorial": true,
+      "note": "holds a stick bait without tearing it; no authoritative source wired yet",
+      "provenance": {
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "verified_at": "2026-09-17T03:04:47+00:00"
+      }
+    },
+    {
+      "id": "bobber",
+      "label": "Bobber",
+      "kind": "terminal",
+      "category": "terminal",
+      "citations": [
+        {
+          "claim": "purpose",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Fishing Weights & Bobbers",
+          "url": "https://www.takemefishing.org/how-to-fish/fishing-gear-and-tackle/fishing-weights-bobbers/",
+          "quote": "bobbers are intended to hold your hook at a desired depth",
+          "fetched_at": "2026-09-17T03:04:47+00:00",
+          "sha256": "a144405fec6eacd3"
+        }
+      ],
+      "editorial": false,
+      "note": null,
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T03:04:47+00:00"
+      }
+    }
+  ]
+}

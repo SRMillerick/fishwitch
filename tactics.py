@@ -85,6 +85,46 @@ def load_line() -> dict:
     return _LINE
 
 
+_TERMINAL: dict | None = None
+_PRINCIPLES: dict | None = None
+
+
+def load_terminal() -> dict:
+    global _TERMINAL
+    if _TERMINAL is None:
+        p = KB_DIR / "terminal.json"
+        _TERMINAL = json.loads(p.read_text()) if p.exists() else {"terminal": []}
+    return _TERMINAL
+
+
+def load_principles() -> dict:
+    global _PRINCIPLES
+    if _PRINCIPLES is None:
+        p = KB_DIR / "principles.json"
+        _PRINCIPLES = json.loads(p.read_text()) if p.exists() else {"principles": []}
+    return _PRINCIPLES
+
+
+def color_principle(ctx: dict) -> dict | None:
+    """Pick the colour principle that fits the session (editorial selection over
+    the cited fish-vision science in kb/principles.json)."""
+    ps = {p["id"]: p for p in load_principles().get("principles", [])}
+    light = (ctx.get("light") or "")
+    cloud = ctx.get("cloud") or 0
+    ls = ctx.get("lake_state") or ""
+    if light in ("night", "dusk/dawn"):
+        pid = "low-light-rods"
+    elif "post-turnover" in ls:
+        pid = "depth-absorbs-long-wavelengths"
+    elif cloud >= 70:
+        pid = "contrast-over-color"
+    elif light in ("golden", "sunset/sunrise"):
+        pid = "true-colors-near-surface"
+    else:
+        pid = "clear-water-color-vision"
+    return ps.get(pid)
+
+
 def knots_for(entry_id: str, limit: int = 2, known: set | None = None) -> list[dict]:
     """Knots whose CITED use fits this KB entry. If `known` (the knot ids this
     angler actually ties) is given, their knots come first; any others the map

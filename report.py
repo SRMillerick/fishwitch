@@ -301,6 +301,12 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         gap = full[:3]
 
 
+    _cb = prime or (blocks[0] if blocks else None)
+    color = tx.color_principle(dict(
+        light=(_cb or {}).get("light"),
+        cloud=((_cb or {}).get("wx") or {}).get("cloud", 0),
+        lake_state=lake_state)) if _cb else None
+
     return dict(
         profile=profile, lake=lake, start=start, end=end, hours=hours,
         species=species, voice=voice, sun=sun,
@@ -310,7 +316,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         natal=natal, aspects=(aspects or [])[:8], perfecting=perfecting,
         voc=voc, moon_note=mn, resonance=resonance, match=match,
         blocks=blocks, rods=rods, prime=prime, prime_score=prime_s, utc_off=wx.utc_offset,
-        knots=knots, knot_notes=knot_notes, angler_knots=angler_knots, line=line, gap=gap,
+        knots=knots, knot_notes=knot_notes, angler_knots=angler_knots, line=line, color=color, gap=gap,
         logbook=lb.summary_for(lake.get("name", ""), angler=profile.get("name")),
         lake_state=lake_state, days_since_turnover=days_since_turnover,
         heat_streak=streak, state_basis=state_basis, access_note=acc_note,
@@ -406,6 +412,8 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
         rows.append((("Lake hours 🚤" if emoji else "Lake hours"), m["access_note"]))
     rows.append(("Sky/wind", f"{w['cloud']}% cloud, {w['wind_mph']:.0f} mph wind, "
                  f"{m['weather']['score']['trend']['word']} barometer ({m['weather']['score']['trend']['now']:.0f} hPa)"))
+    if m.get("color"):
+        rows.append(("Color", m["color"]["rule"]))
     if m["solunar"]:
         in_win = [e for e in m["solunar"] if e["end"] >= m["start"] and e["start"] <= m["end"]]
         near = [e for e in m["solunar"] if e not in in_win]

@@ -636,6 +636,12 @@ def main():
     cl.add_argument("--src", help="filter by page section (tackle|gap)")
     cl.add_argument("--top", type=int, default=20)
 
+    tp = sub.add_parser("terminal", help="terminal tackle KB (hooks, weights, jig heads)")
+    tp.add_argument("--show", help="entry id to print")
+    tp.add_argument("--category", help="hook|weight|jighead|terminal")
+
+    cp = sub.add_parser("colors", help="color/clarity principles (cited fish-vision science)")
+
     args = ap.parse_args()
     if args.cmd == "best":
         cmd_best(args)
@@ -785,6 +791,27 @@ def main():
         by_src = Counter(r.get("src") or "?" for r in rows)
         if by_src:
             print("  by section:", ", ".join(f"{k}={v}" for k, v in by_src.most_common()))
+
+    elif args.cmd == "terminal":
+        rows = tx.load_terminal().get("terminal", [])
+        if args.show:
+            e = next((x for x in rows if x["id"] == args.show), None)
+            if not e:
+                sys.exit(f"no terminal entry '{args.show}'")
+            print(json.dumps(e, indent=2))
+        else:
+            for e in rows:
+                if args.category and e.get("category") != args.category:
+                    continue
+                badge = "✅" if e.get("provenance", {}).get("confidence") == "sourced" else "🟡"
+                print(f"  {badge} {e['id']:16s} {e['label']:34s} {e.get('category','')}")
+
+    elif args.cmd == "colors":
+        for p in tx.load_principles().get("principles", []):
+            print(f"\n  {p['label']}  [{p['id']}]")
+            print(f"    {p['rule']}")
+            for c in p.get("citations", [])[:1]:
+                print(f"    — {c['source']}: “{c['quote'][:110]}…”")
 
     elif args.cmd == "kb":
         sp = tx.normalize_species(args.species)

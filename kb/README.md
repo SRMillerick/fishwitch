@@ -62,6 +62,25 @@ components they are built from.
   `--asin` register **data only** — links go live with no code change.
 - Affiliate tags/IDs live in env, never in code. Ranking never sees any of this.
 
+## Terminal tackle (`kb/terminal.json`)
+
+Hooks, weights, jig heads and hardware as entities:
+`{id, label, category: hook|weight|jighead|terminal, citations, provenance}`.
+Sourced claims are verbatim quotes (fetched_at + sha256); entries with no
+source are labelled `unverified-editorial`. The rig component bundles in
+`offers.json` reuse these ids where they overlap, so a "build it" part can
+become a real KB entity. CLI: `fishwitch terminal [--category hook]`.
+
+## Color & clarity principles (`kb/principles.json`)
+
+`{id, label, when, rule, citations, provenance}`. Each `rule` is an **editorial
+synthesis** (labelled), while `citations` are verbatim fish-vision science
+(Wikipedia — *Vision in fish*): long wavelengths are absorbed first, blue/green
+reach deepest, true colors exist only near the surface, contrast beats color,
+low light runs on rods, clear water rewards color. `tactics.color_principle(ctx)`
+picks one per session (light/cloud/lake-state) and the report renders it as a
+**Color** row in the locked numbers. CLI: `fishwitch colors`.
+
 ## Candidate sources of truth to wire in (deterministic ingestion)
 - **Manufacturer product pages** (Rapala, Zoom, Yamamoto, Roboworm, Z-Man…):
   stated retrieve, depth range, rigging — the primary source for

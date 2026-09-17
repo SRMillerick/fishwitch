@@ -1,0 +1,166 @@
+{
+  "label": "Color & clarity principles",
+  "kind": "principles",
+  "_note": "Editorial color-selection rules grounded in the cited fish-vision science (T3). Each `rule` is a synthesis and labelled editorial; the `citations` are verbatim quotes. Meant to be calibrated against the logbook over time.",
+  "principles": [
+    {
+      "id": "depth-absorbs-long-wavelengths",
+      "label": "Depth absorbs red first",
+      "when": {
+        "depth": "deep"
+      },
+      "rule": "At depth, red/orange are absorbed first \u2014 reds read as grey or black. Lean green, blue and chartreuse for anything deep.",
+      "citations": [
+        {
+          "claim": "wavelength absorption",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Vision in fish",
+          "url": "https://en.wikipedia.org/wiki/Vision_in_fish",
+          "quote": "visible light of long wavelengths (e.g. red, orange) is absorbed more in water than light of shorter wavelengths (green, blue).",
+          "fetched_at": "2026-09-17T03:05:11+00:00",
+          "sha256": "e79bf180d0bfbd3f"
+        }
+      ],
+      "provenance": {
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "verified_at": null,
+        "basis": "editorial rule, grounded in the cited fish-vision science; to be calibrated by the logbook"
+      }
+    },
+    {
+      "id": "deep-blue-cast",
+      "label": "Deep water goes blue-green",
+      "when": {
+        "depth": "deep"
+      },
+      "rule": "Below the thermocline only blue/green light persists, so a bait that looks natural on the surface can go flat down deep \u2014 contrast and profile do the work.",
+      "citations": [
+        {
+          "claim": "penetration",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Vision in fish",
+          "url": "https://en.wikipedia.org/wiki/Vision_in_fish",
+          "quote": "Shorter wavelengths penetrate further, with blue and green light reaching the deepest depths.",
+          "fetched_at": "2026-09-17T03:05:11+00:00",
+          "sha256": "e79bf180d0bfbd3f"
+        },
+        {
+          "claim": "blue cast",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Vision in fish",
+          "url": "https://en.wikipedia.org/wiki/Vision_in_fish",
+          "quote": "Blue is the only colour of light available at depth underwater, so it is the only colour that can be reflected back to the eye, and everything has a blue tinge under water.",
+          "fetched_at": "2026-09-17T03:05:11+00:00",
+          "sha256": "e79bf180d0bfbd3f"
+        }
+      ],
+      "provenance": {
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "verified_at": null,
+        "basis": "editorial rule, grounded in the cited fish-vision science; to be calibrated by the logbook"
+      }
+    },
+    {
+      "id": "true-colors-near-surface",
+      "label": "True colors only near the surface",
+      "when": {
+        "depth": "shallow"
+      },
+      "rule": "Natural, translucent colors read true only in the top few feet \u2014 that's where color-matching forage pays off.",
+      "citations": [
+        {
+          "claim": "surface colors",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Vision in fish",
+          "url": "https://en.wikipedia.org/wiki/Vision_in_fish",
+          "quote": "Objects in water will only appear as their real colours near the surface where all wavelengths of light are still available",
+          "fetched_at": "2026-09-17T03:05:11+00:00",
+          "sha256": "e79bf180d0bfbd3f"
+        }
+      ],
+      "provenance": {
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "verified_at": null,
+        "basis": "editorial rule, grounded in the cited fish-vision science; to be calibrated by the logbook"
+      }
+    },
+    {
+      "id": "contrast-over-color",
+      "label": "Contrast beats color",
+      "when": {
+        "clarity": "low"
+      },
+      "rule": "In low light or stained water, choose baits that contrast with the background (dark/black, chartreuse, black-and-blue) rather than natural shades.",
+      "citations": [
+        {
+          "claim": "detection",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Vision in fish",
+          "url": "https://en.wikipedia.org/wiki/Vision_in_fish",
+          "quote": "The study indicates that an object's contrast against the background, rather than colour, may be more important for object detection.",
+          "fetched_at": "2026-09-17T03:05:11+00:00",
+          "sha256": "e79bf180d0bfbd3f"
+        }
+      ],
+      "provenance": {
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "verified_at": null,
+        "basis": "editorial rule, grounded in the cited fish-vision science; to be calibrated by the logbook"
+      }
+    },
+    {
+      "id": "low-light-rods",
+      "label": "Low light runs on rods",
+      "when": {
+        "light": "night"
+      },
+      "rule": "At night and deep dusk, color vision is out \u2014 go dark silhouette, big profile, and vibration over color.",
+      "citations": [
+        {
+          "claim": "rod vision",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Vision in fish",
+          "url": "https://en.wikipedia.org/wiki/Vision_in_fish",
+          "quote": "The fish retina has rod cells that provide high visual sensitivity in low light conditions and cone cells that provide higher temporal and spatial resolution than the rod cells are capable of.",
+          "fetched_at": "2026-09-17T03:05:11+00:00",
+          "sha256": "e79bf180d0bfbd3f"
+        }
+      ],
+      "provenance": {
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "verified_at": null,
+        "basis": "editorial rule, grounded in the cited fish-vision science; to be calibrated by the logbook"
+      }
+    },
+    {
+      "id": "clear-water-color-vision",
+      "label": "Clear water rewards color",
+      "when": {
+        "clarity": "high"
+      },
+      "rule": "In clear water with good light, fish have the wavelengths \u2014 and the cones \u2014 to see color; natural forage matching is strongest there.",
+      "citations": [
+        {
+          "claim": "color vision conditions",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Vision in fish",
+          "url": "https://en.wikipedia.org/wiki/Vision_in_fish",
+          "quote": "Colour vision is more useful in environments with a broader range of wavelengths available, e.g., near the surface in clear waters rather than in deeper water where only a narrow band of wavelengths persist.",
+          "fetched_at": "2026-09-17T03:05:11+00:00",
+          "sha256": "e79bf180d0bfbd3f"
+        }
+      ],
+      "provenance": {
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "verified_at": null,
+        "basis": "editorial rule, grounded in the cited fish-vision science; to be calibrated by the logbook"
+      }
+    }
+  ]
+}
