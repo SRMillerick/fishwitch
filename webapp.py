@@ -123,9 +123,30 @@ def registry() -> dict:
     return json.loads(p.read_text()) if p.exists() else {}
 
 
+def _region(v: dict) -> str:
+    """Human location for a water: explicit `region`, else the OSM/Wikidata
+    `display` string with its name prefix dropped, else county + CA."""
+    r = (v.get("region") or "").strip()
+    if r:
+        return r
+    d = (v.get("display") or "").strip()
+    if d:
+        name = (v.get("name") or "").lower()
+        parts = [p.strip() for p in d.split(",")]
+        if parts and name and (name in parts[0].lower() or parts[0].lower() in name):
+            parts = parts[1:]
+        return ", ".join(parts)
+    c = (v.get("county") or "").strip()
+    return f"{c} County, CA" if c else ""
+
+
 def lakes_summary() -> list[dict]:
-    return [dict(id=k, name=v.get("name", k), region=v.get("region", ""))
-            for k, v in registry().items()]
+    out = []
+    for k, v in registry().items():
+        out.append(dict(id=k, name=v.get("name", k), region=_region(v),
+                        lat=v.get("lat"), lng=v.get("lng"),
+                        species=v.get("species", [])))
+    return out
 
 
 def resolve_lake(key: str | None) -> dict | None:
@@ -533,6 +554,16 @@ def disclosure_page():
 @app.route("/contact")
 def contact_page():
     return render_template("contact.html", local=LOCAL)
+
+
+@app.route("/lakes")
+def lakes_page():
+    """The registry, on a map. Client-side tiles only — one cacheable page."""
+    lakes = lakes_summary()
+    waters = [dict(id=l["id"], name=l["name"], region=l["region"],
+                   lat=l["lat"], lng=l["lng"]) for l in lakes]
+    return render_template("lakes.html", lakes=lakes,
+                           waters_json=json.dumps(waters), local=LOCAL)
 
 
 @app.route("/kb")

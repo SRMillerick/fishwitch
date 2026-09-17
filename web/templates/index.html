@@ -81,11 +81,13 @@
     <ul class="plain lakes">
       {% for l in lakes %}
       <li><a href="/report?lake={{ l.id }}">{{ l.name }}</a>
-          <span class="fine">{{ l.region }}</span></li>
+          <span class="fine">{{ l.region }}{% if l.lat %} ·
+            <a href="https://www.openstreetmap.org/?mlat={{ l.lat }}&mlon={{ l.lng }}#map=13/{{ l.lat }}/{{ l.lng }}" target="_blank" rel="noopener">map</a>{% endif %}</span></li>
       {% endfor %}
     </ul>
-    <p class="fine" style="margin-top:1.1rem">Any water body can be characterized from
-    public data (OSM + Wikidata) and added to the registry.</p>
+    <p class="fine" style="margin-top:1.1rem"><a href="/lakes">All waters on the map →</a>
+    · any water body can be characterized from public data (OSM + Wikidata) and added
+    to the registry.</p>
   </div>
 </section>
 {% endblock %}

@@ -377,6 +377,16 @@ tbody tr:last-child td { border-bottom: 0; }
 .build .sc { color: var(--faint); text-transform: uppercase; letter-spacing: .1em;
   font-size: .66rem; }
 
+/* waters map (Leaflet, dark tiles) */
+.map { height: min(60vh, 460px); border: 1px solid var(--line); border-radius: 3px;
+  margin: 1.2rem 0 1.6rem; background: var(--panel); z-index: 0; }
+.leaflet-container { background: var(--bg); font: inherit; }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--panel); color: var(--ink);
+  border: 1px solid var(--line); box-shadow: none; }
+.leaflet-popup-content a { color: var(--gold); }
+.leaflet-control-attribution { background: rgba(16,20,13,.8) !important; color: var(--faint); }
+.leaflet-control-attribution a { color: var(--dim); }
+
 /* ── wizard ─────────────────────────────────────────────────────────────── */
 .progress { display: flex; list-style: none; padding: 0; margin: 1.8rem 0 1.4rem; }
 .progress li { flex: 1; padding: .5rem .4rem; border-top: 1px solid var(--line-2);

@@ -81,6 +81,7 @@ def save(path: str, body: str):
     body = re.sub(r'href="/kb\?species=(\w+)"', r'href="kb-\1.html"', body)
     body = body.replace('href="/kb"', 'href="kb-bass.html"')
     body = body.replace('href="/interview"', 'href="interview.html"')
+    body = body.replace('href="/lakes"', 'href="lakes.html"')
     body = body.replace('href="/about"', 'href="about.html"')
     body = body.replace('href="/privacy"', 'href="privacy.html"')
     body = body.replace('href="/disclosure"', 'href="disclosure.html"')
@@ -106,6 +107,7 @@ print(f"building snapshot → site/  ({STAMP})")
 save("index.html", c.get("/").get_data(as_text=True))
 for pg in ("about", "privacy", "disclosure", "contact"):
     save(f"{pg}.html", c.get(f"/{pg}").get_data(as_text=True))
+save("lakes.html", c.get("/lakes").get_data(as_text=True))
 for sp in ("bass", "trout", "catfish", "panfish"):
     save(f"kb-{sp}.html", c.get(f"/kb?species={sp}").get_data(as_text=True))
 save("outlook.html", c.get("/outlook?lake=hidden-valley-lake-ca&days=10")

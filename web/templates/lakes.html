@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}waters{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="/static/leaflet/leaflet.css">
+{% endblock %}
+{% block content %}
+<h1>Waters</h1>
+<p class="fine">The registry — every water baromoon can read. Markers open a report;
+tiles are © OpenStreetMap contributors / CARTO.</p>
+<div id="map" class="map" role="img" aria-label="Map of the waters in the registry"></div>
+<ul class="plain lakes">
+  {% for l in lakes %}
+  <li><a href="/report?lake={{ l.id }}">{{ l.name }}</a>
+      <span class="fine">{{ l.region }}</span></li>
+  {% endfor %}
+</ul>
+<p class="fine">Any water body can be characterized from public data (OSM + Wikidata)
+and added to the registry.</p>
+<script src="/static/leaflet/leaflet.js"></script>
+<script>
+(function () {
+  const waters = {{ waters_json | safe }};
+  const pts = waters.filter(w => w.lat != null).map(w => [w.lat, w.lng]);
+  const map = L.map('map');
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+  }).addTo(map);
+  if (pts.length) map.fitBounds(pts, { padding: [40, 40] });
+  else map.setView([39, -122.6], 8);
+  for (const w of waters) {
+    if (w.lat == null) continue;
+    L.marker([w.lat, w.lng]).addTo(map).bindPopup(
+      '<strong>' + w.name + '</strong><br>' + w.region +
+      '<br><a href="/report?lake=' + encodeURIComponent(w.id) + '">report &rarr;</a>');
+  }
+})();
+</script>
+{% endblock %}
