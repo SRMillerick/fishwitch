@@ -13,3 +13,6 @@ site/
 
 # generated reports (astro renders can be natal-derived — never commit)
 reports/
+
+# outbound click counts (aggregate, no PII — local/VPS only)
+logs/

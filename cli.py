@@ -632,6 +632,10 @@ def main():
     of.add_argument("--kind", choices=["manufacturer", "affiliate"], default="manufacturer")
     of.add_argument("--asin", help="amazon ASIN (affiliate kind)")
 
+    cl = sub.add_parser("clicks", help="aggregate outbound-link click counts (no PII)")
+    cl.add_argument("--src", help="filter by page section (tackle|gap)")
+    cl.add_argument("--top", type=int, default=20)
+
     args = ap.parse_args()
     if args.cmd == "best":
         cmd_best(args)
@@ -754,6 +758,27 @@ def main():
         for o in rows:
             print(f"  [{o['retailer']:14s}] {o.get('url') or '(pending)'}")
             print(f"                  {o['disclosure']}")
+
+    elif args.cmd == "clicks":
+        from collections import Counter
+        log = Path(__file__).resolve().parent / "logs" / "out.jsonl"
+        if not log.exists():
+            sys.exit(f"no clicks logged yet ({log})")
+        rows = []
+        for line in log.read_text().splitlines():
+            try:
+                rows.append(json.loads(line))
+            except Exception:
+                pass
+        if args.src:
+            rows = [r for r in rows if r.get("src") == args.src]
+        print(f"  {len(rows)} outbound clicks" + (f" (src={args.src})" if args.src else ""))
+        for (entry, retailer), n in Counter(
+                (r.get("entry"), r.get("retailer")) for r in rows).most_common(args.top):
+            print(f"  {n:5d}  {entry:18s} {retailer}")
+        by_src = Counter(r.get("src") or "?" for r in rows)
+        if by_src:
+            print("  by section:", ", ".join(f"{k}={v}" for k, v in by_src.most_common()))
 
     elif args.cmd == "kb":
         sp = tx.normalize_species(args.species)

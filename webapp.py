@@ -28,10 +28,10 @@ import os
 import re
 import sys
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from flask import Flask, abort, jsonify, render_template, request
+from flask import Flask, abort, jsonify, redirect, render_template, request
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))          # script-style imports (import logbook)
@@ -46,12 +46,29 @@ from weather import Weather  # noqa: E402
 
 LOCAL = os.environ.get("FISHWITCH_LOCAL", "") == "1"
 CONFIG = ROOT / "config"
+LOG = ROOT / "logs" / "out.jsonl"   # aggregate outbound-click counts (no PII)
+
+
+def _asset_v() -> str:
+    """Cache-bust token = newest mtime across static assets + templates. Any
+    asset change (a deploy pull, an edit) changes the URL, so the 1-year static
+    cache can never serve stale CSS/JS."""
+    files = list((ROOT / "web" / "static").glob("*")) + list((ROOT / "web" / "templates").glob("*.html"))
+    return str(int(max((f.stat().st_mtime for f in files if f.is_file()), default=0)))
+
+
+ASSET_V = _asset_v()
 
 app = Flask(__name__, template_folder=str(ROOT / "web" / "templates"),
             static_folder=str(ROOT / "web" / "static"))
 app.config["JSON_SORT_KEYS"] = False
 app.config["MAX_CONTENT_LENGTH"] = 64 * 1024  # profiles are small; bigger bodies are abuse
 app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 31536000  # static assets are URL-versioned (?v=), cache hard
+
+
+@app.context_processor
+def inject_asset_v():
+    return dict(asset_v=ASSET_V)
 
 
 # ── shared, cached data layers (one weather call serves many renders) ───────
@@ -281,7 +298,7 @@ def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
     gap = []
     for c, s, why in (m.get("gap") or []):
         mfg = (c.get("manufacturer_specs") or {})
-        gap.append(dict(label=c["label"], score=round(s, 1),
+        gap.append(dict(id=c["id"], label=c["label"], score=round(s, 1),
                         kind=c.get("kind", "product"),
                         why="; ".join(why),
                         verified=c["provenance"].get("confidence") in ("verified", "sourced"),
@@ -640,6 +657,38 @@ def api_geocode():
 @app.route("/robots.txt")
 def robots():
     return "User-agent: *\nDisallow: /api/\nAllow: /\n", 200, {"Content-Type": "text/plain"}
+
+
+@app.route("/out/<entry>/<retailer>")
+def out_click(entry, retailer):
+    """Outbound link resolver + aggregate click counter. The destination is
+    resolved server-side from kb/offers.json or the entry's manufacturer specs —
+    never from a user-supplied URL — so this cannot be an open redirect. Logs
+    only {ts, entry, retailer, kind, section}: no IP, no UA, no cookies."""
+    retailer = re.sub(r"[^a-z0-9_-]", "", retailer.lower())[:24]
+    src = re.sub(r"[^a-z0-9_-]", "", (request.args.get("src") or "").lower())[:16]
+    entry = re.sub(r"[^a-z0-9_-]", "", entry.lower())[:40]
+    target, kind = None, "manufacturer"
+    if retailer == "manufacturer":
+        cat = tx.find_entry(entry)
+        if cat:
+            target = (cat.get("manufacturer_specs") or {}).get("product_url")
+    else:
+        for o in offers.resolve(entry):
+            if o.get("retailer") == retailer and o.get("url"):
+                target, kind = o["url"], o.get("kind", "offer")
+                break
+    if not target or not str(target).startswith("http"):
+        abort(404)
+    try:
+        LOG.parent.mkdir(parents=True, exist_ok=True)
+        with LOG.open("a") as f:
+            f.write(json.dumps(dict(
+                ts=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                entry=entry, retailer=retailer, kind=kind, src=src)) + "\n")
+    except Exception:
+        pass
+    return redirect(target, code=302)
 
 
 @app.after_request

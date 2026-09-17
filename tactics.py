@@ -44,6 +44,15 @@ def entry(species: str, entry_id: str) -> dict | None:
     return None
 
 
+def find_entry(entry_id: str) -> dict | None:
+    """Look up an entry id across every species file (for cross-species tasks)."""
+    for sp in ("bass", "trout", "catfish", "panfish"):
+        c = entry(sp, entry_id)
+        if c:
+            return c
+    return None
+
+
 def normalize_species(name: str) -> str:
     n = (name or "").lower()
     if "largemouth" in n or "smallmouth" in n or "bass" in n:

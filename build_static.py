@@ -49,6 +49,27 @@ import shutil  # noqa: E402
 shutil.copytree(ROOT / "web" / "static", OUT / "static", dirs_exist_ok=True)
 
 
+def _resolve_out(path: str):
+    """Resolve a /out/<entry>/<retailer> link back to its destination so the
+    static snapshot (no server) still links correctly."""
+    m = re.match(r"/out/([^/?#]+)/([^/?#]+)", path)
+    if not m:
+        return None
+    entry, retailer = m.group(1), m.group(2)
+    if retailer == "manufacturer":
+        cat = webapp.tx.find_entry(entry)
+        return (cat or {}).get("manufacturer_specs", {}).get("product_url")
+    for o in webapp.offers.resolve(entry):
+        if o.get("retailer") == retailer and o.get("url"):
+            return o["url"]
+    return None
+
+
+def _rewrite_out(m):
+    url = _resolve_out(m.group(1))
+    return f'href="{url}"' if url else m.group(0)
+
+
 def save(path: str, body: str):
     body = body.replace('href="/static/', 'href="static/')
     body = body.replace('src="/static/', 'src="static/')
@@ -71,6 +92,8 @@ def save(path: str, body: str):
     body = body.replace('method="get" action="/kb"', 'onsubmit="return false"')
     body = re.sub(r'<form id="report-form" class="grid" method="get" action="/report">',
                   '<form id="report-form" class="grid" onsubmit="return false">', body)
+    # /out/ click links need a server — resolve them for the static snapshot
+    body = re.sub(r'href="(/out/[^"]+)"', _rewrite_out, body)
     # snapshot banner right under <main>
     body = body.replace("<main>", "<main>" + BANNER, 1)
     (OUT / path).write_text(body)
