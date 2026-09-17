@@ -105,12 +105,36 @@
       },
       "note": "calls fish from distance in low light",
       "provenance": {
-        "seed_author": "fishwitch-editorial-v0",
-        "source": "editorial consensus (seeded from v0 code KB)",
-        "source_url": null,
-        "confidence": "unverified-editorial",
-        "verified_by": null,
-        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+        "seed_author": "kb-ingest/manual",
+        "source": "River2Sea product page",
+        "source_url": "https://www.river2seausa.com/products/whopper-plopper",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T00:07:36+00:00",
+        "note": "catalog sha e45c4d70d9e33991; fetched 2026-09-17T00:07:22+00:00; fixed sentence match (all_of words); technique text human-edited from spec quotes"
+      },
+      "manufacturer_specs": {
+        "quotes": [
+          {
+            "all_of": [
+              "whopper plopper",
+              "larry dahlberg"
+            ],
+            "quote": "River2Sea\u2019s Whopper Plopper, designed by the legendary angler Larry Dahlberg, is his secret weapon for musky fishing.",
+            "found": true
+          },
+          {
+            "all_of": [
+              "roll resistant",
+              "variety of speeds"
+            ],
+            "quote": "The Whopper Plopper 190 is \u201croll resistant\u201d and works well at a variety of speeds.",
+            "found": true
+          }
+        ],
+        "manufacturer": "River2Sea",
+        "product_title": "Whopper Plopper 190",
+        "product_url": "https://www.river2seausa.com/products/whopper-plopper"
       }
     },
     {
@@ -261,12 +285,36 @@
       },
       "note": "last-hour-of-light search bait",
       "provenance": {
-        "seed_author": "fishwitch-editorial-v0",
-        "source": "editorial consensus (seeded from v0 code KB)",
-        "source_url": null,
-        "confidence": "unverified-editorial",
-        "verified_by": null,
-        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+        "seed_author": "agency-ingest/1.0",
+        "source": "Iowa DNR technique guide",
+        "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T00:07:36+00:00",
+        "note": "catalog sha 38cc52f3e8d61f7a; fetched 2026-09-17T00:07:22+00:00; fixed sentence match (all_of words); technique text human-edited from spec quotes"
+      },
+      "agency_guidance": {
+        "quotes": [
+          {
+            "all_of": [
+              "buzz baits",
+              "blades"
+            ],
+            "quote": "Pick lures with smaller and thinner blades when using spinnerbaits, in-line spinners, buzz baits, umbrella rigs and spoon baits.",
+            "found": true
+          },
+          {
+            "all_of": [
+              "larger blades",
+              "vibration"
+            ],
+            "quote": "Select a lure with larger blades that make more vibration under the water\u2019s surface.",
+            "found": true
+          }
+        ],
+        "agency": "Iowa DNR",
+        "page_title": "Largemouth Bass | Department of Natural Resources",
+        "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass"
       }
     },
     {
@@ -637,12 +685,38 @@
       },
       "note": "the confidence bait of dock lights",
       "provenance": {
-        "seed_author": "fishwitch-editorial-v0",
-        "source": "editorial consensus (seeded from v0 code KB)",
-        "source_url": null,
-        "confidence": "unverified-editorial",
-        "verified_by": null,
-        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+        "seed_author": "kb-ingest/1.0",
+        "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
+        "source_url": "https://6thsensefishing.com/products/divine-hybrid-jig",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T00:07:36+00:00",
+        "note": "catalog sha a3487b5e2e4c561b; fetched 2026-09-17T00:07:35+00:00; shopify-products-json + fixed regex; technique text human-edited from spec quotes"
+      },
+      "manufacturer_specs": {
+        "manufacturer": "6th Sense Fishing (ET)",
+        "product_title": "Divine Hybrid Jig",
+        "product_url": "https://6thsensefishing.com/products/divine-hybrid-jig",
+        "product_type": "Jigs",
+        "variants": [
+          "3/8oz. / Black N' Blue",
+          "1/2oz. / Black N' Blue",
+          "3/4oz. / Black N' Blue",
+          "3/8oz. / Blacklight",
+          "1/2oz. / Blacklight",
+          "3/4oz. / Blacklight",
+          "3/8oz. / Cajun Craw",
+          "1/2oz. / Cajun Craw"
+        ],
+        "depth": null,
+        "retrieve": {
+          "quote": "Drag it across rock, hop it through isolated targets, stroke it off the bottom, or steadily work it along structure to imitate crawfish and other bottom-oriented forage",
+          "match": "Drag it across rock, hop it through isolated targets, stroke it off the bottom, "
+        },
+        "rigging": {
+          "quote": "With four weight and hook combinations, the Divine Hybrid Jig gives anglers a versatile platform for adapting presentation and tackle to the cover in front of them",
+          "match": "With four weight and hook combinations, the Divine Hybrid Jig gives anglers a ve"
+        }
       }
     },
     {
@@ -682,12 +756,36 @@
       },
       "note": "never wrong",
       "provenance": {
-        "seed_author": "fishwitch-editorial-v0",
-        "source": "editorial consensus (seeded from v0 code KB)",
-        "source_url": null,
-        "confidence": "unverified-editorial",
-        "verified_by": null,
-        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+        "seed_author": "agency-ingest/1.0",
+        "source": "Take Me Fishing technique guide",
+        "source_url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/bass-fishing-rigs/",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T00:07:35+00:00",
+        "note": "catalog sha 6657aaeb7b899cb3; fetched 2026-09-17T00:07:22+00:00; fixed sentence match (all_of words); technique text human-edited from spec quotes"
+      },
+      "agency_guidance": {
+        "quotes": [
+          {
+            "all_of": [
+              "texas rig",
+              "most popular"
+            ],
+            "quote": "The Texas rig is one of the most popular bass fishing rigs.",
+            "found": true
+          },
+          {
+            "all_of": [
+              "cone-shaped weight",
+              "main line"
+            ],
+            "quote": "Slide a cone-shaped weight through your main line with the bottom of the cone facing the end of the line.",
+            "found": true
+          }
+        ],
+        "agency": "Take Me Fishing",
+        "page_title": "Bass Fishing Rigs - Take Me Fishing",
+        "source_url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/bass-fishing-rigs/"
       }
     },
     {
@@ -915,12 +1013,36 @@
       },
       "note": "deep-structure grinder",
       "provenance": {
-        "seed_author": "fishwitch-editorial-v0",
-        "source": "editorial consensus (seeded from v0 code KB)",
-        "source_url": null,
-        "confidence": "unverified-editorial",
-        "verified_by": null,
-        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+        "seed_author": "agency-ingest/1.0",
+        "source": "Take Me Fishing technique guide",
+        "source_url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/bass-fishing-rigs/",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T00:07:36+00:00",
+        "note": "catalog sha 6657aaeb7b899cb3; fetched 2026-09-17T00:07:22+00:00; fixed sentence match (all_of words); technique text human-edited from spec quotes"
+      },
+      "agency_guidance": {
+        "quotes": [
+          {
+            "all_of": [
+              "carolina rigs",
+              "sliding sinker"
+            ],
+            "quote": "Carolina rigs are Sliding Sinker Rigs created specifically as bass fishing rigs with a weedless hook and a soft plastic worm.",
+            "found": true
+          },
+          {
+            "all_of": [
+              "advantage",
+              "without detecting"
+            ],
+            "quote": "The advantage of using this bass fishing rig setup is that it allows the fish to pick up the bait without detecting the weight of the sinker.",
+            "found": true
+          }
+        ],
+        "agency": "Take Me Fishing",
+        "page_title": "Bass Fishing Rigs - Take Me Fishing",
+        "source_url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/bass-fishing-rigs/"
       }
     },
     {

@@ -17,12 +17,16 @@
     ],
     "jig": [
       {
-        "brand": "Z-Man",
-        "host": "www.zmanfishing.com",
+        "brand": "6th Sense",
+        "host": "6thsensefishing.com",
         "type": "shopify",
-        "search": "football jig",
-        "status": "wrong-match",
-        "note": "Z-Man carries no skirted football jig (only Football NedZ head) \u2014 this search matched ChatterBait Elite EVO HD, wrong product. Needs Strike King Tour Grade / Dirty Jigs (non-Shopify) or an agency source. Pending draft awaiting human reject."
+        "search": "Divine Hybrid Jig",
+        "status": "live",
+        "title_excludes": [
+          "rod",
+          "kit",
+          "bundle"
+        ]
       }
     ],
     "swimbait": [

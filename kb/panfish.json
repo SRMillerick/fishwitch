@@ -32,12 +32,36 @@
       "colors": {},
       "note": "kids-boat-saver and dinner-maker",
       "provenance": {
-        "seed_author": "fishwitch-editorial-v0",
-        "source": "editorial consensus (seeded from v0 code KB)",
-        "source_url": null,
-        "confidence": "unverified-editorial",
-        "verified_by": null,
-        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+        "seed_author": "agency-ingest/1.0",
+        "source": "Iowa DNR technique guide",
+        "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/crappie",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T00:07:37+00:00",
+        "note": "catalog sha 486f1ab2d3b29cae; fetched 2026-09-17T00:07:22+00:00; fixed sentence match (all_of words); technique text human-edited from spec quotes"
+      },
+      "agency_guidance": {
+        "quotes": [
+          {
+            "all_of": [
+              "lead-head jig",
+              "most productive"
+            ],
+            "quote": "A lead-head jig, which imitates a small minnow when fished properly, is the most productive and universal artificial lure for crappies.",
+            "found": true
+          },
+          {
+            "all_of": [
+              "suspend",
+              "small bobber"
+            ],
+            "quote": "Crappies often move up from beneath to take a lure, so many anglers suspend their jig from a small bobber.",
+            "found": true
+          }
+        ],
+        "agency": "Iowa DNR",
+        "page_title": "Crappie | Department of Natural Resources",
+        "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/crappie"
       }
     },
     {
@@ -71,12 +95,36 @@
       "colors": {},
       "note": "search bait for schools",
       "provenance": {
-        "seed_author": "fishwitch-editorial-v0",
-        "source": "editorial consensus (seeded from v0 code KB)",
-        "source_url": null,
-        "confidence": "unverified-editorial",
-        "verified_by": null,
-        "note": "needs replacement with a cited source: manufacturer page or state-agency technique guide"
+        "seed_author": "agency-ingest/1.0",
+        "source": "Take Me Fishing technique guide",
+        "source_url": "https://www.takemefishing.org/blog/april-2022/the-best-spring-fishing-bait-and-lures-for-panfish/",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-17T00:07:37+00:00",
+        "note": "catalog sha 92cc58e08cc604e7; fetched 2026-09-17T00:07:22+00:00; fixed sentence match (all_of words); technique text human-edited from spec quotes"
+      },
+      "agency_guidance": {
+        "quotes": [
+          {
+            "all_of": [
+              "small spinners",
+              "sunfish"
+            ],
+            "quote": "Natural lakes and ponds that do not have timber can provide good results to those using small spinners, especially for sunfish and perch, and mini crankbaits for crappies and occasionally perch.",
+            "found": true
+          },
+          {
+            "all_of": [
+              "tiny spinner blade",
+              "jig-spinner"
+            ],
+            "quote": "When a plain jig doesn\u2019t do the job or stops producing after awhile, try using a small jig with a tiny spinner blade (a jig-spinner combo).",
+            "found": true
+          }
+        ],
+        "agency": "Take Me Fishing",
+        "page_title": "The Best Spring Fishing Bait and Lures for Panfish - Take Me Fishing",
+        "source_url": "https://www.takemefishing.org/blog/april-2022/the-best-spring-fishing-bait-and-lures-for-panfish/"
       }
     }
   ],
