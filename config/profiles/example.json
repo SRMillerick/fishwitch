@@ -18,6 +18,14 @@
     "walking bait",
     "jig"
   ],
+  "baits": [
+    "nightcrawlers",
+    "cut bait"
+  ],
+  "line": [
+    "fluorocarbon",
+    "braid"
+  ],
   "home_lake": "hidden-valley-lake-ca",
   "astro_display": "almanac",
   "knots": [

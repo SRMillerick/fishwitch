@@ -218,6 +218,20 @@ def _client_profile(payload: dict) -> tuple[dict, list[str]]:
             errs.append("knots: list of ≤ 30 strings, each ≤ 60 chars")
         else:
             out["knots"] = kn
+    ln = p.get("line")
+    if ln is not None:
+        if (not isinstance(ln, list) or len(ln) > 30
+                or not all(isinstance(a, str) and 0 < len(a) <= 60 for a in ln)):
+            errs.append("line: list of ≤ 30 strings, each ≤ 60 chars")
+        else:
+            out["line"] = ln
+    bt = p.get("baits")
+    if bt is not None:
+        if (not isinstance(bt, list) or len(bt) > 30
+                or not all(isinstance(a, str) and 0 < len(a) <= 60 for a in bt)):
+            errs.append("baits: list of ≤ 30 strings, each ≤ 60 chars")
+        else:
+            out["baits"] = bt
     hl = p.get("home_lake")
     if hl is not None:
         if not isinstance(hl, str) or len(hl) > 60:
@@ -618,9 +632,22 @@ def interview_page():
             for a in c.get("aliases", [])[:3]:
                 if len(a) > 3:
                     sugg.add(a)
+    line_types = tx.load_line().get("types", [])
+    line_suggestions = sorted({t["label"] for t in line_types}
+                              | {a for t in line_types for a in t.get("aliases", [])})
+    bait_words = ("bait", "worm", "liver", "cricket", "minnow", "powerbait",
+                  "salmon egg", "nightcrawler", "stink", "dough")
+    baits: set[str] = set()
+    for sp in ("bass", "trout", "catfish", "panfish"):
+        for c in tx.catalog(sp):
+            names = [c["label"]] + [a for a in c.get("aliases", []) if 3 < len(a) <= 60]
+            if any(w in n.lower() for n in names for w in bait_words):
+                baits.update(names[:4])
     return render_template("interview.html", lakes=lakes_summary(),
                            suggestions=sorted(sugg),
                            knot_suggestions=sorted({k["label"] for k in tx.load_knots().get("knots", [])}),
+                           line_suggestions=line_suggestions,
+                           bait_suggestions=sorted(baits),
                            local=LOCAL)
 
 

@@ -57,6 +57,12 @@ function profileError(p) {
   if (p.knots !== undefined && (!Array.isArray(p.knots) || p.knots.length > 30
       || p.knots.some(a => typeof a !== "string" || a.length > 60)))
     return "knots: list of ≤ 30 strings, each ≤ 60 chars";
+  if (p.line !== undefined && (!Array.isArray(p.line) || p.line.length > 30
+      || p.line.some(a => typeof a !== "string" || a.length > 60)))
+    return "line: list of ≤ 30 strings, each ≤ 60 chars";
+  if (p.baits !== undefined && (!Array.isArray(p.baits) || p.baits.length > 30
+      || p.baits.some(a => typeof a !== "string" || a.length > 60)))
+    return "baits: list of ≤ 30 strings, each ≤ 60 chars";
   if (p.astro_display !== undefined && !["fisher", "almanac", "astro"].includes(p.astro_display))
     return "astro_display: fisher | almanac | astro";
   return null;
@@ -159,7 +165,7 @@ if (ledgerRows) {
         `<span class="rig">${esc(r.rig)}</span>` +
         `<span class="score">${r.overall}<i>/10</i></span></a></li>`).join("");
       if (note) note.textContent = j.rows.length
-        ? `Best upcoming windows for ${p.name} — transits + arsenal, nearest waters.`
+        ? `Best upcoming windows for ${p.name} — transits + tackle, nearest waters.`
         : "no scorable windows in range";
     }).catch(() => { ledgerRows.innerHTML = ""; });
   }
@@ -173,8 +179,8 @@ if (form) {
     const p0 = getActive();
     if (note) note.className = "pill " + (p0 ? "on" : "");
     if (note) note.textContent = p0
-      ? "Rendering as " + p0.name + " — transits + arsenal · profile stays in this browser"
-      : "Rendering anonymously — build a profile for transits + your arsenal →";
+      ? "Rendering as " + p0.name + " — transits + tackle · profile stays in this browser"
+      : "Rendering anonymously — build a profile for transits + your tackle →";
   }
   form.addEventListener("submit", async (ev) => {
     ev.preventDefault();
@@ -202,8 +208,8 @@ if (form) {
       const p = getActive();
       const note = document.getElementById("profile-note");
       if (note) note.textContent = p
-        ? `Rendered with ${p.name}'s profile (transits + arsenal) — profile stays in this browser.`
-        : "Rendering anonymously — pick or create a profile for transits + arsenal.";
+        ? `Rendered with ${p.name}'s profile (transits + tackle) — profile stays in this browser.`
+        : "Rendering anonymously — pick or create a profile for transits + tackle.";
       out.innerHTML =
         '<div class="scorebar">overall <strong>' + j.overall + "/10</strong> · " + esc(j.lake) + "</div>"
         + j.html + renderTackle(j.rods) + renderGap(j.gap);
@@ -310,6 +316,8 @@ if (iv) {
     }
     iv.querySelector('[name="species"]').value = cur.species || "largemouth bass";
     iv.querySelector('[name="arsenal"]').value = (cur.arsenal || []).join(", ");
+    iv.querySelector('[name="baits"]').value = (cur.baits || []).join(", ");
+    iv.querySelector('[name="line"]').value = (cur.line || []).join(", ");
     iv.querySelector('[name="knots"]').value = (cur.knots || []).join(", ");
     if (cur.home_lake) iv.querySelector('[name="home_lake"]').value = cur.home_lake;
     iv.querySelector('[name="voice"]').value = cur.astro_display || "almanac";
@@ -389,6 +397,8 @@ if (iv) {
       },
       species: f.get("species") || "largemouth bass",
       arsenal: (f.get("arsenal") || "").split(",").map(s => s.trim()).filter(Boolean),
+      baits: (f.get("baits") || "").split(",").map(s => s.trim()).filter(Boolean),
+      line: (f.get("line") || "").split(",").map(s => s.trim()).filter(Boolean),
       knots: (f.get("knots") || "").split(",").map(s => s.trim()).filter(Boolean),
       home_lake: f.get("home_lake"),
       astro_display: f.get("voice") || "almanac",

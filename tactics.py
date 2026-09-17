@@ -173,9 +173,12 @@ def match_knots(items: list[str]) -> list[dict]:
     return out
 
 
-def recommend_line(picks: list[dict]) -> dict | None:
+def recommend_line(picks: list[dict], known: set | None = None) -> dict | None:
     """Editorial pick→line rule, grounded in the CITED line properties (kb/line.json).
-    `picks` are KB entries with id/style. Returns {id, label, why} or None."""
+    `picks` are KB entries with id/style. Returns {id, label, why, mine?} or None.
+    If `known` (the line-type ids this angler actually spools) is given, the
+    result carries `mine`: whether the condition pick is already in their kit —
+    the report flags a better fit they don't spool yet, same as knots."""
     d = load_line()
     rec = d.get("recommend", {}) or {}
     by_entry = rec.get("by_entry", {}) or {}
@@ -189,8 +192,41 @@ def recommend_line(picks: list[dict]) -> dict | None:
     if not votes:
         return None
     lid = max(votes, key=lambda k: votes[k])
-    return dict(id=lid, label=types.get(lid, {}).get("label", lid),
-                why=(rec.get("why", {}) or {}).get(lid, ""))
+    out = dict(id=lid, label=types.get(lid, {}).get("label", lid),
+               why=(rec.get("why", {}) or {}).get(lid, ""))
+    if known:
+        out["mine"] = lid in known
+    return out
+
+
+# ── knots & line matching (cross-species, deterministic) ───────────────────
+def match_line(items: list[str]) -> list[dict]:
+    """Map an angler's free-text line list to line-type entities (exact first,
+    then substring — same two-pass rule as match_arsenal/match_knots)."""
+    types = load_line().get("types", [])
+    out = []
+    for item in items or []:
+        s = (item or "").strip().lower()
+        if not s:
+            continue
+        hit = None
+        for t in types:
+            names = [t["id"].lower(), t["label"].lower()] + [a.lower() for a in t.get("aliases", [])]
+            if s in names:
+                hit = t
+                break
+        if hit is None:
+            for t in types:
+                names = [t["id"].lower(), t["label"].lower()] + [a.lower() for a in t.get("aliases", [])]
+                for n in names:
+                    if n in s or s in n:
+                        hit = t
+                        break
+                if hit:
+                    break
+        if hit and hit["id"] not in [o["id"] for o in out]:
+            out.append(hit)
+    return out
 
 
 # ── arsenal matching (deterministic) ────────────────────────────────────────

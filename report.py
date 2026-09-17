@@ -142,7 +142,10 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         resonance = phase_resonance(natal, sky.jd(start))
 
     arsenal = profile.get("arsenal") or []
-    match = tx.match_arsenal(arsenal, species)
+    baits = profile.get("baits") or []
+    # the angler's baseline is lures/rigs + live/cut/prepared baits — both are
+    # matched against the same cited KB, so condition scoring treats them alike
+    match = tx.match_arsenal(list(arsenal) + list(baits), species)
     if not match["matched"]:
         match = tx.match_arsenal(["chatterbait", "squarebill", "drop shot", "senko",
                                   "jig", "walking bait"], species)
@@ -151,6 +154,11 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
     # and any better-fit knot they don't tie is surfaced as "worth learning"
     angler_knots = tx.match_knots(profile.get("knots") or [])
     known_knot_ids = {k["id"] for k in angler_knots}
+
+    # the angler's line kit (same idea): the condition pick is flagged when it
+    # isn't already on their spools
+    angler_line = tx.match_line(profile.get("line") or [])
+    known_line_ids = {t["id"] for t in angler_line}
 
     events = []
     events.append((start, "launch", "session"))
@@ -260,7 +268,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
                 knots.append(kk)
     knots = knots[:3]
     knot_notes = (tx.load_knots().get("repertoire", {}) or {}).get("practices", [])
-    line = tx.recommend_line(rods)
+    line = tx.recommend_line(rods, known=known_line_ids or None)
 
     def prime_score(blk):
         s = sum(p[1] for p in blk["picks"]) or 0
@@ -284,7 +292,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
     # never fed back into picks or scores (principle 4). Skipped for anonymous
     # renders (a gap against the generic fallback arsenal means nothing).
     gap = []
-    if profile.get("arsenal") and prime is not None:
+    if (profile.get("arsenal") or profile.get("baits")) and prime is not None:
         pblk = prime
         pmid = pblk["start"] + (pblk["end"] - pblk["start"]) / 2
         pw = wx.at(pmid)
@@ -317,6 +325,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         voc=voc, moon_note=mn, resonance=resonance, match=match,
         blocks=blocks, rods=rods, prime=prime, prime_score=prime_s, utc_off=wx.utc_offset,
         knots=knots, knot_notes=knot_notes, angler_knots=angler_knots, line=line, color=color, gap=gap,
+        angler_line=angler_line,
         logbook=lb.summary_for(lake.get("name", ""), angler=profile.get("name")),
         lake_state=lake_state, days_since_turnover=days_since_turnover,
         heat_streak=streak, state_basis=state_basis, access_note=acc_note,
@@ -560,7 +569,14 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
                 else "Line & knots for these rigs")
         L.append(f"## {e('🪢 ')}{head}")
         if m.get("line"):
-            L.append(f"- **{m['line']['label']}** — {m['line']['why']}")
+            ln = m["line"]
+            extra = ""
+            if ln.get("mine") is False:
+                have = ", ".join(t["label"] for t in (m.get("angler_line") or []))
+                extra = f" — *not in your kit (you spool {have}); worth spooling for these rigs*"
+            elif ln.get("mine") is True:
+                extra = " — *that's your line*"
+            L.append(f"- **{ln['label']}** — {ln['why']}{extra}")
         if m.get("knots"):
             L.append("*Knots quoted from the cited guides — facts, not folklore.*")
         for k in m["knots"]:

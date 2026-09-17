@@ -13,8 +13,9 @@ is the clean entry point for it.
    vs. your chart with aspect perfection times, void-of-course moon, planetary
    days & hours, moon sign lore, lunar-phase resonance with your birth moon.
    **The translation layer** (below) controls how this is presented.
-4. **Tactics** — a lure/rig knowledge base per species; only recommends what
-   you own, matched to light, wind, water temp, hour and solunar state.
+4. **Tactics** — a lure/rig/bait knowledge base per species plus cited
+   cross-species line/knot tables; only recommends what you own, matched to
+   light, wind, water temp, hour and solunar state.
 
 ## The translation layer (voices)
 The same sky math always runs. `--voice` (or `astro_display` in the profile)
@@ -63,7 +64,8 @@ FISHWITCH_WEB_HOST=0.0.0.0 ./webapp     # public deploy (gunicorn+nginx in front
 fishwitch report --profile config/profiles/sean.json --lake hidden-valley-lake-ca
 fishwitch report --birth "1988-01-18 17:35" --place "Santa Rosa, CA, US" \
     --lake "Clear Lake, CA" --species bass \
-    --arsenal "drop shot, wacky senko, chatterbait, squarebill, whopper plopper"
+    --arsenal "drop shot, wacky senko, chatterbait, squarebill, whopper plopper" \
+    --baits "nightcrawlers, live shiners" --line "fluorocarbon, braid"
 fishwitch lakes                         # registry of known water bodies
 fishwitch arsenal --species bass        # lure categories it understands
 ```
@@ -72,7 +74,8 @@ fishwitch arsenal --species bass        # lure categories it understands
 ```python
 from fishwitch.report import generate, to_markdown
 profile = {...birth: {date, time, time_known, place, lat, lng, tz},
-           arsenal: [...], species: "largemouth bass", astro_display: "almanac"}
+           arsenal: [...], baits: [...], line: [...], knots: [...],
+           species: "largemouth bass", astro_display: "almanac"}
 lake     = {...name, region, lat, lng, alt_m, structure: [...], lore: [...]}
 model = generate(profile, lake, at_local=datetime(...), hours=2.5, voice="fisher")
 md = to_markdown(model)   # model is a plain dict — serialize for the UI

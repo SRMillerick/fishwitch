@@ -70,6 +70,24 @@ baromoon's server never stores it; it's used in-memory to render your reports, t
       <a href="/kb">cited knowledge base</a>. Unknown names still work — they just won't get
       condition-scored.</div>
     </label>
+    <label>Baits you use — live/cut/prepared, comma-separated
+      <input name="baits" list="bait-suggestions"
+             placeholder="nightcrawlers, powerbait, cut bait">
+      <datalist id="bait-suggestions">
+        {% for b in bait_suggestions %}<option value="{{ b }}">{% endfor %}
+      </datalist>
+      <div class="fine">Bait fished as bait, not lures — scored against the same cited KB and
+      kept out of your gap lane. Leave blank if you're artificials-only.</div>
+    </label>
+    <label>Line you spool — comma-separated
+      <input name="line" list="line-suggestions"
+             placeholder="fluorocarbon, braid">
+      <datalist id="line-suggestions">
+        {% for l in line_suggestions %}<option value="{{ l }}">{% endfor %}
+      </datalist>
+      <div class="fine">Reports pick the line that fits the rigs, and flag a better fit you
+      don't spool yet (cited properties, not brand claims).</div>
+    </label>
     <label>Knots you tie — comma-separated
       <input name="knots" list="knot-suggestions"
              placeholder="palomar, uni, snell, crazy alberto, san diego jam">

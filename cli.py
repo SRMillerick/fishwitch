@@ -102,6 +102,10 @@ def interview(profile_path: Path):
     species = ask("species you're usually after", "largemouth bass")
     arsenal = [s.strip() for s in ask("your lures/rigs (comma-separated)",
                                       "drop shot, wacky senko, chatterbait, squarebill, walking bait, jig").split(",") if s.strip()]
+    baits = [s.strip() for s in ask("baits you use (live/cut/prepared, comma-separated — blank if artificials-only)",
+                                    "").split(",") if s.strip()]
+    line = [s.strip() for s in ask("line you spool (comma-separated: fluorocarbon, braid, monofilament, copolymer)",
+                                   "fluorocarbon").split(",") if s.strip()]
     voice = ask("sky layer presentation: fisher / almanac / astro", "almanac").lower()
     if voice not in ("fisher", "almanac", "astro"):
         voice = "almanac"
@@ -111,7 +115,7 @@ def interview(profile_path: Path):
         birth=dict(date=bdate, time=btime, time_known=time_known,
                    place=bplace, lat=cand["lat"], lng=cand["lng"],
                    tz=cand.get("tz", "UTC")),
-        species=species, arsenal=arsenal, home_lake=lake_name,
+        species=species, arsenal=arsenal, baits=baits, line=line, home_lake=lake_name,
         astro_display=voice,
         created=datetime.now().isoformat(timespec="seconds"),
     )
@@ -142,6 +146,10 @@ def cmd_report(args):
                        arsenal=[s.strip() for s in (args.arsenal or "chatterbait, squarebill, drop shot, senko, jig").split(",") if s.strip()])
     if args.arsenal:
         profile["arsenal"] = [s.strip() for s in args.arsenal.split(",") if s.strip()]
+    if args.baits:
+        profile["baits"] = [s.strip() for s in args.baits.split(",") if s.strip()]
+    if args.line:
+        profile["line"] = [s.strip() for s in args.line.split(",") if s.strip()]
     if args.species:
         profile["species"] = args.species
 
@@ -554,6 +562,8 @@ def main():
     rp.add_argument("--until", help="hard off-water time 'HH:MM' or 'YYYY-MM-DD HH:MM' — overrides --hours")
     rp.add_argument("--species", help="e.g. largemouth bass, trout, catfish, panfish")
     rp.add_argument("--arsenal", help="comma-separated lures/rigs you own")
+    rp.add_argument("--baits", help="comma-separated live/cut/prepared baits you use")
+    rp.add_argument("--line", help="comma-separated line types you spool (fluorocarbon, braid, …)")
     rp.add_argument("--birth", help="flag-mode: 'YYYY-MM-DD HH:MM'")
     rp.add_argument("--place", help="flag-mode birthplace 'City, State, Country'")
     rp.add_argument("--name", help="angler name (flag-mode)")
