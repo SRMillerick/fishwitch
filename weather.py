@@ -6,6 +6,7 @@ kept so the sky math can convert to UT.
 """
 from __future__ import annotations
 import math
+import time
 from datetime import datetime, timedelta
 import requests
 
@@ -137,3 +138,86 @@ class Weather:
             pts -= 2; notes.append(f"{pop}% rain chance — bring the shells")
         return dict(score=min(10, max(0, pts + 2)), cloud=cloud, wind=wind,
                     pop=pop, trend=trend, notes=notes)
+
+
+# ── multi-model forecast agreement (display-only confidence) ────────────────
+# The same free Open-Meteo call can return GFS, ECMWF and ICON side by side;
+# their spread is an honest confidence signal. It is shown, never scored:
+# ranking changes on forecast uncertainty wait for the calibration ledger.
+AGREE_MODELS = ("gfs_seamless", "ecmwf_ifs025", "icon_seamless")
+AGREE_VARS = ("temperature_2m", "wind_speed_10m", "cloud_cover", "precipitation_probability")
+_AGREE_TTL = 1800
+_AGREE_CACHE: dict[tuple, tuple[float, dict | None]] = {}
+_UA = {"User-Agent": "fishwitch-mvp/1.0 (fishing report tool)"}
+
+
+def _agree_label(temp_f: float | None, wind_mph: float | None) -> str | None:
+    if temp_f is None or wind_mph is None:
+        return None
+    if temp_f <= 2.5 and wind_mph <= 3.5:
+        return "high"
+    if temp_f <= 4.5 and wind_mph <= 6.0:
+        return "medium"
+    return "low"
+
+
+def model_agreement(lat: float, lng: float, start: datetime, end: datetime) -> dict | None:
+    """How much GFS/ECMWF/ICON disagree over [start, end] — or None.
+
+    The forecast endpoint only carries models forward; sessions older than the
+    past_days window return None without a network call, so replaying the
+    logbook costs nothing. Cached 30 min per location + window.
+    """
+    if end < datetime.now() - timedelta(days=2):
+        return None
+    key = (round(lat, 3), round(lng, 3), start.date().isoformat(), end.date().isoformat())
+    hit = _AGREE_CACHE.get(key)
+    if hit and time.time() - hit[0] < _AGREE_TTL:
+        return hit[1]
+    result = None
+    try:
+        days = max(1, min(16, (end.date() - datetime.now().date()).days + 2))
+        r = requests.get(FORECAST, params=dict(
+            latitude=lat, longitude=lng, timezone="auto", forecast_days=days,
+            hourly=",".join(AGREE_VARS), models=",".join(AGREE_MODELS)),
+            headers=_UA, timeout=20)
+        r.raise_for_status()
+        h = r.json()["hourly"]
+        times = [datetime.fromisoformat(t) for t in h["time"]]
+        idx = [i for i, t in enumerate(times) if start <= t <= end] or [0]
+
+        def avg_spread(var: str, convert=lambda v: v):
+            vals = []
+            for i in idx:
+                row = []
+                for m in AGREE_MODELS:
+                    series = h.get(f"{var}_{m}")
+                    if series and i < len(series) and series[i] is not None:
+                        row.append(convert(series[i]))
+                if len(row) >= 2:
+                    vals.append(max(row) - min(row))
+            return round(sum(vals) / len(vals), 1) if vals else None
+
+        temp = avg_spread("temperature_2m", _c2f)
+        wind = avg_spread("wind_speed_10m", lambda v: v / KPH_PER_MPH)
+        cloud = avg_spread("cloud_cover")
+        pop = avg_spread("precipitation_probability")
+        label = _agree_label(temp, wind)
+        if label:
+            bits = []
+            if temp is not None:
+                bits.append(f"±{temp:.1f}°F")
+            if wind is not None:
+                bits.append(f"±{wind:.1f} mph")
+            # cloud drives this engine's light scoring; wide disagreement is
+            # worth naming, a raw ±98% looks like noise
+            if cloud is not None and cloud >= 25:
+                bits.append(f"cloud uncertain (±{cloud:.0f}%)")
+            result = dict(label=label, models=len(AGREE_MODELS),
+                          temp_spread_f=temp, wind_spread_mph=wind,
+                          cloud_spread_pct=cloud, pop_spread_pct=pop,
+                          summary="GFS/ECMWF/ICON " + ", ".join(bits))
+    except Exception:
+        result = None
+    _AGREE_CACHE[key] = (time.time(), result)
+    return result

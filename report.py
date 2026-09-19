@@ -20,7 +20,7 @@ import re
 from datetime import datetime, timedelta, date
 from pathlib import Path
 
-from weather import Weather
+from weather import Weather, model_agreement
 from skycalc import Sky, phase_name, illum_pct, fmt_sign, planet_lon, SIGNS, SYM
 from chart import NatalChart, transit_aspects, voc_moon, moon_note, phase_resonance, HOUR_MEANINGS
 import tactics as tx
@@ -122,6 +122,11 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         water_f = real_temp[1]
         water_temp_label = real_temp[2]
     stocking = stk.recent(lake)
+    # multi-model agreement: display-only confidence, never scoring
+    try:
+        forecast = model_agreement(lake["lat"], lake["lng"], start, end)
+    except Exception:
+        forecast = None
 
     # access rules: documented in registry, enforced only when asked
     acc_note = None
@@ -386,7 +391,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         lake_state=lake_state, days_since_turnover=days_since_turnover,
         heat_streak=streak, state_basis=state_basis, access_note=acc_note,
         water_temp_source=bool(real_temp), water_temp_label=water_temp_label,
-        stocking=stocking,
+        stocking=stocking, forecast=forecast,
         scores=dict(weather=wscore["score"], solunar=round(sol_score, 1),
                     astro=round(astro_score, 1), overall=overall,
                     astro_notes=astro_notes),
@@ -490,6 +495,8 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
         rows.append((("Lake hours 🚤" if emoji else "Lake hours"), m["access_note"]))
     rows.append(("Sky/wind", f"{w['cloud']}% cloud, {w['wind_mph']:.0f} mph wind, "
                  f"{m['weather']['score']['trend']['word']} barometer ({m['weather']['score']['trend']['now']:.0f} hPa)"))
+    if m.get("forecast"):
+        rows.append(("Forecast", f"{m['forecast']['label']} agreement — {m['forecast']['summary']}"))
     if m.get("color"):
         rows.append(("Color", m["color"]["rule"]))
     if m.get("bottom"):
@@ -507,6 +514,8 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
     if emoji:
         tiers = [
             "✅ sky+weather",
+            ("✅ " + m["forecast"]["summary"] + f" ({m['forecast']['label']} agreement)")
+            if m.get("forecast") else "🟡 forecast agreement unavailable",
             "✅ history→lake-state" if (m.get("state_basis") or m.get("lake_state"))
             else "⚠️ no lake state (manual flag?)",
             ("✅ " + (m.get("water_temp_label") or "gauge water temp"))
@@ -519,6 +528,8 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
     else:
         tiers = [
             "sky + weather",
+            (m["forecast"]["summary"] + f" ({m['forecast']['label']} agreement)")
+            if m.get("forecast") else "forecast agreement unavailable",
             "history → lake-state" if (m.get("state_basis") or m.get("lake_state"))
             else "no lake-state inference",
             (m.get("water_temp_label") or "gauge water temp") if m.get("water_temp_source")

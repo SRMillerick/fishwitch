@@ -64,7 +64,7 @@ fishwitch clicks                        # aggregate outbound clicks (no PII)
 fishwitch stats                         # aggregate page views (no PII)
 ./webapp                                 # web front door → http://127.0.0.1:7700
 FISHWITCH_LOCAL=1 ./webapp               # + /review and /stats panels (self-host only)
-~/.astro-venv/bin/python -m unittest discover -s tests -t .   # 30 tests, no network
+~/.astro-venv/bin/python -m unittest discover -s tests -t .   # 58 tests, no network
 FISHWITCH_WEB_HOST=0.0.0.0 ./webapp     # public deploy (gunicorn+nginx in front)
 fishwitch report --profile config/profiles/sean.json --lake hidden-valley-lake-ca
 fishwitch report --birth "1988-01-18 17:35" --place "Santa Rosa, CA, US" \
@@ -112,8 +112,8 @@ curl 'https://baromoon.com/api/v1/windows?lake=hidden-valley-lake-ca&days=7'
 
 `/api/v1/report` returns the scores, prime window, every block's picks with the
 engine's own reasons, the top rigs with their cited builds, the gap lane, knots,
-line, color, sky times, conditions, and links. `/api/v1/windows` returns the
-horizon scan. Embed the ledger anywhere:
+line, color, sky times, conditions, **model-agreement confidence**, and links.
+`/api/v1/windows` returns the horizon scan. Embed the ledger anywhere:
 
 ```html
 <iframe src="https://baromoon.com/embed/ledger?lake=hidden-valley-lake-ca&days=7"
@@ -122,6 +122,10 @@ horizon scan. Embed the ledger anywhere:
 ```
 
 ## Notes & limits
+- **Forecast confidence:** the report shows how much GFS, ECMWF and ICON disagree
+  for the window (a free Open-Meteo multi-model call). Wide disagreement on cloud is
+  called out because cloud drives the light scoring. It is disclosed, never scored —
+  uncertainty changes the ranking only if the calibration ledger earns it.
 - Forecast range ~3 days out (Open-Meteo free tier). Further = sky/astro only.
 - Water temp is an air-temp-lagged estimate unless NMEA/Signal K is live.
 - Solunar majors/minors follow the classic overhead/underfoot model.
