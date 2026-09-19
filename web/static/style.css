@@ -538,3 +538,7 @@ body.is-loading .nav-progress { width: 88%; opacity: 1;
   h1 { font-size: 20px; }
   table { font-size: 11px; }
 }
+
+/* ── session timeline (server-rendered SVG) ───────────────────────────────── */
+.timeline { margin: 6px 0 16px; }
+.timeline svg { display: block; width: 100%; height: auto; }

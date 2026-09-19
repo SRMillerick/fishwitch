@@ -45,6 +45,7 @@ reports add your natal transits and your arsenal. <a href="/interview">Build one
   {% else %}
     <div class="scorebar">overall <strong>{{ out.overall }}/10</strong> · {{ out.lake }} · {{ out.at.strftime('%a %b %-d, %-I:%M %p') }}</div>
     <p class="no-print fine"><a href="#" id="print-card">🖨 print / pocket card</a> — the locked numbers, windows, and rigs in one page.</p>
+    {% if out.timeline %}<div class="timeline">{{ out.timeline | safe }}</div>{% endif %}
     {{ out.html | safe }}
     {% include "_tackle.html" %}
   {% endif %}

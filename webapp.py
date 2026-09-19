@@ -42,6 +42,7 @@ import offers  # noqa: E402
 import public_api  # noqa: E402
 import telemetry  # noqa: E402
 import tactics as tx  # noqa: E402
+import viz  # noqa: E402
 from layers.history import History  # noqa: E402
 from report import generate as gen, to_markdown  # noqa: E402
 from weather import Weather  # noqa: E402
@@ -412,7 +413,8 @@ def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
                         product_url=mfg.get("product_url"),
                         offers=offers.resolve(c["id"]),
                         components=offers.components(c["id"])))
-    return dict(html=body, overall=m["scores"]["overall"],
+    return dict(html=body, timeline=viz.session_timeline_svg(m),
+                overall=m["scores"]["overall"],
                 lake=lake["name"], at=at, rods=rods, gap=gap,
                 shopping=offers.build_shopping(
                     [{"id": r["id"], "label": r["label"], "spec": r.get("spec")} for r in rods]),
