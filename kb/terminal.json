@@ -1,7 +1,7 @@
 {
   "label": "Terminal tackle",
   "kind": "terminal",
-  "_note": "Terminal tackle entities (hooks, weights, jig heads, hardware). Sourced claims are verbatim quotes from the cited live page (fetched_at + sha256); editorial entries are labelled. Rig components in kb/offers.json reuse these ids.",
+  "_note": "Terminal tackle entities (hooks, weights, jig heads, hardware). Sourced claims are verbatim quotes from the cited live page (fetched_at + sha256); editorial entries are labelled. Rig components in kb/offers.json reuse these ids. `purpose` groups interchangeable parts (hook size/family or weight class) so the report can offer alternatives; grouping is editorial, the specs are sourced.",
   "terminal": [
     {
       "id": "offset-hook",
@@ -25,7 +25,8 @@
         "confidence": "sourced",
         "verified_by": "sean",
         "verified_at": "2026-09-17T03:04:47+00:00"
-      }
+      },
+      "purpose": "worm-hook"
     },
     {
       "id": "circle-hook",
@@ -67,7 +68,8 @@
         "confidence": "sourced",
         "verified_by": "sean",
         "verified_at": "2026-09-17T03:04:47+00:00"
-      }
+      },
+      "purpose": "bait-hook"
     },
     {
       "id": "dropshot-hook",
@@ -91,7 +93,8 @@
         "confidence": "sourced",
         "verified_by": "sean",
         "verified_at": "2026-09-17T03:04:47+00:00"
-      }
+      },
+      "purpose": "dropshot-hook"
     },
     {
       "id": "bait-hook",
@@ -148,7 +151,8 @@
         "confidence": "sourced",
         "verified_by": "sean",
         "verified_at": "2026-09-17T03:04:47+00:00"
-      }
+      },
+      "purpose": "treble-hook"
     },
     {
       "id": "wacky-hook",
@@ -162,7 +166,8 @@
         "confidence": "unverified-editorial",
         "verified_by": null,
         "verified_at": "2026-09-17T03:04:47+00:00"
-      }
+      },
+      "purpose": "wacky-hook"
     },
     {
       "id": "bullet-weight",
@@ -276,7 +281,8 @@
         "confidence": "sourced",
         "verified_by": "sean",
         "verified_at": "2026-09-17T03:04:47+00:00"
-      }
+      },
+      "purpose": "dropshot-weight"
     },
     {
       "id": "ned-head",
@@ -300,7 +306,8 @@
         "confidence": "sourced",
         "verified_by": "sean",
         "verified_at": "2026-09-17T03:04:47+00:00"
-      }
+      },
+      "purpose": "ned-head"
     },
     {
       "id": "jig-head",
@@ -531,7 +538,8 @@
         "verified_by": "sean",
         "verified_at": "2026-09-19T03:55:29+00:00",
         "note": "text sha 71676256848bd9c3; fetched 2026-09-19T03:51:10+00:00; maker specs quoted (T1); owner size choice is T5"
-      }
+      },
+      "purpose": "wacky-hook"
     },
     {
       "id": "owner-cover-shot",
@@ -588,7 +596,8 @@
         "verified_by": "sean",
         "verified_at": "2026-09-19T04:08:55+00:00",
         "note": "text sha aa8c52361fb23348; fetched 2026-09-19T04:08:18+00:00; maker specs quoted (T1)"
-      }
+      },
+      "purpose": "dropshot-hook"
     },
     {
       "id": "owner-mosquito-circle",
@@ -645,7 +654,8 @@
         "verified_by": "sean",
         "verified_at": "2026-09-19T04:08:56+00:00",
         "note": "text sha c1867df5d896569d; fetched 2026-09-19T04:08:18+00:00; maker specs quoted (T1)"
-      }
+      },
+      "purpose": "dropshot-hook"
     },
     {
       "id": "vmc-crossover-ring",
@@ -692,7 +702,8 @@
         "verified_by": "sean",
         "verified_at": "2026-09-19T04:08:56+00:00",
         "note": "text sha 863ab60c2752ca14; fetched 2026-09-19T04:08:18+00:00; maker specs quoted (T1)"
-      }
+      },
+      "purpose": "wacky-ring"
     },
     {
       "id": "vmc-crossover-pliers",
@@ -752,7 +763,8 @@
         "verified_by": "sean",
         "verified_at": "2026-09-19T04:08:56+00:00",
         "note": "text sha e7950f91fc6d6fa1; fetched 2026-09-19T04:08:18+00:00; maker specs quoted (T1)"
-      }
+      },
+      "purpose": "ring-tool"
     },
     {
       "id": "vmc-nkr-neko-ring",
@@ -784,7 +796,8 @@
         "verified_by": "sean",
         "verified_at": "2026-09-19T04:08:56+00:00",
         "note": "text sha 024737f073257a12; fetched 2026-09-19T04:08:18+00:00; maker specs quoted (T1)"
-      }
+      },
+      "purpose": "wacky-ring"
     },
     {
       "id": "vmc-half-moon-weight",
@@ -828,7 +841,8 @@
         "verified_by": "sean",
         "verified_at": "2026-09-19T04:08:57+00:00",
         "note": "text sha 7f74e97b04fedf06; fetched 2026-09-19T04:08:18+00:00; maker specs quoted (T1)"
-      }
+      },
+      "purpose": "neko-weight"
     },
     {
       "id": "vmc-nkw-neko-weights",
@@ -863,7 +877,8 @@
         "verified_by": "sean",
         "verified_at": "2026-09-19T04:08:57+00:00",
         "note": "text sha cabb9973df2743d3; fetched 2026-09-19T04:08:18+00:00; maker specs quoted (T1)"
-      }
+      },
+      "purpose": "neko-weight"
     }
   ]
 }

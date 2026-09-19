@@ -331,6 +331,15 @@ function renderShopping(list) {
       h += " · <a href='/out/" + encodeURIComponent(o.entry) + "/" + encodeURIComponent(o.retailer) +
         "?comp=" + encodeURIComponent(s.id) + "&src=shopping' target='_blank' rel='sponsored noopener'>" +
         esc(o.retailer_label || o.retailer) + "</a> <span class='fine'>(" + esc(o.disclosure) + ")</span>";
+    if (s.alternatives && s.alternatives.length)
+      h += "<div class='fine'>also: " + s.alternatives.map(a => {
+        let t = esc(a.label);
+        for (const o of (a.offers || [])) if (o.url)
+          t += " <a href='/out/" + encodeURIComponent(o.entry) + "/" + encodeURIComponent(o.retailer) +
+            "?comp=" + encodeURIComponent(s.id) + "&src=shopping' target='_blank' rel='sponsored noopener'>" +
+            esc(o.retailer_label || o.retailer) + "</a>";
+        return t;
+      }).join(" · ") + "</div>";
     h += "</li>";
   }
   return h + "</ul></section>";

@@ -92,6 +92,24 @@ Almanac voice: plain, weathered, a little wry. Short sentences. The moon is a
 noun, not a brand asset. Numbers keep their clothes on (7.2/10, not "amazing!").
 Disclosures stated once, plainly, like a shopkeeper's sign.
 
+## Monetization & sponsorship (the table stays level)
+
+The product is free; affiliate commissions and, at scale, disclosed sponsorships
+keep it that way. Rank is sacred:
+
+1. **Ranking never sees money, relationships, or brand.** The conditions score
+   is computed before offers exist (`offers.py`); no placement, ordering, or
+   tie-break may consult a retailer, a partner, or a payment.
+2. **Paid placement is a labeled block, never a rank change.** A sponsor may buy
+   a clearly marked *sponsored* slot in an offer surface — never a
+   recommendation, a "best rig", a gap-lane position, or an alternative order.
+3. **No free favors either.** Nobody gets placement or priority for a discount,
+   a relationship, or a promise; if it isn't a disclosed paid slot, it isn't there.
+4. **Alternatives are deterministic.** "Also:" options come from the KB's
+   `purpose` grouping in catalog order, not affiliation.
+5. **Sponsorship activates only when users exist.** Until then, only commission
+   links — and those still resolve after ranking.
+
 ## Forbidden Patterns
 
 - No spinners — pulsing "casting…" text or skeleton rows.

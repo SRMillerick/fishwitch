@@ -257,6 +257,23 @@ def presentation_class(entry_id: str) -> str:
     return (load_presentation().get("entries") or {}).get(entry_id) or ""
 
 
+def alternatives(entry_id: str) -> list[dict]:
+    """Interchangeable parts for a spec ref — same `purpose` across terminal +
+    baits, excluding the entry itself. Editorial grouping (specs stay cited);
+    the report renders them as 'also:' options and ranking never sees them."""
+    ent = terminal_entry(entry_id) or bait_entry(entry_id)
+    purpose = (ent or {}).get("purpose")
+    if not purpose:
+        return []
+    out, seen = [], set()
+    for coll in (load_terminal().get("terminal", []), load_baits().get("baits", [])):
+        for e in coll:
+            if e.get("purpose") == purpose and e.get("id") != entry_id \
+                    and e.get("id") not in seen:
+                out.append(e); seen.add(e["id"])
+    return out
+
+
 def color_principle(ctx: dict) -> dict | None:
     """Pick the colour principle that fits the session (editorial selection over
     the cited fish-vision science in kb/principles.json)."""

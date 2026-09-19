@@ -131,15 +131,16 @@ def build_shopping(rigs: list[dict]) -> list[dict]:
     registered component. Rigs without a spec fall back to their component
     bundle. Presentation only — never enters ranking."""
     rows: dict[str, dict] = {}
+    import tactics as tx
     for r in rigs or []:
         rid = r.get("id")
         rlabel = r.get("label") or rid or ""
         comps = {c["id"]: c for c in components(rid)}
         spec = r.get("spec")
 
-        def _row(key: str, label: str, note, offers: list[dict]):
+        def _row(key: str, label: str, note, offers: list[dict], alts: list[dict] | None = None):
             row = rows.setdefault(key, dict(id=key, label=label, note=note,
-                                            for_labels=[], offers=[]))
+                                            for_labels=[], offers=[], alternatives=[]))
             if rlabel and rlabel not in row["for_labels"]:
                 row["for_labels"].append(rlabel)
             for o in offers:
@@ -147,6 +148,9 @@ def build_shopping(rigs: list[dict]) -> list[dict]:
                 if o.get("url") and sig not in {(x.get("retailer"), x.get("url"))
                                                  for x in row["offers"]}:
                     row["offers"].append(o)
+            for a in alts or []:
+                if a["id"] not in {x["id"] for x in row["alternatives"]}:
+                    row["alternatives"].append(a)
             return row
 
         if spec:
@@ -166,11 +170,22 @@ def build_shopping(rigs: list[dict]) -> list[dict]:
                 key = p.get("ref") or f"{rid}:{part}"
                 comp = comps.get(p.get("ref"))
                 offers = []
+                if p.get("ref"):
+                    for o in resolve(p["ref"]):
+                        ro = dict(o); ro["entry"] = p["ref"]
+                        offers.append(ro)
                 if comp:
                     for o in comp.get("offers", []):
                         ro = dict(o); ro["entry"] = rid
                         offers.append(ro)
-                _row(key, label, p.get("note"), offers)
+                alts = []
+                for a in tx.alternatives(p.get("ref")) if p.get("ref") else []:
+                    ao = resolve(a["id"])
+                    for o in ao:
+                        o["entry"] = a["id"]
+                    alts.append(dict(id=a["id"], label=a.get("label", a["id"]),
+                                     offers=[o for o in ao if o.get("url")]))
+                _row(key, label, p.get("note"), offers, alts)
         else:
             for c in comps.values():
                 offers = []

@@ -2,6 +2,9 @@
 {% block title %}{{ lake.name }} fishing report{% endblock %}
 {% block head %}
 <meta name="description" content="{{ lake.name }} ({{ lake.region }}) — conditions, upcoming windows, and what to tie on. Deterministic fishing report from baromoon.">
+<meta property="og:title" content="{{ lake.name }} fishing report — baromoon">
+<meta property="og:description" content="Conditions, upcoming windows, and what to tie on at {{ lake.name }}. Deterministic, cited, free.">
+<meta property="og:url" content="https://baromoon.com/lake/{{ lake.id }}">
 <link rel="canonical" href="https://baromoon.com/lake/{{ lake.id }}">
 <link rel="stylesheet" href="/static/leaflet/leaflet.css">
 <script type="application/ld+json">

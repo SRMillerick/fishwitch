@@ -97,6 +97,9 @@
         <a href="/out/{{ o.entry }}/{{ o.retailer }}?comp={{ s.id }}&src=shopping" target="_blank" rel="sponsored noopener">{{ o.retailer_label or o.retailer }}</a>
         <span class="fine">({{ o.disclosure }})</span>
       {% endif %}{% endfor %}
+      {% if s.alternatives %}
+      <div class="fine">also: {% for a in s.alternatives %}{{ a.label }}{% for o in a.offers %} <a href="/out/{{ o.entry }}/{{ o.retailer }}?comp={{ s.id }}&src=shopping" target="_blank" rel="sponsored noopener">{{ o.retailer_label or o.retailer }}</a>{% endfor %}{% if not loop.last %} · {% endif %}{% endfor %}</div>
+      {% endif %}
     </li>
   {% endfor %}
   </ul>

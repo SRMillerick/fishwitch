@@ -74,6 +74,10 @@ Sourced claims are verbatim quotes (fetched_at + sha256); entries with no
 source are labelled `unverified-editorial`. The rig component bundles in
 `offers.json` reuse these ids where they overlap, so a "build it" part can
 become a real KB entity. CLI: `fishwitch terminal [--category hook]`.
+`purpose` groups interchangeable parts across terminal + baits (e.g.
+`dropshot-hook`: Owner Mosquito Circle, Owner Cover Shot, generic point-up);
+the report renders the group as deterministic "also:" options — catalog order,
+no brand weighting, ranking never sees it.
 
 ## Rig specs (`spec` on a species entry)
 

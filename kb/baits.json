@@ -171,7 +171,8 @@
         "verified_by": "sean",
         "verified_at": "2026-09-19T03:55:28+00:00",
         "note": "text sha 0a2f44142840e7bf; fetched 2026-09-19T03:42:11+00:00; maker specs quoted (T1); hook-width rule is T5 owner observation"
-      }
+      },
+      "purpose": "urchin-bait"
     },
     {
       "id": "prickly-pear",
@@ -286,9 +287,10 @@
         "verified_by": "sean",
         "verified_at": "2026-09-19T03:55:28+00:00",
         "note": "text sha 3ded6e14f9b9a685; fetched 2026-09-19T03:42:11+00:00; maker specs quoted (T1); hook-width rule is T5 owner observation"
-      }
+      },
+      "purpose": "urchin-bait"
     }
   ],
   "label": "Baits",
-  "_note": "Cross-species bait entities. A bait is a product; a rig is how it is presented. Rig specs reference bait ids; maker shape/material/size claims are quoted (T1), owner rigging rules are T5 until sourced/calibrated."
+  "_note": "Cross-species bait entities. A bait is a product; a rig is how it is presented. Rig specs reference bait ids; maker shape/material/size claims are quoted (T1), owner rigging rules are T5 until sourced/calibrated. `purpose` groups interchangeable baits by style; grouping is editorial."
 }
