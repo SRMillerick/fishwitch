@@ -87,6 +87,7 @@ def load_line() -> dict:
 
 _TERMINAL: dict | None = None
 _PRINCIPLES: dict | None = None
+_SUBSTRATE: dict | None = None
 
 
 def load_terminal() -> dict:
@@ -103,6 +104,26 @@ def load_principles() -> dict:
         p = KB_DIR / "principles.json"
         _PRINCIPLES = json.loads(p.read_text()) if p.exists() else {"principles": []}
     return _PRINCIPLES
+
+
+def load_substrate() -> dict:
+    """Editorial substrate/presentation table (kb/substrate.json). Facts here
+    are T5-labelled until sourced; scoring uses them only when the session
+    declares a bottom."""
+    global _SUBSTRATE
+    if _SUBSTRATE is None:
+        p = KB_DIR / "substrate.json"
+        _SUBSTRATE = json.loads(p.read_text()) if p.exists() else {"entries": {}}
+    return _SUBSTRATE
+
+
+def substrate_fit(entry_id: str, bottom: str | None) -> tuple[float, str]:
+    """(score delta, one-line behavior note) for an entry on a declared bottom."""
+    if not bottom:
+        return 0.0, ""
+    e = (load_substrate().get("entries") or {}).get(entry_id) or {}
+    b = e.get(bottom) or {}
+    return float(b.get("fit", 0) or 0), (b.get("note") or "")
 
 
 def color_principle(ctx: dict) -> dict | None:
@@ -297,6 +318,13 @@ def score_entry(cat: dict, ctx: dict) -> tuple[float, list[str], str | None]:
             score -= 2.0; why.append("post-turnover: shallow reaction compressed")
         if cat["depth"] in ("mid", "deep"):
             score += 1.5; why.append("post-turnover: fish holding deep/suspended")
+    sub = ctx.get("bottom")
+    if sub:
+        fit, note = substrate_fit(cat["id"], sub)
+        if fit:
+            score += fit
+            if note:
+                why.append(f"{sub}: {note}")
     if "hot-streak" in ls and ctx["light"] not in ("dusk/dawn", "night"):
         if cat["depth"] == "shallow" and cat["style"] == "reaction":
             score -= 1.0

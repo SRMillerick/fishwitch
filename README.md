@@ -67,7 +67,7 @@ fishwitch report --profile config/profiles/sean.json --lake hidden-valley-lake-c
 fishwitch report --birth "1988-01-18 17:35" --place "Santa Rosa, CA, US" \
     --lake "Clear Lake, CA" --species bass \
     --arsenal "drop shot, wacky senko, chatterbait, squarebill, whopper plopper" \
-    --baits "nightcrawlers, live shiners" --line "fluorocarbon, braid"
+    --baits "nightcrawlers, live shiners" --line "fluorocarbon, braid" --bottom grass
 fishwitch lakes                         # registry of known water bodies
 fishwitch arsenal --species bass        # lure categories it understands
 ```
@@ -88,10 +88,12 @@ md = to_markdown(model)   # model is a plain dict — serialize for the UI
 
 Tackle links resolve at the very end of the pipe (`offers.py`) and never
 influence ranking. Every offer carries a disclosure, and only promoted, cited
-KB entries get links. Affiliate tags live in the environment
-(`FISHWITCH_AMZ_TAG`), never in code. Manufacturer pages carry no commission;
-affiliate links (Amazon among them) are always labeled. See the site's
-`/disclosure` and `/privacy` pages.
+KB entries get links. The rig picks carry a per-rig "build it" bundle and a
+consolidated shopping list (hook, weight, plastic, line) — each part routes
+through `/out/` with its own disclosure and click count. Affiliate tags live in
+the environment (`FISHWITCH_AMZ_TAG`), never in code. Manufacturer pages carry
+no commission; affiliate links (Amazon among them) are always labeled. See the
+site's `/disclosure` and `/privacy` pages.
 
 ## Notes & limits
 - Forecast range ~3 days out (Open-Meteo free tier). Further = sky/astro only.

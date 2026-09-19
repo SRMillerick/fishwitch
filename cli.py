@@ -192,7 +192,8 @@ def cmd_report(args):
 
     model = generate(profile, lake, at, hours=hours,
                      species=args.species or profile.get("species"),
-                     voice=args.voice or profile.get("astro_display"))
+                     voice=args.voice or profile.get("astro_display"),
+                     bottom=args.bottom)
     md = to_markdown(model)
     print(md)
     p = save(model, md)
@@ -571,6 +572,8 @@ def main():
     rp.add_argument("--turnover", help="'YYYY-MM-DD' — lake turnover date; persists to registry")
     rp.add_argument("--voice", choices=["fisher", "almanac", "astro"],
                     help="sky-layer presentation (default: profile setting, else astro)")
+    rp.add_argument("--bottom", choices=["grass", "muck", "sand", "rock", "wood"],
+                    help="bottom you're fishing — applies substrate presentation fit")
     rp.add_argument("--gpx", help="also export prime-window waypoints to this GPX path")
 
     bp = sub.add_parser("best", help="scan a day for optimal fishing windows")
@@ -637,6 +640,8 @@ def main():
 
     of = sub.add_parser("offers", help="resolve retailer links for a KB entry (disclosure included)")
     of.add_argument("--entry", required=True)
+    of.add_argument("--shopping-list", action="store_true",
+                    help="aggregate components across --entry a,b,c into one shopping list")
     of.add_argument("--add-url", help="register an offer URL")
     of.add_argument("--retailer", default="manufacturer-site")
     of.add_argument("--kind", choices=["manufacturer", "affiliate"], default="manufacturer")
@@ -765,6 +770,20 @@ def main():
 
     elif args.cmd == "offers":
         import offers
+        if args.shopping_list:
+            ids = [s.strip() for s in args.entry.split(",") if s.strip()]
+            entries = []
+            for i in ids:
+                c = tx.find_entry(i)
+                entries.append(dict(id=i, label=(c or {}).get("label", i)))
+            rows = offers.shopping_list(entries)
+            if not rows:
+                print("  no component bundles registered for those entries")
+            for r in rows:
+                links = " ".join(f"[{o['retailer_label']}]" for o in r["offers"] if o.get("url"))
+                print(f"  {r['label']:38s} for {', '.join(r['for_labels'])}"
+                      + (f"  {links}" if links else "  (no links yet)"))
+            return
         if args.add_url:
             offers.add(args.entry, args.retailer, args.add_url, args.kind, args.asin)
             print(f"  ✅ offer registered: {args.entry} @ {args.retailer} ({args.kind})")

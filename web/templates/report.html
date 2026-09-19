@@ -21,6 +21,14 @@
     </select>
   </label>
   <label>Species <input type="text" name="species" placeholder="largemouth bass" value="{{ q.species or '' }}"></label>
+  <label>Bottom
+    <select name="bottom">
+      <option value="">— (no substrate fit)</option>
+      {% for b in ['grass','muck','sand','rock','wood'] %}
+      <option value="{{ b }}" {% if q.bottom == b %}selected{% endif %}>{{ b }}</option>
+      {% endfor %}
+    </select>
+  </label>
   <button type="submit">Generate</button>
 </form>
 <p class="fine" id="profile-note">Rendering anonymously — with a profile (browser-only),

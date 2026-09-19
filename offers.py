@@ -95,6 +95,36 @@ def components(entry_id: str) -> list[dict]:
     return out
 
 
+def shopping_list(entries: list[dict]) -> list[dict]:
+    """Aggregate the component bundles of the recommended rigs into one
+    deduped shopping list. Presentation only — never enters ranking. Each row
+    names every rig it belongs to; resolved links keep their source rig entry
+    so /out/ click counting stays attributed. `entries` = [{"id", "label"}]."""
+    d = _load()
+    reg = d.get("retailers", {})
+    byid = d.get("entries", {})
+    rows: dict[str, dict] = {}
+    for e in entries or []:
+        eid = e.get("id")
+        elabel = e.get("label") or eid or ""
+        cfg = byid.get(eid, {})
+        comps = cfg.get("components", []) if isinstance(cfg, dict) else []
+        for c in comps:
+            row = rows.setdefault(c["id"], dict(
+                id=c["id"], label=c.get("label", c["id"]), note=c.get("note"),
+                for_labels=[], offers=[]))
+            if elabel and elabel not in row["for_labels"]:
+                row["for_labels"].append(elabel)
+            for o in c.get("offers", []):
+                ro = _resolve(eid, o, reg, comp=c["id"])
+                ro["entry"] = eid
+                sig = (ro.get("retailer"), ro.get("url"), ro.get("comp"))
+                if sig not in {(x.get("retailer"), x.get("url"), x.get("comp"))
+                               for x in row["offers"]}:
+                    row["offers"].append(ro)
+    return list(rows.values())
+
+
 def add(entry_id: str, retailer: str, url: str | None = None,
         kind: str | None = None, asin: str | None = None):
     """Register/update a product offer. Data-only — no code change to go live."""

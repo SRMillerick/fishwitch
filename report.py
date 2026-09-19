@@ -59,7 +59,7 @@ def _slug(s: str) -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
              species: str | None = None, voice: str | None = None,
-             wx: Weather | None = None, hist=None) -> dict:
+             wx: Weather | None = None, hist=None, bottom: str | None = None) -> dict:
     species = tx.normalize_species(species or profile.get("species", "bass"))
     voice = voice or profile.get("astro_display") or "astro"
     if voice not in ("fisher", "almanac", "astro"):
@@ -215,7 +215,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
                    solunar=sol, moon_fruitful=(mn["fruitful"] if mn else None),
                    pressure_word=wscore["trend"]["word"],
                    structure_notes=lake.get("structure", []),
-                   lake_state=lake_state)
+                   lake_state=lake_state, bottom=bottom)
         picks = tx.recommend(ctx, candidates, top_n=2)
         blocks.append(dict(start=a, end=b, light=light, sun_alt=round(sun_alt, 1),
                            hour=hour, solunar=sol, events=ev_notes, picks=picks, wx=w))
@@ -302,7 +302,8 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
                        temp_f=pw["temp_f"], water_f=water_f, hour_ruler=pblk["hour"]["ruler"],
                        solunar=pblk["solunar"], moon_fruitful=(mn["fruitful"] if mn else None),
                        pressure_word=wscore["trend"]["word"],
-                       structure_notes=lake.get("structure", []), lake_state=lake_state)
+                       structure_notes=lake.get("structure", []), lake_state=lake_state,
+                       bottom=bottom)
         owned = owned_ids
         full = [(c, s, why) for c, s, why in
                 tx.recommend(gap_ctx, [(c, c["label"]) for c in tx.catalog(species)
@@ -328,6 +329,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         blocks=blocks, rods=rods, prime=prime, prime_score=prime_s, utc_off=wx.utc_offset,
         knots=knots, knot_notes=knot_notes, angler_knots=angler_knots, line=line, color=color, gap=gap,
         angler_line=angler_line, owned_ids=owned_ids, has_baseline=has_baseline,
+        bottom=bottom,
         logbook=lb.summary_for(lake.get("name", ""), angler=profile.get("name")),
         lake_state=lake_state, days_since_turnover=days_since_turnover,
         heat_streak=streak, state_basis=state_basis, access_note=acc_note,
@@ -436,6 +438,8 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
                  f"{m['weather']['score']['trend']['word']} barometer ({m['weather']['score']['trend']['now']:.0f} hPa)"))
     if m.get("color"):
         rows.append(("Color", m["color"]["rule"]))
+    if m.get("bottom"):
+        rows.append(("Bottom", f"**{m['bottom']}** — presentation fit applied to the rig scores"))
     if m["solunar"]:
         in_win = [e for e in m["solunar"] if e["end"] >= m["start"] and e["start"] <= m["end"]]
         near = [e for e in m["solunar"] if e not in in_win]
@@ -571,7 +575,9 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
 
     L.append(f"## {e('🎣 ')}Best rigs for these conditions")
     for c in m["rods"]:
-        L.append(f"- {c['label']}" + (f" — {c['note']}" if c.get("note") else "") + _box(c))
+        _, sfit = tx.substrate_fit(c["id"], m.get("bottom"))
+        L.append(f"- {c['label']}" + (f" — {c['note']}" if c.get("note") else "") + _box(c)
+                 + (f" — *{sfit}*" if sfit else ""))
     unmatched = m["match"]["unmatched"]
     if unmatched:
         L.append(f"- *(no match in the KB for: {', '.join(unmatched)} — still bring them)*")

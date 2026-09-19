@@ -1,0 +1,52 @@
+{
+  "label": "Substrate behavior",
+  "_note": "T5 unverified-editorial seed from owner field observations (session 2026-09-18). Deliberately small: only claims the owner made. Depth bands and sand/rock/wood behaviors await sourcing (T1 manufacturer rigging guides / T2 agency technique guides) and logbook calibration. Reports label this content editorial until a human promotes it with a source.",
+  "provenance": {
+    "confidence": "unverified-editorial",
+    "author": "sean",
+    "seeded_at": "2026-09-18",
+    "verified_by": null,
+    "note": "presentation behavior on grass/muck; source claims in a later pass"
+  },
+  "bottoms": [
+    "grass",
+    "muck",
+    "sand",
+    "rock",
+    "wood"
+  ],
+  "entries": {
+    "dropshot": {
+      "grass": {
+        "fit": 2,
+        "note": "keeps the bait suspended above the canopy"
+      },
+      "muck": {
+        "fit": 2,
+        "note": "keeps the bait suspended out of the goo"
+      }
+    },
+    "wacky": {
+      "grass": {
+        "fit": 2,
+        "note": "weightless bait rests on the grass instead of sinking into it"
+      }
+    },
+    "neko": {
+      "grass": {
+        "fit": -2,
+        "note": "effective, but the grass swallows it"
+      }
+    },
+    "ned": {
+      "grass": {
+        "fit": -2,
+        "note": "effective, but the grass swallows it"
+      },
+      "muck": {
+        "fit": -2,
+        "note": "muck gobbles up the Ned rig"
+      }
+    }
+  }
+}

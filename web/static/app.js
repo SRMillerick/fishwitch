@@ -265,6 +265,7 @@ if (form) {
     const payload = {
       lake: f.get("lake"), at: date + " " + time,
       hours: f.get("hours"), voice: f.get("voice"), species: f.get("species"),
+      bottom: f.get("bottom"),
       profile: getActive() || undefined,
     };
     const out = document.getElementById("report-out");
@@ -287,7 +288,7 @@ if (form) {
         : "Rendering anonymously — pick or create a profile for transits + tackle.";
       out.innerHTML =
         '<div class="scorebar">overall <strong>' + j.overall + "/10</strong> · " + esc(j.lake) + "</div>"
-        + j.html + renderTackle(j.rods) + renderGap(j.gap);
+        + j.html + renderTackle(j.rods) + renderShopping(j.shopping) + renderGap(j.gap);
     } catch (e) {
       out.innerHTML = '<p class="error">render failed: ' + esc(String(e)) + "</p>";
     }
@@ -303,6 +304,25 @@ function buildList(entryId, comps, src) {
     return esc(c.label) + links;
   }).join(" · ");
   return "<div class='fine build'><span class='sc'>build it:</span> " + rows + "</div>";
+}
+
+function renderShopping(list) {
+  if (!list || !list.length) return "";
+  let h = '<section class="tackle"><h2>🛒 Shopping list — everything the top rigs need</h2>' +
+    '<p class="fine">One row per part, consolidated across the recommended rigs. Links attach ' +
+    'after ranking, and ranking never sees them.</p><ul class="plain">';
+  for (const s of list) {
+    h += "<li><strong>" + esc(s.label) + "</strong>";
+    if (s.for_labels && s.for_labels.length)
+      h += " <span class='fine'>for " + esc(s.for_labels.join(" · ")) + "</span>";
+    if (s.note) h += "<div class='fine'>" + esc(s.note) + "</div>";
+    for (const o of (s.offers || [])) if (o.url)
+      h += " · <a href='/out/" + encodeURIComponent(o.entry) + "/" + encodeURIComponent(o.retailer) +
+        "?comp=" + encodeURIComponent(s.id) + "&src=shopping' target='_blank' rel='sponsored noopener'>" +
+        esc(o.retailer_label || o.retailer) + "</a> <span class='fine'>(" + esc(o.disclosure) + ")</span>";
+    h += "</li>";
+  }
+  return h + "</ul></section>";
 }
 
 function renderTackle(rods) {

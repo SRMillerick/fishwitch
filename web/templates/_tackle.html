@@ -80,3 +80,23 @@
 </section>
 {% endif %}
 {% endif %}
+{% if out and out.shopping %}
+<section class="tackle">
+  <h2>🛒 Shopping list — everything the top rigs need</h2>
+  <p class="fine">One row per part, consolidated across the recommended rigs. Links attach
+  after ranking, and ranking never sees them.</p>
+  <ul class="plain">
+  {% for s in out.shopping %}
+    <li>
+      <strong>{{ s.label }}</strong>
+      {% if s.for_labels %}<span class="fine">for {{ s.for_labels | join(' · ') }}</span>{% endif %}
+      {% if s.note %}<div class="fine">{{ s.note }}</div>{% endif %}
+      {% for o in s.offers %}{% if o.url %} ·
+        <a href="/out/{{ o.entry }}/{{ o.retailer }}?comp={{ s.id }}&src=shopping" target="_blank" rel="sponsored noopener">{{ o.retailer_label or o.retailer }}</a>
+        <span class="fine">({{ o.disclosure }})</span>
+      {% endif %}{% endfor %}
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+{% endif %}
