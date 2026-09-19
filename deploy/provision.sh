@@ -42,6 +42,35 @@ EOF
 systemctl daemon-reload
 systemctl enable --now baromoon
 
+# warm-cache timer: keeps the weather/history/render caches hot so the first
+# visitor gets an instant page (synthetic requests carry ?warm=1 and are not
+# counted in page telemetry)
+cat > /etc/systemd/system/baromoon-warm.service <<'EOF'
+[Unit]
+Description=baromoon warm cache (keep the first visitor fast)
+After=baromoon.service
+Requires=baromoon.service
+
+[Service]
+Type=oneshot
+ExecStart=/srv/fishwitch/deploy/warm.sh
+EOF
+cat > /etc/systemd/system/baromoon-warm.timer <<'EOF'
+[Unit]
+Description=warm baromoon caches every 15 minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=15min
+AccuracySec=1min
+
+[Install]
+WantedBy=timers.target
+EOF
+chmod +x "$APPDIR/deploy/warm.sh"
+systemctl daemon-reload
+systemctl enable --now baromoon-warm.timer
+
 # Caddy site: auto-TLS for the domain, proxy to gunicorn
 cat > /etc/caddy/Caddyfile <<EOF
 $DOMAIN, www.$DOMAIN {

@@ -75,6 +75,7 @@ def _count_page(resp):
     Best-effort; a telemetry failure must never fail a page."""
     try:
         if (request.method == "GET" and resp.status_code == 200
+                and request.args.get("warm") != "1"
                 and telemetry.should_count(request.path)):
             telemetry.record(request.path, lake=request.args.get("lake"),
                              ref=request.referrer)

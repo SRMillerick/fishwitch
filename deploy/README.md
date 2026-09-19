@@ -33,6 +33,10 @@ Caddy fetches the Let's Encrypt cert on first hit — no certbot config.
 
 ## 4. Deploy updates (any time, from ~/fishwitch)
 
+A `baromoon-warm.timer` (installed by `provision.sh`) runs `deploy/warm.sh` every 15 min to keep
+the in-memory weather/history/render caches hot, so the first visitor never waits; synthetic
+requests carry `?warm=1` and are excluded from page telemetry.
+
 ```bash
 ./deploy/deploy.sh          # = publish-mirror, then ssh pull + restart
 ```

@@ -1,0 +1,8 @@
+[Unit]
+Description=baromoon warm cache (keep the first visitor fast)
+After=baromoon.service
+Requires=baromoon.service
+
+[Service]
+Type=oneshot
+ExecStart=/srv/fishwitch/deploy/warm.sh
