@@ -17,7 +17,9 @@ is the clean entry point for it.
    cross-species line/knot tables. Every cited entry is scored for the conditions
    (light, wind, water temp, hour, solunar, lake state) and the **best rigs rank
    first for everyone**; the angler's baseline (arsenal, baits, line, knots) is a
-   lens that tags what's already in the box vs a gap.
+   lens that tags what's already in the box vs a gap. Decision rules also add a
+   **wind-exposure** read from the lake's cached shoreline (which bank the wind is
+   stacking), fetched once by `adapters/shorelines.py`.
 
 ## The translation layer (voices)
 The same sky math always runs. `--voice` (or `astro_display` in the profile)
@@ -122,6 +124,9 @@ line, color, sky times, conditions, **model-agreement confidence**, and links.
 ```
 
 ## Notes & limits
+- **Shoreline wind model:** lake outlines come from OpenStreetMap (Overpass API),
+  simplified and cached in `config/shorelines.json` — data © OpenStreetMap
+  contributors (ODbL). The report credits it wherever the wind-bank advice appears.
 - **Forecast confidence:** the report shows how much GFS, ECMWF and ICON disagree
   for the window (a free Open-Meteo multi-model call). Wide disagreement on cloud is
   called out because cloud drives the light scoring. It is disclosed, never scored —

@@ -616,6 +616,12 @@ def decision_rules(ctx: dict, picks: list[str]) -> list[str]:
         rules.append("**Swirls/short strikes on topwater →** don't speed up; slow down, longer pauses. Still missing → upsize the profile.")
     if "Drop shot" in picks:
         rules.append("**Drop-shot fish slapping →** re-cast the same fish one size up — change profile, not color.")
+    sh = ctx.get("shoreline")
+    if sh and ctx.get("wind_mph", 0) >= 5:
+        rules.append(
+            f"**Wind from {sh['from_sector']} at {ctx['wind_mph']:.0f} mph →** "
+            f"the {sh['stacked']} shore is wind-stacked (fetch ~{sh['stacked_fetch_m']} m); "
+            f"fish it first — the {sh['lee']} shore is the lee.")
     if ctx.get("wind_mph", 0) >= 5 and "Chatterbait (bladed jig)" in picks:
         rules.append("**Wind dies →** skip the wind-lane baits, go straight to the low-light topwater.")
     if ctx.get("cloud", 0) >= 60:

@@ -119,6 +119,7 @@ def report(m: dict, lake_id: str, lake: dict, at: datetime, hours: float,
             "stocking": bool(m.get("stocking")),
         },
         "forecast": m.get("forecast"),
+        "shoreline": m.get("shoreline"),
         "trends": [{"label": t.get("label"), "score": t.get("score"),
                     "signal": t.get("signal"), "source": t.get("source"),
                     "url": t.get("url"), "observed_at": t.get("observed_at")}

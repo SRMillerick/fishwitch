@@ -127,6 +127,14 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         forecast = model_agreement(lake["lat"], lake["lng"], start, end)
     except Exception:
         forecast = None
+    # wind exposure from the cached OSM shoreline: where the wind stacks bait
+    shoreline = None
+    try:
+        from layers import shoreline as _shore
+        if (wxs.get("wind_mph") or 0) >= 5:
+            shoreline = _shore.wind_shore(lake.get("id"), wxs.get("dir"))
+    except Exception:
+        shoreline = None
 
     # access rules: documented in registry, enforced only when asked
     acc_note = None
@@ -391,7 +399,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         lake_state=lake_state, days_since_turnover=days_since_turnover,
         heat_streak=streak, state_basis=state_basis, access_note=acc_note,
         water_temp_source=bool(real_temp), water_temp_label=water_temp_label,
-        stocking=stocking, forecast=forecast,
+        stocking=stocking, forecast=forecast, shoreline=shoreline,
         scores=dict(weather=wscore["score"], solunar=round(sol_score, 1),
                     astro=round(astro_score, 1), overall=overall,
                     astro_notes=astro_notes),
@@ -740,9 +748,11 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
             L.append("")
 
     ctx = dict(wind_mph=m["weather"]["start"]["wind_mph"], cloud=m["weather"]["start"]["cloud"],
+               wind_dir=m["weather"]["start"].get("dir"),
                moon_fruitful=(m["moon_note"]["fruitful"] if m["moon_note"] else None),
                pressure_word=m["weather"]["score"]["trend"]["word"],
                structure_notes=m["lake"].get("structure", []),
+               lake_key=m["lake"].get("id"), shoreline=m.get("shoreline"),
                lake_state=m.get("lake_state"))
     L.append(f"## {e('🧠 ')}Decision rules")
     for r in tx.decision_rules(ctx, [c["label"] for c in m["rods"]]):
@@ -750,6 +760,8 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
             r = r.replace("barren-sign evenings backload — the payoff window is late",
                           "slow starts backload the payoff window on dark moons")
         L.append(f"- {r}")
+    if m.get("shoreline"):
+        L.append("*(shoreline wind model — © OpenStreetMap contributors, ODbL)*")
     for lore in m["lake"].get("lore", [])[:2]:
         L.append(f"- Lake lore: {lore}")
     L.append("")

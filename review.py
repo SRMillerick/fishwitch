@@ -76,8 +76,11 @@ def _lake_for(entry: dict, profile: dict) -> dict | None:
         for k, v in reg.items():
             vname = (v.get("name") or "").lower()
             if k == name or vname == name or vname in name or name in vname:
-                return v
-    return reg.get(profile.get("home_lake"))
+                return {**v, "id": k}
+    home = profile.get("home_lake")
+    if home and home in reg:
+        return {**reg[home], "id": home}
+    return reg.get(home)
 
 
 def _dedupe(picks: list[tuple]) -> list[tuple]:

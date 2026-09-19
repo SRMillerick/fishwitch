@@ -283,8 +283,8 @@
     "name": "Highland Springs Reservoir",
     "region": "Lake County, CA, USA",
     "display": "Highland Springs Reservoir, Lake County, CA",
-    "lat": 39.144,
-    "lng": -122.928,
+    "lat": 38.9425,
+    "lng": -122.9054,
     "alt_m": 425,
     "area_m2": 526110,
     "area_source": "manual: ~130 acres (Lake County Parks)",
@@ -304,6 +304,7 @@
       "rainbow trout"
     ],
     "note": "hand-carded (geocode miss) \u2014 coords/area from Lake County Parks; verify locally",
-    "county": "Lake"
+    "county": "Lake",
+    "coords_source": "Nominatim (OpenStreetMap) \u2014 corrected 2026-09-19; prior auto-card point was 22 km off"
   }
 }
