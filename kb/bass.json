@@ -1404,7 +1404,78 @@
           "fetched_at": "2026-09-19T04:12:57+00:00",
           "sha256": "ed19bb4a792da9db"
         }
-      ]
+      ],
+      "practice": {
+        "kind": "creator how-to note (pilot)",
+        "tier": "T5",
+        "confidence": "unverified-editorial",
+        "signal": "creator instructional",
+        "source": "Tom Redington \u2014 \u201cCarolina Rig Masterclass From the Guy Who Perfected It\u201d (YouTube)",
+        "url": "https://www.youtube.com/watch?v=SlGUxju-kVQ",
+        "uploaded_at": "2026-09-14",
+        "duration_s": 5165,
+        "transcribed_at": "2026-09-19T05:06:49+00:00",
+        "transcription": {
+          "tool": "yt-dlp + faster-whisper small/int8",
+          "transcript_sha256": "03a202ab050dd4ff",
+          "caveat": "auto-captions (ASR), not human-verified; quotes are whitespace-joined contiguous segments"
+        },
+        "summary": "Redington's standard Carolina rig: a faceted bead behind a 3/4\u20135/8 oz tungsten weight (not below 1/2 oz) plus an oval spacer bead over the swivel; a ~10\u201314 lb leader, never heavier than the main line, at about 3 ft \u2014 shortened to ~2 ft in winter/early spring for cold, lethargic fish; a standard 90-degree offset worm hook; fished with the line tight to stay in contact with the bottom. Hard bottoms (sand/gravel) are the pattern. A compact bullet/egg hybrid weight comes through cover better than lead. Summer plastic: a stickbait or fluke. His lighter \u201cPD-rig\u201d variant runs an ~18-inch leader and 1/8 oz weight around docks, grass and laydowns.",
+        "quotes": [
+          {
+            "at": "33:14",
+            "text": "So that's that's the standard length leader for me about maybe right at three feet. You know, you can go three and a half. You can go two and three quarters"
+          },
+          {
+            "at": "33:36",
+            "text": "in the winter and in the early spring, I would short my leader up a little bit more, maybe, you know, two feet so that the fish being more cold natured and being more lethargic wouldn't have to travel as far to get to that bait."
+          },
+          {
+            "at": "31:48",
+            "text": "And I usually drop down to a, you know, anywhere from 10 to 14 pound test leader."
+          },
+          {
+            "at": "32:08",
+            "text": "always tell people to never use a heavier leader than your main line simply because when you get hung up, you don't want to have to re rig everything, you know, with your weight"
+          },
+          {
+            "at": "42:44",
+            "text": "If you're going to use tungsten, which most everybody does nowadays, you can downsize. I would certainly not go less than a half an ounce, but most of the time, three quarter, five, eight, something like that ounce weight is is what a standard."
+          },
+          {
+            "at": "38:27",
+            "text": "So my standard setup is the faceted bead or the smaller hole bead behind the weight and then the oval shaped spacer bead on behind it that sits on top of the swivel."
+          },
+          {
+            "at": "45:09",
+            "text": "Anymore, I just use a standard. Offset, shank, 90 degree offset, shank, worm hook."
+          },
+          {
+            "at": "43:09",
+            "text": "But the biggest thing was keep in contact with the bottom, making sure you understood what you were fishing and where"
+          },
+          {
+            "at": "41:19",
+            "text": "And that didn't matter whether it was sand or gravel or whatever the fish were using at the time."
+          },
+          {
+            "at": "42:15",
+            "text": "it was a cross between a bullet weight and an egg sinker, basically, that it was able to come through cover very well. Where lead would get caught between two pieces of rock"
+          },
+          {
+            "at": "45:41",
+            "text": "I'll fish an old monster a lot. On a Carolina read, you know, in the summer months when when the fish are feeding."
+          },
+          {
+            "at": "48:23",
+            "text": "And, you know, my leader length, which is about. I'd say it's probably about 18 inches, something like that"
+          },
+          {
+            "at": "48:59",
+            "text": "And it works around boat docks. It works around grass. It works around. Tree lines, laydowns."
+          }
+        ]
+      }
     },
     {
       "id": "swimbait",

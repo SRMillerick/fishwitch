@@ -448,6 +448,20 @@ def match_arsenal(items: list[str], species="bass") -> dict:
 
 
 # ── condition scoring (fixed arithmetic over KB data) ───────────────────────
+# Tie-break layer (kb/CONDITIONS.md): fitted dimensions (cover/substrate now;
+# season/mood later) are small and capped so no single term dominates a tie.
+# 1 raw fit unit = 0.25 score; per-dimension cap ±0.5; total tie-break cap
+# ±1.0 (the planetary-hour bonus was demoted for the same reason).
+FIT_SCALE = 0.25
+FIT_CAP = 0.5
+TIEBREAK_CAP = 1.0
+
+
+def _fit_delta(fit: float) -> float:
+    """Scale a raw substrate/dimension fit onto the capped tie-break grid."""
+    return max(-FIT_CAP, min(FIT_CAP, fit * FIT_SCALE))
+
+
 def _wind_band(w):
     if w < 3: return "glass"
     if w <= 12: return "chop"
@@ -504,7 +518,8 @@ def score_entry(cat: dict, ctx: dict) -> tuple[float, list[str], str | None]:
     if sub:
         fit, note = substrate_fit(cat["id"], sub)
         if fit:
-            score += fit
+            # cover fit is a capped tie-break dimension, not a condition driver
+            score += _fit_delta(fit)
             if note:
                 why.append(f"{sub}: {note}")
     if "hot-streak" in ls and ctx["light"] not in ("dusk/dawn", "night"):

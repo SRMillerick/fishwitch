@@ -296,16 +296,32 @@ def promote(species: str, entry_id: str, verified_by: str) -> Path | None:
         return kb_file
 
     if draft.get("patch"):
-        for c in kb.setdefault(key, []):
-            if c["id"] == entry_id:
-                for k, v in draft["patch"].items():
-                    if isinstance(v, dict) and isinstance(c.get(k), dict):
-                        c[k] = {**c[k], **v}
-                    else:
-                        c[k] = v
-                if draft.get("citations"):
-                    c.setdefault("citations", []).extend(draft["citations"])
-                break
+        coll = kb.setdefault(key, [])
+        # collections come in two shapes: species files are lists of entries
+        # with ids; cross-species tables (kb/substrate.json `entries`) are
+        # dicts keyed by entry id. Support both so a patch can target either.
+        if isinstance(coll, dict):
+            # dict-keyed tables create the entry on first patch (substrate.json
+            # `entries` starts empty for rigs with no seed)
+            target = coll.setdefault(entry_id, {})
+            for k, v in draft["patch"].items():
+                if isinstance(v, dict) and isinstance(target.get(k), dict):
+                    target[k] = {**target[k], **v}
+                else:
+                    target[k] = v
+            if draft.get("citations"):
+                target.setdefault("citations", []).extend(draft["citations"])
+        else:
+            for c in coll:
+                if c["id"] == entry_id:
+                    for k, v in draft["patch"].items():
+                        if isinstance(v, dict) and isinstance(c.get(k), dict):
+                            c[k] = {**c[k], **v}
+                        else:
+                            c[k] = v
+                    if draft.get("citations"):
+                        c.setdefault("citations", []).extend(draft["citations"])
+                    break
         kb_file.write_text(json.dumps(kb, indent=2) + "\n")
         p.unlink()
         return kb_file

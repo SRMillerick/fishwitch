@@ -19,39 +19,135 @@
     "dropshot": {
       "grass": {
         "fit": 2,
-        "note": "keeps the bait suspended above the canopy"
+        "note": "keeps the bait suspended above the canopy",
+        "confidence": "unverified-editorial",
+        "source": "owner field observation (sean, 2026-09-18)",
+        "tier": "T5"
       },
       "muck": {
         "fit": 2,
-        "note": "keeps the bait suspended out of the goo"
+        "note": "keeps the bait suspended out of the goo",
+        "confidence": "unverified-editorial",
+        "source": "owner field observation (sean, 2026-09-18)",
+        "tier": "T5"
       }
     },
     "wacky": {
       "grass": {
         "fit": 2,
-        "note": "weightless bait rests on the grass instead of sinking into it"
+        "note": "weightless bait rests on the grass instead of sinking into it",
+        "confidence": "unverified-editorial",
+        "source": "owner field observation (sean, 2026-09-18)",
+        "tier": "T5"
       }
     },
     "neko": {
       "grass": {
         "fit": -2,
-        "note": "effective, but the grass swallows it"
+        "note": "effective, but the grass swallows it",
+        "confidence": "unverified-editorial",
+        "source": "owner field observation (sean, 2026-09-18)",
+        "tier": "T5"
       }
     },
     "ned": {
       "grass": {
         "fit": -2,
-        "note": "effective, but the grass swallows it"
+        "note": "effective, but the grass swallows it",
+        "confidence": "unverified-editorial",
+        "source": "owner field observation (sean, 2026-09-18)",
+        "tier": "T5"
       },
       "muck": {
         "fit": -2,
-        "note": "muck gobbles up the Ned rig"
+        "note": "muck gobbles up the Ned rig",
+        "confidence": "unverified-editorial",
+        "source": "owner field observation (sean, 2026-09-18)",
+        "tier": "T5"
       }
     },
     "chicken": {
       "grass": {
         "fit": -2,
-        "note": "effective, but the grass swallows it"
+        "note": "effective, but the grass swallows it",
+        "confidence": "unverified-editorial",
+        "source": "owner field observation (sean, 2026-09-18)",
+        "tier": "T5"
+      }
+    },
+    "trig": {
+      "grass": {
+        "fit": 2,
+        "note": "weedless worm hook \u2014 made to work weeds and heavy cover",
+        "confidence": "sourced",
+        "citations": [
+          {
+            "claim": "weeds/cover",
+            "tier": "T2",
+            "source": "Take Me Fishing \u2014 Bass Fishing Rigs",
+            "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/bass-fishing-rigs/",
+            "quote": "It is a way to fish a soft plastic worm close to or in cover such as weeds.",
+            "found": true,
+            "fetched_at": "2026-09-19T04:56:47+00:00",
+            "sha256": "dd17d69c0fd91f42"
+          },
+          {
+            "claim": "heavy cover",
+            "tier": "T2",
+            "source": "Take Me Fishing \u2014 Bass Fishing Rigs",
+            "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/bass-fishing-rigs/",
+            "quote": "This allows these rigs to worked through weeds or heavy cover without getting snagged.",
+            "found": true,
+            "fetched_at": "2026-09-19T04:56:47+00:00",
+            "sha256": "dd17d69c0fd91f42"
+          }
+        ]
+      },
+      "wood": {
+        "fit": 1,
+        "note": "weedless through heavy cover (wood/brush included)",
+        "confidence": "sourced",
+        "citations": [
+          {
+            "claim": "heavy cover",
+            "tier": "T2",
+            "source": "Take Me Fishing \u2014 Bass Fishing Rigs",
+            "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/bass-fishing-rigs/",
+            "quote": "This allows these rigs to worked through weeds or heavy cover without getting snagged.",
+            "found": true,
+            "fetched_at": "2026-09-19T04:56:47+00:00",
+            "sha256": "dd17d69c0fd91f42"
+          }
+        ]
+      }
+    },
+    "carolina": {
+      "grass": {
+        "fit": 1,
+        "note": "lighter sinkers pass through weeds/grass; short leader for weedy water",
+        "confidence": "sourced",
+        "citations": [
+          {
+            "claim": "lighter sinkers in grass",
+            "tier": "T2",
+            "source": "Take Me Fishing \u2014 Bass Fishing Rigs",
+            "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/bass-fishing-rigs/",
+            "quote": "Lighter sinkers help the rig pass through weeds or grass.",
+            "found": true,
+            "fetched_at": "2026-09-19T04:56:47+00:00",
+            "sha256": "dd17d69c0fd91f42"
+          },
+          {
+            "claim": "weedy water leader",
+            "tier": "T2",
+            "source": "Take Me Fishing \u2014 Try a Carolina rig for Minnesota bass",
+            "url": "https://www.takemefishing.org/blog/july-2019/try-a-carolina-rig-for-minnesota-bass/",
+            "quote": "Short leaders work best in shallow or weedy waters.",
+            "found": true,
+            "fetched_at": "2026-09-19T04:56:47+00:00",
+            "sha256": "7502358ab6c88f17"
+          }
+        ]
       }
     }
   }

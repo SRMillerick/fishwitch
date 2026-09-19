@@ -466,7 +466,7 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
     if m.get("color"):
         rows.append(("Color", m["color"]["rule"]))
     if m.get("bottom"):
-        rows.append(("Bottom", f"**{m['bottom']}** — presentation fit applied to the rig scores"))
+        rows.append(("Bottom", f"**{m['bottom']}** — substrate fit applied as a capped tie-break (kb/CONDITIONS.md)"))
     if m["solunar"]:
         in_win = [e for e in m["solunar"] if e["end"] >= m["start"] and e["start"] <= m["end"]]
         near = [e for e in m["solunar"] if e not in in_win]

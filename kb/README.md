@@ -134,6 +134,14 @@ low light runs on rods, clear water rewards color. `tactics.color_principle(ctx)
 picks one per session (light/cloud/lake-state) and the report renders it as a
 **Color** row in the locked numbers. CLI: `fishwitch colors`.
 
+## Condition depth / tie-break layer (`kb/CONDITIONS.md`)
+
+The design contract for separating same-class rigs (drop shot / Texas / Neko /
+wacky / Carolina): one home per signal, 0.25-point fit grid, per-dimension
+cap ±0.5 and total tie-break cap ±1.0, sourced fits vs. labelled T5, and the
+12-session replay as the regression guard. Read `kb/CONDITIONS.md` before
+adding a condition field.
+
 ## Candidate sources of truth to wire in (deterministic ingestion)
 - **Manufacturer product pages** (Rapala, Zoom, Yamamoto, Roboworm, Z-Man…):
   stated retrieve, depth range, rigging — the primary source for
