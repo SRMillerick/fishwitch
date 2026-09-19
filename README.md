@@ -99,6 +99,28 @@ the environment (`FISHWITCH_AMZ_TAG`), never in code. Manufacturer pages carry
 no commission; affiliate links (Amazon among them) are always labeled. See the
 site's `/disclosure` and `/privacy` pages.
 
+## Public JSON API (v1) & embed
+
+Anonymous, read-only, deterministic — the same rankings the site serves, free
+to use with attribution. No profile data can appear in a response; responses
+carry `Cache-Control` and open CORS for GET.
+
+```bash
+curl 'https://baromoon.com/api/v1/report?lake=hidden-valley-lake-ca&bottom=grass'
+curl 'https://baromoon.com/api/v1/windows?lake=hidden-valley-lake-ca&days=7'
+```
+
+`/api/v1/report` returns the scores, prime window, every block's picks with the
+engine's own reasons, the top rigs with their cited builds, the gap lane, knots,
+line, color, sky times, conditions, and links. `/api/v1/windows` returns the
+horizon scan. Embed the ledger anywhere:
+
+```html
+<iframe src="https://baromoon.com/embed/ledger?lake=hidden-valley-lake-ca&days=7"
+        style="width:100%;max-width:430px;height:250px;border:1px solid #37402c;border-radius:6px"
+        title="baromoon — best fishing windows"></iframe>
+```
+
 ## Notes & limits
 - Forecast range ~3 days out (Open-Meteo free tier). Further = sky/astro only.
 - Water temp is an air-temp-lagged estimate unless NMEA/Signal K is live.

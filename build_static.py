@@ -79,6 +79,10 @@ def save(path: str, body: str):
     body = body.replace('href="/report"', 'href="report-tonight.html"')  # nav + hero btn
     body = re.sub(r'href="/outlook\?[^"]*"', 'href="outlook.html"', body)
     body = body.replace('href="/outlook"', 'href="outlook.html"')
+    # /ledger.ics + /outlook.rss are dynamic-only (no server on gh-pages); drop
+    # the subscribe line so the static snapshot has no broken links.
+    body = re.sub(r'<p class="fine">Subscribe to the A/S windows:.*?</p>\s*',
+                  '', body, flags=re.S)
     body = re.sub(r'href="/kb\?species=(\w+)"', r'href="kb-\1.html"', body)
     body = body.replace('href="/kb"', 'href="kb-bass.html"')
     body = body.replace('href="/interview"', 'href="interview.html"')

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>baromoon — best windows · {{ lake.name }}</title>
+<link rel="stylesheet" href="/static/style.css?v={{ asset_v }}">
+<style>
+  body { background: var(--bg); margin: 0; }
+  .embed { padding: 14px 16px; }
+  .embed h1 { font-size: 20px; margin: .15em 0 .6em; }
+  .embed .row { display: flex; justify-content: space-between; gap: 12px;
+                padding: 7px 0; border-bottom: 1px solid var(--line2); }
+  .embed .row:last-of-type { border-bottom: 0; }
+  .embed .picks { color: var(--dim); text-align: right; }
+  .embed .when strong { color: var(--gold); font-family: var(--mono); }
+</style>
+</head>
+<body>
+<div class="embed">
+  <div class="eyebrow">baromoon · {{ lake.name }}</div>
+  <h1>Best windows <span class="fine">next {{ days }} days</span></h1>
+  {% if rows %}
+    {% for r in rows[:3] %}
+    <div class="row">
+      <span class="when">{{ r.start.strftime('%a %b %-d · %-I:%M %p') }}–{{ r.end.strftime('%-I %p') }}
+        <strong>{{ tier(r.overall) }} {{ r.overall }}</strong></span>
+      <span class="picks">{{ ' + '.join(r.picks) }}</span>
+    </div>
+    {% endfor %}
+    {% if not strict %}<p class="fine">No A/S window in range — these are the best available.</p>{% endif %}
+  {% else %}
+    <p class="fine">No windows scored for this range yet.</p>
+  {% endif %}
+  <p class="fine" style="margin-top:10px"><a href="{{ base }}/outlook?lake={{ lake.id }}&amp;utm_source=embed"
+     target="_blank" rel="noopener">baromoon</a> — conditions-scored, free &amp; cited</p>
+</div>
+</body>
+</html>

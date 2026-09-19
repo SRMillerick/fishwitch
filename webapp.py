@@ -39,6 +39,7 @@ sys.path.insert(0, str(ROOT.parent))   # package imports (from fishwitch import 
 
 import markdown as _md  # noqa: E402  (pip install markdown)
 import offers  # noqa: E402
+import public_api  # noqa: E402
 import telemetry  # noqa: E402
 import tactics as tx  # noqa: E402
 from layers.history import History  # noqa: E402
@@ -817,6 +818,87 @@ def stats_page():
     days = max(1, min(365, int(request.args.get("days") or 30)))
     s = telemetry.summarize(days=days)
     return render_template("stats.html", s=s, days=days, local=LOCAL)
+
+
+# ── public API v1 (anonymous, read-only, attributed) ────────────────────────
+@app.route("/embed/ledger")
+def embed_ledger():
+    """A minimal, iframe-able ledger for other sites — same cached horizon
+    scan as /outlook, no account, absolute links back to baromoon."""
+    import feeds
+    lake = resolve_lake(request.args.get("lake"))
+    if lake is None:
+        abort(404)
+    try:
+        days = max(1, min(16, int(request.args.get("days") or 7)))
+    except ValueError:
+        days = 7
+    species = (request.args.get("species") or "").strip()[:40] or None
+    try:
+        rows, _ = _cached(f"outlook:{lake['name']}:{days}:{species}",
+                          lambda: _horizon(lake, days, species))
+    except Exception:
+        rows = []
+    good = [r for r in rows if r["overall"] >= feeds.MIN_OVERALL]
+    body = render_template("embed.html", lake=lake, days=days,
+                           rows=good or rows[:3], strict=bool(good),
+                           tier=feeds.tier, base="https://baromoon.com")
+    return Response(body, mimetype="text/html",
+                    headers={"Cache-Control": "public, max-age=900"})
+
+
+@app.route("/api/v1/report")
+def api_v1_report():
+    """Public anonymous JSON report — the stable shape in public_api.py."""
+    if not _rate_ok(f"v1report:{request.remote_addr}", 60):
+        return jsonify(error="rate limit — 60 API reports/hour per visitor"), 429
+    lake = resolve_lake(request.args.get("lake"))
+    if lake is None:
+        return jsonify(error="unknown lake", hint="see /lakes"), 404
+    try:
+        hours = min(8.0, max(0.5, float(request.args.get("hours") or 2.5)))
+    except ValueError:
+        hours = 2.5
+    at = _clamp_at(request.args.get("at"))
+    species = (request.args.get("species") or "").strip()[:40] or "bass"
+    voice = request.args.get("voice")
+    if voice not in ("fisher", "almanac", "astro"):
+        voice = "fisher"
+    bottom = request.args.get("bottom")
+    if bottom not in ("grass", "muck", "sand", "rock", "wood"):
+        bottom = None
+    profile = dict(species=species, astro_display=voice, arsenal=[])
+    wx = shared_weather(lake["lat"], lake["lng"])
+    hist = shared_history(lake["lat"], lake["lng"], at)
+    m = gen(profile, lake, at, hours=hours, species=species, voice=voice,
+            wx=wx, hist=hist, bottom=bottom)
+    body = public_api.report(m, lake.get("id"), lake, at, hours, voice, species, bottom)
+    r = jsonify(public_api.envelope(body))
+    r.headers["Access-Control-Allow-Origin"] = "*"
+    r.headers["Cache-Control"] = "public, max-age=300"
+    return r
+
+
+@app.route("/api/v1/windows")
+def api_v1_windows():
+    """Public anonymous horizon scan (same cache as /outlook)."""
+    if not _rate_ok(f"v1windows:{request.remote_addr}", 120):
+        return jsonify(error="rate limit — 120 API scans/hour per visitor"), 429
+    lake = resolve_lake(request.args.get("lake"))
+    if lake is None:
+        return jsonify(error="unknown lake", hint="see /lakes"), 404
+    try:
+        days = max(1, min(16, int(request.args.get("days") or 7)))
+    except ValueError:
+        days = 7
+    species = (request.args.get("species") or "").strip()[:40] or None
+    rows, moon = _cached(f"outlook:{lake['name']}:{days}:{species}",
+                         lambda: _horizon(lake, days, species))
+    body = public_api.windows(rows, moon, lake.get("id"))
+    r = jsonify(public_api.envelope(body))
+    r.headers["Access-Control-Allow-Origin"] = "*"
+    r.headers["Cache-Control"] = "public, max-age=900"
+    return r
 
 
 # ── JSON API (for the browser layer; robots-discouraged) ─────────────────────
