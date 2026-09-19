@@ -379,6 +379,36 @@ def _print_rows(graded: list[dict]) -> None:
                 print("     model said: low-value window — model agreed")
 
 
+def session_weight(g: dict) -> float:
+    """A session's calibration weight: known total weight, else best fish,
+    else 1.0. The ledger repeatedly shows within-catch variance dominating
+    day scores (a 4.5 lb fish in a 6.3 window) — weighting by what was
+    actually caught keeps the grade about the fish, not the count."""
+    e = g.get("entry") or {}
+    try:
+        return float(e.get("total_lb") or e.get("best_lb") or 1.0)
+    except (TypeError, ValueError):
+        return 1.0
+
+
+def weighted_presentation(graded: list[dict]) -> dict[str, int]:
+    """Weighted share (%) of exact/style/miss across catch sessions."""
+    rows = [g for g in graded if not g["skunk"] and g["pres"]]
+    total = sum(session_weight(g) for g in rows)
+    if not total:
+        return {}
+    shares: dict[str, float] = {}
+    for g in rows:
+        shares[g["pres"]] = shares.get(g["pres"], 0.0) + session_weight(g)
+    return {k: round(100 * v / total) for k, v in shares.items()}
+
+
+def weighted_catch_avg(graded: list[dict]) -> float | None:
+    rows = [g for g in graded if not g["skunk"]]
+    total = sum(session_weight(g) for g in rows)
+    return round(sum(session_weight(g) * g["overall"] for g in rows) / total, 1) if total else None
+
+
 def _print_summary(graded: list[dict], skipped: int) -> None:
     catches = [g for g in graded if not g["skunk"]]
     skunks = [g for g in graded if g["skunk"]]
@@ -395,6 +425,10 @@ def _print_summary(graded: list[dict], skipped: int) -> None:
                  if k.startswith("pres:")]
     if pres_bits:
         print(f"  PRESENTATION  {' · '.join(pres_bits)}")
+        wp = weighted_presentation(graded)
+        if wp:
+            ws = " · ".join(f"{v}% {k}" for k, v in sorted(wp.items()))
+            print(f"  PRESENTATIONW {ws}  (weighted by catch — big fish count more)")
     tim_bits = [f"{v} {k.split(':')[1]}" for k, v in sorted(tally.items())
                 if k.startswith("tim:")]
     if tim_bits:
@@ -410,7 +444,9 @@ def _print_summary(graded: list[dict], skipped: int) -> None:
         sep = cm - sm
         verdict = ("separates ✅" if sep >= 1.0 else
                    "weak separation" if sep >= 0 else "inverted ✗")
-        print(f"  SEPARATION    catches avg {cm:.1f} · skunks avg {sm:.1f} "
+        cw = weighted_catch_avg(graded)
+        wnote = f" · {cw:.1f} if weighted by catch" if cw is not None else ""
+        print(f"  SEPARATION    catches avg {cm:.1f}{wnote} · skunks avg {sm:.1f} "
               f"→ {sep:+.1f} ({verdict})")
     elif catches:
         cm = sum(g["overall"] for g in catches) / len(catches)

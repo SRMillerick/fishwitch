@@ -9,7 +9,10 @@ Read-only; the logbook itself never leaves this machine.</p>
 {% if rows %}
 <p class="scorebar">separation: catches vs skunks
 {% if sep is not none %} <strong>{{ '%+.1f'| format(sep) }}</strong>{% else %} — needs at least one of each{% endif %}
-· {{ n_catch }} catches · {{ n_skunk }} skunks</p>
+· {{ n_catch }} catches · {{ n_skunk }} skunks
+{% if catch_w is not none %} · catch-weighted avg {{ catch_w }}{% endif %}
+{% if pres_w %} · weighted presentation:
+  {% for k, v in pres_w.items() %}{{ v }}% {{ k }}{% if not loop.last %} · {% endif %}{% endfor %}{% endif %}</p>
 <div class="table-scroll">
 <table>
   <thead><tr><th>session</th><th>angler</th><th>result</th><th>model said</th><th>presentation</th><th>timing</th><th>zone</th></tr></thead>

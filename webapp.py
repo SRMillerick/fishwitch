@@ -804,6 +804,8 @@ def review_page():
         sep = round(sum(catches) / len(catches) - sum(skunks) / len(skunks), 1)
     return render_template("review.html", rows=rows, skipped=skipped, sep=sep,
                            n_catch=len(catches), n_skunk=len(skunks),
+                           pres_w=rv.weighted_presentation(graded),
+                           catch_w=rv.weighted_catch_avg(graded),
                            local=LOCAL)
 
 
