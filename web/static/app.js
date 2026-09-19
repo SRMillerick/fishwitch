@@ -311,7 +311,11 @@ function renderTackle(rods) {
     '<p class="fine">Ranking never sees these links. They attach after the pipe ends.</p><ul class="plain">';
   for (const r of rods) {
     h += "<li><span class='badge " + (r.verified ? "ok" : "pend") + "'>" +
-      (r.verified ? "sourced" : "editorial") + "</span> <strong>" + esc(r.label) + "</strong>";
+      (r.verified ? "sourced" : "editorial") + "</span>";
+    if (r.owned !== undefined && r.owned !== null)
+      h += " <span class='badge " + (r.owned ? "mine" : "gap") + "'>" +
+        (r.owned ? "in your box" : "gap") + "</span>";
+    h += " <strong>" + esc(r.label) + "</strong>";
     if (r.product_url) h += " · <a href='/out/" + encodeURIComponent(r.id) + "/manufacturer?src=tackle' target='_blank' rel='nofollow noopener'>" +
       esc(r.product || "manufacturer page") + "</a>";
     for (const o of (r.offers || [])) if (o.url)

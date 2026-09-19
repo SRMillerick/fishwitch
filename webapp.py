@@ -351,10 +351,13 @@ def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
     body = _md.markdown(to_markdown(m, emoji=False, show_gap=False), extensions=["tables"])
     body = _responsive_tables(body)
     prime = m.get("prime")
+    owned_ids = m.get("owned_ids") or set()
+    has_box = bool(m.get("has_baseline"))
     rods = []
     for c in m["rods"]:
         mfg = (c.get("manufacturer_specs") or {})
         rod = dict(id=c["id"], label=c["label"],
+                   owned=(c["id"] in owned_ids) if has_box else None,
                    verified=c["provenance"].get("confidence") == "verified"
                    or c["provenance"].get("confidence") == "sourced",
                    source=c["provenance"].get("source", "editorial consensus"),

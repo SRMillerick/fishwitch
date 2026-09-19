@@ -6,6 +6,9 @@
   {% for r in out.rods %}
     <li>
       <span class="badge {% if r.verified %}ok{% else %}pend{% endif %}">{% if r.verified %}sourced{% else %}editorial{% endif %}</span>
+      {% if r.owned is defined and r.owned is not none %}
+      <span class="badge {% if r.owned %}mine{% else %}gap{% endif %}">{% if r.owned %}in your box{% else %}gap{% endif %}</span>
+      {% endif %}
       <strong>{{ r.label }}</strong>
       {% if r.product_url %}·
         <a href="/out/{{ r.id }}/manufacturer?src=tackle" target="_blank" rel="nofollow noopener">{{ r.product or 'manufacturer page' }}</a>

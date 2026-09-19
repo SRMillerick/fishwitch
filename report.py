@@ -143,12 +143,14 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
 
     arsenal = profile.get("arsenal") or []
     baits = profile.get("baits") or []
-    # the angler's baseline is lures/rigs + live/cut/prepared baits — both are
-    # matched against the same cited KB, so condition scoring treats them alike
-    match = tx.match_arsenal(list(arsenal) + list(baits), species)
-    if not match["matched"]:
-        match = tx.match_arsenal(["chatterbait", "squarebill", "drop shot", "senko",
-                                  "jig", "walking bait"], species)
+    # the angler's baseline (lures/rigs + live/cut/prepared baits) is a LENS,
+    # not a filter: every cited KB entry is scored for the conditions and the
+    # best rigs rank first for everyone. Ownership only tags which picks are
+    # already in the angler's box.
+    baseline = tx.match_arsenal(list(arsenal) + list(baits), species)
+    owned_ids = {c["id"] for c, _ in baseline["matched"]}
+    has_baseline = bool(arsenal or baits)
+    candidates = [(c, c["label"]) for c in tx.catalog(species)]
 
     # the angler's knot repertoire (like the arsenal): their knots come first,
     # and any better-fit knot they don't tie is surfaced as "worth learning"
@@ -214,7 +216,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
                    pressure_word=wscore["trend"]["word"],
                    structure_notes=lake.get("structure", []),
                    lake_state=lake_state)
-        picks = tx.recommend(ctx, match["matched"], top_n=2)
+        picks = tx.recommend(ctx, candidates, top_n=2)
         blocks.append(dict(start=a, end=b, light=light, sun_alt=round(sun_alt, 1),
                            hour=hour, solunar=sol, events=ev_notes, picks=picks, wx=w))
 
@@ -253,7 +255,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         weight = dur * (1.5 if blk["light"] in ("dusk/dawn", "night") else 1)
         for cat, sc, _ in blk["picks"]:
             agg[cat["id"]] = agg.get(cat["id"], 0) + weight * sc
-    cat_by_id = {c["id"]: c for c, _ in match["matched"]}
+    cat_by_id = {c["id"]: c for c, _ in candidates}
     rods = [cat_by_id[i] for i, _ in sorted(agg.items(), key=lambda kv: -kv[1])][:5]
 
     # knots for the rods actually recommended (cited facts; see kb/knots.json);
@@ -287,12 +289,12 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
     prime = max(blocks, key=prime_score) if blocks else None
     prime_s = round(prime_score(prime), 1) if prime else None
 
-    # ── the gap lane: high scorers the angler DOESN'T own ────────────────
+    # ── the gap lane: the best scorers the angler DOESN'T own ────────────
     # Display/monetization surface only — computed after all ranking is done,
-    # never fed back into picks or scores (principle 4). Skipped for anonymous
-    # renders (a gap against the generic fallback arsenal means nothing).
+    # never fed back into picks or scores (principle 4). Skipped when the
+    # angler gave no baseline (a "gap" against nothing means nothing).
     gap = []
-    if (profile.get("arsenal") or profile.get("baits")) and prime is not None:
+    if has_baseline and prime is not None:
         pblk = prime
         pmid = pblk["start"] + (pblk["end"] - pblk["start"]) / 2
         pw = wx.at(pmid)
@@ -301,7 +303,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
                        solunar=pblk["solunar"], moon_fruitful=(mn["fruitful"] if mn else None),
                        pressure_word=wscore["trend"]["word"],
                        structure_notes=lake.get("structure", []), lake_state=lake_state)
-        owned = {c["id"] for c, _ in match["matched"]}
+        owned = owned_ids
         full = [(c, s, why) for c, s, why in
                 tx.recommend(gap_ctx, [(c, c["label"]) for c in tx.catalog(species)
                                        if c["id"] not in owned], top_n=5)
@@ -322,10 +324,10 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         solunar=solunar, weather=dict(score=wscore, start=wxs, tmax=tmax, tmin=tmin,
                                       water_f=water_f),
         natal=natal, aspects=(aspects or [])[:8], perfecting=perfecting,
-        voc=voc, moon_note=mn, resonance=resonance, match=match,
+        voc=voc, moon_note=mn, resonance=resonance, match=baseline,
         blocks=blocks, rods=rods, prime=prime, prime_score=prime_s, utc_off=wx.utc_offset,
         knots=knots, knot_notes=knot_notes, angler_knots=angler_knots, line=line, color=color, gap=gap,
-        angler_line=angler_line,
+        angler_line=angler_line, owned_ids=owned_ids, has_baseline=has_baseline,
         logbook=lb.summary_for(lake.get("name", ""), angler=profile.get("name")),
         lake_state=lake_state, days_since_turnover=days_since_turnover,
         heat_streak=streak, state_basis=state_basis, access_note=acc_note,
@@ -353,6 +355,17 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
     def e(prefix: str) -> str:
         return prefix if emoji else ""
     voice = m["voice"]
+    owned = m.get("owned_ids") or set()
+    has_box = bool(m.get("has_baseline"))
+
+    def _box(c: dict, short: bool = False) -> str:
+        """Ownership tag — the personal lens on top of the conditions rank."""
+        if not has_box:
+            return ""
+        if c["id"] in owned:
+            return " *(yours)*" if short else " — *in your box*"
+        return " *(gap)*" if short else " — *not in your box (gap)*"
+
     L = []
     wk = m["start"].strftime("%A").upper()
     date = m["start"].strftime("%b %-d").upper()
@@ -541,7 +554,7 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
         for lab in b["events"][:3]:
             astro.append(_t_event(lab, voice))
         pick_txt = "<br>".join(
-            f"**{c['label']}** — {c['technique']}"
+            f"**{c['label']}**{_box(c, short=True)} — {c['technique']}"
             + (f" · {tx.zone_hint(c, b['light'])}" if tx.zone_hint(c, b['light']) else "")
             + (f" ({tx.color_hint(c, dict(light=b['light'], cloud=b['wx']['cloud']))})"
                if tx.color_hint(c, dict(light=b['light'], cloud=b['wx']['cloud'])) else "")
@@ -556,9 +569,9 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
                  f"{LIGHT_LABELS.get(b['light'], b['light'])} | {pick_txt} |")
     L.append("")
 
-    L.append(f"## {e('🎣 ')}Rods tied")
+    L.append(f"## {e('🎣 ')}Best rigs for these conditions")
     for c in m["rods"]:
-        L.append(f"- {c['label']}" + (f" — {c['note']}" if c.get("note") else ""))
+        L.append(f"- {c['label']}" + (f" — {c['note']}" if c.get("note") else "") + _box(c))
     unmatched = m["match"]["unmatched"]
     if unmatched:
         L.append(f"- *(no match in the KB for: {', '.join(unmatched)} — still bring them)*")
@@ -643,7 +656,8 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
         parts.append(f"— the window that matters is **{_fmt_ampm(m['prime']['start'])}–{_fmt_ampm(m['prime']['end'])}"
                      + f" ({m['prime']['light']})" + "**")
         if top:
-            parts.append(f"parked on the **{top[0]['label'].lower()}**")
+            gap_note = (" (a gap — not in your box)" if has_box and top[0]["id"] not in owned else "")
+            parts.append(f"parked on the **{top[0]['label'].lower()}**{gap_note}")
     if m["perfecting"]:
         a = m["perfecting"][0]
         amark = f"{a['sym']} " if emoji else ""

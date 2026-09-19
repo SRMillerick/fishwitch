@@ -14,8 +14,10 @@ is the clean entry point for it.
    days & hours, moon sign lore, lunar-phase resonance with your birth moon.
    **The translation layer** (below) controls how this is presented.
 4. **Tactics** — a lure/rig/bait knowledge base per species plus cited
-   cross-species line/knot tables; only recommends what you own, matched to
-   light, wind, water temp, hour and solunar state.
+   cross-species line/knot tables. Every cited entry is scored for the conditions
+   (light, wind, water temp, hour, solunar, lake state) and the **best rigs rank
+   first for everyone**; the angler's baseline (arsenal, baits, line, knots) is a
+   lens that tags what's already in the box vs a gap.
 
 ## The translation layer (voices)
 The same sky math always runs. `--voice` (or `astro_display` in the profile)

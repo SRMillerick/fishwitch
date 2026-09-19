@@ -389,6 +389,10 @@ tbody tr:last-child td { border-bottom: 0; }
   background: rgba(147, 179, 107, .08); }
 .badge.pend { color: var(--ember); border-color: rgba(201, 138, 82, .4);
   background: rgba(201, 138, 82, .07); }
+.badge.mine { color: var(--gold); border-color: rgba(211, 170, 95, .45);
+  background: rgba(211, 170, 95, .08); }
+.badge.gap { color: var(--ember); border-color: rgba(201, 138, 82, .45);
+  background: rgba(201, 138, 82, .08); }
 .moonrow { display: flex; flex-wrap: wrap; gap: .5rem .9rem; }
 .moon { color: var(--dim); font-size: .84rem; font-family: var(--font-mono); }
 .moon.peak { color: var(--gold); }
