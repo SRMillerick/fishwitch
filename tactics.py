@@ -131,7 +131,7 @@ def rig_spec(entry_id: str) -> dict | None:
     if not spec:
         return None
     out: dict = {}
-    for part in ("hook", "weight", "ring", "bait"):
+    for part in ("hook", "weight", "ring", "tool", "bait"):
         p = spec.get(part)
         if not isinstance(p, dict):
             continue
@@ -165,7 +165,7 @@ def spec_line(spec: dict | None) -> str:
     if not spec:
         return ""
     bits = []
-    for part in ("hook", "weight", "ring", "bait"):
+    for part in ("hook", "weight", "ring", "tool", "bait"):
         p = spec.get(part) or {}
         if p:
             bits.append(_spec_bit(p, size=True))

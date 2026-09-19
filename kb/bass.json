@@ -863,14 +863,25 @@
           "found": true,
           "fetched_at": "2026-09-19T03:56:42+00:00",
           "sha256": null
+        },
+        {
+          "claim": "owner dropshot build refs",
+          "tier": "T5",
+          "source": "owner field observation \u2014 Sean Millerick, 2026-09-18",
+          "url": null,
+          "quote": "kit sheet (2026-09-18)",
+          "found": true,
+          "fetched_at": "2026-09-19T04:09:05+00:00",
+          "sha256": null
         }
       ],
       "spec": {
         "hook": {
-          "type": "mosquito circle hook",
+          "ref": "owner-mosquito-circle",
           "sizes": [
             "1/0"
-          ]
+          ],
+          "note": "owner build (fine-wire circle for light line)"
         },
         "weight": {
           "type": "drop-shot weight",
@@ -966,6 +977,16 @@
           "found": true,
           "fetched_at": "2026-09-19T03:56:42+00:00",
           "sha256": null
+        },
+        {
+          "claim": "owner wacky build refs",
+          "tier": "T5",
+          "source": "owner field observation \u2014 Sean Millerick, 2026-09-18",
+          "url": null,
+          "quote": "kit sheet (2026-09-18)",
+          "found": true,
+          "fetched_at": "2026-09-19T04:09:05+00:00",
+          "sha256": null
         }
       ],
       "spec": {
@@ -977,8 +998,11 @@
           "note": "weedless; titanium weedguard"
         },
         "ring": {
-          "type": "VMC 6mm O-ring",
-          "note": "applied with VMC pliers; replaced doubled-up O-rings"
+          "ref": "vmc-crossover-ring",
+          "sizes": [
+            "6mm"
+          ],
+          "note": "owner build; 6mm dual-channel; NKR Neko Ring is the plain alternative"
         },
         "bait": {
           "form": "5in Senko",
@@ -992,7 +1016,11 @@
           "note": "kb/line.json finesse pick"
         },
         "source": "owner kit (sean, 2026-09-18); hook ref: Owner Jungle Wacky",
-        "confidence": "unverified-editorial"
+        "confidence": "unverified-editorial",
+        "tool": {
+          "ref": "vmc-crossover-pliers",
+          "note": "owner build"
+        }
       }
     },
     {
@@ -1266,6 +1294,16 @@
           "found": true,
           "fetched_at": "2026-09-19T03:56:42+00:00",
           "sha256": null
+        },
+        {
+          "claim": "owner neko build refs",
+          "tier": "T5",
+          "source": "owner field observation \u2014 Sean Millerick, 2026-09-18",
+          "url": null,
+          "quote": "kit sheet (2026-09-18)",
+          "found": true,
+          "fetched_at": "2026-09-19T04:09:05+00:00",
+          "sha256": null
         }
       ],
       "spec": {
@@ -1278,11 +1316,11 @@
           "note": "Sean 3/0 treble; Jack 1/0 treble"
         },
         "weight": {
-          "type": "tungsten screw / VMC neko weight",
+          "ref": "vmc-half-moon-weight",
           "sizes": [
-            "2x 1/8 oz",
             "3/16 oz"
-          ]
+          ],
+          "note": "Jack's build; Sean runs two 1/8 oz tungsten screws"
         },
         "bait": {
           "ref": "abstract",
@@ -1338,12 +1376,13 @@
       },
       "spec": {
         "hook": {
-          "type": "straight-shank worm hook",
+          "ref": "owner-cover-shot",
           "sizes": [
-            "4/0",
-            "5/0"
+            "1/0"
           ],
-          "rigging": "point about an inch behind the egg sack, threaded past it and flipped Texas-style; hook ends ~2/3 down the bait, weedless"
+          "type": "Cover Shot (owner build)",
+          "rigging": "point about an inch behind the egg sack, threaded past it and flipped Texas-style; hook ends ~2/3 down the bait, weedless",
+          "note": "owner build; inventor spec is a 4/0-5/0 straight-shank worm hook"
         },
         "weight": {
           "type": "drywall screw (big head)",
@@ -1442,6 +1481,16 @@
           "found": true,
           "fetched_at": "2026-09-19T03:37:57+00:00",
           "sha256": "4169784e8548f822"
+        },
+        {
+          "claim": "owner chicken build refs",
+          "tier": "T5",
+          "source": "owner field observation \u2014 Sean Millerick, 2026-09-18",
+          "url": null,
+          "quote": "kit sheet (2026-09-18)",
+          "found": true,
+          "fetched_at": "2026-09-19T04:09:05+00:00",
+          "sha256": null
         }
       ],
       "provenance": {

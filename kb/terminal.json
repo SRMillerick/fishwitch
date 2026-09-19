@@ -532,6 +532,338 @@
         "verified_at": "2026-09-19T03:55:29+00:00",
         "note": "text sha 71676256848bd9c3; fetched 2026-09-19T03:51:10+00:00; maker specs quoted (T1); owner size choice is T5"
       }
+    },
+    {
+      "id": "owner-cover-shot",
+      "label": "Owner Cover Shot",
+      "kind": "terminal",
+      "category": "hook",
+      "brand": "Owner",
+      "sizes": [
+        "#2",
+        "#1",
+        "1/0",
+        "2/0",
+        "3/0",
+        "4/0"
+      ],
+      "note": "Owner's fine-wire finesse hook for small worms and drop-shot/neko/chicken rigging; monofilament bait keeper; owner runs 1/0 (4107-116)",
+      "citations": [
+        {
+          "claim": "finesse use",
+          "tier": "T1",
+          "source": "Owner Hooks product page (ownerhooks.com)",
+          "url": "https://www.ownerhooks.com/product/covershot/",
+          "quote": "A light finesse style hook for rigging small worms and baits.",
+          "found": true,
+          "fetched_at": "2026-09-19T04:08:18+00:00",
+          "sha256": "aa8c52361fb23348"
+        },
+        {
+          "claim": "wire & hooksets",
+          "tier": "T1",
+          "source": "Owner Hooks product page (ownerhooks.com)",
+          "url": "https://www.ownerhooks.com/product/covershot/",
+          "quote": "Typically used as a drop shot hook, this hook is made from fine wire for easy hooksets with light lines.",
+          "found": true,
+          "fetched_at": "2026-09-19T04:08:18+00:00",
+          "sha256": "aa8c52361fb23348"
+        },
+        {
+          "claim": "finish",
+          "tier": "T1",
+          "source": "Owner Hooks product page (ownerhooks.com)",
+          "url": "https://www.ownerhooks.com/product/covershot/",
+          "quote": "Comes with Super Needle Point and Silky Gray frictionless finish.",
+          "found": true,
+          "fetched_at": "2026-09-19T04:08:18+00:00",
+          "sha256": "aa8c52361fb23348"
+        }
+      ],
+      "provenance": {
+        "seed_author": "pi research 2026-09-18",
+        "source": "Owner Hooks product page (ownerhooks.com)",
+        "source_url": "https://www.ownerhooks.com/product/covershot/",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-19T04:08:55+00:00",
+        "note": "text sha aa8c52361fb23348; fetched 2026-09-19T04:08:18+00:00; maker specs quoted (T1)"
+      }
+    },
+    {
+      "id": "owner-mosquito-circle",
+      "label": "Owner Mosquito Circle",
+      "kind": "terminal",
+      "category": "hook",
+      "brand": "Owner",
+      "sizes": [
+        "#6",
+        "#4",
+        "#2",
+        "#1",
+        "1/0",
+        "2/0"
+      ],
+      "note": "Owner's lightest-wire circle hook, self-setting hangnail point; owner runs 1/0 on drop shot (5185-111)",
+      "citations": [
+        {
+          "claim": "light line & self-set",
+          "tier": "T1",
+          "source": "Owner Hooks product page (ownerhooks.com)",
+          "url": "https://www.ownerhooks.com/product/mosquito-circle/",
+          "quote": "Designed for light line fishing, these small circle hooks are engineered with a self setting \"hangnail\" point.",
+          "found": true,
+          "fetched_at": "2026-09-19T04:08:18+00:00",
+          "sha256": "c1867df5d896569d"
+        },
+        {
+          "claim": "wire & bait movement",
+          "tier": "T1",
+          "source": "Owner Hooks product page (ownerhooks.com)",
+          "url": "https://www.ownerhooks.com/product/mosquito-circle/",
+          "quote": "Light wire leads to smaller diameter wire for better penetration and superior bait movement.",
+          "found": true,
+          "fetched_at": "2026-09-19T04:08:18+00:00",
+          "sha256": "c1867df5d896569d"
+        },
+        {
+          "claim": "finish",
+          "tier": "T1",
+          "source": "Owner Hooks product page (ownerhooks.com)",
+          "url": "https://www.ownerhooks.com/product/mosquito-circle/",
+          "quote": "Features include a forged shank, offset Super Needle Point and black chrome finish.",
+          "found": true,
+          "fetched_at": "2026-09-19T04:08:18+00:00",
+          "sha256": "c1867df5d896569d"
+        }
+      ],
+      "provenance": {
+        "seed_author": "pi research 2026-09-18",
+        "source": "Owner Hooks product page (ownerhooks.com)",
+        "source_url": "https://www.ownerhooks.com/product/mosquito-circle/",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-19T04:08:56+00:00",
+        "note": "text sha c1867df5d896569d; fetched 2026-09-19T04:08:18+00:00; maker specs quoted (T1)"
+      }
+    },
+    {
+      "id": "vmc-crossover-ring",
+      "label": "VMC Crossover Ring",
+      "kind": "terminal",
+      "category": "terminal",
+      "brand": "VMC",
+      "sizes": [
+        "3mm",
+        "4mm",
+        "5mm",
+        "6mm",
+        "7mm",
+        "8mm"
+      ],
+      "note": "dual-channel hood for Neko or Wacky rigging; 10 per pack; driven by the Crossover Pliers; NKR Neko Ring (6mm, 15/pack) is the plain alternative",
+      "citations": [
+        {
+          "claim": "dual-channel",
+          "tier": "T1",
+          "source": "VMC/Rapala product page (rapala.com)",
+          "url": "https://www.rapala.com/us_en/crossover-ring",
+          "quote": "The VMC Crossover Rings have a dual-channel hood which allows for either Neko or Wacky style rigging.",
+          "found": true,
+          "fetched_at": "2026-09-19T04:08:18+00:00",
+          "sha256": "863ab60c2752ca14"
+        },
+        {
+          "claim": "with pliers",
+          "tier": "T1",
+          "source": "VMC/Rapala product page (rapala.com)",
+          "url": "https://www.rapala.com/us_en/crossover-ring",
+          "quote": "The innovative design of the VMC Crossover Rings when used with the VMC Crossover Pliers maximizes efficiencies when rigging soft plastics or worms.",
+          "found": true,
+          "fetched_at": "2026-09-19T04:08:18+00:00",
+          "sha256": "863ab60c2752ca14"
+        }
+      ],
+      "provenance": {
+        "seed_author": "pi research 2026-09-18",
+        "source": "VMC/Rapala product page (rapala.com)",
+        "source_url": "https://www.rapala.com/us_en/crossover-ring",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-19T04:08:56+00:00",
+        "note": "text sha 863ab60c2752ca14; fetched 2026-09-19T04:08:18+00:00; maker specs quoted (T1)"
+      }
+    },
+    {
+      "id": "vmc-crossover-pliers",
+      "label": "VMC Crossover Pliers",
+      "kind": "terminal",
+      "category": "terminal",
+      "brand": "VMC",
+      "sizes": [],
+      "note": "plastic ring-rigging pliers; holds rings in the handles; includes four 6mm rings (CRSP)",
+      "citations": [
+        {
+          "claim": "operation",
+          "tier": "T1",
+          "source": "VMC/Rapala product page (rapala.com)",
+          "url": "https://www.rapala.com/us_en/crossover-pliers",
+          "quote": "To operate, simply slide the desired size Crossover Ring over the closed jaws.",
+          "found": true,
+          "fetched_at": "2026-09-19T04:08:18+00:00",
+          "sha256": "e7950f91fc6d6fa1"
+        },
+        {
+          "claim": "construction",
+          "tier": "T1",
+          "source": "VMC/Rapala product page (rapala.com)",
+          "url": "https://www.rapala.com/us_en/crossover-pliers",
+          "quote": "The Crossover Pliers are made of lightweight durable plastic",
+          "found": true,
+          "fetched_at": "2026-09-19T04:08:18+00:00",
+          "sha256": "e7950f91fc6d6fa1"
+        },
+        {
+          "claim": "includes rings",
+          "tier": "T1",
+          "source": "VMC/Rapala product page (rapala.com)",
+          "url": "https://www.rapala.com/us_en/crossover-pliers",
+          "quote": "Includes four 6 mm VMC Crossover Rings (additional sizes sold separately)",
+          "found": true,
+          "fetched_at": "2026-09-19T04:08:18+00:00",
+          "sha256": "e7950f91fc6d6fa1"
+        },
+        {
+          "claim": "dual use",
+          "tier": "T1",
+          "source": "VMC/Rapala product page (rapala.com)",
+          "url": "https://www.rapala.com/us_en/crossover-pliers",
+          "quote": "The patent pending VMC Crossover Ring has a dual-channel hood which allows either Neko or Wacky style rigging",
+          "found": true,
+          "fetched_at": "2026-09-19T04:08:18+00:00",
+          "sha256": "e7950f91fc6d6fa1"
+        }
+      ],
+      "provenance": {
+        "seed_author": "pi research 2026-09-18",
+        "source": "VMC/Rapala product page (rapala.com)",
+        "source_url": "https://www.rapala.com/us_en/crossover-pliers",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-19T04:08:56+00:00",
+        "note": "text sha e7950f91fc6d6fa1; fetched 2026-09-19T04:08:18+00:00; maker specs quoted (T1)"
+      }
+    },
+    {
+      "id": "vmc-nkr-neko-ring",
+      "label": "VMC NKR Neko Ring",
+      "kind": "terminal",
+      "category": "terminal",
+      "brand": "VMC",
+      "sizes": [
+        "6mm"
+      ],
+      "note": "plain silicone neko ring, 6mm, 15 per pack (NKRB6 black / NKRC6 clear)",
+      "citations": [
+        {
+          "claim": "purpose",
+          "tier": "T1",
+          "source": "VMC/Rapala product page (rapala.com)",
+          "url": "https://www.rapala.com/us_en/nkr-neko-ring",
+          "quote": "Ring rigging secures hooks to the worm without hook penetration greatly reducing the wear-and-tear on your worm due to aggressive fish short strikes or over-casting.",
+          "found": true,
+          "fetched_at": "2026-09-19T04:08:18+00:00",
+          "sha256": "024737f073257a12"
+        }
+      ],
+      "provenance": {
+        "seed_author": "pi research 2026-09-18",
+        "source": "VMC/Rapala product page (rapala.com)",
+        "source_url": "https://www.rapala.com/us_en/nkr-neko-ring",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-19T04:08:56+00:00",
+        "note": "text sha 024737f073257a12; fetched 2026-09-19T04:08:18+00:00; maker specs quoted (T1)"
+      }
+    },
+    {
+      "id": "vmc-half-moon-weight",
+      "label": "VMC Half Moon Wacky Weight (HMWW)",
+      "kind": "terminal",
+      "category": "weight",
+      "brand": "VMC",
+      "sizes": [
+        "1/16 oz",
+        "1/8 oz",
+        "3/16 oz"
+      ],
+      "note": "half-moon insert weight for neko/wacky rigging; 10 per pack; HMWW316 = 3/16 oz (Jack's Abstract build)",
+      "citations": [
+        {
+          "claim": "purpose",
+          "tier": "T1",
+          "source": "VMC/Rapala product page (rapala.com)",
+          "url": "https://www.rapala.com/us_en/hmww-half-moon-wacky-weight",
+          "quote": "Conical ribs firmly anchor weight in place without damaging plastic. Insert weight into head or tail of plastic for desired action. Perfect for Neko-Wacky Rigging.",
+          "found": true,
+          "fetched_at": "2026-09-19T04:08:18+00:00",
+          "sha256": "7f74e97b04fedf06"
+        },
+        {
+          "claim": "3/16 model",
+          "tier": "T1",
+          "source": "VMC/Rapala product page (rapala.com)",
+          "url": "https://www.rapala.com/us_en/hmww-half-moon-wacky-weight",
+          "quote": "3/16 oz.",
+          "found": true,
+          "fetched_at": "2026-09-19T04:08:18+00:00",
+          "sha256": "7f74e97b04fedf06"
+        }
+      ],
+      "provenance": {
+        "seed_author": "pi research 2026-09-18",
+        "source": "VMC/Rapala product page (rapala.com)",
+        "source_url": "https://www.rapala.com/us_en/hmww-half-moon-wacky-weight",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-19T04:08:57+00:00",
+        "note": "text sha 7f74e97b04fedf06; fetched 2026-09-19T04:08:18+00:00; maker specs quoted (T1)"
+      }
+    },
+    {
+      "id": "vmc-nkw-neko-weights",
+      "label": "VMC NKW Neko Weights",
+      "kind": "terminal",
+      "category": "weight",
+      "brand": "VMC",
+      "sizes": [
+        "1/32 oz",
+        "1/16 oz",
+        "3/32 oz",
+        "1/8 oz"
+      ],
+      "note": "thin ribbed insert weight for neko/wacky rigging; 10 per pack (NKW132/NKW116/NKW332...)",
+      "citations": [
+        {
+          "claim": "purpose",
+          "tier": "T1",
+          "source": "VMC/Rapala product page (rapala.com)",
+          "url": "https://www.rapala.com/us_en/nkw-neko-weights",
+          "quote": "Conical ribs firmly anchor weight in place without damaging plastic. Thin profile offers angler ability to modify actions. Perfect for Neko-Wacky Rigging.",
+          "found": true,
+          "fetched_at": "2026-09-19T04:08:18+00:00",
+          "sha256": "cabb9973df2743d3"
+        }
+      ],
+      "provenance": {
+        "seed_author": "pi research 2026-09-18",
+        "source": "VMC/Rapala product page (rapala.com)",
+        "source_url": "https://www.rapala.com/us_en/nkw-neko-weights",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-19T04:08:57+00:00",
+        "note": "text sha cabb9973df2743d3; fetched 2026-09-19T04:08:18+00:00; maker specs quoted (T1)"
+      }
     }
   ]
 }

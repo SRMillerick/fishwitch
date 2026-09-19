@@ -1,7 +1,7 @@
 # Public mirror
 
 Clean public mirror of fishwitch — mirrored from the private development
-ledger by `publish-mirror` (mirror of archive@1c0f9b9). Excluded from the
+ledger by `publish-mirror` (mirror of archive@78bdec0). Excluded from the
 mirror: session docs, generated reports, and home-lake intel. Profiles and
 logbooks are gitignored by policy in both repos (identity-grade PII).
 
