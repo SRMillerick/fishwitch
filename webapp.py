@@ -398,6 +398,7 @@ def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
                 lake=lake["name"], at=at, rods=rods, gap=gap,
                 shopping=offers.build_shopping(
                     [{"id": r["id"], "label": r["label"], "spec": r.get("spec")} for r in rods]),
+                trends=m.get("trends") or [],
                 prime_t=prime["start"] if prime else None,
                 prime_lab=(prime["light"] if prime else ""),
                 moon=m.get("moon") or {},

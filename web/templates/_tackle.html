@@ -82,6 +82,22 @@
 </section>
 {% endif %}
 {% endif %}
+{% if out and out.trends %}
+<section class="tackle">
+  <h2>📈 Trend watch — what's winning</h2>
+  <p class="fine">Dated tournament/creator signals for rigs that already fit these conditions —
+  shown after ranking and never scored into it.</p>
+  <ul class="plain">
+  {% for t in out.trends[:4] %}
+    <li><strong>{{ t.label }}</strong> — scores {{ t.score }} here ·
+      {% if t.url %}<a href="{{ t.url }}" target="_blank" rel="noopener">{{ t.source }}</a>{% else %}{{ t.source }}{% endif %}
+      ({{ t.observed_at }})
+      {% if t.quote %}<div class="fine">“{{ t.quote[:200] }}”</div>{% endif %}
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+{% endif %}
 {% if out and out.shopping %}
 <section class="tackle">
   <h2>🛒 Shopping list — everything the top rigs need</h2>

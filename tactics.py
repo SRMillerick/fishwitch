@@ -90,6 +90,7 @@ _PRINCIPLES: dict | None = None
 _SUBSTRATE: dict | None = None
 _BAITS: dict | None = None
 _PRESENTATION: dict | None = None
+_TRENDS: dict | None = None
 
 
 def load_terminal() -> dict:
@@ -255,6 +256,21 @@ def load_presentation() -> dict:
 
 def presentation_class(entry_id: str) -> str:
     return (load_presentation().get("entries") or {}).get(entry_id) or ""
+
+
+def load_trends() -> dict:
+    """Promoted trend signals (kb/trends.json) — dated, sourced claims about
+    what is winning/being pushed. Never scored; the report labels them."""
+    global _TRENDS
+    if _TRENDS is None:
+        p = KB_DIR / "trends.json"
+        _TRENDS = json.loads(p.read_text()) if p.exists() else {"trends": []}
+    return _TRENDS
+
+
+def trends_for(entry_id: str) -> list[dict]:
+    return [t for t in load_trends().get("trends", [])
+            if t.get("entity_id") == entry_id]
 
 
 def alternatives(entry_id: str) -> list[dict]:

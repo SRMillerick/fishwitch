@@ -1,0 +1,22 @@
+{
+  "label": "Creator & pro sources",
+  "_note": "Practitioner media monitored for trend signals and how-to interpretation. NOT a KB fact tier: mentions are T5/trend, labelled, never in ranking. Channel IDs verified live 2026-09-18.",
+  "creators": [
+    {
+      "id": "brian-latimer",
+      "name": "Brian Latimer",
+      "platform": "youtube",
+      "channel_id": "UCCbB1VodVud_cpX9QPlU1_g",
+      "url": "https://www.youtube.com/@brianlatimerfishing",
+      "focus": "electronics, tournament patterns, technique details"
+    },
+    {
+      "id": "tom-redington",
+      "name": "Tom Redington",
+      "platform": "youtube",
+      "channel_id": "UCvzH3t70Ge-D3s7nhQ2t5sA",
+      "url": "https://www.youtube.com/@TomReddington",
+      "focus": "rig masterclasses, color selection, seasonal patterns"
+    }
+  ]
+}

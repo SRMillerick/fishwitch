@@ -289,6 +289,33 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
     prime = max(blocks, key=prime_score) if blocks else None
     prime_s = round(prime_score(prime), 1) if prime else None
 
+    # ── trend watch: market signals, scored against the prime window ────────
+    # Post-ranking only. A trend never changes a score; it tells the angler
+    # what's winning and whether these conditions actually favor it.
+    trends = []
+    if prime:
+        pmid = prime["start"] + (prime["end"] - prime["start"]) / 2
+        pw = wx.at(pmid)
+        pctx = dict(light=prime["light"], cloud=pw["cloud"], wind_mph=pw["wind_mph"],
+                    temp_f=pw["temp_f"], water_f=water_f, hour_ruler=prime["hour"]["ruler"],
+                    solunar=prime["solunar"], moon_fruitful=(mn["fruitful"] if mn else None),
+                    pressure_word=wscore["trend"]["word"],
+                    structure_notes=lake.get("structure", []), lake_state=lake_state,
+                    bottom=bottom)
+        for c in tx.catalog(species):
+            entries = tx.trends_for(c["id"])
+            if not entries:
+                continue
+            sc, _why, rej = tx.score_entry(c, pctx)
+            if rej or sc <= 0:
+                continue   # out of band for this window — trend not shown
+            for t in entries:
+                trends.append(dict(label=c["label"], score=round(sc, 1), fits=(sc >= 5.0),
+                                   signal=t.get("signal", ""), source=t.get("source", ""),
+                                   url=t.get("url"), observed_at=t.get("observed_at", ""),
+                                   quote=t.get("quote", ""), note=t.get("note", "")))
+        trends.sort(key=lambda x: -x["score"])
+
     # ── the gap lane: the best scorers the angler DOESN'T own ────────────
     # Display/monetization surface only — computed after all ranking is done,
     # never fed back into picks or scores (principle 4). Skipped when the
@@ -329,7 +356,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         blocks=blocks, rods=rods, prime=prime, prime_score=prime_s, utc_off=wx.utc_offset,
         knots=knots, knot_notes=knot_notes, angler_knots=angler_knots, line=line, color=color, gap=gap,
         angler_line=angler_line, owned_ids=owned_ids, has_baseline=has_baseline,
-        bottom=bottom,
+        bottom=bottom, trends=trends,
         logbook=lb.summary_for(lake.get("name", ""), angler=profile.get("name")),
         lake_state=lake_state, days_since_turnover=days_since_turnover,
         heat_streak=streak, state_basis=state_basis, access_note=acc_note,
@@ -591,6 +618,19 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
     if unmatched:
         L.append(f"- *(no match in the KB for: {', '.join(unmatched)} — still bring them)*")
     L.append("")
+
+    if m.get("trends"):
+        L.append(f"## {e('📈 ')}Trend watch — what's winning (market signal, not science)")
+        L.append("*Dated tournament/creator signals for rigs that already fit these conditions — "
+                 "shown after ranking and never scored into it.*")
+        for t in m["trends"][:4]:
+            src = f"[{t['source']}]({t['url']})" if t.get("url") else t["source"]
+            fit = (f"fits these conditions (scores {t['score']})" if t.get("fits")
+                   else f"not favored in this window (scores {t['score']})")
+            L.append(f"- **{t['label']}** — {fit} · {src} ({t['observed_at']})")
+            if t.get("quote"):
+                L.append(f"    - *“{t['quote'][:180]}”*")
+        L.append("")
 
     if m.get("knots") or m.get("line"):
         head = ("Line & your knots for these rigs" if m.get("angler_knots")

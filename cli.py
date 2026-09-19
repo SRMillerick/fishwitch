@@ -648,6 +648,11 @@ def main():
     of.add_argument("--kind", choices=["manufacturer", "affiliate"], default="manufacturer")
     of.add_argument("--asin", help="amazon ASIN (affiliate kind)")
 
+    tr = sub.add_parser("trends", help="trend signals (what's winning) — list, refresh, or show one")
+    tr.add_argument("--refresh", action="store_true",
+                    help="poll tournament feeds + creator channels into kb/pending/trends")
+    tr.add_argument("--show", help="entity id — trends for one entity")
+
     cl = sub.add_parser("clicks", help="aggregate outbound-link click counts (no PII)")
     cl.add_argument("--src", help="filter by page section (tackle|gap)")
     cl.add_argument("--top", type=int, default=20)
@@ -820,6 +825,26 @@ def main():
             for c in comps:
                 linked = [o for o in c.get("offers", []) if o.get("url")]
                 print(f"    {c['label']:34s} " + (f"{len(linked)} live link(s)" if linked else "(no links yet)"))
+
+    elif args.cmd == "trends":
+        from adapters import trends as tra
+        if args.refresh:
+            paths = tra.draft()
+            print(f"  wrote {len(paths)} draft(s) → kb/pending/trends/")
+            for p in paths:
+                print(f"    - {p.name}")
+            print("  review with `fishwitch kb-review`; promote with `kb-promote --species trends --entry <id>`")
+            return
+        rows = tx.load_trends().get("trends", [])
+        if args.show:
+            rows = [t for t in rows if t.get("entity_id") == args.show]
+        if not rows:
+            print("  no trends promoted yet — `fishwitch trends --refresh` drafts candidates")
+            return
+        for t in rows:
+            print(f"  {t.get('entity_id','?'):<12} {str(t.get('observed_at',''))[:16]:<16} "
+                  f"{t.get('signal',''):<10} {t.get('source','')[:44]}")
+            print(f"      “{(t.get('quote') or '')[:100]}”")
 
     elif args.cmd == "clicks":
         from collections import Counter

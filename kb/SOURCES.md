@@ -112,9 +112,20 @@ claims, add an optional per-claim list:
 - A human `verified_by` is the attestation; the calibration ledger
   (`fishwitch review`) is the court where editorial claims are judged.
 
+## Trend signals (T5/trend — dated, never facts)
+
+Tournament results and creator instruction are *market intelligence*: what is
+winning or being pushed, not what the conditions dictate. They live in
+`kb/trends.json` (signals) + `kb/creators.json` (registry), are drafted
+deterministically by `adapters/trends.py`, and are promoted by a human. Rules:
+labelled as trend in output; **never scored into ranking or offers**; social
+pushes need a URL + date; no pay-for-trend (see `DESIGN.md`). "How to run it"
+notes stay editorial until sourced and calibrated.
+
 ## What we do NOT use
 
-- Retailer marketing copy, influencer videos, forum posts, SEO listicles.
+- Retailer marketing copy; influencer videos/forum posts **as fact** (creator
+  media is used only as a labelled trend/how-to signal — see above); SEO listicles.
 - Prices or "best/cheapest" claims (they change; Amazon owns pricing).
 - Unattributed consensus. If it can't be cited, it's `editorial` and labelled.
 

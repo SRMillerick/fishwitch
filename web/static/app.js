@@ -299,7 +299,7 @@ if (form) {
         : "Rendering anonymously — pick or create a profile for transits + tackle.";
       out.innerHTML =
         '<div class="scorebar">overall <strong>' + j.overall + "/10</strong> · " + esc(j.lake) + "</div>"
-        + j.html + renderTackle(j.rods) + renderShopping(j.shopping) + renderGap(j.gap);
+        + j.html + renderTackle(j.rods) + renderTrends(j.trends) + renderShopping(j.shopping) + renderGap(j.gap);
     } catch (e) {
       out.innerHTML = '<p class="error">render failed: ' + esc(String(e)) + "</p>";
     }
@@ -315,6 +315,21 @@ function buildList(entryId, comps, src) {
     return esc(c.label) + links;
   }).join(" · ");
   return "<div class='fine build'><span class='sc'>build it:</span> " + rows + "</div>";
+}
+
+function renderTrends(list) {
+  if (!list || !list.length) return "";
+  let h = '<section class="tackle"><h2>📈 Trend watch — what\'s winning</h2>' +
+    '<p class="fine">Dated tournament/creator signals for rigs that already fit these conditions — ' +
+    'shown after ranking and never scored into it.</p><ul class="plain">';
+  for (const t of list.slice(0, 4)) {
+    h += "<li><strong>" + esc(t.label) + "</strong> — scores " + esc(t.score) + " here · " +
+      (t.url ? "<a href='" + esc(t.url) + "' target='_blank' rel='noopener'>" + esc(t.source) + "</a>" : esc(t.source)) +
+      " <span class='fine'>(" + esc(t.observed_at) + ")</span>";
+    if (t.quote) h += "<div class='fine'>“" + esc(t.quote.slice(0, 200)) + "”</div>";
+    h += "</li>";
+  }
+  return h + "</ul></section>";
 }
 
 function renderShopping(list) {

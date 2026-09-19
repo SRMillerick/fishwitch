@@ -1,0 +1,99 @@
+{
+  "label": "Trend signals",
+  "_note": "Dated, sourced claims about what is winning or being pushed (tournament results, creator instruction, viral tackle). NOT conditions facts: the rank never reads them and the report labels them as trend. Trend drafts land in kb/pending/trends/ from adapters/trends.py; promote with fishwitch kb-promote --species trends --entry <id>.",
+  "trends": [
+    {
+      "id": "mlf-fri-18-se-swimbait",
+      "entity_id": "swimbait",
+      "signal": "tournament",
+      "source": "MLF \u2014 Bakewell takes the early lead on the Kissimmee Chain",
+      "url": "https://majorleaguefishing.com/pro-circuit/bakewell-takes-the-early-lead-on-the-kissimmee-chain/",
+      "observed_at": "Fri, 18 Sep 2026",
+      "quote": "They all made sense, and I kept big baits in my hand most of the day \u2013 I threw a glide bait most of the time, and when I got bites, they were good ones.",
+      "note": "Bakewell takes the early lead on the Kissimmee Chain",
+      "citations": [
+        {
+          "claim": "tournament mention",
+          "tier": "T5",
+          "source": "MLF \u2014 Bakewell takes the early lead on the Kissimmee Chain",
+          "url": "https://majorleaguefishing.com/pro-circuit/bakewell-takes-the-early-lead-on-the-kissimmee-chain/",
+          "quote": "They all made sense, and I kept big baits in my hand most of the day \u2013 I threw a glide bait most of the time, and when I got bites, they were good ones.",
+          "found": true,
+          "fetched_at": "2026-09-19T04:40:02+00:00",
+          "sha256": "20d2232a992d1b0d"
+        }
+      ],
+      "provenance": {
+        "seed_author": "trends/1.0",
+        "source": "MLF \u2014 Bakewell takes the early lead on the Kissimmee Chain",
+        "source_url": "https://majorleaguefishing.com/pro-circuit/bakewell-takes-the-early-lead-on-the-kissimmee-chain/",
+        "confidence": "unverified-editorial",
+        "verified_by": "sean",
+        "verified_at": "2026-09-19T04:40:44+00:00",
+        "note": "text sha 20d2232a992d1b0d; fetched 2026-09-19T04:40:02+00:00; Bakewell takes the early lead on the Kissimmee Chain \u2014 tournament signal from MLF \u2014 Bakewell takes the early lead on the Kissimmee Chain"
+      }
+    },
+    {
+      "id": "yt-brian-latimer-swimbait",
+      "entity_id": "swimbait",
+      "signal": "creator",
+      "source": "YouTube \u2014 Brian Latimer",
+      "url": "https://www.youtube.com/watch?v=SvfFqKnZ8KU",
+      "observed_at": "2 weeks ago",
+      "quote": "how to catch bass on big swimbaits... (Details matter)",
+      "note": "how to catch bass on big swimbaits... (Details matter)",
+      "citations": [
+        {
+          "claim": "creator mention",
+          "tier": "T5",
+          "source": "YouTube \u2014 Brian Latimer",
+          "url": "https://www.youtube.com/watch?v=SvfFqKnZ8KU",
+          "quote": "how to catch bass on big swimbaits... (Details matter)",
+          "found": true,
+          "fetched_at": "2026-09-19T04:40:30+00:00",
+          "sha256": null
+        }
+      ],
+      "provenance": {
+        "seed_author": "trends/1.0",
+        "source": "YouTube \u2014 Brian Latimer",
+        "source_url": "https://www.youtube.com/watch?v=SvfFqKnZ8KU",
+        "confidence": "unverified-editorial",
+        "verified_by": "sean",
+        "verified_at": "2026-09-19T04:40:44+00:00",
+        "note": "fetched 2026-09-19T04:40:30+00:00; how to catch bass on big swimbaits... (Details matter) \u2014 creator signal from YouTube \u2014 Brian Latimer"
+      }
+    },
+    {
+      "id": "yt-tom-redington-carolina",
+      "entity_id": "carolina",
+      "signal": "creator",
+      "source": "YouTube \u2014 Tom Redington",
+      "url": "https://www.youtube.com/watch?v=SlGUxju-kVQ",
+      "observed_at": "2026-09-18",
+      "quote": "Carolina Rig Masterclass From the Guy Who Perfected It",
+      "note": "Carolina Rig Masterclass From the Guy Who Perfected It",
+      "citations": [
+        {
+          "claim": "creator mention",
+          "tier": "T5",
+          "source": "YouTube \u2014 Tom Redington",
+          "url": "https://www.youtube.com/watch?v=SlGUxju-kVQ",
+          "quote": "Carolina Rig Masterclass From the Guy Who Perfected It",
+          "found": true,
+          "fetched_at": "2026-09-19T04:40:06+00:00",
+          "sha256": null
+        }
+      ],
+      "provenance": {
+        "seed_author": "trends/1.0",
+        "source": "YouTube \u2014 Tom Redington",
+        "source_url": "https://www.youtube.com/watch?v=SlGUxju-kVQ",
+        "confidence": "unverified-editorial",
+        "verified_by": "sean",
+        "verified_at": "2026-09-19T04:40:44+00:00",
+        "note": "fetched 2026-09-19T04:40:06+00:00; Carolina Rig Masterclass From the Guy Who Perfected It \u2014 creator signal from YouTube \u2014 Tom Redington"
+      }
+    }
+  ]
+}
