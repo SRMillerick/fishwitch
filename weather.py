@@ -36,27 +36,38 @@ class Weather:
         self.tz = j["timezone"]
         self.utc_offset = int(j["utc_offset_seconds"])
         h = j["hourly"]
-        self.hourly = [dict(
-            dt=datetime.fromisoformat(h["time"][i]),
-            temp_f=_c2f(h["temperature_2m"][i]),
-            feels_f=_c2f(h["apparent_temperature"][i]),
-            rh=h["relative_humidity_2m"][i],
-            pop=h["precipitation_probability"][i] or 0,
-            precip=h["precipitation"][i] or 0,
-            code=h["weather_code"][i],
-            cloud=h["cloud_cover"][i] or 0,
-            wind_mph=(h["wind_speed_10m"][i] or 0) / KPH_PER_MPH,
-            gust_mph=(h["wind_gusts_10m"][i] or 0) / KPH_PER_MPH,
-            dir=h["wind_direction_10m"][i] or 0,
-            press=h["pressure_msl"][i],
-        ) for i in range(len(h["time"]))]
+        # Past-days requests can return nulls for hours beyond model coverage;
+        # an incomplete hour must be skipped, not crash the whole report.
+        self.hourly = []
+        for i in range(len(h["time"])):
+            t = h["temperature_2m"][i]
+            if t is None:
+                continue
+            self.hourly.append(dict(
+                dt=datetime.fromisoformat(h["time"][i]),
+                temp_f=_c2f(t),
+                feels_f=_c2f(h["apparent_temperature"][i]) if h["apparent_temperature"][i] is not None else _c2f(t),
+                rh=h["relative_humidity_2m"][i],
+                pop=h["precipitation_probability"][i] or 0,
+                precip=h["precipitation"][i] or 0,
+                code=h["weather_code"][i],
+                cloud=h["cloud_cover"][i] or 0,
+                wind_mph=(h["wind_speed_10m"][i] or 0) / KPH_PER_MPH,
+                gust_mph=(h["wind_gusts_10m"][i] or 0) / KPH_PER_MPH,
+                dir=h["wind_direction_10m"][i] or 0,
+                press=h["pressure_msl"][i],
+            ))
         d = j["daily"]
-        self.daily = [dict(
-            dt=datetime.fromisoformat(d["time"][i]),
-            tmax_f=_c2f(d["temperature_2m_max"][i]),
-            tmin_f=_c2f(d["temperature_2m_min"][i]),
-            pop=d["precipitation_probability_max"][i] or 0,
-        ) for i in range(len(d["time"]))]
+        self.daily = []
+        for i in range(len(d["time"])):
+            if d["temperature_2m_max"][i] is None or d["temperature_2m_min"][i] is None:
+                continue
+            self.daily.append(dict(
+                dt=datetime.fromisoformat(d["time"][i]),
+                tmax_f=_c2f(d["temperature_2m_max"][i]),
+                tmin_f=_c2f(d["temperature_2m_min"][i]),
+                pop=d["precipitation_probability_max"][i] or 0,
+            ))
 
     # ── lookups ────────────────────────────────────────────────────────────
     def at(self, dt: datetime) -> dict:

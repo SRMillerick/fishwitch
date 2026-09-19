@@ -134,6 +134,15 @@ low light runs on rods, clear water rewards color. `tactics.color_principle(ctx)
 picks one per session (light/cloud/lake-state) and the report renders it as a
 **Color** row in the locked numbers. CLI: `fishwitch colors`.
 
+## Spawn phase (`kb/spawn.json`)
+
+`{phases, warming_months, triggers, phase_notes, entries}`. A T2
+water-temperature phase during the warming half of the year — pre-spawn
+48–60°F, spawn 60–75°F, post-spawn 75–95°F — with sourced location notes and
+T5 rig-fit translations. While active it **supersedes** `kb/season.json` (the
+more specific signal), and both ride the capped tie-break layer. Null-safe
+outside the warming window.
+
 ## Season phases (`kb/season.json`)
 
 `{phases, month_phase, entries: {entry_id: {phase: {fit, note, confidence,

@@ -127,6 +127,9 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         forecast = model_agreement(lake["lat"], lake["lng"], start, end)
     except Exception:
         forecast = None
+    # bass spawn phase: T2 water-temp triggers during the warming half of the
+    # year; T5 rig fits ride the capped tie-break layer (kb/spawn.json)
+    bass_phase = tx.spawn_phase(water_f, start.month)
     # wind exposure from the cached OSM shoreline: where the wind stacks bait
     shoreline = None
     try:
@@ -400,6 +403,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         heat_streak=streak, state_basis=state_basis, access_note=acc_note,
         water_temp_source=bool(real_temp), water_temp_label=water_temp_label,
         stocking=stocking, forecast=forecast, shoreline=shoreline,
+        bass_phase=bass_phase,
         scores=dict(weather=wscore["score"], solunar=round(sol_score, 1),
                     astro=round(astro_score, 1), overall=overall,
                     astro_notes=astro_notes),
@@ -499,6 +503,9 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
         ls_bits.append(f"{m['heat_streak']}-day ≥90°F heat streak")
     if ls_bits:
         rows.append(("Lake state", " · ".join(ls_bits) + " — fish position altered, see rules"))
+    if m.get("bass_phase"):
+        _pnote, _ = tx.spawn_note(m["bass_phase"])
+        rows.append(("Bass phase", f"**{m['bass_phase']}** — {_pnote}"))
     if m.get("access_note"):
         rows.append((("Lake hours 🚤" if emoji else "Lake hours"), m["access_note"]))
     rows.append(("Sky/wind", f"{w['cloud']}% cloud, {w['wind_mph']:.0f} mph wind, "
@@ -749,6 +756,7 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
 
     ctx = dict(wind_mph=m["weather"]["start"]["wind_mph"], cloud=m["weather"]["start"]["cloud"],
                wind_dir=m["weather"]["start"].get("dir"),
+               water_f=m["weather"].get("water_f"), month=m["start"].month,
                moon_fruitful=(m["moon_note"]["fruitful"] if m["moon_note"] else None),
                pressure_word=m["weather"]["score"]["trend"]["word"],
                structure_notes=m["lake"].get("structure", []),

@@ -62,6 +62,17 @@
 </ul>
 {% endif %}
 
+{% if spawn %}
+<h2 class="rule-double">Spawn phase fit <span class="fine">(tie-break layer, T5 translation)</span></h2>
+<ul class="plain">
+  {% for phase, fit in spawn.items() %}
+  <li><strong>{{ phase }}</strong> — fit {{ fit.fit }}
+    {% if fit.note %}<div class="fine">{{ fit.note }}</div>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+
 <h2 class="rule-double">Sources</h2>
 {% if prov.source_url %}
 <p><span class="badge ok">{{ prov.confidence }}</span>

@@ -89,6 +89,7 @@ _TERMINAL: dict | None = None
 _PRINCIPLES: dict | None = None
 _SUBSTRATE: dict | None = None
 _SEASON: dict | None = None
+_SPAWN: dict | None = None
 _BAITS: dict | None = None
 _PRESENTATION: dict | None = None
 _TRENDS: dict | None = None
@@ -272,6 +273,49 @@ def season_fit(entry_id: str, month) -> tuple[float, str]:
     e = (load_season().get("entries") or {}).get(entry_id) or {}
     b = e.get(phase) or {}
     return float(b.get("fit", 0) or 0), (b.get("note") or "")
+
+
+def load_spawn() -> dict:
+    """Bass spawn phase (kb/spawn.json): T2 water-temp triggers during the
+    warming half of the year + T5 rig-fit translations."""
+    global _SPAWN
+    if _SPAWN is None:
+        p = KB_DIR / "spawn.json"
+        _SPAWN = json.loads(p.read_text()) if p.exists() else {"entries": {}, "triggers": {}}
+    return _SPAWN
+
+
+def spawn_phase(water_f, month) -> str:
+    """'pre-spawn' | 'spawn' | 'post-spawn' | '' — null-safe."""
+    d = load_spawn()
+    try:
+        if not water_f or not month or int(month) not in (d.get("warming_months") or []):
+            return ""
+        t = float(water_f)
+        for ph in ("pre-spawn", "spawn", "post-spawn"):
+            lo, hi = (d.get("triggers") or {}).get(ph, {}).get("water_f", (None, None))
+            if lo is None:
+                continue
+            if lo <= t < hi or (ph == "post-spawn" and lo <= t <= hi):
+                return ph
+    except (TypeError, ValueError):
+        return ""
+    return ""
+
+
+def spawn_fit(entry_id: str, phase: str) -> tuple[float, str]:
+    """(raw fit, note) for this entry in a spawn phase; 0 when unsourced/T5-absent."""
+    if not phase:
+        return 0.0, ""
+    e = (load_spawn().get("entries") or {}).get(entry_id) or {}
+    b = e.get(phase) or {}
+    return float(b.get("fit", 0) or 0), (b.get("note") or "")
+
+
+def spawn_note(phase: str) -> tuple[str, list[dict]]:
+    """(sourced phase guidance, citations) for the locked-numbers row."""
+    n = (load_spawn().get("phase_notes") or {}).get(phase) or {}
+    return (n.get("note") or ""), list(n.get("citations") or [])
 
 
 def load_presentation() -> dict:
@@ -554,13 +598,23 @@ def score_entry(cat: dict, ctx: dict) -> tuple[float, list[str], str | None]:
             tie += _fit_delta(fit)
             if note:
                 why.append(f"{sub}: {note}")
-    month = ctx.get("month")
-    if month:
-        sfit, snote = season_fit(cat["id"], month)
-        if sfit:
-            tie += _fit_delta(sfit)
-            if snote:
-                why.append(f"{season_phase(month)}: {snote}")
+    # a live spawn phase is the more specific signal: it supersedes the
+    # month-based season fits, so the two can never stack (kb/CONDITIONS.md)
+    phase = spawn_phase(ctx.get("water_f"), ctx.get("month"))
+    if phase:
+        pfit, pnote = spawn_fit(cat["id"], phase)
+        if pfit:
+            tie += _fit_delta(pfit)
+            if pnote:
+                why.append(f"{phase}: {pnote}")
+    else:
+        month = ctx.get("month")
+        if month:
+            sfit, snote = season_fit(cat["id"], month)
+            if sfit:
+                tie += _fit_delta(sfit)
+                if snote:
+                    why.append(f"{season_phase(month)}: {snote}")
     if tie:
         score += max(-TIEBREAK_CAP, min(TIEBREAK_CAP, tie))
     if "hot-streak" in ls and ctx["light"] not in ("dusk/dawn", "night"):
@@ -616,6 +670,11 @@ def decision_rules(ctx: dict, picks: list[str]) -> list[str]:
         rules.append("**Swirls/short strikes on topwater →** don't speed up; slow down, longer pauses. Still missing → upsize the profile.")
     if "Drop shot" in picks:
         rules.append("**Drop-shot fish slapping →** re-cast the same fish one size up — change profile, not color.")
+    phase = spawn_phase(ctx.get("water_f"), ctx.get("month"))
+    if phase:
+        note, _ = spawn_note(phase)
+        if note:
+            rules.append(f"**Bass phase: {phase} →** {note}.")
     sh = ctx.get("shoreline")
     if sh and ctx.get("wind_mph", 0) >= 5:
         rules.append(

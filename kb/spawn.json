@@ -1,0 +1,239 @@
+{
+  "label": "Spawn phase (bass)",
+  "_note": "Phase triggers are T2-sourced from water temperature during the warming half of the year (N. hemisphere: Feb-Jun). Outside that window \u2014 or inside the spawn band during the cooling half \u2014 no phase applies (null-safe). The rig-fit translations are T5 editorial and live only in the capped tie-break layer (kb/CONDITIONS.md); while a spawn phase is active it SUPERSEDES the month-based season fits, so the two never stack.",
+  "provenance": {
+    "confidence": "sourced",
+    "author": "conditions-pass/1.0",
+    "seeded_at": "2026-09-19",
+    "verified_by": null,
+    "note": "trigger quotes T2 verbatim; rig-fit translations T5"
+  },
+  "phases": [
+    "pre-spawn",
+    "spawn",
+    "post-spawn"
+  ],
+  "warming_months": [
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "triggers": {
+    "pre-spawn": {
+      "water_f": [
+        48,
+        60
+      ]
+    },
+    "spawn": {
+      "water_f": [
+        60,
+        75
+      ]
+    },
+    "post-spawn": {
+      "water_f": [
+        75,
+        95
+      ]
+    }
+  },
+  "citations": [
+    {
+      "claim": "spawn temperature band",
+      "tier": "T2",
+      "source": "Take Me Fishing \u2014 Determining factors for freshwater fish spawning times (Mar 2018)",
+      "url": "https://www.takemefishing.org/blog/march-2018/4-determining-factors-for-freshwater-fish-spawning-times/",
+      "quote": "As an example, largemouth bass prefer water temperatures between 60-75 degrees for spawning, while bluegill spawn when water temperatures are in the 75-85-degree range.",
+      "found": true,
+      "fetched_at": "2026-09-19T14:40:41+00:00",
+      "sha256": "8cd42e770c097148"
+    },
+    {
+      "claim": "staging at ~55F",
+      "tier": "T2",
+      "source": "Iowa DNR \u2014 Largemouth bass",
+      "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+      "quote": "They move closer to spawning areas as the water warms to about 55 degrees.",
+      "found": true,
+      "fetched_at": "2026-09-19T14:40:41+00:00",
+      "sha256": "ccddac5b447f0e64"
+    },
+    {
+      "claim": "pre-spawn shallow feed 55-62F",
+      "tier": "T2",
+      "source": "Iowa DNR \u2014 Largemouth bass",
+      "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+      "quote": "Largemouth bass move into shallow water to actively feed when the water temperature is 55 to 62 degrees and become more aggressive.",
+      "found": true,
+      "fetched_at": "2026-09-19T14:40:41+00:00",
+      "sha256": "ccddac5b447f0e64"
+    },
+    {
+      "claim": "spawn focus / big females off feed",
+      "tier": "T2",
+      "source": "Take Me Fishing \u2014 Largemouth bass spawning and fishing considerations (Feb 2016)",
+      "url": "https://www.takemefishing.org/blog/february-2016/largemouth-bass-spawning-and-fishing-considerations/",
+      "quote": "As water approaches about 55 degrees bass are focusing on spawning and the big females may not be in the mood to eat.",
+      "found": true,
+      "fetched_at": "2026-09-19T14:40:41+00:00",
+      "sha256": "fb2a44af841d4fd7"
+    },
+    {
+      "claim": "nest guard duration",
+      "tier": "T2",
+      "source": "Iowa DNR \u2014 Largemouth bass",
+      "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+      "quote": "They guard the nest for 10 to 14 days while the eggs incubate and hatch.",
+      "found": true,
+      "fetched_at": "2026-09-19T14:40:41+00:00",
+      "sha256": "ccddac5b447f0e64"
+    },
+    {
+      "claim": "post-spawn deeper edges",
+      "tier": "T2",
+      "source": "Iowa DNR \u2014 Largemouth bass",
+      "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+      "quote": "After this recovery period until summer, females sometimes move out on the deeper edges and secondary points.",
+      "found": true,
+      "fetched_at": "2026-09-19T14:40:41+00:00",
+      "sha256": "ccddac5b447f0e64"
+    },
+    {
+      "claim": "pre-spawn location",
+      "tier": "T2",
+      "source": "Take Me Fishing \u2014 5 pre-spawn bass fishing tips (Feb 2017)",
+      "url": "https://www.takemefishing.org/blog/february-2017/5-pre-spawn-bass-fishing-tips/",
+      "quote": "An ideal spot before bass spawning season is a cove with an inlet and a shelf that drops off into deeper water.",
+      "found": true,
+      "fetched_at": "2026-09-19T14:40:41+00:00",
+      "sha256": "d62dfb43b59907e1"
+    }
+  ],
+  "entries": {
+    "trig": {
+      "pre-spawn": {
+        "fit": 2,
+        "confidence": "unverified-editorial",
+        "note": "shallow cover staging \u2014 the 55-62F shallows feed"
+      }
+    },
+    "wacky": {
+      "pre-spawn": {
+        "fit": 1,
+        "confidence": "unverified-editorial",
+        "note": "slow shallow presentation for staging fish"
+      },
+      "spawn": {
+        "fit": 2,
+        "confidence": "unverified-editorial",
+        "note": "classic bed bait \u2014 dead-stick the fall in the bedding coves"
+      }
+    },
+    "neko": {
+      "spawn": {
+        "fit": 1,
+        "confidence": "unverified-editorial",
+        "note": "stand-up in place on the beds"
+      },
+      "post-spawn": {
+        "fit": 1,
+        "confidence": "unverified-editorial",
+        "note": "stays in the strike zone on the deeper edges"
+      }
+    },
+    "dropshot": {
+      "spawn": {
+        "fit": 1,
+        "confidence": "unverified-editorial",
+        "note": "sight-fishing suspended over the beds in clear water"
+      },
+      "post-spawn": {
+        "fit": 2,
+        "confidence": "unverified-editorial",
+        "note": "females slide to deeper edges and secondary points"
+      }
+    },
+    "carolina": {
+      "pre-spawn": {
+        "fit": 1,
+        "confidence": "unverified-editorial",
+        "note": "drag the staging points and transition shelves"
+      },
+      "post-spawn": {
+        "fit": 2,
+        "confidence": "unverified-editorial",
+        "note": "long-leader drag for the deeper edges"
+      }
+    }
+  },
+  "phase_notes": {
+    "pre-spawn": {
+      "note": "fish are staging near spawning coves and transition shelves",
+      "citations": [
+        {
+          "claim": "staging at ~55F",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Largemouth bass",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+          "quote": "They move closer to spawning areas as the water warms to about 55 degrees.",
+          "found": true,
+          "fetched_at": "2026-09-19T14:40:41+00:00",
+          "sha256": "ccddac5b447f0e64"
+        },
+        {
+          "claim": "pre-spawn location",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 5 pre-spawn bass fishing tips (Feb 2017)",
+          "url": "https://www.takemefishing.org/blog/february-2017/5-pre-spawn-bass-fishing-tips/",
+          "quote": "An ideal spot before bass spawning season is a cove with an inlet and a shelf that drops off into deeper water.",
+          "found": true,
+          "fetched_at": "2026-09-19T14:40:41+00:00",
+          "sha256": "d62dfb43b59907e1"
+        }
+      ]
+    },
+    "spawn": {
+      "note": "they are on the beds \u2014 males guard 10\u201314 days; big females are often off the feed",
+      "citations": [
+        {
+          "claim": "nest guard duration",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Largemouth bass",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+          "quote": "They guard the nest for 10 to 14 days while the eggs incubate and hatch.",
+          "found": true,
+          "fetched_at": "2026-09-19T14:40:41+00:00",
+          "sha256": "ccddac5b447f0e64"
+        },
+        {
+          "claim": "spawn focus / big females off feed",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Largemouth bass spawning and fishing considerations (Feb 2016)",
+          "url": "https://www.takemefishing.org/blog/february-2016/largemouth-bass-spawning-and-fishing-considerations/",
+          "quote": "As water approaches about 55 degrees bass are focusing on spawning and the big females may not be in the mood to eat.",
+          "found": true,
+          "fetched_at": "2026-09-19T14:40:41+00:00",
+          "sha256": "fb2a44af841d4fd7"
+        }
+      ]
+    },
+    "post-spawn": {
+      "note": "females slide out to deeper edges and secondary points",
+      "citations": [
+        {
+          "claim": "post-spawn deeper edges",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Largemouth bass",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+          "quote": "After this recovery period until summer, females sometimes move out on the deeper edges and secondary points.",
+          "found": true,
+          "fetched_at": "2026-09-19T14:40:41+00:00",
+          "sha256": "ccddac5b447f0e64"
+        }
+      ]
+    }
+  }
+}

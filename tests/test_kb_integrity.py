@@ -83,6 +83,26 @@ class KBSchemaTest(unittest.TestCase):
                         self.assertTrue(c.get("sha256"), f"{eid}/{phase}: no sha256")
                         self.assertTrue(c.get("fetched_at"), f"{eid}/{phase}: no fetched_at")
 
+    def test_spawn_table_is_sourced_and_narrow(self):
+        d = json.loads((KB / "spawn.json").read_text())
+        self.assertEqual(set(d.get("phases", [])),
+                         {"pre-spawn", "spawn", "post-spawn"})
+        for m in d.get("warming_months", []):
+            self.assertTrue(1 <= m <= 12)
+        for phase in d["phases"]:
+            band = (d.get("triggers") or {}).get(phase, {}).get("water_f")
+            self.assertEqual(len(band), 2, f"{phase}: missing band")
+            self.assertTrue((d.get("phase_notes") or {}).get(phase, {}).get("citations"),
+                            f"{phase}: no phase-note citations")
+        for eid, phases in (d.get("entries") or {}).items():
+            for phase, fit in phases.items():
+                self.assertIn(phase, d["phases"], f"{eid}: unknown phase {phase}")
+                self.assertLessEqual(abs(fit.get("fit", 0)), 2, f"{eid}/{phase}")
+                self.assertIn(fit.get("confidence"), CONFIDENCE, f"{eid}/{phase}")
+        for c in d.get("citations", []):
+            self.assertTrue(c.get("sha256") and c.get("fetched_at") and c.get("quote"),
+                            "spawn citation missing provenance")
+
     def test_presentation_classes_are_known(self):
         d = json.loads((KB / "presentation.json").read_text())
         classes = set(d.get("classes") or [])

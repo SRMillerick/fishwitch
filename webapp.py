@@ -756,10 +756,12 @@ def kb_entry_page(entry_id):
                  ((tx.load_substrate().get("entries") or {}).get(entry_id) or {}).items()
                  if isinstance(v, dict)}
     season = (tx.load_season().get("entries") or {}).get(entry_id) or {}
+    spawn = (tx.load_spawn().get("entries") or {}).get(entry_id) or {}
     return render_template(
         "kb_entry.html", c=c, prov=c.get("provenance") or {},
         spec=spec, spec_line=tx.spec_line(spec),
         citations=list(c.get("citations") or []), substrate=substrate, season=season,
+        spawn=spawn,
         presentation=tx.presentation_class(entry_id),
         alternatives=tx.alternatives(entry_id),
         offers_list=[o for o in offers.resolve(entry_id) if o.get("url")],

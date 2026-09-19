@@ -31,6 +31,7 @@ deterministically, without letting any one signal drive a tie.
 | **Mood** | `kb/presentation.json` (classes) | `lake_state` (post-turnover → suspended fish) | existing: suspend +0.5, fall +0.25 |
 | **Clarity** | `kb/principles.json` (color rules) | light + cloud + lake_state | color selection only — **no rig score** (a rig fit here would double-count light/cloud) |
 | **Season** | `kb/season.json` | report month (N. hemisphere) | shipped: T2-sourced summer/fall fits; spring/winter null |
+| **Spawn** | `kb/spawn.json` | water temp + warming months | shipped: T2 bands, T5 fits; supersedes season while active |
 
 `purpose` groups in `kb/terminal.json` / `kb/baits.json` remain the
 deterministic "also:" alternatives and are **never** scored — no double count.
@@ -102,6 +103,28 @@ from `takemefishing.org/blog/may-2017/…`; the fall quote from
 the 12-session replay held **5 exact / 3 style / 2 miss** after the layer
 landed (2026-09-19), and before/after reports are in
 `reports/season-pass-{before,after}.md`.
+
+## Spawn phase — shipped (T2 triggers, T5 fits)
+
+`kb/spawn.json` derives a bass phase from **water temperature during the
+warming half of the year** (N. hemisphere: Feb–Jun). Outside that window, or
+inside the band during cooling months, no phase applies.
+
+| Phase | Water | T2 basis |
+|---|---|---|
+| pre-spawn | 48–60°F | "move closer to spawning areas as the water warms to about 55 degrees"; "move into shallow water to actively feed when the water temperature is 55 to 62 degrees" (Iowa DNR) |
+| spawn | 60–75°F | "largemouth bass prefer water temperatures between 60-75 degrees for spawning" (Take Me Fishing); "males guard the nest for 10 to 14 days" |
+| post-spawn | 75–95°F | "females sometimes move out on the deeper edges and secondary points" (Iowa DNR) |
+
+Each phase carries a sourced location note and a T5 rig-fit translation
+(pre-spawn → Texas/Carolina; spawn → wacky/Neko/drop shot; post-spawn →
+drop shot/Carolina). **While a spawn phase is active it supersedes the
+month-based season fits**, so the two can never stack; the total tie-break cap
+(±1.0, shared with cover) still applies. Acceptance: the 12-session replay
+(fall) is unchanged at **5 exact / 3 style / 2 miss**, and a synthetic April
+report diff shows the phase row, the cited decision rule, and the spawn fits
+moving the finesse cluster — `reports/spawn-pass-{before,after}.md`. Spring
+rig fits remain T5 until spring sessions exist in the ledger.
 
 ## Deferred dimensions (evidence recorded, not scored)
 
