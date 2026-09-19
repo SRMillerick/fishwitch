@@ -60,6 +60,8 @@ fishwitch report --gpx prime.gpx        # waypoints for the chartplotter
 fishwitch log --lure "110 walker"       # log a catch → empirical reports
 fishwitch review                        # grade the logbook vs blind model replays
 fishwitch review --angler Jack --since 2026-09-01
+fishwitch clicks                        # aggregate outbound clicks (no PII)
+fishwitch stats                         # aggregate page views (no PII)
 ./webapp                                 # web front door → http://127.0.0.1:7700
 FISHWITCH_LOCAL=1 ./webapp               # + /review calibration panel (self-host only)
 FISHWITCH_WEB_HOST=0.0.0.0 ./webapp     # public deploy (gunicorn+nginx in front)

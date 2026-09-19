@@ -657,6 +657,10 @@ def main():
     cl.add_argument("--src", help="filter by page section (tackle|gap)")
     cl.add_argument("--top", type=int, default=20)
 
+    st = sub.add_parser("stats", help="aggregate page-view counts (no PII)")
+    st.add_argument("--days", type=int, default=30)
+    st.add_argument("--top", type=int, default=15)
+
     tp = sub.add_parser("terminal", help="terminal tackle KB (hooks, weights, jig heads)")
     tp.add_argument("--show", help="entry id to print")
     tp.add_argument("--category", help="hook|weight|jighead|terminal")
@@ -866,6 +870,25 @@ def main():
         by_src = Counter(r.get("src") or "?" for r in rows)
         if by_src:
             print("  by section:", ", ".join(f"{k}={v}" for k, v in by_src.most_common()))
+
+    elif args.cmd == "stats":
+        from telemetry import summarize
+        s = summarize(days=args.days, top=args.top)
+        if not s["total"]:
+            sys.exit("no page views logged yet (logs/pages.jsonl)")
+        print(f"  {s['total']} page views in the trailing {s['days']} days")
+        print("  by page:")
+        for path, n in s["by_path"]:
+            print(f"    {n:5d}  {path}")
+        if s["by_lake"]:
+            print("  report views by lake:")
+            for lake, n in s["by_lake"]:
+                print(f"    {n:5d}  {lake}")
+        if s["by_ref"]:
+            print("  external referrers:")
+            for ref, n in s["by_ref"]:
+                print(f"    {n:5d}  {ref}")
+        print("  by day: " + ", ".join(f"{d}:{n}" for d, n in s["by_day"]))
 
     elif args.cmd == "terminal":
         rows = tx.load_terminal().get("terminal", [])

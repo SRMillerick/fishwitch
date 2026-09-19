@@ -21,6 +21,11 @@ exists.</p>
 <ul class="plain">
   <li>Standard request logs (IP address, timestamp, page) for rate limiting
   and abuse prevention. Rotated routinely.</li>
+  <li><strong>Aggregate page counts</strong> — page path, the lake you looked
+  at, and the external site you arrived from (host only). No IP address, no
+  user agent, no cookies, no query string, nothing that can be joined into a
+  session. Raw counts include bots and are used only to see which pages are
+  read.</li>
   <li>The contents of report requests — lake, time window, and (if you send
   one) your profile — held in memory for the duration of the render only.</li>
 </ul>

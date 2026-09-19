@@ -321,6 +321,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
     # never fed back into picks or scores (principle 4). Skipped when the
     # angler gave no baseline (a "gap" against nothing means nothing).
     gap = []
+    box_check = []
     if has_baseline and prime is not None:
         pblk = prime
         pmid = pblk["start"] + (pblk["end"] - pblk["start"]) / 2
@@ -337,6 +338,28 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
                                        if c["id"] not in owned], top_n=5)
                 if s >= 5.0]
         gap = full[:3]
+
+        # your box vs the board: the engine already scored every bait the
+        # angler owns for the prime window, including the ones that lost.
+        # Surface the reasons (rejection or the top cited fits) — display
+        # only, computed after all ranking, never fed back into picks.
+        pick_ids = {c["id"] for c, _, _ in prime["picks"]}
+        top_score = max((s for _, s, _ in prime["picks"]), default=0.0)
+        lost = []
+        for c, _label in baseline["matched"]:
+            if c["id"] in pick_ids:
+                continue
+            sc, why, rej = tx.score_entry(c, gap_ctx)
+            if rej:
+                reason, out = rej, True
+            else:
+                reason, out = ("; ".join(why[:2]) or
+                               ("fits — the top picks edge it" if sc >= top_score
+                                else "in the conditions band — the top picks score higher")), False
+            lost.append(dict(label=c["label"], id=c["id"], score=round(sc, 1),
+                             reason=reason, out=out))
+        lost.sort(key=lambda r: (-r["score"], r["label"]))
+        box_check = lost[:6]
 
 
     _cb = prime or (blocks[0] if blocks else None)
@@ -356,7 +379,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         blocks=blocks, rods=rods, prime=prime, prime_score=prime_s, utc_off=wx.utc_offset,
         knots=knots, knot_notes=knot_notes, angler_knots=angler_knots, line=line, color=color, gap=gap,
         angler_line=angler_line, owned_ids=owned_ids, has_baseline=has_baseline,
-        bottom=bottom, trends=trends,
+        bottom=bottom, trends=trends, box_check=box_check,
         logbook=lb.summary_for(lake.get("name", ""), angler=profile.get("name")),
         lake_state=lake_state, days_since_turnover=days_since_turnover,
         heat_streak=streak, state_basis=state_basis, access_note=acc_note,
@@ -618,6 +641,20 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
     if unmatched:
         L.append(f"- *(no match in the KB for: {', '.join(unmatched)} — still bring them)*")
     L.append("")
+
+    if m.get("box_check"):
+        _picks = (m.get("prime") or {}).get("picks") or []
+        _top = max((s for _, s, _ in _picks), default=None)
+        L.append(f"## {e('🔎 ')}Why not your usual?")
+        L.append("*Every bait in your box was scored for the prime window"
+                 + (f" (top pick {_top:g})" if _top is not None else "")
+                 + " — the notes are the engine's own fit reasons.*")
+        for r in m["box_check"]:
+            if r["out"]:
+                L.append(f"- **{r['label']}** — out of band: {r['reason']}")
+            else:
+                L.append(f"- **{r['label']}** — {r['score']:g} · {r['reason']}")
+        L.append("")
 
     if m.get("trends"):
         L.append(f"## {e('📈 ')}Trend watch — what's winning (market signal, not science)")

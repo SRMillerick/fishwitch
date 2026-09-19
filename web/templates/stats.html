@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}aggregate stats{% endblock %}
+{% block content %}
+<h1>Aggregate stats</h1>
+<p class="smallcaps">counts, not people — no IP, no user agent, no cookies</p>
+<p>{{ s.total }} page views in the trailing {{ days }} days. Raw counts (bots
+included); report views are also broken out by lake registry key.</p>
+
+{% if s.by_path %}
+<h2 class="rule-double">Pages</h2>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>path</th><th>views</th></tr></thead>
+  <tbody>
+  {% for path, n in s.by_path %}
+  <tr><td data-label="path"><code>{{ path }}</code></td><td data-label="views">{{ n }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+
+{% if s.by_lake %}
+<h2 class="rule-double">Report views by lake</h2>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>lake key</th><th>views</th></tr></thead>
+  <tbody>
+  {% for lake, n in s.by_lake %}
+  <tr><td data-label="lake"><code>{{ lake }}</code></td><td data-label="views">{{ n }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+
+{% if s.by_ref %}
+<h2 class="rule-double">External referrers</h2>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>host</th><th>views</th></tr></thead>
+  <tbody>
+  {% for ref, n in s.by_ref %}
+  <tr><td data-label="host"><code>{{ ref }}</code></td><td data-label="views">{{ n }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+
+{% if s.by_day %}
+<h2 class="rule-double">By day</h2>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>day (UTC)</th><th>views</th></tr></thead>
+  <tbody>
+  {% for day, n in s.by_day %}
+  <tr><td data-label="day">{{ day }}</td><td data-label="views">{{ n }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+
+{% if not s.total %}
+<p>Nothing counted yet. The local app counts page views as they render.</p>
+{% endif %}
+{% endblock %}

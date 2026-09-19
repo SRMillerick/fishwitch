@@ -39,6 +39,7 @@ sys.path.insert(0, str(ROOT.parent))   # package imports (from fishwitch import 
 
 import markdown as _md  # noqa: E402  (pip install markdown)
 import offers  # noqa: E402
+import telemetry  # noqa: E402
 import tactics as tx  # noqa: E402
 from layers.history import History  # noqa: E402
 from report import generate as gen, to_markdown  # noqa: E402
@@ -64,6 +65,21 @@ app = Flask(__name__, template_folder=str(ROOT / "web" / "templates"),
 app.config["JSON_SORT_KEYS"] = False
 app.config["MAX_CONTENT_LENGTH"] = 64 * 1024  # profiles are small; bigger bodies are abuse
 app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 31536000  # static assets are URL-versioned (?v=), cache hard
+
+
+@app.after_request
+def _count_page(resp):
+    """Aggregate page counts (telemetry.py): path + lake key + external
+    referrer host only — no IP, no user agent, no cookies, no query string.
+    Best-effort; a telemetry failure must never fail a page."""
+    try:
+        if (request.method == "GET" and resp.status_code == 200
+                and telemetry.should_count(request.path)):
+            telemetry.record(request.path, lake=request.args.get("lake"),
+                             ref=request.referrer)
+    except Exception:
+        pass
+    return resp
 
 
 @app.context_processor
@@ -743,6 +759,16 @@ def review_page():
     return render_template("review.html", rows=rows, skipped=skipped, sep=sep,
                            n_catch=len(catches), n_skunk=len(skunks),
                            local=LOCAL)
+
+
+# ── JSON API (for the browser layer; robots-discouraged) ─────────────────────
+@app.route("/stats")
+def stats_page():
+    if not LOCAL:
+        abort(404)
+    days = max(1, min(365, int(request.args.get("days") or 30)))
+    s = telemetry.summarize(days=days)
+    return render_template("stats.html", s=s, days=days, local=LOCAL)
 
 
 # ── JSON API (for the browser layer; robots-discouraged) ─────────────────────
