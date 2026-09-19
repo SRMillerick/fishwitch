@@ -89,24 +89,33 @@ def _dedupe(picks: list[tuple]) -> list[tuple]:
 
 
 # ── the three grades ───────────────────────────────────────────────────────
-def _grade_presentation(lure: str | None, species: str, profile: dict,
+def _grade_presentation(lures: list[str], species: str, profile: dict,
                         picks: list[tuple]) -> tuple[str | None, str]:
-    """Compare the logged lure to the model's picks. None = not gradeable."""
-    if not lure or not picks:
+    """Compare the session's logged lures to the model's picks for the session
+    window. Any logged lure matching a pick grades exact; any sharing the top
+    pick's style grades style. None = not gradeable."""
+    cands = [l for l in (lures or []) if l]
+    if not cands or not picks:
         return None, ""
-    m = match_arsenal([lure], species)
-    if not m["matched"]:
-        return "n/a", f"‘{lure}’ not in the {species} catalog"
-    cat = m["matched"][0][0]
     labels = " + ".join(c["label"] for c, _, _ in picks[:2])
-    if cat["id"] in {c["id"] for c, _, _ in picks}:
-        return "exact", f"model picked {labels}"
+    pick_ids = {c["id"] for c, _, _ in picks}
+    matched = []
+    for lure in cands:
+        m = match_arsenal([lure], species)
+        if m["matched"]:
+            matched.append(m["matched"][0][0])
+    if not matched:
+        return "n/a", f"‘{cands[0]}’ not in the {species} catalog"
     arsenal_ids = {c["id"] for c, _ in
                    match_arsenal(profile.get("arsenal") or [], species)["matched"]}
-    if cat["id"] not in arsenal_ids:
+    for cat in matched:
+        if cat["id"] in pick_ids:
+            return "exact", f"model picked {labels}"
+    for cat in matched:
+        if picks[0][0].get("style") == cat.get("style"):
+            return "style", f"right {cat.get('style')} family — model picked {labels}"
+    if all(cat["id"] not in arsenal_ids for cat in matched):
         return "benched", f"not in angler’s arsenal — model picked {labels}"
-    if picks[0][0].get("style") == cat.get("style"):
-        return "style", f"right {cat.get('style')} family — model picked {labels}"
     return "miss", f"model picked {labels}"
 
 
@@ -187,6 +196,7 @@ def _sessions(rows: list[dict]) -> list[dict]:
             lbs = [x for x in lbs if x is not None]
             out.append(dict(
                 angler=entries[0].get("angler"), ts=_ts(entries[0]),
+                ts_end=_ts(entries[-1]),
                 lake=entries[0].get("lake"), entries=entries, skunk=skunk,
                 n_fish=len(catches), primary_lure=primary, other_lures=others,
                 species=catches[0].get("species") if catches else None,
@@ -268,9 +278,12 @@ def collect(angler: str | None = None, since: datetime | None = None,
             hist = hist_cache[key]
 
             start = ts - timedelta(hours=hours / 2)   # window centered on the stamp:
+            ts_end = sess.get("ts_end") or ts
+            span_end = max(ts, ts_end + timedelta(minutes=30))
+            eff_hours = max(hours, (span_end - start).total_seconds() / 3600)
             cutoff[0] = ts                             # the session actually fished
             try:
-                m = generate(prof, lk, start, hours=hours, species=sp, wx=wx, hist=hist)
+                m = generate(prof, lk, start, hours=eff_hours, species=sp, wx=wx, hist=hist)
             except Exception as ex:
                 skipped += 1
                 skipped_msgs.append(f"{ts:%Y-%m-%d %H:%M} · {e.get('angler')}: replay failed ({ex})")
@@ -279,11 +292,15 @@ def collect(angler: str | None = None, since: datetime | None = None,
                 cutoff[0] = None
 
             prime = m.get("prime")
+            # grade against every block in the replay window — the centered window
+            # is the report the angler would have seen, and the hour-by-hour table
+            # offers all of these picks, not just the prime block's
             picks = _dedupe([(c, s, w) for blk in m["blocks"] for c, s, w in blk["picks"]])
-            if prime and prime.get("picks"):
+            if not picks and prime and prime.get("picks"):
                 picks = prime["picks"]
+            lures = [e.get("primary_lure")] + list(e.get("other_lures") or [])
             pres, pres_why = (None, "") if is_skunk else \
-                _grade_presentation(e.get("primary_lure"), sp, prof, picks)
+                _grade_presentation(lures, sp, prof, picks)
             tim, tim_d = (None, 0) if is_skunk else _grade_timing(ts, prime)
             zon, zon_why = _grade_zone(e.get("notes", ""), picks,
                                        m.get("lake_state") or "")  # skunks too: wrong-water skunks

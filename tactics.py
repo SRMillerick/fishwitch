@@ -420,7 +420,10 @@ def score_entry(cat: dict, ctx: dict) -> tuple[float, list[str], str | None]:
     style_hour = {"Mars": "reaction", "Jupiter": "reaction", "Mercury": "finesse",
                   "Venus": "finesse", "Moon": "finesse", "Saturn": "finesse"}.get(ruler)
     if style_hour and cat["style"] == style_hour:
-        score += 1.0; why.append(f"{ruler} hour favors {style_hour} work")
+        # a tint, not a driver: the ledger has reaction producing in finesse hours
+        # (9/5) and finesse producing in reaction hours (9/17), so the planetary
+        # hour personalizes the ranking without overriding the conditions
+        score += 0.25; why.append(f"{ruler} hour favors {style_hour} work")
     if ctx.get("solunar") == "major":
         if cat["style"] == "reaction":
             score += 1.0; why.append("solunar major — feed window")

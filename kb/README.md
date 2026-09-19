@@ -103,7 +103,10 @@ derivation from each entry's cited `technique` string (drop shot hovers =
 suspend; wacky dead-sticks the fall = fall; trig drags = bottom). The scorer
 uses it under post-turnover (suspended fish): suspend +0.5, fall +0.25. It is
 the seed for future clarity/depth dimensions; source each class in a later
-pass (a maker/agency quote that states the bait's fall/suspension behavior).
+pass. The planetary-hour style bonus is a **+0.25 tint, not a driver** — the
+ledger has counterexamples in both directions (reaction in a finesse hour 9/5,
+finesse in reaction hours 9/17), so it colors ties instead of overriding the
+conditions.
 - Every component is optional. Sizes are display ranges, not prescriptions.
 - `source`/`confidence` label owner builds (T5) vs sourced maker specs (T1).
   Owner builds that differ from a maker's spec live in the entry anyway,
