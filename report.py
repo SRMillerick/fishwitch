@@ -115,10 +115,12 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         lake_state_parts.append("heat-streak")
     lake_state = "+".join(lake_state_parts) or None
 
-    # real water temp where a gauge exists, else estimate
+    # real water temp where a gauge exists (distance-guarded), else estimate
     real_temp = wt.nearest_water_temp(lake["lat"], lake["lng"])
+    water_temp_label = None
     if real_temp:
         water_f = real_temp[1]
+        water_temp_label = real_temp[2]
     stocking = stk.recent(lake)
 
     # access rules: documented in registry, enforced only when asked
@@ -214,7 +216,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
                    temp_f=w["temp_f"], water_f=water_f, hour_ruler=hour["ruler"],
                    solunar=sol, moon_fruitful=(mn["fruitful"] if mn else None),
                    pressure_word=wscore["trend"]["word"],
-                   structure_notes=lake.get("structure", []),
+                   structure_notes=lake.get("structure", []), month=mid.month,
                    lake_state=lake_state, bottom=bottom)
         picks = tx.recommend(ctx, candidates, top_n=2)
         blocks.append(dict(start=a, end=b, light=light, sun_alt=round(sun_alt, 1),
@@ -299,7 +301,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         pctx = dict(light=prime["light"], cloud=pw["cloud"], wind_mph=pw["wind_mph"],
                     temp_f=pw["temp_f"], water_f=water_f, hour_ruler=prime["hour"]["ruler"],
                     solunar=prime["solunar"], moon_fruitful=(mn["fruitful"] if mn else None),
-                    pressure_word=wscore["trend"]["word"],
+                    pressure_word=wscore["trend"]["word"], month=prime["start"].month,
                     structure_notes=lake.get("structure", []), lake_state=lake_state,
                     bottom=bottom)
         for c in tx.catalog(species):
@@ -329,7 +331,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         gap_ctx = dict(light=pblk["light"], cloud=pw["cloud"], wind_mph=pw["wind_mph"],
                        temp_f=pw["temp_f"], water_f=water_f, hour_ruler=pblk["hour"]["ruler"],
                        solunar=pblk["solunar"], moon_fruitful=(mn["fruitful"] if mn else None),
-                       pressure_word=wscore["trend"]["word"],
+                       pressure_word=wscore["trend"]["word"], month=pblk["start"].month,
                        structure_notes=lake.get("structure", []), lake_state=lake_state,
                        bottom=bottom)
         owned = owned_ids
@@ -383,7 +385,8 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         logbook=lb.summary_for(lake.get("name", ""), angler=profile.get("name")),
         lake_state=lake_state, days_since_turnover=days_since_turnover,
         heat_streak=streak, state_basis=state_basis, access_note=acc_note,
-        water_temp_source=bool(real_temp), stocking=stocking,
+        water_temp_source=bool(real_temp), water_temp_label=water_temp_label,
+        stocking=stocking,
         scores=dict(weather=wscore["score"], solunar=round(sol_score, 1),
                     astro=round(astro_score, 1), overall=overall,
                     astro_notes=astro_notes),
@@ -454,7 +457,8 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
         ("Air", f"{m['weather']['start']['temp_f']:.0f}°F at launch / window {m['weather']['tmin']:.0f}–{m['weather']['tmax']:.0f}°F"),
     ]
     if m["weather"]["water_f"]:
-        src = "USGS gauge" if m.get("water_temp_source") else "air-temp estimate — small-lake assumption"
+        src = ((m.get("water_temp_label") or "gauge") if m.get("water_temp_source")
+               else "air-temp estimate — small-lake assumption, no gauge within 30 km")
         rows.append(("Water", f"~{m['weather']['water_f']:.0f}°F ({src})"))
     lake_sp = [s.lower() for s in m["lake"].get("species", [])]
     sp_word = m["species"].split()[0]
@@ -505,7 +509,8 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
             "✅ sky+weather",
             "✅ history→lake-state" if (m.get("state_basis") or m.get("lake_state"))
             else "⚠️ no lake state (manual flag?)",
-            "✅ gauge water temp" if m.get("water_temp_source") else "🟡 est. water temp",
+            ("✅ " + (m.get("water_temp_label") or "gauge water temp"))
+            if m.get("water_temp_source") else "🟡 est. water temp (no gauge nearby)",
             "✅ stocking data" if m.get("stocking") else "🟡 no stocking intel",
             ('✅' if m.get('logbook') else '🟡') + " logbook"
             + (f" ({m['logbook']['n']})" if m.get("logbook") else ""),
@@ -516,7 +521,8 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
             "sky + weather",
             "history → lake-state" if (m.get("state_basis") or m.get("lake_state"))
             else "no lake-state inference",
-            "gauge water temp" if m.get("water_temp_source") else "water temp estimated",
+            (m.get("water_temp_label") or "gauge water temp") if m.get("water_temp_source")
+            else "water temp estimated (no gauge nearby)",
             "stocking data" if m.get("stocking") else "no stocking intel",
             "logbook" + (f" ({m['logbook']['n']})" if m.get("logbook") else " (none)"),
             "bathymetry: registry notes only",

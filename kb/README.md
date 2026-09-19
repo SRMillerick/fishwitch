@@ -134,6 +134,15 @@ low light runs on rods, clear water rewards color. `tactics.color_principle(ctx)
 picks one per session (light/cloud/lake-state) and the report renders it as a
 **Color** row in the locked numbers. CLI: `fishwitch colors`.
 
+## Season phases (`kb/season.json`)
+
+`{phases, month_phase, entries: {entry_id: {phase: {fit, note, confidence,
+ citations}}}}`. The report month maps to a phase (N. hemisphere) and an entry
+with a sourced fit gets it — everything else is a null-safe no-op. v1 sources
+only **summer** (Texas/Carolina: T2 "warm weather winners") and **fall**
+(bottom-crawling soft plastics lose attention); spring/winter are deliberately
+unsourced. Fits ride the capped tie-break layer (`kb/CONDITIONS.md`).
+
 ## Condition depth / tie-break layer (`kb/CONDITIONS.md`)
 
 The design contract for separating same-class rigs (drop shot / Texas / Neko /

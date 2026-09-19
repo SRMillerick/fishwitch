@@ -88,6 +88,7 @@ def load_line() -> dict:
 _TERMINAL: dict | None = None
 _PRINCIPLES: dict | None = None
 _SUBSTRATE: dict | None = None
+_SEASON: dict | None = None
 _BAITS: dict | None = None
 _PRESENTATION: dict | None = None
 _TRENDS: dict | None = None
@@ -241,6 +242,35 @@ def substrate_fit(entry_id: str, bottom: str | None) -> tuple[float, str]:
         return 0.0, ""
     e = (load_substrate().get("entries") or {}).get(entry_id) or {}
     b = e.get(bottom) or {}
+    return float(b.get("fit", 0) or 0), (b.get("note") or "")
+
+
+def load_season() -> dict:
+    """Season-phase rig fits (kb/season.json) — T2-sourced summer/fall claims;
+    other phases are null-safe no-ops. The phase comes from the report date."""
+    global _SEASON
+    if _SEASON is None:
+        p = KB_DIR / "season.json"
+        _SEASON = json.loads(p.read_text()) if p.exists() else {"entries": {}, "month_phase": {}}
+    return _SEASON
+
+
+def season_phase(month) -> str:
+    if not month:
+        return ""
+    try:
+        return (load_season().get("month_phase") or {}).get(str(int(month)), "")
+    except (TypeError, ValueError):
+        return ""
+
+
+def season_fit(entry_id: str, month) -> tuple[float, str]:
+    """(raw fit, note) for this entry in the month's phase; 0 when unsourced."""
+    phase = season_phase(month)
+    if not phase:
+        return 0.0, ""
+    e = (load_season().get("entries") or {}).get(entry_id) or {}
+    b = e.get(phase) or {}
     return float(b.get("fit", 0) or 0), (b.get("note") or "")
 
 
@@ -514,14 +544,25 @@ def score_entry(cat: dict, ctx: dict) -> tuple[float, list[str], str | None]:
             score += 0.5; why.append("post-turnover: suspends in the strike zone")
         elif pres == "fall":
             score += 0.25; why.append("post-turnover: slow fall stays in the zone")
+    # tie-break layer: cover (substrate) + season. Each dimension is scaled
+    # and capped; the pair shares the total tie-break cap (kb/CONDITIONS.md).
+    tie = 0.0
     sub = ctx.get("bottom")
     if sub:
         fit, note = substrate_fit(cat["id"], sub)
         if fit:
-            # cover fit is a capped tie-break dimension, not a condition driver
-            score += _fit_delta(fit)
+            tie += _fit_delta(fit)
             if note:
                 why.append(f"{sub}: {note}")
+    month = ctx.get("month")
+    if month:
+        sfit, snote = season_fit(cat["id"], month)
+        if sfit:
+            tie += _fit_delta(sfit)
+            if snote:
+                why.append(f"{season_phase(month)}: {snote}")
+    if tie:
+        score += max(-TIEBREAK_CAP, min(TIEBREAK_CAP, tie))
     if "hot-streak" in ls and ctx["light"] not in ("dusk/dawn", "night"):
         if cat["depth"] == "shallow" and cat["style"] == "reaction":
             score -= 1.0

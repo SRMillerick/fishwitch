@@ -1,0 +1,178 @@
+{
+  "label": "Season phase (tie-break layer)",
+  "_note": "T2-sourced seasonal rig fits. The phase is derived deterministically from the report date (N. hemisphere: Mar-May spring, Jun-Aug summer, Sep-Nov fall, Dec-Feb winter). Only phases with sourced claims carry fits; every other phase is a null-safe no-op. Weighting: raw fit x 0.25, per-dimension cap \u00b10.5, total tie-break cap \u00b11.0 (kb/CONDITIONS.md). Magnitudes are the editorial translation of the cited claims; the quotes are the facts. One quote preserves the source's spacing before its comma (sic).",
+  "provenance": {
+    "confidence": "sourced",
+    "author": "conditions-pass/1.0",
+    "seeded_at": "2026-09-19",
+    "verified_by": null,
+    "note": "T2 quotes verbatim; phase mapping + magnitudes editorial"
+  },
+  "phases": [
+    "spring",
+    "summer",
+    "fall",
+    "winter"
+  ],
+  "month_phase": {
+    "1": "winter",
+    "2": "winter",
+    "3": "spring",
+    "4": "spring",
+    "5": "spring",
+    "6": "summer",
+    "7": "summer",
+    "8": "summer",
+    "9": "fall",
+    "10": "fall",
+    "11": "fall",
+    "12": "winter"
+  },
+  "entries": {
+    "trig": {
+      "summer": {
+        "fit": 2,
+        "confidence": "sourced",
+        "note": "named a warm-weather winner; shallow heavy cover / vegetation",
+        "citations": [
+          {
+            "claim": "summer position",
+            "tier": "T2",
+            "source": "Take Me Fishing \u2014 5 best summer bass lures (May 2017)",
+            "url": "https://www.takemefishing.org/blog/may-2017/5-best-summer-bass-lures-warm-weather-favorites/",
+            "quote": "During the heat of summer bass will often move to cooler, shady areas near the bottom of the water column.",
+            "found": true,
+            "fetched_at": "2026-09-19T05:55:37+00:00",
+            "sha256": "41c2a1f90f38004d"
+          },
+          {
+            "claim": "warm weather winner",
+            "tier": "T2",
+            "source": "Take Me Fishing \u2014 5 best summer bass lures (May 2017)",
+            "url": "https://www.takemefishing.org/blog/may-2017/5-best-summer-bass-lures-warm-weather-favorites/",
+            "quote": "This is why soft plastic worms, rigged either Texas or Carolina style , are warm weather winners.",
+            "found": true,
+            "fetched_at": "2026-09-19T05:55:37+00:00",
+            "sha256": "41c2a1f90f38004d"
+          },
+          {
+            "claim": "shallow cover vs deep search",
+            "tier": "T2",
+            "source": "Take Me Fishing \u2014 5 best summer bass lures (May 2017)",
+            "url": "https://www.takemefishing.org/blog/may-2017/5-best-summer-bass-lures-warm-weather-favorites/",
+            "quote": "The Texas rig is generally a better choice when fishing in shallow spots with heavy cover or vegetation, whereas the Carolina rig excels when used in deep water as a search lure.",
+            "found": true,
+            "fetched_at": "2026-09-19T05:55:37+00:00",
+            "sha256": "41c2a1f90f38004d"
+          }
+        ]
+      },
+      "fall": {
+        "fit": -1,
+        "confidence": "sourced",
+        "note": "bottom-crawling soft plastics lose attention in fall",
+        "citations": [
+          {
+            "claim": "fall movement",
+            "tier": "T2",
+            "source": "Take Me Fishing \u2014 Fall bass fishing lures & tips (Oct 2017)",
+            "url": "https://www.takemefishing.org/blog/october-2017/catch-more-fish-with-these-fall-bass-fishing-lures-tips/",
+            "quote": "The slow, bottom crawling soft plastic rigs used in warm water no longer attract the same attention.",
+            "found": true,
+            "fetched_at": "2026-09-19T05:55:37+00:00",
+            "sha256": "45778af5268855a6"
+          }
+        ]
+      }
+    },
+    "carolina": {
+      "summer": {
+        "fit": 2,
+        "confidence": "sourced",
+        "note": "named a warm-weather winner; deep-water search lure",
+        "citations": [
+          {
+            "claim": "summer position",
+            "tier": "T2",
+            "source": "Take Me Fishing \u2014 5 best summer bass lures (May 2017)",
+            "url": "https://www.takemefishing.org/blog/may-2017/5-best-summer-bass-lures-warm-weather-favorites/",
+            "quote": "During the heat of summer bass will often move to cooler, shady areas near the bottom of the water column.",
+            "found": true,
+            "fetched_at": "2026-09-19T05:55:37+00:00",
+            "sha256": "41c2a1f90f38004d"
+          },
+          {
+            "claim": "warm weather winner",
+            "tier": "T2",
+            "source": "Take Me Fishing \u2014 5 best summer bass lures (May 2017)",
+            "url": "https://www.takemefishing.org/blog/may-2017/5-best-summer-bass-lures-warm-weather-favorites/",
+            "quote": "This is why soft plastic worms, rigged either Texas or Carolina style , are warm weather winners.",
+            "found": true,
+            "fetched_at": "2026-09-19T05:55:37+00:00",
+            "sha256": "41c2a1f90f38004d"
+          },
+          {
+            "claim": "shallow cover vs deep search",
+            "tier": "T2",
+            "source": "Take Me Fishing \u2014 5 best summer bass lures (May 2017)",
+            "url": "https://www.takemefishing.org/blog/may-2017/5-best-summer-bass-lures-warm-weather-favorites/",
+            "quote": "The Texas rig is generally a better choice when fishing in shallow spots with heavy cover or vegetation, whereas the Carolina rig excels when used in deep water as a search lure.",
+            "found": true,
+            "fetched_at": "2026-09-19T05:55:37+00:00",
+            "sha256": "41c2a1f90f38004d"
+          }
+        ]
+      },
+      "fall": {
+        "fit": -1,
+        "confidence": "sourced",
+        "note": "bottom-crawling soft plastics lose attention in fall",
+        "citations": [
+          {
+            "claim": "fall movement",
+            "tier": "T2",
+            "source": "Take Me Fishing \u2014 Fall bass fishing lures & tips (Oct 2017)",
+            "url": "https://www.takemefishing.org/blog/october-2017/catch-more-fish-with-these-fall-bass-fishing-lures-tips/",
+            "quote": "The slow, bottom crawling soft plastic rigs used in warm water no longer attract the same attention.",
+            "found": true,
+            "fetched_at": "2026-09-19T05:55:37+00:00",
+            "sha256": "45778af5268855a6"
+          }
+        ]
+      }
+    },
+    "neko": {
+      "fall": {
+        "fit": -1,
+        "confidence": "sourced",
+        "note": "bottom-crawling soft plastic (nail-weight drag) \u2014 the fall shift is away from it",
+        "citations": [
+          {
+            "claim": "fall movement",
+            "tier": "T2",
+            "source": "Take Me Fishing \u2014 Fall bass fishing lures & tips (Oct 2017)",
+            "url": "https://www.takemefishing.org/blog/october-2017/catch-more-fish-with-these-fall-bass-fishing-lures-tips/",
+            "quote": "The slow, bottom crawling soft plastic rigs used in warm water no longer attract the same attention.",
+            "found": true,
+            "fetched_at": "2026-09-19T05:55:37+00:00",
+            "sha256": "45778af5268855a6"
+          }
+        ]
+      }
+    }
+  },
+  "sources": [
+    {
+      "source": "Take Me Fishing \u2014 5 best summer bass lures (May 2017)",
+      "url": "https://www.takemefishing.org/blog/may-2017/5-best-summer-bass-lures-warm-weather-favorites/",
+      "sha256": "41c2a1f90f38004d",
+      "fetched_at": "2026-09-19T05:55:37+00:00"
+    },
+    {
+      "source": "Take Me Fishing \u2014 Fall bass fishing lures & tips (Oct 2017)",
+      "url": "https://www.takemefishing.org/blog/october-2017/catch-more-fish-with-these-fall-bass-fishing-lures-tips/",
+      "sha256": "45778af5268855a6",
+      "fetched_at": "2026-09-19T05:55:37+00:00"
+    }
+  ]
+}

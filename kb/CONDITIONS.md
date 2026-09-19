@@ -30,7 +30,7 @@ deterministically, without letting any one signal drive a tie.
 | **Cover** | `kb/substrate.json` (`entries[id][bottom]`) | `--bottom grass\|muck\|sand\|rock\|wood` (CLI + web form) | tie-break fit, this pass |
 | **Mood** | `kb/presentation.json` (classes) | `lake_state` (post-turnover → suspended fish) | existing: suspend +0.5, fall +0.25 |
 | **Clarity** | `kb/principles.json` (color rules) | light + cloud + lake_state | color selection only — **no rig score** (a rig fit here would double-count light/cloud) |
-| **Season** | `kb/season.json` *(future)* | date / water temp | deferred until T1/T2 evidence separates the tied rigs |
+| **Season** | `kb/season.json` | report month (N. hemisphere) | shipped: T2-sourced summer/fall fits; spring/winter null |
 
 `purpose` groups in `kb/terminal.json` / `kb/baits.json` remain the
 deterministic "also:" alternatives and are **never** scored — no double count.
@@ -79,12 +79,37 @@ The T5 owner seeds keep their raw values; the scorer's cap normalizes them to
 the same ±0.5 layer as sourced fits. `kb/pending/substrate/` holds the
 promotion drafts (one per entry) that label each fit and add the T2 fits.
 
+## Season — shipped (T2, summer/fall)
+
+`kb/season.json` maps the report month to a phase (Mar–May spring, Jun–Aug
+summer, Sep–Nov fall, Dec–Feb winter) and carries only the phases with sourced
+claims; everything else is a null-safe no-op. v1 is **N. hemisphere only**.
+
+| Rig | summer | fall | T2 basis |
+|---|---|---|---|
+| Texas-rigged worm | **+2** | **−1** | "warm weather winners"; "slow, bottom crawling soft plastic rigs … no longer attract the same attention" |
+| Carolina rig | **+2** | **−1** | same claims (deep-water search lure) |
+| Neko rig | — | **−1** | bottom-crawling soft plastic (nail-weight drag) |
+| Drop shot | — | — | not "bottom crawling" — the fall claim does not apply |
+| Wacky-rigged Senko | — | — | falling dead-stick, not bottom crawling |
+
+At the scoring scale (×0.25, cap ±0.5) this separates the stable-conditions
+tie without a declared bottom: **summer** → Texas/Carolina lead;
+**fall** → drop shot/wacky lead. Spring and winter remain unsourced and
+therefore tied — do not invent claims for them. The summer quote is verbatim
+from `takemefishing.org/blog/may-2017/…`; the fall quote from
+`…/october-2017/…`; each fit carries `sha256` + `fetched_at`. Acceptance:
+the 12-session replay held **5 exact / 3 style / 2 miss** after the layer
+landed (2026-09-19), and before/after reports are in
+`reports/season-pass-{before,after}.md`.
+
 ## Deferred dimensions (evidence recorded, not scored)
 
-- **Season.** T2 Take Me Fishing: the Ned rig "can be one of the best fishing
-  rigs to use during the fall and winter months when largemouth get
-  lethargic." Strong, but Ned is not in the tie cluster; no comparable T2
-  claim yet for the tied five. `kb/season.json` waits for that evidence.
+- **Ned season (recorded, not scored).** T2 Take Me Fishing: the Ned rig "can
+  be one of the best fishing rigs to use during the fall and winter months
+  when largemouth get lethargic." Ned is not in the tie cluster and its
+  existing 40–70°F band already covers the cold window — scoring this too
+  would double-count temperature.
 - **Mood.** T2 Take Me Fishing: the drop shot presents a bait "above the
   bottom to bass that are suspended just above the bottom"; T2 Minnesota
   article: Carolina "works well for bottom-hugging bass". These fit

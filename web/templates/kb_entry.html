@@ -46,6 +46,22 @@
 </ul>
 {% endif %}
 
+{% if season %}
+<h2 class="rule-double">Season fit <span class="fine">(capped tie-break layer)</span></h2>
+<ul class="plain">
+  {% for phase, fit in season.items() %}
+  <li><strong>{{ phase }}</strong> — fit {{ fit.fit }} <span class="fine">({{ fit.confidence }})</span>
+    {% if fit.note %}<div class="fine">{{ fit.note }}</div>{% endif %}
+    {% for cit in fit.citations or [] %}
+    <blockquote class="fine">“{{ cit.quote }}”
+      — {% if cit.url %}<a href="{{ cit.url }}" target="_blank" rel="noopener">{{ cit.source }}</a>{% else %}{{ cit.source }}{% endif %}
+      <span class="fine">({{ (cit.fetched_at or '')[:10] }})</span></blockquote>
+    {% endfor %}
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+
 <h2 class="rule-double">Sources</h2>
 {% if prov.source_url %}
 <p><span class="badge ok">{{ prov.confidence }}</span>

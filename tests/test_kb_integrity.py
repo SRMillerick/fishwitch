@@ -67,6 +67,22 @@ class KBSchemaTest(unittest.TestCase):
                     if ref:
                         self.assertIn(ref, terminal | baits, f"{name}/{eid}.{part}: dangling ref {ref}")
 
+    def test_season_table_is_narrow_and_sourced(self):
+        d = json.loads((KB / "season.json").read_text())
+        self.assertEqual(set(d.get("month_phase", {})), {str(m) for m in range(1, 13)})
+        self.assertEqual(set(d.get("phases", [])), {"spring", "summer", "fall", "winter"})
+        for eid, phases in (d.get("entries") or {}).items():
+            for phase, fit in phases.items():
+                self.assertIn(phase, d["phases"], f"{eid}: unknown phase {phase}")
+                self.assertLessEqual(abs(fit.get("fit", 0)), 2, f"{eid}/{phase}")
+                self.assertIn(fit.get("confidence"), CONFIDENCE, f"{eid}/{phase}")
+                if fit.get("confidence") == "sourced":
+                    cits = fit.get("citations") or []
+                    self.assertTrue(cits, f"{eid}/{phase}: sourced without citations")
+                    for c in cits:
+                        self.assertTrue(c.get("sha256"), f"{eid}/{phase}: no sha256")
+                        self.assertTrue(c.get("fetched_at"), f"{eid}/{phase}: no fetched_at")
+
     def test_presentation_classes_are_known(self):
         d = json.loads((KB / "presentation.json").read_text())
         classes = set(d.get("classes") or [])
