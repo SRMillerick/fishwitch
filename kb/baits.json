@@ -1,0 +1,294 @@
+{
+  "baits": [
+    {
+      "id": "abstract",
+      "label": "The Abstract (6th Sense)",
+      "kind": "soft-plastic",
+      "style": "urchin",
+      "sizes": [
+        "12mm",
+        "18mm",
+        "24mm",
+        "28mm"
+      ],
+      "material": "HyperStretch",
+      "profile": "barrel-shaped body with flat ends; wide flat appendages; urchin-style",
+      "buoyancy": "enhanced",
+      "weight_slot": "integrated Neko nail-weight slot",
+      "rigs": [
+        "neko",
+        "wacky",
+        "trig"
+      ],
+      "note": "urchin-style plastic with a Neko nail-weight slot; owner cross-refs: Hideout Coike, Berkley Omoeba",
+      "rigging_rule": "the hook needs to be larger/wider than the central ball of that kind of bait; if the hook doesn't extend beyond that central ball, you will lose fish or miss your hookset",
+      "field_notes": [
+        "owner rig: 24mm green/blue Abstract, 3/0 treble hook, two 1/8 oz tungsten screw neko-style weights (1/4 oz total)",
+        "owner: medium-heavy rod required \u2014 lighter rods feel loaded like weeds; casting is challenging (poor aerodynamics)",
+        "owner: bite is sudden, hookup instant/hard",
+        "owner buoyancy: neutral \u2014 TPE urchin baits weigh a bit but won't sink unless weighted (maker copy says 'floating')",
+        "Jack's setup (2026-09-13): 24mm green pumpkin blue Abstract, 1/0 treble, 3/16 oz VMC neko weight \u2014 12 lb (lake-record class) plus 7/6/5/3/3 in one Sunday session",
+        "Jack's line (2026-09-13): braid tied directly to the hook with no leader \u2014 against the finesse-leader convention, and it still produced the 12 lb"
+      ],
+      "citations": [
+        {
+          "claim": "urchin-style profile",
+          "tier": "T1",
+          "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
+          "url": "https://6thsensefishing.com/products/abstract",
+          "quote": "The Abstract takes the proven urchin-style profile and pushes it further with increased water displacement, responsive appendage action, and exceptional rigging versatility.",
+          "found": true,
+          "fetched_at": "2026-09-19T03:42:11+00:00",
+          "sha256": "0a2f44142840e7bf"
+        },
+        {
+          "claim": "sizes",
+          "tier": "T1",
+          "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
+          "url": "https://6thsensefishing.com/products/abstract",
+          "quote": "Available in 12mm, 18mm, 24mm, and 28mm sizes, the lineup scales from subtle finesse presentations for pressured fish to larger offerings designed to attract quality bites.",
+          "found": true,
+          "fetched_at": "2026-09-19T03:42:11+00:00",
+          "sha256": "0a2f44142840e7bf"
+        },
+        {
+          "claim": "body shape",
+          "tier": "T1",
+          "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
+          "url": "https://6thsensefishing.com/products/abstract",
+          "quote": "At the center of the design is a distinctive barrel-shaped body with flat ends that helps maintain a stable, natural posture throughout the presentation.",
+          "found": true,
+          "fetched_at": "2026-09-19T03:42:11+00:00",
+          "sha256": "0a2f44142840e7bf"
+        },
+        {
+          "claim": "Neko weight slot",
+          "tier": "T1",
+          "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
+          "url": "https://6thsensefishing.com/products/abstract",
+          "quote": "An integrated weight slot simplifies rigging with Neko nail weights, hooks, and other terminal tackle",
+          "found": true,
+          "fetched_at": "2026-09-19T03:42:11+00:00",
+          "sha256": "0a2f44142840e7bf"
+        },
+        {
+          "claim": "hook width rule for urchin/dice-style baits",
+          "tier": "T5",
+          "source": "owner field observation \u2014 Sean Millerick, 2026-09-18",
+          "url": null,
+          "quote": "the hook needs to be larger/wider than the central ball of that kind of bait; if the hook doesn't extend beyond that central ball, you will lose fish or miss your hookset",
+          "found": true,
+          "fetched_at": "2026-09-19T03:42:11+00:00",
+          "sha256": null,
+          "note": "style-wide rigging rule; pending calibration/sourcing"
+        },
+        {
+          "claim": "market timing",
+          "tier": "T5",
+          "source": "owner field observation \u2014 Sean Millerick, 2026-09-18",
+          "url": null,
+          "quote": "the dice/urchin style did not become popular until 2026",
+          "found": true,
+          "fetched_at": "2026-09-19T03:42:11+00:00",
+          "sha256": null
+        },
+        {
+          "claim": "owner rig",
+          "tier": "T5",
+          "source": "owner field observation \u2014 Sean Millerick, 2026-09-18",
+          "url": null,
+          "quote": "runs a 24mm Abstract in green/blue with a 3/0 treble hook and two 1/8 oz tungsten screw neko-style weights (1/4 oz total)",
+          "found": true,
+          "fetched_at": "2026-09-19T03:48:04+00:00",
+          "sha256": null
+        },
+        {
+          "claim": "owner rod requirement",
+          "tier": "T5",
+          "source": "owner field observation \u2014 Sean Millerick, 2026-09-18",
+          "url": null,
+          "quote": "you need a medium-heavy rod to run that, otherwise it feels like you have weeds on the line all the time",
+          "found": true,
+          "fetched_at": "2026-09-19T03:48:04+00:00",
+          "sha256": null
+        },
+        {
+          "claim": "owner casting",
+          "tier": "T5",
+          "source": "owner field observation \u2014 Sean Millerick, 2026-09-18",
+          "url": null,
+          "quote": "casting it is challenging, aerodynamics do it no favors",
+          "found": true,
+          "fetched_at": "2026-09-19T03:48:04+00:00",
+          "sha256": null
+        },
+        {
+          "claim": "owner hookup",
+          "tier": "T5",
+          "source": "owner field observation \u2014 Sean Millerick, 2026-09-18",
+          "url": null,
+          "quote": "the bite is sudden and hookup is instant/hard",
+          "found": true,
+          "fetched_at": "2026-09-19T03:48:04+00:00",
+          "sha256": null
+        },
+        {
+          "claim": "owner buoyancy observation",
+          "tier": "T5",
+          "source": "owner field observation \u2014 Sean Millerick, 2026-09-18",
+          "url": null,
+          "quote": "the dice/urchin baits in TPE seem to have a neutral buoyancy, they weigh a bit, but they won't sink unless you weight them",
+          "found": true,
+          "fetched_at": "2026-09-19T03:48:04+00:00",
+          "sha256": null
+        },
+        {
+          "claim": "Jack's 12 lb setup",
+          "tier": "T5",
+          "source": "owner report of Jack's session \u2014 Sean Millerick, 2026-09-18",
+          "url": null,
+          "quote": "Jack caught his 12 pounder and his other Sunday fish on the 24mm Abstract with a 1/0 treble and a 3/16 oz VMC neko weight",
+          "found": true,
+          "fetched_at": "2026-09-19T03:54:01+00:00",
+          "sha256": null
+        },
+        {
+          "claim": "Jack's line setup (no leader)",
+          "tier": "T5",
+          "source": "owner report of Jack's session \u2014 Sean Millerick, 2026-09-18",
+          "url": null,
+          "quote": "he was also tying his braid directly to the hook, no leader, which was interesting, but it worked",
+          "found": true,
+          "fetched_at": "2026-09-19T03:54:35+00:00",
+          "sha256": null
+        }
+      ],
+      "provenance": {
+        "seed_author": "pi research 2026-09-18",
+        "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
+        "source_url": "https://6thsensefishing.com/products/abstract",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-19T03:55:28+00:00",
+        "note": "text sha 0a2f44142840e7bf; fetched 2026-09-19T03:42:11+00:00; maker specs quoted (T1); hook-width rule is T5 owner observation"
+      }
+    },
+    {
+      "id": "prickly-pear",
+      "label": "Hag's Prickly Pear",
+      "kind": "soft-plastic",
+      "style": "urchin",
+      "sizes": [
+        "9.9mm (2-pack)",
+        "19mm (1-pack)"
+      ],
+      "material": "TPE floating plastic",
+      "profile": "floating central ball with thin whipping tentacles; stands up on the bottom",
+      "buoyancy": "floating",
+      "weight_slot": null,
+      "rigs": [
+        "ned",
+        "jig"
+      ],
+      "note": "floating tentacled urchin-style bait; maker suggests flip/drag/jig/Ned",
+      "rigging_rule": "the hook needs to be larger/wider than the central ball of that kind of bait; if the hook doesn't extend beyond that central ball, you will lose fish or miss your hookset",
+      "field_notes": [
+        "owner buoyancy: neutral \u2014 TPE urchin baits weigh a bit but won't sink unless weighted (maker copy says 'floating')"
+      ],
+      "citations": [
+        {
+          "claim": "identity",
+          "tier": "T1",
+          "source": "Hags Baits product page (hagsbaits.com, Wix store)",
+          "url": "https://www.hagsbaits.com/product-page/hag-s-prickly-pear",
+          "quote": "Meet the Hag's Prickly Pear-the floating, tentacled nightmare that bass cannot resist.",
+          "found": true,
+          "fetched_at": "2026-09-19T03:42:11+00:00",
+          "sha256": "3ded6e14f9b9a685"
+        },
+        {
+          "claim": "material & action",
+          "tier": "T1",
+          "source": "Hags Baits product page (hagsbaits.com, Wix store)",
+          "url": "https://www.hagsbaits.com/product-page/hag-s-prickly-pear",
+          "quote": "Built from TPE floating plastic, this thing stands up, fights back, and keeps working long after every other bait dies on the bottom.",
+          "found": true,
+          "fetched_at": "2026-09-19T03:42:11+00:00",
+          "sha256": "3ded6e14f9b9a685"
+        },
+        {
+          "claim": "tentacles",
+          "tier": "T1",
+          "source": "Hags Baits product page (hagsbaits.com, Wix store)",
+          "url": "https://www.hagsbaits.com/product-page/hag-s-prickly-pear",
+          "quote": "Those thin, whipping tentacles? They don't just move-they taunt fish into striking.",
+          "found": true,
+          "fetched_at": "2026-09-19T03:42:11+00:00",
+          "sha256": "3ded6e14f9b9a685"
+        },
+        {
+          "claim": "sizes",
+          "tier": "T1",
+          "source": "Hags Baits product page (hagsbaits.com, Wix store)",
+          "url": "https://www.hagsbaits.com/product-page/hag-s-prickly-pear",
+          "quote": "Available in: \u20229.9 mm (2 pack) - finesse assassin \u202219 mm (1 pack) - big-profile homewrecker",
+          "found": true,
+          "fetched_at": "2026-09-19T03:42:11+00:00",
+          "sha256": "3ded6e14f9b9a685"
+        },
+        {
+          "claim": "rigging",
+          "tier": "T1",
+          "source": "Hags Baits product page (hagsbaits.com, Wix store)",
+          "url": "https://www.hagsbaits.com/product-page/hag-s-prickly-pear",
+          "quote": "Flip it. Drag it. Pin it to a jig. Hell, throw it on a Ned rig and watch it come alive.",
+          "found": true,
+          "fetched_at": "2026-09-19T03:42:11+00:00",
+          "sha256": "3ded6e14f9b9a685"
+        },
+        {
+          "claim": "hook width rule for urchin/dice-style baits",
+          "tier": "T5",
+          "source": "owner field observation \u2014 Sean Millerick, 2026-09-18",
+          "url": null,
+          "quote": "the hook needs to be larger/wider than the central ball of that kind of bait; if the hook doesn't extend beyond that central ball, you will lose fish or miss your hookset",
+          "found": true,
+          "fetched_at": "2026-09-19T03:42:11+00:00",
+          "sha256": null,
+          "note": "style-wide rigging rule; pending calibration/sourcing"
+        },
+        {
+          "claim": "market timing",
+          "tier": "T5",
+          "source": "owner field observation \u2014 Sean Millerick, 2026-09-18",
+          "url": null,
+          "quote": "the dice/urchin style did not become popular until 2026",
+          "found": true,
+          "fetched_at": "2026-09-19T03:42:11+00:00",
+          "sha256": null
+        },
+        {
+          "claim": "owner buoyancy observation",
+          "tier": "T5",
+          "source": "owner field observation \u2014 Sean Millerick, 2026-09-18",
+          "url": null,
+          "quote": "the dice/urchin baits in TPE seem to have a neutral buoyancy, they weigh a bit, but they won't sink unless you weight them",
+          "found": true,
+          "fetched_at": "2026-09-19T03:48:04+00:00",
+          "sha256": null
+        }
+      ],
+      "provenance": {
+        "seed_author": "pi research 2026-09-18",
+        "source": "Hags Baits product page (hagsbaits.com, Wix store)",
+        "source_url": "https://www.hagsbaits.com/product-page/hag-s-prickly-pear",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-19T03:55:28+00:00",
+        "note": "text sha 3ded6e14f9b9a685; fetched 2026-09-19T03:42:11+00:00; maker specs quoted (T1); hook-width rule is T5 owner observation"
+      }
+    }
+  ],
+  "label": "Baits",
+  "_note": "Cross-species bait entities. A bait is a product; a rig is how it is presented. Rig specs reference bait ids; maker shape/material/size claims are quoted (T1), owner rigging rules are T5 until sourced/calibrated."
+}

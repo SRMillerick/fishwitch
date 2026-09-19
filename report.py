@@ -578,6 +578,11 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
         _, sfit = tx.substrate_fit(c["id"], m.get("bottom"))
         L.append(f"- {c['label']}" + (f" — {c['note']}" if c.get("note") else "") + _box(c)
                  + (f" — *{sfit}*" if sfit else ""))
+        spec = tx.rig_spec(c["id"])
+        if spec:
+            L.append(f"    - *build: {tx.spec_line(spec)}*")
+            if spec.get("source"):
+                L.append(f"      *({spec['source']})*")
     unmatched = m["match"]["unmatched"]
     if unmatched:
         L.append(f"- *(no match in the KB for: {', '.join(unmatched)} — still bring them)*")

@@ -342,6 +342,7 @@ function renderTackle(rods) {
       h += " · <a href='/out/" + encodeURIComponent(r.id) + "/" + encodeURIComponent(o.retailer) + "?src=tackle' target='_blank' rel='sponsored noopener'>" + esc(o.retailer_label || o.retailer) +
         "</a> <span class='fine'>(" + esc(o.disclosure) + ")</span>";
     if (r.components && r.components.length) h += buildList(r.id, r.components, "tackle");
+    if (r.spec_line) h += "<div class='fine'><span class='sc'>build:</span> " + esc(r.spec_line) + "</div>";
     h += "<div class='fine'>" + esc(r.source) +
       (r.source_url ? " · <a href='" + r.source_url + "' target='_blank' rel='noopener'>source</a>" : "") + "</div></li>";
   }

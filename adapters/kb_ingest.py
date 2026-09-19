@@ -246,20 +246,75 @@ def review_queue() -> list[Path]:
 
 
 def promote(species: str, entry_id: str, verified_by: str) -> Path | None:
-    """Merge pending draft into the KB: attach manufacturer specs + real provenance.
+    """Merge a pending draft into the KB. Two shapes:
+      - new_entry: append/replace a full KB entry (with citations + provenance);
+        honors target_file / target_key for cross-species files (baits, terminal…)
+      - spec draft: graft manufacturer_specs / agency_guidance onto an entry
     Technique text stays human-authored — we only graft citations + data."""
     p = PENDING / species / f"{entry_id}.json"
     if not p.exists():
         return None
     draft = json.loads(p.read_text())
-    kb_file = KB / f"{species}.json"
-    kb = json.loads(kb_file.read_text())
+    key = draft.get("target_key") or "cats"
+    kb_file = KB / (draft.get("target_file") or f"{species}.json")
+    if kb_file.exists():
+        kb = json.loads(kb_file.read_text())
+    else:
+        kb = {key: [],
+              "label": draft.get("target_label") or kb_file.stem.replace("-", " ").title(),
+              "_note": draft.get("target_note", "")}
+    prov = draft["provenance"]
+    now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+    if draft.get("new_entry"):
+        entry = dict(draft["proposed"])
+        entry["citations"] = draft.get("citations", [])
+        bits = []
+        if prov.get("text_sha256"):
+            bits.append(f"text sha {prov['text_sha256']}")
+        if prov.get("fetched_at"):
+            bits.append(f"fetched {prov['fetched_at']}")
+        note = (("; ".join(bits) + "; ") if bits else "") + \
+               (draft.get("note") or "new entry from a reviewed draft")
+        entry["provenance"] = dict(
+            seed_author=prov.get("seed_author", "kb-ingest"),
+            source=prov.get("source", ""),
+            source_url=prov.get("source_url", ""),
+            confidence=draft.get("confidence", "sourced"),
+            verified_by=verified_by,
+            verified_at=now,
+            note=note)
+        coll = kb.setdefault(key, [])
+        for i, c in enumerate(coll):
+            if c["id"] == entry_id:
+                coll[i] = entry
+                break
+        else:
+            coll.append(entry)
+        kb_file.write_text(json.dumps(kb, indent=2) + "\n")
+        p.unlink()
+        return kb_file
+
+    if draft.get("patch"):
+        for c in kb.setdefault(key, []):
+            if c["id"] == entry_id:
+                for k, v in draft["patch"].items():
+                    if isinstance(v, dict) and isinstance(c.get(k), dict):
+                        c[k] = {**c[k], **v}
+                    else:
+                        c[k] = v
+                if draft.get("citations"):
+                    c.setdefault("citations", []).extend(draft["citations"])
+                break
+        kb_file.write_text(json.dumps(kb, indent=2) + "\n")
+        p.unlink()
+        return kb_file
+
     specs_field = ("agency_guidance" if draft.get("source_type") == "agency"
                    else "manufacturer_specs")
-    for c in kb["cats"]:
+    for c in kb.setdefault(key, []):
         if c["id"] == entry_id:
             c[specs_field] = draft["proposed"]
-            prov = draft["provenance"]
             bits = []
             if prov.get("catalog_sha256"):
                 bits.append(f"catalog sha {prov['catalog_sha256']}")
@@ -275,7 +330,7 @@ def promote(species: str, entry_id: str, verified_by: str) -> Path | None:
                 source_url=prov["source_url"],
                 confidence="sourced",
                 verified_by=verified_by,
-                verified_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                verified_at=now,
                 note=note)
             break
     kb_file.write_text(json.dumps(kb, indent=2) + "\n")

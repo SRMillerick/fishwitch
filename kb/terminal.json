@@ -449,6 +449,89 @@
         "verified_by": "sean",
         "verified_at": "2026-09-17T03:04:47+00:00"
       }
+    },
+    {
+      "id": "jungle-wacky",
+      "label": "Owner Jungle Wacky (weedless wacky hook)",
+      "kind": "terminal",
+      "category": "hook",
+      "brand": "Owner",
+      "sizes": [
+        "#6",
+        "#4",
+        "#2",
+        "#1",
+        "1/0",
+        "2/0",
+        "3/0"
+      ],
+      "weedguard": "titanium wire weedguard (weedless series); non-weedguard series also offered",
+      "material": "Zo-Wire high-carbon steel",
+      "finish": "Silky Gray",
+      "design": "short shank + monster gap",
+      "note": "the 'monster gap' is the hook-width answer for urchin/dice-style baits; owner runs model 4109-116 (1/0, weedless) for wacky rigs",
+      "owner_setup": "1/0 weedless with titanium wire weedguard",
+      "citations": [
+        {
+          "claim": "design",
+          "tier": "T1",
+          "source": "Owner Hooks product page (ownerhooks.com)",
+          "url": "https://www.ownerhooks.com/product/jungle_wacky/",
+          "quote": "Includes a short shank and monster gap for superior hooking abilities.",
+          "found": true,
+          "fetched_at": "2026-09-19T03:51:10+00:00",
+          "sha256": "71676256848bd9c3"
+        },
+        {
+          "claim": "material",
+          "tier": "T1",
+          "source": "Owner Hooks product page (ownerhooks.com)",
+          "url": "https://www.ownerhooks.com/product/jungle_wacky/",
+          "quote": "Made from Zo-Wire which makes hooks 15% stronger by diameter over other high carbon steel hooks.",
+          "found": true,
+          "fetched_at": "2026-09-19T03:51:10+00:00",
+          "sha256": "71676256848bd9c3"
+        },
+        {
+          "claim": "weedguard & finish",
+          "tier": "T1",
+          "source": "Owner Hooks product page (ownerhooks.com)",
+          "url": "https://www.ownerhooks.com/product/jungle_wacky/",
+          "quote": "Also includes Silky Gray finish for superior penetration and Titanium weedguards for weedless presentations.",
+          "found": true,
+          "fetched_at": "2026-09-19T03:51:10+00:00",
+          "sha256": "71676256848bd9c3"
+        },
+        {
+          "claim": "series",
+          "tier": "T1",
+          "source": "Owner Hooks product page (ownerhooks.com)",
+          "url": "https://www.ownerhooks.com/product/jungle_wacky/",
+          "quote": "Also Available in a non-weedguard series.",
+          "found": true,
+          "fetched_at": "2026-09-19T03:51:10+00:00",
+          "sha256": "71676256848bd9c3"
+        },
+        {
+          "claim": "owner's size choice",
+          "tier": "T5",
+          "source": "owner field observation \u2014 Sean Millerick, 2026-09-18",
+          "url": null,
+          "quote": "for wacky rigs I run an Owner 1/0 weedless Jungle Wacky hook with Ti wires",
+          "found": true,
+          "fetched_at": "2026-09-19T03:51:10+00:00",
+          "sha256": null
+        }
+      ],
+      "provenance": {
+        "seed_author": "pi research 2026-09-18",
+        "source": "Owner Hooks product page (ownerhooks.com)",
+        "source_url": "https://www.ownerhooks.com/product/jungle_wacky/",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-19T03:55:29+00:00",
+        "note": "text sha 71676256848bd9c3; fetched 2026-09-19T03:51:10+00:00; maker specs quoted (T1); owner size choice is T5"
+      }
     }
   ]
 }

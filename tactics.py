@@ -88,6 +88,7 @@ def load_line() -> dict:
 _TERMINAL: dict | None = None
 _PRINCIPLES: dict | None = None
 _SUBSTRATE: dict | None = None
+_BAITS: dict | None = None
 
 
 def load_terminal() -> dict:
@@ -96,6 +97,86 @@ def load_terminal() -> dict:
         p = KB_DIR / "terminal.json"
         _TERMINAL = json.loads(p.read_text()) if p.exists() else {"terminal": []}
     return _TERMINAL
+
+
+def load_baits() -> dict:
+    """Cross-species bait entities (kb/baits.json): the product, not the rig."""
+    global _BAITS
+    if _BAITS is None:
+        p = KB_DIR / "baits.json"
+        _BAITS = json.loads(p.read_text()) if p.exists() else {"baits": []}
+    return _BAITS
+
+
+def bait_entry(entry_id: str) -> dict | None:
+    for b in load_baits().get("baits", []):
+        if b.get("id") == entry_id:
+            return b
+    return None
+
+
+def terminal_entry(entry_id: str) -> dict | None:
+    for t in load_terminal().get("terminal", []):
+        if t.get("id") == entry_id:
+            return t
+    return None
+
+
+def rig_spec(entry_id: str) -> dict | None:
+    """The structured tackle-system build for a rig: hook / weight / ring /
+    bait / line. Cross-species `ref`s resolve to their entity labels so the
+    report can print a concrete build. None when the entry has no spec."""
+    e = find_entry(entry_id)
+    spec = (e or {}).get("spec") or {}
+    if not spec:
+        return None
+    out: dict = {}
+    for part in ("hook", "weight", "ring", "bait"):
+        p = spec.get(part)
+        if not isinstance(p, dict):
+            continue
+        p = dict(p)
+        ref = p.get("ref")
+        if ref:
+            ent = terminal_entry(ref) or bait_entry(ref)
+            if ent:
+                p.setdefault("ref_label", ent.get("label"))
+        out[part] = p
+    if spec.get("line"):
+        out["line"] = dict(spec["line"])
+    if spec.get("source"):
+        out["source"] = spec["source"]
+    return out or None
+
+
+def _spec_bit(p: dict, size: bool = False) -> str:
+    label = str(p.get("ref_label") or p.get("type") or p.get("form") or "").strip()
+    if size and p.get("sizes"):
+        s = p["sizes"] if isinstance(p["sizes"], list) else [p["sizes"]]
+        s = [str(x) for x in s if x]
+        if s:
+            label = (label + " " + "\u2013".join(s[:2])).strip()
+    return label
+
+
+def spec_line(spec: dict | None) -> str:
+    """One-line concrete build: 'Owner Jungle Wacky 1/0 · VMC 6mm ring ·
+    5in Senko · 15 lb braid / 16 lb fluoro'."""
+    if not spec:
+        return ""
+    bits = []
+    for part in ("hook", "weight", "ring", "bait"):
+        p = spec.get(part) or {}
+        if p:
+            bits.append(_spec_bit(p, size=True))
+    ln = spec.get("line") or {}
+    if ln.get("main"):
+        line = str(ln["main"])
+        leader = str(ln.get("leader") or "")
+        if leader and leader.lower() not in ("none", "no leader", "-"):
+            line += f" / {leader}"
+        bits.append(line)
+    return " · ".join(b for b in bits if b)
 
 
 def load_principles() -> dict:

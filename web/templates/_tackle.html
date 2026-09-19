@@ -26,6 +26,7 @@
         {% for comp in r.components %}{{ comp.label }}{% set linked = comp.offers | selectattr('url') | list %}{% for o in linked %} <a href="/out/{{ r.id }}/{{ o.retailer }}?comp={{ comp.id }}&src=tackle" target="_blank" rel="sponsored noopener">{{ o.retailer_label or o.retailer }}</a>{% endfor %}{% if not loop.last %} · {% endif %}{% endfor %}
       </div>
       {% endif %}
+      {% if r.spec_line %}<div class="fine">build: {{ r.spec_line }}</div>{% endif %}
       <div class="fine">{{ r.source }}{% if r.source_url %} · <a href="{{ r.source_url }}" target="_blank" rel="noopener">source</a>{% endif %}</div>
     </li>
   {% endfor %}

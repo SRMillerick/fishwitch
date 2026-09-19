@@ -744,7 +744,10 @@ def main():
         for p in drafts:
             d = json.loads(p.read_text())
             prop = d["proposed"]
-            if "quotes" in prop:
+            if d.get("new_entry"):
+                print(f"  {d['species_kb']}/{d['entry_id']}: NEW — {prop.get('label', d['entry_id'])}")
+                print(f"      source: {d['provenance'].get('source_url')}")
+            elif "quotes" in prop:
                 print(f"  {d['species_kb']}/{d['entry_id']}: {prop['agency']} — {prop['page_title']}")
                 print(f"      source: {prop['source_url']}")
             else:

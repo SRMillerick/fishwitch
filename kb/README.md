@@ -71,6 +71,36 @@ source are labelled `unverified-editorial`. The rig component bundles in
 `offers.json` reuse these ids where they overlap, so a "build it" part can
 become a real KB entity. CLI: `fishwitch terminal [--category hook]`.
 
+## Rig specs (`spec` on a species entry)
+
+A rig entry can carry a structured **tackle-system spec** — the concrete build
+the report and shopping list print:
+
+```json
+"spec": {
+  "hook":   {"ref": "jungle-wacky", "sizes": ["1/0"], "note": "weedless"},
+  "weight": {"type": "drop-shot weight", "sizes": ["1/8 oz"]},
+  "ring":   {"type": "VMC 6mm O-ring"},
+  "bait":   {"ref": "abstract", "sizes": ["24mm"]},
+  "line":   {"main": "fluorocarbon", "leader": "none", "rod": "medium-heavy"},
+  "source": "owner field observation (sean, 2026-09-18)",
+  "confidence": "unverified-editorial"
+}
+```
+
+- `ref` points at a `kb/terminal.json` or `kb/baits.json` entity id; the report
+  resolves it to the entity label so the build reads
+  *“Owner Jungle Wacky 1/0 · VMC 6mm O-ring · The Abstract 24mm · fluorocarbon”*
+  (`tactics.rig_spec()` / `tactics.spec_line()`).
+- Every component is optional. Sizes are display ranges, not prescriptions.
+- `source`/`confidence` label owner builds (T5) vs sourced maker specs (T1).
+  Owner builds that differ from a maker's spec live in the entry anyway,
+  labelled — the report distinguishes KB best-fit from the concrete build.
+- Specs are patched through the same pending queue: a draft
+  `{"patch": {"spec": {...}}, "citations": [...]}` is shallow-merged into the
+  entry by `kb-promote` (the patch object is exactly the set of top-level keys
+  to merge — keep the `spec` nesting).
+
 ## Color & clarity principles (`kb/principles.json`)
 
 `{id, label, when, rule, citations, provenance}`. Each `rule` is an **editorial

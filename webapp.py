@@ -359,6 +359,8 @@ def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
         mfg = (c.get("manufacturer_specs") or {})
         rod = dict(id=c["id"], label=c["label"],
                    owned=(c["id"] in owned_ids) if has_box else None,
+                   spec=tx.rig_spec(c["id"]),
+                   spec_line=tx.spec_line(tx.rig_spec(c["id"])),
                    verified=c["provenance"].get("confidence") == "verified"
                    or c["provenance"].get("confidence") == "sourced",
                    source=c["provenance"].get("source", "editorial consensus"),

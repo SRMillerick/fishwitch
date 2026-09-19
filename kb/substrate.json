@@ -47,6 +47,12 @@
         "fit": -2,
         "note": "muck gobbles up the Ned rig"
       }
+    },
+    "chicken": {
+      "grass": {
+        "fit": -2,
+        "note": "effective, but the grass swallows it"
+      }
     }
   }
 }

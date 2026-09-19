@@ -852,6 +852,44 @@
           "quote": "When rigged Texas style, on a drop shot rig, or on a shaky head, the ultra-soft body and natural action make the salt-impregnated Finesse WormZ ideal for virtually all finesse presentations",
           "match": "When rigged Texas style, on a drop shot rig, or on a shaky head, the ultra-soft "
         }
+      },
+      "citations": [
+        {
+          "claim": "owner drop-shot build",
+          "tier": "T5",
+          "source": "owner field observation \u2014 Sean Millerick, 2026-09-18",
+          "url": null,
+          "quote": "drop shot: 1/0 mosquito circle hook; 6in Deception worm / Roboworm MMIII; 1/8 oz weight; 8-9 ft dock cast",
+          "found": true,
+          "fetched_at": "2026-09-19T03:56:42+00:00",
+          "sha256": null
+        }
+      ],
+      "spec": {
+        "hook": {
+          "type": "mosquito circle hook",
+          "sizes": [
+            "1/0"
+          ]
+        },
+        "weight": {
+          "type": "drop-shot weight",
+          "sizes": [
+            "1/8 oz"
+          ]
+        },
+        "bait": {
+          "form": "6in Deception worm / Roboworm MMIII",
+          "sizes": [
+            "6 in"
+          ]
+        },
+        "line": {
+          "main": "fluorocarbon",
+          "note": "kb/line.json finesse pick"
+        },
+        "source": "owner field observation (sean, 2026-09-18); line from kb/line.json",
+        "confidence": "unverified-editorial"
       }
     },
     {
@@ -917,6 +955,44 @@
           "quote": "Equally effective when fished on a Texas rig with a pegged worm weight, on our SMH\u2122 Jighead, or with our Neko ShroomZ\u2122, ZinkerZ\u2122 outfish other soft stick baits due to their incredibly soft and limber composition",
           "match": "Equally effective when fished on a Texas rig with a pegged worm weight, on our S"
         }
+      },
+      "citations": [
+        {
+          "claim": "owner wacky build",
+          "tier": "T5",
+          "source": "owner field observation \u2014 Sean Millerick, 2026-09-18",
+          "url": null,
+          "quote": "wacky: Owner 1/0 weedless Jungle Wacky (Ti weedguard), VMC 6mm rings with VMC pliers (replaced doubled O-rings), 5in green pumpkin Senko",
+          "found": true,
+          "fetched_at": "2026-09-19T03:56:42+00:00",
+          "sha256": null
+        }
+      ],
+      "spec": {
+        "hook": {
+          "ref": "jungle-wacky",
+          "sizes": [
+            "1/0"
+          ],
+          "note": "weedless; titanium weedguard"
+        },
+        "ring": {
+          "type": "VMC 6mm O-ring",
+          "note": "applied with VMC pliers; replaced doubled-up O-rings"
+        },
+        "bait": {
+          "form": "5in Senko",
+          "sizes": [
+            "5 in"
+          ],
+          "note": "green pumpkin"
+        },
+        "line": {
+          "main": "fluorocarbon",
+          "note": "kb/line.json finesse pick"
+        },
+        "source": "owner kit (sean, 2026-09-18); hook ref: Owner Jungle Wacky",
+        "confidence": "unverified-editorial"
       }
     },
     {
@@ -1179,6 +1255,203 @@
           "quote": "The Abstract Description The Abstract takes the proven urchin-style profile and pushes it further with increased water displacement, responsive appendage action, and exceptional rigging versatility",
           "match": "The Abstract Description The Abstract takes the proven urchin-style profile and "
         }
+      },
+      "citations": [
+        {
+          "claim": "owner neko/urchin build",
+          "tier": "T5",
+          "source": "owner field observation \u2014 Sean Millerick, 2026-09-18",
+          "url": null,
+          "quote": "neko/urchin: 24mm Abstract (green/blue), treble 1/0-3/0, two 1/8 oz tungsten screws (Sean) / 3/16 oz VMC (Jack), medium-heavy rod; Jack ran braid direct, no leader",
+          "found": true,
+          "fetched_at": "2026-09-19T03:56:42+00:00",
+          "sha256": null
+        }
+      ],
+      "spec": {
+        "hook": {
+          "type": "treble or wacky/octopus hook",
+          "sizes": [
+            "1/0",
+            "3/0"
+          ],
+          "note": "Sean 3/0 treble; Jack 1/0 treble"
+        },
+        "weight": {
+          "type": "tungsten screw / VMC neko weight",
+          "sizes": [
+            "2x 1/8 oz",
+            "3/16 oz"
+          ]
+        },
+        "bait": {
+          "ref": "abstract",
+          "sizes": [
+            "24mm"
+          ],
+          "note": "green pumpkin blue"
+        },
+        "line": {
+          "main": "fluorocarbon",
+          "note": "Jack ran braid direct, no leader"
+        },
+        "source": "owner field observations (sean, 2026-09-18)",
+        "confidence": "unverified-editorial"
+      }
+    },
+    {
+      "id": "chicken",
+      "label": "Chicken rig (backward weighted Kut Tail)",
+      "style": "power",
+      "depth": "mid",
+      "kind": "rig",
+      "aliases": [
+        "chicken",
+        "chicken rig",
+        "bwwk",
+        "kut tail chicken",
+        "backward wacky weighted kut tail"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day",
+          "golden",
+          "dusk/dawn"
+        ],
+        "wind": [
+          "glass",
+          "chop",
+          "windy"
+        ],
+        "water_temp_f": [
+          50,
+          90
+        ]
+      },
+      "technique": "reverse-Texas weedless hook set about two-thirds down a 7.75in Kut Tail, drywall screw in the tail; slack-line fall off hard cover, lift ~2 ft and drop; reel down and pull with steady pressure",
+      "colors": {},
+      "note": "Yamamoto's weedless Neko \u2014 opens hard cover a Neko can't fish; power rhythm, not a soak",
+      "zones": {
+        "day": "HARD COVER: bridge pilings, barge tieups, docks, rip rap \u2014 slack-line fall, lift and drop",
+        "night": ""
+      },
+      "spec": {
+        "hook": {
+          "type": "straight-shank worm hook",
+          "sizes": [
+            "4/0",
+            "5/0"
+          ],
+          "rigging": "point about an inch behind the egg sack, threaded past it and flipped Texas-style; hook ends ~2/3 down the bait, weedless"
+        },
+        "weight": {
+          "type": "drywall screw (big head)",
+          "placement": "tail end, in the last ~1.5 in of the bait"
+        },
+        "bait": {
+          "form": "Yamamoto Kut Tail worm",
+          "sizes": [
+            "7.75 in",
+            "6.5 in"
+          ]
+        },
+        "line": {
+          "main": "15-20 lb braid",
+          "leader": "16-20 lb fluorocarbon (Sugoi)",
+          "rod": "medium-heavy spinning"
+        }
+      },
+      "citations": [
+        {
+          "claim": "identity & origin",
+          "tier": "T1 (inventor interview)",
+          "source": "Wired2Fish \u2014 Introducing the Chicken Rig for Bass Fishing (TJ Maglio, 2015; quotes Gary Yamamoto)",
+          "url": "https://www.wired2fish.com/fishing-tips/introducing-the-chicken-rig-for-bass-fishing",
+          "quote": "The rig is a modification of the Neko rig (nail weighted Senko), but instead uses the new Yamamoto 7.75 inch Kut Tail worm.",
+          "found": true,
+          "fetched_at": "2026-09-19T03:37:57+00:00",
+          "sha256": "4169784e8548f822"
+        },
+        {
+          "claim": "hook type & size",
+          "tier": "T1 (inventor interview)",
+          "source": "Wired2Fish \u2014 Introducing the Chicken Rig for Bass Fishing (TJ Maglio, 2015; quotes Gary Yamamoto)",
+          "url": "https://www.wired2fish.com/fishing-tips/introducing-the-chicken-rig-for-bass-fishing",
+          "quote": "The key is to use a 4/0 or 5/0 straight-shank, worm hook and insert the point about an inch behind the egg sack of the Kut Tail.",
+          "found": true,
+          "fetched_at": "2026-09-19T03:37:57+00:00",
+          "sha256": "4169784e8548f822"
+        },
+        {
+          "claim": "hook placement & screw weight",
+          "tier": "T1 (inventor interview)",
+          "source": "Wired2Fish \u2014 Introducing the Chicken Rig for Bass Fishing (TJ Maglio, 2015; quotes Gary Yamamoto)",
+          "url": "https://www.wired2fish.com/fishing-tips/introducing-the-chicken-rig-for-bass-fishing",
+          "quote": "When done properly, the hook will be about two thirds of the way down the bait, leaving an inch and a half of the meatiest part of the bait left and insert a standard drywall screw in that portion.",
+          "found": true,
+          "fetched_at": "2026-09-19T03:37:57+00:00",
+          "sha256": "4169784e8548f822"
+        },
+        {
+          "claim": "weedless advantage",
+          "tier": "T1 (inventor interview)",
+          "source": "Wired2Fish \u2014 Introducing the Chicken Rig for Bass Fishing (TJ Maglio, 2015; quotes Gary Yamamoto)",
+          "url": "https://www.wired2fish.com/fishing-tips/introducing-the-chicken-rig-for-bass-fishing",
+          "quote": "It's weedless - The Neko rig is great, but it's not weedless and it can be frustrating to fish around cover because the wacky hook tends to hang up.",
+          "found": true,
+          "fetched_at": "2026-09-19T03:37:57+00:00",
+          "sha256": "4169784e8548f822"
+        },
+        {
+          "claim": "rod & line",
+          "tier": "T1 (inventor interview)",
+          "source": "Wired2Fish \u2014 Introducing the Chicken Rig for Bass Fishing (TJ Maglio, 2015; quotes Gary Yamamoto)",
+          "url": "https://www.wired2fish.com/fishing-tips/introducing-the-chicken-rig-for-bass-fishing",
+          "quote": "Yamamoto generally fishes the Chicken rig on medium heavy spinning tackle, using 15 to 20-pound braid as a mainline with a 16 or 20-pound Sugoi Fluorocarbon leader.",
+          "found": true,
+          "fetched_at": "2026-09-19T03:37:57+00:00",
+          "sha256": "4169784e8548f822"
+        },
+        {
+          "claim": "retrieve",
+          "tier": "T1 (inventor interview)",
+          "source": "Wired2Fish \u2014 Introducing the Chicken Rig for Bass Fishing (TJ Maglio, 2015; quotes Gary Yamamoto)",
+          "url": "https://www.wired2fish.com/fishing-tips/introducing-the-chicken-rig-for-bass-fishing",
+          "quote": "\"I like to cast it out there and let it fall on slack line,\" Yamamoto said. \"Once it hits bottom, I'll lift it up a couple feet and let it drop again.",
+          "found": true,
+          "fetched_at": "2026-09-19T03:37:57+00:00",
+          "sha256": "4169784e8548f822"
+        },
+        {
+          "claim": "hookset",
+          "tier": "T1 (inventor interview)",
+          "source": "Wired2Fish \u2014 Introducing the Chicken Rig for Bass Fishing (TJ Maglio, 2015; quotes Gary Yamamoto)",
+          "url": "https://www.wired2fish.com/fishing-tips/introducing-the-chicken-rig-for-bass-fishing",
+          "quote": "I recommend anglers just reel down and pull with hard steady pressure.",
+          "found": true,
+          "fetched_at": "2026-09-19T03:37:57+00:00",
+          "sha256": "4169784e8548f822"
+        },
+        {
+          "claim": "hard cover",
+          "tier": "T1 (inventor interview)",
+          "source": "Wired2Fish \u2014 Introducing the Chicken Rig for Bass Fishing (TJ Maglio, 2015; quotes Gary Yamamoto)",
+          "url": "https://www.wired2fish.com/fishing-tips/introducing-the-chicken-rig-for-bass-fishing",
+          "quote": "Yamamoto was fishing the Chicken rig around bridge pilings, barge tieups, docks, rip rap, and other hard cover found right in the city of La Crosse.",
+          "found": true,
+          "fetched_at": "2026-09-19T03:37:57+00:00",
+          "sha256": "4169784e8548f822"
+        }
+      ],
+      "provenance": {
+        "seed_author": "pi research session 2026-09-18",
+        "source": "Wired2Fish \u2014 Introducing the Chicken Rig for Bass Fishing (TJ Maglio, 2015; quotes Gary Yamamoto)",
+        "source_url": "https://www.wired2fish.com/fishing-tips/introducing-the-chicken-rig-for-bass-fishing",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-19T03:55:28+00:00",
+        "note": "text sha 4169784e8548f822; fetched 2026-09-19T03:37:57+00:00; mechanism/hook/weight/line/retrieve quotes from the inventor interview; condition bands, zones, spec grouping and one-line technique are editorial"
       }
     }
   ],
