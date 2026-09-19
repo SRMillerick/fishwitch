@@ -280,7 +280,7 @@ if (form) {
     const payload = {
       lake: f.get("lake"), at: date + " " + time,
       hours: f.get("hours"), voice: f.get("voice"), species: f.get("species"),
-      bottom: f.get("bottom"),
+      bottom: f.get("bottom"), clarity: f.get("clarity"),
       profile: getActive() || undefined,
     };
     const out = document.getElementById("report-out");

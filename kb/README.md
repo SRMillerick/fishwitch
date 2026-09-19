@@ -23,12 +23,12 @@ Every entry in `kb/<species>.json` carries `provenance`:
    `confidence != "verified"` shows 🟡 in reports and kb listings until a
    human checks it against the cited source.
 
-## Entry kind: product vs rig
+## Entry kind: product vs rig vs bait
 
 Every entry also carries `kind`:
 
 ```json
-"kind": "product"   // product | rig
+"kind": "product"   // product | rig | bait
 ```
 
 - **`product`** — a discrete purchasable item (crankbait, spinnerbait, skirted
@@ -106,9 +106,12 @@ the report and shopping list print:
 
 ## Presentation classes (`kb/presentation.json`)
 
-`{entries: {entry_id: topwater|swim|suspend|fall|bottom}}` — a T5 editorial
-derivation from each entry's cited `technique` string (drop shot hovers =
-suspend; wacky dead-sticks the fall = fall; trig drags = bottom). The scorer
+`{entries: {entry_id: topwater|swim|suspend|fall|bottom}, class_sources}` — a T5
+editorial derivation from each entry's cited `technique` string (drop shot
+hovers = suspend; wacky dead-sticks the fall = fall; trig drags = bottom).
+`class_sources` now carries one T1/T2 quote per class (CatWalk = topwater,
+ChatterBait = swim, drop-shot "suspended" = suspend, ZinkerZ slow sink = fall,
+Carolina "bottom-hugging" = bottom); the entry→class mapping stays editorial. The scorer
 uses it under post-turnover (suspended fish): suspend +0.5, fall +0.25. It is
 the seed for future clarity/depth dimensions; source each class in a later
 pass. The planetary-hour style bonus is a **+0.25 tint, not a driver** — the

@@ -3,23 +3,23 @@
   "cats": [
     {
       "id": "cut-bait",
-      "label": "Cut bait / chicken liver on bottom",
-      "style": "finesse",
+      "label": "Cut bait",
+      "style": "bait",
       "depth": "deep",
-      "kind": "rig",
+      "kind": "bait",
       "aliases": [
         "cut bait",
-        "liver",
-        "anchovy",
-        "mackerel",
-        "stink bait",
-        "dip bait"
+        "cut shad",
+        "shad",
+        "fish chunks",
+        "dead minnows"
       ],
       "conditions": {
         "light": [
-          "night",
+          "moderate day",
+          "bright day",
           "dusk/dawn",
-          "moderate day"
+          "night"
         ],
         "wind": [
           "glass",
@@ -27,53 +27,52 @@
           "windy"
         ],
         "water_temp_f": [
-          55,
-          95
+          38,
+          68
         ]
       },
-      "technique": "soak it on the bottom; rod in holder",
-      "colors": {},
-      "note": "night specialist \u2014 new-moon nights are prime",
+      "technique": "chunks of fish or dead minnows on a circle hook, fished on the bottom on a slip-sinker rig; a late-winter/early-spring bait",
+      "note": "cold-water catfish bait",
+      "citations": [
+        {
+          "claim": "late winter/spring",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Channel catfish",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/channel-catfish",
+          "quote": "Use cut bait or dead minnows in late winter and spring- just after ice-out.",
+          "found": true,
+          "fetched_at": "2026-09-19T17:14:33+00:00",
+          "sha256": "1bcb43506ed48fe1"
+        },
+        {
+          "claim": "bait options",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Channel catfish",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/channel-catfish",
+          "quote": "Bait options range from nightcrawlers, leeches, chicken blood, chicken liver, chicken or fish guts, crawdads, grasshoppers, water dogs, live and dead minnows, cut bait and a variety of prepared stink baits.",
+          "found": true,
+          "fetched_at": "2026-09-19T17:14:33+00:00",
+          "sha256": "1bcb43506ed48fe1"
+        },
+        {
+          "claim": "circle hooks",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Channel catfish",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/channel-catfish",
+          "quote": "Circle hooks are popular when using live or cut bait.",
+          "found": true,
+          "fetched_at": "2026-09-19T17:14:33+00:00",
+          "sha256": "1bcb43506ed48fe1"
+        }
+      ],
       "provenance": {
         "seed_author": "agency-ingest/1.0",
-        "source": "Iowa DNR technique guide",
+        "source": "Iowa DNR \u2014 Channel catfish",
         "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/channel-catfish",
         "confidence": "sourced",
         "verified_by": "sean",
-        "verified_at": "2026-09-16T23:57:04+00:00",
-        "note": "fetched 2026-09-11T02:54:07+00:00; fixed sentence match (all_of words); technique text human-edited from spec quotes"
-      },
-      "zones": {
-        "night": "SHORE-SHALLOW: flats & bank edges adjacent to deep water \u2014 cats feed shallow after dark",
-        "day": "DEEP: channel holes & cove mouths \u2014 daytime holding water"
-      },
-      "agency_guidance": {
-        "agency": "Iowa DNR",
-        "page_title": "Channel Catfish | Department of Natural Resources",
-        "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/channel-catfish",
-        "quotes": [
-          {
-            "all_of": [
-              "circle hooks"
-            ],
-            "quote": "Circle hooks are popular when using live or cut bait.",
-            "found": true
-          },
-          {
-            "all_of": [
-              "cut bait or dead minnows"
-            ],
-            "quote": "Use cut bait or dead minnows in late winter and spring- just after ice-out.",
-            "found": true
-          },
-          {
-            "all_of": [
-              "water temperature is less than 60"
-            ],
-            "quote": "Made of half-rotten fish, use this bait when the water temperature is less than 60 degrees.",
-            "found": true
-          }
-        ]
+        "verified_at": "2026-09-19T17:14:35+00:00",
+        "note": "cut-bait entry \u2014 condition bands are editorial; quotes are the facts"
       }
     },
     {
@@ -146,6 +145,79 @@
             "found": true
           }
         ]
+      }
+    },
+    {
+      "id": "stink-bait",
+      "label": "Prepared stink bait",
+      "style": "bait",
+      "depth": "deep",
+      "kind": "bait",
+      "aliases": [
+        "stink bait",
+        "stinkbait",
+        "prepared bait",
+        "cheese bait",
+        "dip bait"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day",
+          "dusk/dawn",
+          "night"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          60,
+          95
+        ]
+      },
+      "technique": "bait-holder hook or sponge, fished on the bottom on a slip-sinker rig; the warm-water standard for pan-sized cats",
+      "note": "warm-water prepared bait",
+      "citations": [
+        {
+          "claim": "switch at 70F+",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Channel catfish",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/channel-catfish",
+          "quote": "Many catfish anglers switch to prepared baits when water temperatures warm to 70 degrees and above.",
+          "found": true,
+          "fetched_at": "2026-09-19T17:14:33+00:00",
+          "sha256": "1bcb43506ed48fe1"
+        },
+        {
+          "claim": "mid-summer peak",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Channel catfish",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/channel-catfish",
+          "quote": "Prepared bait is most effective for pan-sized catfish in mid-summer (June, July and August).",
+          "found": true,
+          "fetched_at": "2026-09-19T17:14:33+00:00",
+          "sha256": "1bcb43506ed48fe1"
+        },
+        {
+          "claim": "bait options",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Channel catfish",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/channel-catfish",
+          "quote": "Bait options range from nightcrawlers, leeches, chicken blood, chicken liver, chicken or fish guts, crawdads, grasshoppers, water dogs, live and dead minnows, cut bait and a variety of prepared stink baits.",
+          "found": true,
+          "fetched_at": "2026-09-19T17:14:33+00:00",
+          "sha256": "1bcb43506ed48fe1"
+        }
+      ],
+      "provenance": {
+        "seed_author": "agency-ingest/1.0",
+        "source": "Iowa DNR \u2014 Channel catfish",
+        "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/channel-catfish",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-19T17:14:35+00:00",
+        "note": "stink-bait entry \u2014 condition bands are editorial; quotes are the facts"
       }
     }
   ],

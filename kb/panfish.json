@@ -126,6 +126,142 @@
         "page_title": "The Best Spring Fishing Bait and Lures for Panfish - Take Me Fishing",
         "source_url": "https://www.takemefishing.org/blog/april-2022/the-best-spring-fishing-bait-and-lures-for-panfish/"
       }
+    },
+    {
+      "id": "cricket",
+      "label": "Cricket / grasshopper",
+      "style": "bait",
+      "depth": "shallow",
+      "kind": "bait",
+      "aliases": [
+        "crickets",
+        "grasshopper",
+        "grasshoppers",
+        "hoppers",
+        "catalpa worm"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day",
+          "dusk/dawn",
+          "golden"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          55,
+          85
+        ]
+      },
+      "technique": "small thin-wire hook under a bobber; let it kick and drift naturally over beds and weed edges",
+      "note": "summer/fall live bait for panfish",
+      "citations": [
+        {
+          "claim": "other live baits",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Bluegill",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/bluegill",
+          "quote": "Other live baits used include grasshoppers, crickets, catalpa worms, or any artificial scented baits that mimic a worm or grub.",
+          "found": true,
+          "fetched_at": "2026-09-19T17:14:33+00:00",
+          "sha256": "007755b8345861af"
+        },
+        {
+          "claim": "thin wire hooks",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Bluegill",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/bluegill",
+          "quote": "Thin wire hooks work best with live bait because the bait stays alive longer and is more tempting to fish as it squirms on the hook.",
+          "found": true,
+          "fetched_at": "2026-09-19T17:14:33+00:00",
+          "sha256": "007755b8345861af"
+        }
+      ],
+      "provenance": {
+        "seed_author": "agency-ingest/1.0",
+        "source": "Iowa DNR \u2014 Bluegill",
+        "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/bluegill",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-19T17:14:34+00:00",
+        "note": "panfish cricket bait entry \u2014 condition bands are editorial; quotes are the facts"
+      }
+    },
+    {
+      "id": "live-worm",
+      "label": "Live worm (panfish)",
+      "style": "bait",
+      "depth": "shallow",
+      "kind": "bait",
+      "aliases": [
+        "worm",
+        "worms",
+        "piece of worm",
+        "red worm",
+        "redworms"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day",
+          "dusk/dawn",
+          "golden"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          45,
+          85
+        ]
+      },
+      "technique": "pinch to an inch or two for small mouths, fished under a small bobber or slowly on the bottom near weed edges and brush",
+      "note": "the all-time panfish live bait",
+      "citations": [
+        {
+          "claim": "favorite live bait",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Bluegill",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/bluegill",
+          "quote": "Worms are the all-time favorite live bait.",
+          "found": true,
+          "fetched_at": "2026-09-19T17:14:33+00:00",
+          "sha256": "007755b8345861af"
+        },
+        {
+          "claim": "size for small mouths",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Bluegill",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/bluegill",
+          "quote": "Anglers often pinch off only an inch or two of worm to fish with since bluegill have small mouths.",
+          "found": true,
+          "fetched_at": "2026-09-19T17:14:33+00:00",
+          "sha256": "007755b8345861af"
+        },
+        {
+          "claim": "summer cover",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Bluegill",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/bluegill",
+          "quote": "To catch mid-summer bluegill in lakes, reservoirs and ponds, try live bait or small lures near the edges of weed beds, brush/rock piles, submerged extensions of shoreline points, humps or flats that drop into creek channels.",
+          "found": true,
+          "fetched_at": "2026-09-19T17:14:33+00:00",
+          "sha256": "007755b8345861af"
+        }
+      ],
+      "provenance": {
+        "seed_author": "agency-ingest/1.0",
+        "source": "Iowa DNR \u2014 Bluegill",
+        "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/bluegill",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-19T17:14:34+00:00",
+        "note": "panfish live-worm bait entry \u2014 condition bands are editorial; quotes are the facts"
+      }
     }
   ],
   "provenance": {

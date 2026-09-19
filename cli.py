@@ -193,7 +193,7 @@ def cmd_report(args):
     model = generate(profile, lake, at, hours=hours,
                      species=args.species or profile.get("species"),
                      voice=args.voice or profile.get("astro_display"),
-                     bottom=args.bottom)
+                     bottom=args.bottom, clarity=args.clarity)
     md = to_markdown(model)
     print(md)
     p = save(model, md)
@@ -574,6 +574,8 @@ def main():
                     help="sky-layer presentation (default: profile setting, else astro)")
     rp.add_argument("--bottom", choices=["grass", "muck", "sand", "rock", "wood"],
                     help="bottom you're fishing — applies substrate presentation fit")
+    rp.add_argument("--clarity", choices=["clear", "stained"],
+                    help="declared water clarity — color vs contrast selection")
     rp.add_argument("--gpx", help="also export prime-window waypoints to this GPX path")
 
     bp = sub.add_parser("best", help="scan a day for optimal fishing windows")

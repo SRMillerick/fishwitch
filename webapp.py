@@ -374,12 +374,12 @@ def _responsive_tables(html: str) -> str:
 
 def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
                    voice: str | None, species: str | None,
-                   bottom: str | None = None) -> dict:
+                   bottom: str | None = None, clarity: str | None = None) -> dict:
     wx = shared_weather(lake["lat"], lake["lng"])
     hist = shared_history(lake["lat"], lake["lng"], at)
     m = gen(profile, lake, at, hours=hours, species=species,
             voice=voice or profile.get("astro_display") or "almanac",
-            wx=wx, hist=hist, bottom=bottom)
+            wx=wx, hist=hist, bottom=bottom, clarity=clarity)
     body = _md.markdown(to_markdown(m, emoji=False, show_gap=False), extensions=["tables"])
     body = _responsive_tables(body)
     prime = m.get("prime")
@@ -441,16 +441,17 @@ def _report_response(payload: dict, anonymous: bool) -> dict:
     bottom = payload.get("bottom")
     if bottom not in ("grass", "muck", "sand", "rock", "wood"):
         bottom = None
+    clarity = tx.normalize_clarity(payload.get("clarity")) or None
     profile, errs = ({}, []) if anonymous else _client_profile(payload)
     if errs:
         return dict(error="profile rejected", details=errs)
 
     def run():
-        return _render_report(profile, lake, at, hours, voice, species, bottom)
+        return _render_report(profile, lake, at, hours, voice, species, bottom, clarity)
 
     if anonymous:  # cacheable — no personal data involved
         key = "anon:" + json.dumps([str(payload.get("lake")), at.isoformat(),
-                                    hours, voice, species, bottom], default=str)
+                                    hours, voice, species, bottom, clarity], default=str)
         return _cached(key, run)
     return run()
 
@@ -486,7 +487,8 @@ def report_page():
              hours=request.args.get("hours") or "2.5",
              voice=request.args.get("voice") or "",
              species=request.args.get("species") or "",
-             bottom=request.args.get("bottom") or "")
+             bottom=request.args.get("bottom") or "",
+             clarity=request.args.get("clarity") or "")
     out = None
     if q["lake"] or q["at"] or q["species"]:
         out = _report_response(q, anonymous=True)
@@ -1027,12 +1029,14 @@ def api_v1_report():
     bottom = request.args.get("bottom")
     if bottom not in ("grass", "muck", "sand", "rock", "wood"):
         bottom = None
+    clarity = tx.normalize_clarity(request.args.get("clarity")) or None
     profile = dict(species=species, astro_display=voice, arsenal=[])
     wx = shared_weather(lake["lat"], lake["lng"])
     hist = shared_history(lake["lat"], lake["lng"], at)
     m = gen(profile, lake, at, hours=hours, species=species, voice=voice,
-            wx=wx, hist=hist, bottom=bottom)
-    body = public_api.report(m, lake.get("id"), lake, at, hours, voice, species, bottom)
+            wx=wx, hist=hist, bottom=bottom, clarity=clarity)
+    body = public_api.report(m, lake.get("id"), lake, at, hours, voice, species, bottom,
+                             clarity=clarity)
     r = jsonify(public_api.envelope(body))
     r.headers["Access-Control-Allow-Origin"] = "*"
     r.headers["Cache-Control"] = "public, max-age=300"

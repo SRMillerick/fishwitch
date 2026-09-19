@@ -1,12 +1,12 @@
 {
   "label": "Presentation behavior",
-  "_note": "T5 editorial synthesis derived from each entry's cited technique text (kb/bass.json technique strings). Classifies how the bait moves in the water; the scorer uses it under post-turnover (fish deep/suspended) and can extend to clarity/depth later. Not independently cited — label and calibrate. Classes: topwater, swim, suspend, fall, bottom.",
+  "_note": "T5 editorial synthesis derived from each entry's cited technique text, now with a per-class citation (`class_sources`, 2026-09-19). Classifies how the bait moves in the water; the scorer uses it under post-turnover (fish deep/suspended). Classes: topwater, swim, suspend, fall, bottom. The class\u2192entry mapping remains editorial and is calibrated by the logbook.",
   "provenance": {
-    "confidence": "unverified-editorial",
+    "confidence": "sourced",
     "author": "kb synthesis (technique-text derive)",
     "seeded_at": "2026-09-18",
     "verified_by": null,
-    "note": "derived from cited technique strings; source each class in a later pass"
+    "note": "class_sources: one T1/T2 quote per class; entry mapping editorial"
   },
   "classes": [
     "topwater",
@@ -35,5 +35,47 @@
     "dropshot": "suspend",
     "wacky": "fall",
     "chicken": "fall"
+  },
+  "class_sources": {
+    "topwater": {
+      "tier": "T1",
+      "source": "6th Sense \u2014 CatWalk product page",
+      "url": "https://6thsensefishing.com/products/catwalk",
+      "quote": "Its keel-shaped belly and balanced body create an effortless walk-the-dog action while letting the bait cut just beneath the surface on each turn, closely imitating a fleeing baitfish struggling to escape.",
+      "fetched_at": "2026-09-19T17:15:59+00:00",
+      "sha256": "984c5583e47578fc"
+    },
+    "swim": {
+      "tier": "T1",
+      "source": "Z-Man \u2014 ChatterBait Elite EVO HD product page",
+      "url": "https://www.zmanfishing.com/products/chatterbait-elite-evo-hd",
+      "quote": "A hybrid molded split-grip keeper with double-wire retainer locks trailers in place, while the trademarked ChatterBlade\u00ae delivers the aggressive hunting action anglers expect.",
+      "fetched_at": "2026-09-19T17:15:59+00:00",
+      "sha256": "de7d96a325970051"
+    },
+    "suspend": {
+      "tier": "T2",
+      "source": "Take Me Fishing \u2014 Bass Fishing Rigs",
+      "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/bass-fishing-rigs/",
+      "quote": "Drop shot rigs are also popular bass fishing rigs as they allow you to present a soft plastic lure above the bottom to bass that are suspended just above the bottom.",
+      "fetched_at": "2026-09-19T17:15:59+00:00",
+      "sha256": "a36e90b5782c7edc"
+    },
+    "fall": {
+      "tier": "T1",
+      "source": "Z-Man \u2014 ZinkerZ product JSON",
+      "url": "https://www.zmanfishing.com/products/zinkerz.json",
+      "quote": "dosed with a heavy slug of salt to counteract the natural buoyancy of the ElaZtech\u00ae material, creating a slow and tantalizing sink rate when fished unweighted",
+      "fetched_at": "2026-09-19T17:15:59+00:00",
+      "sha256": "7b4fe24123f3ee9d"
+    },
+    "bottom": {
+      "tier": "T2",
+      "source": "Take Me Fishing \u2014 Try a Carolina rig for Minnesota bass",
+      "url": "https://www.takemefishing.org/blog/july-2019/try-a-carolina-rig-for-minnesota-bass/",
+      "quote": "A Carolina rig works well for bottom-hugging bass for two reasons.",
+      "fetched_at": "2026-09-19T17:15:59+00:00",
+      "sha256": "181cdfac5f4491e2"
+    }
   }
 }

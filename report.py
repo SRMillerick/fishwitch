@@ -59,9 +59,11 @@ def _slug(s: str) -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
              species: str | None = None, voice: str | None = None,
-             wx: Weather | None = None, hist=None, bottom: str | None = None) -> dict:
+             wx: Weather | None = None, hist=None, bottom: str | None = None,
+             clarity: str | None = None) -> dict:
     species = tx.normalize_species(species or profile.get("species", "bass"))
     voice = voice or profile.get("astro_display") or "astro"
+    clarity_eff = tx.normalize_clarity(clarity or lake.get("clarity")) or None
     if voice not in ("fisher", "almanac", "astro"):
         voice = "astro"
     wx = wx or Weather(lake["lat"], lake["lng"])
@@ -237,7 +239,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         ctx = dict(light=light, cloud=w["cloud"], wind_mph=w["wind_mph"],
                    temp_f=w["temp_f"], water_f=water_f, hour_ruler=hour["ruler"],
                    solunar=sol, moon_fruitful=(mn["fruitful"] if mn else None),
-                   pressure_word=wscore["trend"]["word"],
+                   pressure_word=wscore["trend"]["word"], clarity=clarity_eff,
                    structure_notes=lake.get("structure", []), month=mid.month,
                    lake_state=lake_state, bottom=bottom)
         picks = tx.recommend(ctx, candidates, top_n=2)
@@ -324,6 +326,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
                     temp_f=pw["temp_f"], water_f=water_f, hour_ruler=prime["hour"]["ruler"],
                     solunar=prime["solunar"], moon_fruitful=(mn["fruitful"] if mn else None),
                     pressure_word=wscore["trend"]["word"], month=prime["start"].month,
+                    clarity=clarity_eff,
                     structure_notes=lake.get("structure", []), lake_state=lake_state,
                     bottom=bottom)
         for c in tx.catalog(species):
@@ -354,6 +357,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
                        temp_f=pw["temp_f"], water_f=water_f, hour_ruler=pblk["hour"]["ruler"],
                        solunar=pblk["solunar"], moon_fruitful=(mn["fruitful"] if mn else None),
                        pressure_word=wscore["trend"]["word"], month=pblk["start"].month,
+                       clarity=clarity_eff,
                        structure_notes=lake.get("structure", []), lake_state=lake_state,
                        bottom=bottom)
         owned = owned_ids
@@ -390,7 +394,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
     color = tx.color_principle(dict(
         light=(_cb or {}).get("light"),
         cloud=((_cb or {}).get("wx") or {}).get("cloud", 0),
-        lake_state=lake_state)) if _cb else None
+        lake_state=lake_state, clarity=clarity_eff)) if _cb else None
 
     return dict(
         profile=profile, lake=lake, start=start, end=end, hours=hours,
@@ -409,7 +413,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         heat_streak=streak, state_basis=state_basis, access_note=acc_note,
         water_temp_source=bool(real_temp), water_temp_label=water_temp_label,
         stocking=stocking, forecast=forecast, shoreline=shoreline,
-        bass_phase=bass_phase, water_trend=water_trend,
+        bass_phase=bass_phase, water_trend=water_trend, clarity=clarity_eff,
         scores=dict(weather=wscore["score"], solunar=round(sol_score, 1),
                     astro=round(astro_score, 1), overall=overall,
                     astro_notes=astro_notes),
@@ -564,6 +568,10 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
         rows.append(("Forecast", f"{m['forecast']['label']} agreement — {m['forecast']['summary']}"))
     if m.get("color"):
         rows.append(("Color", m["color"]["rule"]))
+    if m.get("clarity"):
+        rows.append(("Clarity", ("**clear** — colour reads true; natural/translucent patterns work"
+                                 if m["clarity"] == "high"
+                                 else "**stained** — contrast beats colour; go dark/solid or high-viz")))
     if m.get("bottom"):
         rows.append(("Bottom", f"**{m['bottom']}** — substrate fit applied as a capped tie-break (kb/CONDITIONS.md)"))
     if m["solunar"]:
@@ -705,7 +713,7 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
                  f"{LIGHT_LABELS.get(b['light'], b['light'])} | {pick_txt} |")
     L.append("")
 
-    L.append(f"## {e('🎣 ')}Best rigs for these conditions")
+    L.append(f"## {e('🎣 ')}Best presentations for these conditions")
     for c in m["rods"]:
         _, sfit = tx.substrate_fit(c["id"], m.get("bottom"))
         L.append(f"- {c['label']}" + (f" — {c['note']}" if c.get("note") else "") + _box(c)
@@ -807,7 +815,7 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
     ctx = dict(wind_mph=m["weather"]["start"]["wind_mph"], cloud=m["weather"]["start"]["cloud"],
                wind_dir=m["weather"]["start"].get("dir"),
                water_f=m["weather"].get("water_f"), month=m["start"].month,
-               water_trend=m.get("water_trend"),
+               water_trend=m.get("water_trend"), clarity=m.get("clarity"),
                moon_fruitful=(m["moon_note"]["fruitful"] if m["moon_note"] else None),
                pressure_word=m["weather"]["score"]["trend"]["word"],
                structure_notes=m["lake"].get("structure", []),

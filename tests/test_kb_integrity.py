@@ -109,6 +109,15 @@ class KBSchemaTest(unittest.TestCase):
         for eid, cls in (d.get("entries") or {}).items():
             self.assertIn(cls, classes, f"{eid}: {cls} not in the class list")
 
+    def test_every_presentation_class_is_sourced(self):
+        d = json.loads((KB / "presentation.json").read_text())
+        sources = d.get("class_sources") or {}
+        for cls in d.get("classes") or []:
+            src = sources.get(cls) or {}
+            self.assertTrue(src.get("quote"), f"{cls}: no class source quote")
+            self.assertTrue(src.get("sha256"), f"{cls}: no class source sha256")
+            self.assertTrue(src.get("url"), f"{cls}: no class source url")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -28,7 +28,7 @@ deterministically, without letting any one signal drive a tie.
 | Dimension | Home (data) | Input that activates it | Score role |
 |---|---|---|---|
 | **Cover** | `kb/substrate.json` (`entries[id][bottom]`) | `--bottom grass\|muck\|sand\|rock\|wood` (CLI + web form) | tie-break fit, this pass |
-| **Mood** | `kb/presentation.json` (classes) | `lake_state` (post-turnover → suspended fish) | existing: suspend +0.5, fall +0.25 |
+| **Mood** | `kb/presentation.json` (classes) | `lake_state` (post-turnover → suspended fish) | existing: suspend +0.5, fall +0.25; classes now cited (`class_sources`) |
 | **Clarity** | `kb/principles.json` (color rules) | light + cloud + lake_state | color selection only — **no rig score** (a rig fit here would double-count light/cloud) |
 | **Season** | `kb/season.json` | report month (N. hemisphere) | shipped: T2-sourced summer/fall fits; spring/winter null |
 | **Spawn** | `kb/spawn.json` | water temp + warming months | shipped: T2 bands, T5 fits; supersedes season while active |
@@ -135,11 +135,17 @@ rig fits remain T5 until spring sessions exist in the ledger.
   when largemouth get lethargic." Ned is not in the tie cluster and its
   existing 40–70°F band already covers the cold window — scoring this too
   would double-count temperature.
-- **Mood.** T2 Take Me Fishing: the drop shot presents a bait "above the
-  bottom to bass that are suspended just above the bottom"; T2 Minnesota
-  article: Carolina "works well for bottom-hugging bass". These fit
-  `kb/presentation.json` classes, which already score under post-turnover —
-  source the class derivations when the clarity/season passes run.
+- **Mood — classes sourced (2026-09-19).** Every class in
+  `kb/presentation.json` now carries a T1/T2 `class_sources` citation: topwater
+  (6th Sense CatWalk), swim (Z-Man ChatterBait), suspend (Take Me Fishing —
+  drop shot "suspended just above the bottom"), fall (Z-Man ZinkerZ "slow and
+  tantalizing sink rate"), bottom (Take Me Fishing — Carolina
+  "bottom-hugging bass"). The **entry→class mapping remains editorial**. A
+  behavioral mood input still doesn't exist: outside post-turnover the engine
+  has no fish-position signal, so stable-condition ties persist. The evidence
+  that would separate them: an agency source tying a rig to a *derivable*
+  position input (thermocline depth, dissolved oxygen, or a lake-registry
+  `position` field). Do not force it.
 - **Clarity.** The existing color principles already carry the clarity rules
   (contrast vs. color, clear water rewards color). Wiring a clarity *input*
   (lake registry or angler) is a later data-layer task; until then, no rig

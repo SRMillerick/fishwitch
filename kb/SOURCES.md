@@ -36,7 +36,7 @@ allowed but never presented as sourced.
 |---|---|---|---|
 | **Lures / hard baits / plastics** | T1 manufacturer catalog | Shopify `/products.json` (2 hosts live: 6th Sense, Z-Man); JSON-LD/HTML scraper for the rest; manual with URL otherwise | partial |
 | **Rigs** | T2 agency technique guides + T1 maker rigging guides | agency quote extractor (live for Iowa DNR); probe TPWD / MN DNR / CDFW | partial |
-| **Baits (live/cut/prepared)** | T2 agency guides; T1 prepared-bait makers | agency quote extractor | partial |
+| **Baits (live/cut/prepared)** | T2 agency guides; T1 prepared-bait makers | agency quote extractor | **bass 3 · panfish 2 · catfish 2 promoted 2026-09-19** (Iowa DNR) |
 | **Knots** | T1 line-maker guides (Seaguar `/blogs/knot-guide`, Sunline `/pages/knots`) + T2 Take Me Fishing + T3 Wikipedia | new `wikipedia` + generic HTML adapters | **DRAFT `kb/knots.json`** (9 knots, 17 live-verified quotes) |
 | **Line** | T1 manufacturer spec sheets; T3 IGFA line classes; T4 TackleTour tests | manual/spec-page adapter; cite test methodology | not modelled |
 | **Terminal tackle** (hooks, weights, jig heads) | T1 manufacturer specs (Gamakatsu, VMC, Mustad, Owner) | spec-page adapter | not modelled |

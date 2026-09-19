@@ -1830,6 +1830,216 @@
         "verified_at": "2026-09-19T03:55:28+00:00",
         "note": "text sha 4169784e8548f822; fetched 2026-09-19T03:37:57+00:00; mechanism/hook/weight/line/retrieve quotes from the inventor interview; condition bands, zones, spec grouping and one-line technique are editorial"
       }
+    },
+    {
+      "id": "live-crayfish",
+      "label": "Live crayfish",
+      "style": "bait",
+      "depth": "mid",
+      "kind": "bait",
+      "aliases": [
+        "crayfish",
+        "crawfish",
+        "crawdad",
+        "crawdads",
+        "crayfish bait"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day",
+          "dusk/dawn",
+          "night"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          45,
+          85
+        ]
+      },
+      "technique": "nose- or tail-hooked and worked slowly near structure and cover; keep it moving, and match the size the bass are eating",
+      "note": "the natural bait that keeps bass pinned to cover",
+      "citations": [
+        {
+          "claim": "near cover, keep moving",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Largemouth bass",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+          "quote": "Try fishing crayfish, live minnows and frogs in a similar manner near structure and cover; constant movement is the key to success.",
+          "found": true,
+          "fetched_at": "2026-09-19T17:14:33+00:00",
+          "sha256": "8305a97d11589dfa"
+        },
+        {
+          "claim": "keep natural bait active",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Largemouth bass",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+          "quote": "Always keep natural bait active and moving.",
+          "found": true,
+          "fetched_at": "2026-09-19T17:14:33+00:00",
+          "sha256": "8305a97d11589dfa"
+        },
+        {
+          "claim": "match the size",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Largemouth bass",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+          "quote": "Match the size of natural baitfish or crayfish the bass are eating.",
+          "found": true,
+          "fetched_at": "2026-09-19T17:14:33+00:00",
+          "sha256": "8305a97d11589dfa"
+        }
+      ],
+      "provenance": {
+        "seed_author": "agency-ingest/1.0",
+        "source": "Iowa DNR \u2014 Largemouth bass",
+        "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-19T17:14:33+00:00",
+        "note": "live-crayfish bait entry \u2014 condition bands are editorial; quotes are the facts"
+      }
+    },
+    {
+      "id": "live-minnow",
+      "label": "Live minnow",
+      "style": "bait",
+      "depth": "mid",
+      "kind": "bait",
+      "aliases": [
+        "minnow",
+        "live minnows",
+        "shiner",
+        "shiners",
+        "baitfish"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day",
+          "dusk/dawn",
+          "golden"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          45,
+          80
+        ]
+      },
+      "technique": "hook through the back or lips and let it swim; keep it active near structure and cover, and match the local baitfish size",
+      "note": "forage-matched live bait; movement is the trigger",
+      "citations": [
+        {
+          "claim": "near cover, keep moving",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Largemouth bass",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+          "quote": "Try fishing crayfish, live minnows and frogs in a similar manner near structure and cover; constant movement is the key to success.",
+          "found": true,
+          "fetched_at": "2026-09-19T17:14:33+00:00",
+          "sha256": "8305a97d11589dfa"
+        },
+        {
+          "claim": "keep natural bait active",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Largemouth bass",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+          "quote": "Always keep natural bait active and moving.",
+          "found": true,
+          "fetched_at": "2026-09-19T17:14:33+00:00",
+          "sha256": "8305a97d11589dfa"
+        },
+        {
+          "claim": "match the size",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Largemouth bass",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+          "quote": "Match the size of natural baitfish or crayfish the bass are eating.",
+          "found": true,
+          "fetched_at": "2026-09-19T17:14:33+00:00",
+          "sha256": "8305a97d11589dfa"
+        }
+      ],
+      "provenance": {
+        "seed_author": "agency-ingest/1.0",
+        "source": "Iowa DNR \u2014 Largemouth bass",
+        "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-19T17:14:34+00:00",
+        "note": "live-minnow bait entry \u2014 condition bands are editorial; quotes are the facts"
+      }
+    },
+    {
+      "id": "nightcrawler",
+      "label": "Nightcrawler",
+      "style": "bait",
+      "depth": "mid",
+      "kind": "bait",
+      "aliases": [
+        "nightcrawlers",
+        "crawler",
+        "crawlers",
+        "earthworm",
+        "worm"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day",
+          "dusk/dawn",
+          "golden",
+          "night"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          45,
+          85
+        ]
+      },
+      "technique": "nose-hooked or threaded and slowly worked on the bottom near cover; year-round producer",
+      "note": "the year-round live-bait default",
+      "citations": [
+        {
+          "claim": "year-round",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Largemouth bass",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+          "quote": "They gladly take nightcrawlers throughout the year.",
+          "found": true,
+          "fetched_at": "2026-09-19T17:14:33+00:00",
+          "sha256": "8305a97d11589dfa"
+        },
+        {
+          "claim": "keep natural bait active",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Largemouth bass",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+          "quote": "Always keep natural bait active and moving.",
+          "found": true,
+          "fetched_at": "2026-09-19T17:14:33+00:00",
+          "sha256": "8305a97d11589dfa"
+        }
+      ],
+      "provenance": {
+        "seed_author": "agency-ingest/1.0",
+        "source": "Iowa DNR \u2014 Largemouth bass",
+        "source_url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-19T17:14:34+00:00",
+        "note": "nightcrawler bait entry \u2014 condition bands are editorial; quotes are the facts"
+      }
     }
   ],
   "provenance": {

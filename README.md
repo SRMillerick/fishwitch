@@ -57,6 +57,7 @@ Push fishwitch **out**:
 fishwitch interview                     # answer the questions → save a profile
 fishwitch report                        # tonight 6 PM, default profile + home lake
 fishwitch report --at "2026-09-10 18:00" --hours 3
+fishwitch report --bottom grass --clarity stained   # declared cover + water clarity
 fishwitch report --voice fisher         # astrology fully translated away
 fishwitch report --gpx prime.gpx        # waypoints for the chartplotter
 fishwitch log --lure "110 walker"       # log a catch → empirical reports

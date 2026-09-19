@@ -80,7 +80,8 @@ def _block(b: dict) -> dict:
 
 
 def report(m: dict, lake_id: str, lake: dict, at: datetime, hours: float,
-           voice: str, species: str, bottom: str | None) -> dict:
+           voice: str, species: str, bottom: str | None,
+           clarity: str | None = None) -> dict:
     prime = m.get("prime")
     knots = [{"id": k["id"], "label": k.get("label"),
               "connection": k.get("connection"),
@@ -89,7 +90,7 @@ def report(m: dict, lake_id: str, lake: dict, at: datetime, hours: float,
     return {
         "lake": {"id": lake_id, "name": lake.get("name"), "region": lake.get("region")},
         "session": {"at": _iso(at), "hours": hours, "voice": voice,
-                    "species": species, "bottom": bottom},
+                    "species": species, "bottom": bottom, "clarity": clarity},
         "scores": m.get("scores") or {},
         "prime": ({"start": _iso(prime["start"]), "end": _iso(prime["end"]),
                    "light": prime.get("light"), "solunar": prime.get("solunar"),

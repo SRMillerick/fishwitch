@@ -371,19 +371,34 @@ def alternatives(entry_id: str) -> list[dict]:
     return out
 
 
+def normalize_clarity(v) -> str:
+    """Accepts the angler/registry vocabulary → 'high' | 'low' | ''."""
+    s = str(v or "").strip().lower()
+    if s in ("clear", "high", "clean"):
+        return "high"
+    if s in ("stained", "dirty", "muddy", "turbid", "low"):
+        return "low"
+    return ""
+
+
 def color_principle(ctx: dict) -> dict | None:
     """Pick the colour principle that fits the session (editorial selection over
-    the cited fish-vision science in kb/principles.json)."""
+    the cited fish-vision science in kb/principles.json). A declared clarity is
+    a real visibility input: stained water forces contrast, clear water lets
+    colour work — light and lake state still outrank it."""
     ps = {p["id"]: p for p in load_principles().get("principles", [])}
     light = (ctx.get("light") or "")
     cloud = ctx.get("cloud") or 0
     ls = ctx.get("lake_state") or ""
+    clarity = normalize_clarity(ctx.get("clarity"))
     if light in ("night", "dusk/dawn"):
         pid = "low-light-rods"
     elif "post-turnover" in ls:
         pid = "depth-absorbs-long-wavelengths"
-    elif cloud >= 70:
+    elif clarity == "low" or cloud >= 70:
         pid = "contrast-over-color"
+    elif clarity == "high":
+        pid = "clear-water-color-vision"
     elif light in ("golden", "sunset/sunrise"):
         pid = "true-colors-near-surface"
     else:
