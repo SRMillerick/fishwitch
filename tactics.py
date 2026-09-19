@@ -165,7 +165,7 @@ def spec_line(spec: dict | None) -> str:
     if not spec:
         return ""
     bits = []
-    for part in ("hook", "weight", "ring", "tool", "bait"):
+    for part in ("hook", "weight", "ring", "tool", "bead", "swivel", "bait"):
         p = spec.get(part) or {}
         if p:
             bits.append(_spec_bit(p, size=True))
@@ -177,6 +177,23 @@ def spec_line(spec: dict | None) -> str:
             line += f" / {leader}"
         bits.append(line)
     return " · ".join(b for b in bits if b)
+
+
+def setup_line(setup: dict | None) -> str:
+    """One-line angler build from a profile `setups[rig]` entry — the personal
+    layer over the KB reference spec."""
+    if not isinstance(setup, dict):
+        return ""
+    order = ("hook", "ring", "tool", "weight", "bait", "line", "rod")
+    bits, seen = [], set()
+    for k in order:
+        v = setup.get(k)
+        if v:
+            bits.append(str(v)); seen.add(k)
+    for k, v in setup.items():
+        if k not in seen and v:
+            bits.append(str(v))
+    return " · ".join(bits)
 
 
 def load_principles() -> dict:

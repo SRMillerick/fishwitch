@@ -232,6 +232,17 @@ def _client_profile(payload: dict) -> tuple[dict, list[str]]:
             errs.append("baits: list of ≤ 30 strings, each ≤ 60 chars")
         else:
             out["baits"] = bt
+    su = p.get("setups")
+    if su is not None:
+        ok = (isinstance(su, dict) and len(su) <= 30
+              and all(isinstance(k, str) and 0 < len(k) <= 60 for k in su)
+              and all(isinstance(v, dict) and len(v) <= 20
+                      and all(isinstance(x, str) and 0 < len(x) <= 120 for x in v.values())
+                      for v in su.values()))
+        if not ok:
+            errs.append("setups: object of rig → object of strings (≤ 30 rigs, ≤ 20 parts, each ≤ 120 chars)")
+        else:
+            out["setups"] = su
     hl = p.get("home_lake")
     if hl is not None:
         if not isinstance(hl, str) or len(hl) > 60:
@@ -355,12 +366,14 @@ def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
     owned_ids = m.get("owned_ids") or set()
     has_box = bool(m.get("has_baseline"))
     rods = []
+    setups = profile.get("setups") if isinstance(profile.get("setups"), dict) else {}
     for c in m["rods"]:
         mfg = (c.get("manufacturer_specs") or {})
         rod = dict(id=c["id"], label=c["label"],
                    owned=(c["id"] in owned_ids) if has_box else None,
                    spec=tx.rig_spec(c["id"]),
                    spec_line=tx.spec_line(tx.rig_spec(c["id"])),
+                   your_setup_line=tx.setup_line(setups.get(c["id"])),
                    verified=c["provenance"].get("confidence") == "verified"
                    or c["provenance"].get("confidence") == "sourced",
                    source=c["provenance"].get("source", "editorial consensus"),

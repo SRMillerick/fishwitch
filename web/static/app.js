@@ -63,6 +63,16 @@ function profileError(p) {
   if (p.baits !== undefined && (!Array.isArray(p.baits) || p.baits.length > 30
       || p.baits.some(a => typeof a !== "string" || a.length > 60)))
     return "baits: list of ≤ 30 strings, each ≤ 60 chars";
+  if (p.setups !== undefined) {
+    const su = p.setups;
+    const bad = !su || typeof su !== "object" || Array.isArray(su)
+      || Object.keys(su).length > 30
+      || Object.keys(su).some(k => k.length < 1 || k.length > 60)
+      || Object.values(su).some(v => !v || typeof v !== "object" || Array.isArray(v)
+           || Object.keys(v).length > 20
+           || Object.values(v).some(x => typeof x !== "string" || x.length < 1 || x.length > 120));
+    if (bad) return "setups: object of rig → object of strings (≤ 30 rigs, ≤ 20 parts, each ≤ 120 chars)";
+  }
   if (p.astro_display !== undefined && !["fisher", "almanac", "astro"].includes(p.astro_display))
     return "astro_display: fisher | almanac | astro";
   return null;
@@ -342,7 +352,8 @@ function renderTackle(rods) {
       h += " · <a href='/out/" + encodeURIComponent(r.id) + "/" + encodeURIComponent(o.retailer) + "?src=tackle' target='_blank' rel='sponsored noopener'>" + esc(o.retailer_label || o.retailer) +
         "</a> <span class='fine'>(" + esc(o.disclosure) + ")</span>";
     if (r.components && r.components.length) h += buildList(r.id, r.components, "tackle");
-    if (r.spec_line) h += "<div class='fine'><span class='sc'>build:</span> " + esc(r.spec_line) + "</div>";
+    if (r.your_setup_line) h += "<div class='fine'><span class='sc'>your build:</span> " + esc(r.your_setup_line) + "</div>";
+    else if (r.spec_line) h += "<div class='fine'><span class='sc'>build:</span> " + esc(r.spec_line) + "</div>";
     h += "<div class='fine'>" + esc(r.source) +
       (r.source_url ? " · <a href='" + r.source_url + "' target='_blank' rel='noopener'>source</a>" : "") + "</div></li>";
   }

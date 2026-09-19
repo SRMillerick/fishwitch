@@ -717,7 +717,72 @@
           "quote": "With four weight and hook combinations, the Divine Hybrid Jig gives anglers a versatile platform for adapting presentation and tackle to the cover in front of them",
           "match": "With four weight and hook combinations, the Divine Hybrid Jig gives anglers a ve"
         }
-      }
+      },
+      "spec": {
+        "hook": {
+          "type": "integrated jig hook",
+          "sizes": [
+            "4/0",
+            "5/0"
+          ],
+          "note": "4/0 on 3/8-1/2 oz, 5/0 on 5/8-3/4 oz (T1)"
+        },
+        "weight": {
+          "type": "skirted jig",
+          "sizes": [
+            "3/8 oz",
+            "1/2 oz",
+            "5/8 oz",
+            "3/4 oz"
+          ]
+        },
+        "bait": {
+          "form": "craw/creature trailer",
+          "sizes": [
+            "3.7 in",
+            "3.8 in"
+          ],
+          "note": "Bongo 3.7 / Congo Craw 3.8 (T1)"
+        },
+        "line": {
+          "main": "fluorocarbon or braid",
+          "note": "kb/line.json power pick"
+        },
+        "source": "6th Sense Divine Hybrid Jig product page (T1): weight/hook table + pairings",
+        "confidence": "sourced"
+      },
+      "citations": [
+        {
+          "claim": "weight/hook table",
+          "tier": "T1",
+          "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
+          "url": "https://6thsensefishing.com/products/divine-hybrid-jig.json",
+          "quote": "3/8 oz. 4/0 1/2 oz. 4/0 5/8 oz. 5/0 3/4 oz. 5/0",
+          "found": true,
+          "fetched_at": "2026-09-19T04:12:57+00:00",
+          "sha256": "c2534dcf749071f9"
+        },
+        {
+          "claim": "versatility",
+          "tier": "T1",
+          "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
+          "url": "https://6thsensefishing.com/products/divine-hybrid-jig.json",
+          "quote": "With four weight and hook combinations, the Divine Hybrid Jig gives anglers a versatile platform for adapting presentation and tackle to the cover in front of them",
+          "found": true,
+          "fetched_at": "2026-09-19T04:12:57+00:00",
+          "sha256": "c2534dcf749071f9"
+        },
+        {
+          "claim": "perfect pairings",
+          "tier": "T1",
+          "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
+          "url": "https://6thsensefishing.com/products/divine-hybrid-jig.json",
+          "quote": "Bongo 3.7\" | Congo Craw 3.8\" | Bodega",
+          "found": true,
+          "fetched_at": "2026-09-19T04:12:57+00:00",
+          "sha256": "c2534dcf749071f9"
+        }
+      ]
     },
     {
       "id": "trig",
@@ -786,7 +851,64 @@
         "agency": "Take Me Fishing",
         "page_title": "Bass Fishing Rigs - Take Me Fishing",
         "source_url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/bass-fishing-rigs/"
-      }
+      },
+      "spec": {
+        "hook": {
+          "ref": "offset-hook",
+          "sizes": [
+            "3/0",
+            "4/0",
+            "5/0"
+          ],
+          "note": "EWG/offset worm hook; size to bait (sizes editorial)"
+        },
+        "weight": {
+          "type": "cone/bullet weight",
+          "sizes": [
+            "1/8 oz",
+            "3/8 oz",
+            "1/2 oz"
+          ],
+          "note": "pegged or free-sliding; weight to cover/depth (sizes editorial)"
+        },
+        "bait": {
+          "form": "soft plastic worm/creature",
+          "sizes": [
+            "6 in",
+            "7 in",
+            "10 in"
+          ],
+          "note": "sizes editorial"
+        },
+        "line": {
+          "main": "fluorocarbon",
+          "note": "kb/line.json finesse pick"
+        },
+        "source": "Take Me Fishing bass rigs guide (T2): cone weight + weedless worm hook; size ranges editorial",
+        "confidence": "sourced"
+      },
+      "citations": [
+        {
+          "claim": "cone weight + worm hook",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Bass Fishing Rigs (takemefishing.org)",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/bass-fishing-rigs/",
+          "quote": "This rig requires a special cone-shaped weight and a \"worm hook\" which is designed to be threaded through the worm so that the point of the hook is not exposed.",
+          "found": true,
+          "fetched_at": "2026-09-19T04:12:57+00:00",
+          "sha256": "ed19bb4a792da9db"
+        },
+        {
+          "claim": "assembly",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Bass Fishing Rigs (takemefishing.org)",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/bass-fishing-rigs/",
+          "quote": "Slide a cone-shaped weight through your main line with the bottom of the cone facing the end of the line. Tie on a weedless worm hook.",
+          "found": true,
+          "fetched_at": "2026-09-19T04:12:57+00:00",
+          "sha256": "ed19bb4a792da9db"
+        }
+      ]
     },
     {
       "id": "dropshot",
@@ -1083,7 +1205,72 @@
           "quote": "The Finesse TRD\u2122 (The Real Deal) is designed specifically for the Midwest finesse style of fishing, more commonly known as the Ned Rig, which has been gaining momentum nationwide as a subtle and easy-to-master, yet amazingly effective, presentation",
           "match": "The Finesse TRD\u2122 (The Real Deal) is designed specifically for the Midwest finess"
         }
-      }
+      },
+      "spec": {
+        "hook": {
+          "type": "light-wire mushroom jighead",
+          "sizes": [
+            "1",
+            "2"
+          ],
+          "note": "Finesse ShroomZ custom light wire (T1)"
+        },
+        "weight": {
+          "ref": "ned-head",
+          "sizes": [
+            "1/20 oz",
+            "1/15 oz",
+            "1/10 oz",
+            "1/6 oz",
+            "1/5 oz"
+          ]
+        },
+        "bait": {
+          "form": "Finesse TRD",
+          "sizes": [
+            "2.75 in"
+          ]
+        },
+        "line": {
+          "main": "fluorocarbon",
+          "note": "kb/line.json finesse pick"
+        },
+        "source": "Z-Man Finesse TRD + Finesse ShroomZ pages (T1)",
+        "confidence": "sourced"
+      },
+      "citations": [
+        {
+          "claim": "Ned rig identity",
+          "tier": "T1",
+          "source": "Z-Man catalog (www.zmanfishing.com, Shopify products.json)",
+          "url": "https://www.zmanfishing.com/products/finesse-shroomz.json",
+          "quote": "The Finesse TRD (The Real Deal) is designed specifically for the Midwest finesse style of fishing, more commonly known as the Ned Rig",
+          "found": true,
+          "fetched_at": "2026-09-19T04:12:57+00:00",
+          "sha256": "25fb8280e3e9f4f9"
+        },
+        {
+          "claim": "head hook size",
+          "tier": "T1",
+          "source": "Z-Man catalog (www.zmanfishing.com, Shopify products.json)",
+          "url": "https://www.zmanfishing.com/products/finesse-shroomz.json",
+          "quote": "built around custom light wire size 1 and 2 hooks",
+          "found": true,
+          "fetched_at": "2026-09-19T04:12:57+00:00",
+          "sha256": "25fb8280e3e9f4f9"
+        },
+        {
+          "claim": "head sizes",
+          "tier": "T1",
+          "source": "Z-Man catalog (www.zmanfishing.com, Shopify products.json)",
+          "url": "https://www.zmanfishing.com/products/finesse-shroomz.json",
+          "quote": "1/20 oz",
+          "found": false,
+          "fetched_at": "2026-09-19T04:12:57+00:00",
+          "sha256": "25fb8280e3e9f4f9",
+          "note": "sizes come from the variant list (1/20, 1/15, 1/10, 1/6, 1/5 oz)"
+        }
+      ]
     },
     {
       "id": "carolina",
@@ -1147,7 +1334,77 @@
         "agency": "Take Me Fishing",
         "page_title": "Bass Fishing Rigs - Take Me Fishing",
         "source_url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/bass-fishing-rigs/"
-      }
+      },
+      "spec": {
+        "hook": {
+          "ref": "offset-hook",
+          "sizes": [
+            "3/0",
+            "4/0"
+          ],
+          "note": "weedless offset; sizes editorial"
+        },
+        "weight": {
+          "ref": "egg-sinker",
+          "sizes": [
+            "1/2 oz",
+            "3/4 oz"
+          ],
+          "note": "T2: egg sinkers up to 3-4 oz; lighter passes grass"
+        },
+        "bead": {
+          "ref": "bead",
+          "note": "between sinker and swivel (T2)"
+        },
+        "swivel": {
+          "ref": "swivel"
+        },
+        "bait": {
+          "form": "soft plastic worm",
+          "sizes": [
+            "6 in"
+          ],
+          "note": "on a fluoro leader; leader length editorial (2-4 ft)"
+        },
+        "line": {
+          "main": "fluorocarbon or braid",
+          "leader": "fluorocarbon 2-4 ft (editorial)"
+        },
+        "source": "Take Me Fishing bass rigs guide (T2): egg sinker up to 3-4 oz, bead before swivel, weedless hook + worm; leader length editorial",
+        "confidence": "sourced"
+      },
+      "citations": [
+        {
+          "claim": "sliding sinker + weedless hook",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Bass Fishing Rigs (takemefishing.org)",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/bass-fishing-rigs/",
+          "quote": "Carolina rigs are Sliding Sinker Rigs created specifically as bass fishing rigs with a weedless hook and a soft plastic worm.",
+          "found": true,
+          "fetched_at": "2026-09-19T04:12:57+00:00",
+          "sha256": "ed19bb4a792da9db"
+        },
+        {
+          "claim": "sinker range",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Bass Fishing Rigs (takemefishing.org)",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/bass-fishing-rigs/",
+          "quote": "A Carolina rig works with egg sinkers up to 3 or 4 ounces. Lighter sinkers help the rig pass through weeds or grass.",
+          "found": true,
+          "fetched_at": "2026-09-19T04:12:57+00:00",
+          "sha256": "ed19bb4a792da9db"
+        },
+        {
+          "claim": "bead before swivel",
+          "tier": "T2",
+          "source": "Take Me Fishing \u2014 Bass Fishing Rigs (takemefishing.org)",
+          "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/bass-fishing-rigs/",
+          "quote": "To keep the sinker or fishfinder from snagging on the swivel, place a small plastic bead on the mainline between the sinker and the swivel.",
+          "found": true,
+          "fetched_at": "2026-09-19T04:12:57+00:00",
+          "sha256": "ed19bb4a792da9db"
+        }
+      ]
     },
     {
       "id": "swimbait",

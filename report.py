@@ -578,8 +578,12 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
         _, sfit = tx.substrate_fit(c["id"], m.get("bottom"))
         L.append(f"- {c['label']}" + (f" — {c['note']}" if c.get("note") else "") + _box(c)
                  + (f" — *{sfit}*" if sfit else ""))
+        setups = (m.get("profile") or {}).get("setups") or {}
+        setup = setups.get(c["id"]) if isinstance(setups, dict) else None
         spec = tx.rig_spec(c["id"])
-        if spec:
+        if setup:
+            L.append(f"    - *your build: {tx.setup_line(setup)}*")
+        elif spec:
             L.append(f"    - *build: {tx.spec_line(spec)}*")
             if spec.get("source"):
                 L.append(f"      *({spec['source']})*")

@@ -77,6 +77,7 @@ fishwitch arsenal --species bass        # lure categories it understands
 from fishwitch.report import generate, to_markdown
 profile = {...birth: {date, time, time_known, place, lat, lng, tz},
            arsenal: [...], baits: [...], line: [...], knots: [...],
+           setups: {dropshot: {hook: "Owner Mosquito Circle 1/0", bait: "6in Deception worm"}},
            species: "largemouth bass", astro_display: "almanac"}
 lake     = {...name, region, lat, lng, alt_m, structure: [...], lore: [...]}
 model = generate(profile, lake, at_local=datetime(...), hours=2.5, voice="fisher")

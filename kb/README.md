@@ -92,6 +92,9 @@ the report and shopping list print:
   resolves it to the entity label so the build reads
   *“Owner Jungle Wacky 1/0 · VMC 6mm O-ring · The Abstract 24mm · fluorocarbon”*
   (`tactics.rig_spec()` / `tactics.spec_line()`).
+- **Profile `setups` override the reference:** when the angler's profile carries
+  `setups[rig_id]` (a plain object of part → string), the report prints
+  *“your build: …”* from the profile instead of the KB *“build: …”* reference.
 - Every component is optional. Sizes are display ranges, not prescriptions.
 - `source`/`confidence` label owner builds (T5) vs sourced maker specs (T1).
   Owner builds that differ from a maker's spec live in the entry anyway,
