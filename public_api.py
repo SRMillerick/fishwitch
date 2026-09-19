@@ -63,6 +63,7 @@ def _rod(c: dict) -> dict:
     prov = c.get("provenance") or {}
     spec = rig_spec(c["id"])
     return {"id": c["id"], "label": c["label"], "kind": c.get("kind"),
+            "kb": f"{SOURCE}/kb/{c['id']}",
             "style": c.get("style"), "depth": c.get("depth"),
             "technique": c.get("technique"), "note": c.get("note"),
             "build": spec_line(spec) if spec else None,

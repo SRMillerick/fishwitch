@@ -742,6 +742,29 @@ def kb_page():
     return render_template("kb.html", species=species, cats=cats, local=LOCAL)
 
 
+@app.route("/kb/<entry_id>")
+def kb_entry_page(entry_id):
+    """Canonical page for one KB entity — the citeable home for a rig/lure:
+    conditions, the concrete build, substrate fits, every citation verbatim,
+    disclosed offers, and same-purpose alternatives."""
+    entry_id = re.sub(r"[^a-z0-9_-]", "", (entry_id or "").lower())[:40]
+    c = tx.find_entry(entry_id)
+    if not c:
+        abort(404)
+    spec = tx.rig_spec(entry_id)
+    substrate = {b: v for b, v in
+                 ((tx.load_substrate().get("entries") or {}).get(entry_id) or {}).items()
+                 if isinstance(v, dict)}
+    return render_template(
+        "kb_entry.html", c=c, prov=c.get("provenance") or {},
+        spec=spec, spec_line=tx.spec_line(spec),
+        citations=list(c.get("citations") or []), substrate=substrate,
+        presentation=tx.presentation_class(entry_id),
+        alternatives=tx.alternatives(entry_id),
+        offers_list=[o for o in offers.resolve(entry_id) if o.get("url")],
+        components=offers.components(entry_id), local=LOCAL)
+
+
 @app.route("/interview")
 def interview_page():
     sugg: set[str] = set()
@@ -973,6 +996,8 @@ def sitemap():
     urls = ["/", "/report", "/outlook", "/lakes", "/kb", "/interview",
             "/about", "/contact", "/privacy", "/disclosure"]
     urls += [f"/lake/{l['id']}" for l in lakes_summary()]
+    urls += [f"/kb/{c['id']}" for sp in ("bass", "trout", "catfish", "panfish")
+             for c in tx.catalog(sp)]
     body = ['<?xml version="1.0" encoding="UTF-8"?>',
             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     body += [f"<url><loc>{base}{u}</loc></url>" for u in urls]

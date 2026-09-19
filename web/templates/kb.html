@@ -22,7 +22,7 @@ citation — shown as unverified in the pipe until promoted by a human.</p>
   <tbody>
   {% for c in cats %}
   <tr>
-    <td data-label="entry"><strong>{{ c.label }}</strong><div class="fine">aka {{ c.aliases | join(', ') }}</div></td>
+    <td data-label="entry"><a href="/kb/{{ c.id }}"><strong>{{ c.label }}</strong></a><div class="fine">aka {{ c.aliases | join(', ') }}</div></td>
     <td data-label="style">{{ c.style }}</td>
     <td data-label="depth">{{ c.depth }}</td>
     <td data-label="light">{{ c.light }}</td>

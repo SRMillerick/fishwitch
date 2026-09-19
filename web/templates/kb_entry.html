@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}{{ c.label }} — knowledge base{% endblock %}
+{% block head %}
+<meta name="description" content="{{ c.label }} — {{ c.technique[:140] }}{% if c.note %} · {{ c.note[:80] }}{% endif %}">
+<link rel="canonical" href="https://baromoon.com/kb/{{ c.id }}">
+{% endblock %}
+{% block content %}
+<div class="narrow">
+<span class="eyebrow">{{ c.kind }} · knowledge base</span>
+<h1>{{ c.label }}</h1>
+{% if c.aliases %}<p class="fine">aka {{ c.aliases | join(' · ') }}</p>{% endif %}
+<p><strong>{{ c.technique }}</strong>{% if c.note %} — {{ c.note }}{% endif %}</p>
+
+<h2 class="rule-double">Conditions</h2>
+<div class="table-scroll">
+<table>
+  <tbody>
+    <tr><th>Style</th><td>{{ c.style }} · {{ c.depth }}</td></tr>
+    <tr><th>Light</th><td>{{ c.conditions.light | join(', ') }}</td></tr>
+    <tr><th>Wind</th><td>{{ c.conditions.wind | join(', ') }}</td></tr>
+    <tr><th>Water</th><td>{{ c.conditions.water_temp_f[0] }}–{{ c.conditions.water_temp_f[1] }} °F</td></tr>
+    {% if presentation %}<tr><th>Presentation</th><td>{{ presentation }}</td></tr>{% endif %}
+  </tbody>
+</table>
+</div>
+
+{% if spec_line %}
+<h2 class="rule-double">The build</h2>
+<p><strong>{{ spec_line }}</strong></p>
+{% if spec.source %}<p class="fine">{{ spec.source }}{% if spec.confidence %} · {{ spec.confidence }}{% endif %}</p>{% endif %}
+{% endif %}
+
+{% if substrate %}
+<h2 class="rule-double">Substrate fit <span class="fine">(capped tie-break layer)</span></h2>
+<ul class="plain">
+  {% for bottom, fit in substrate.items() %}
+  <li><strong>{{ bottom }}</strong> — fit {{ fit.fit }} <span class="fine">({{ fit.confidence }})</span>
+    {% if fit.note %}<div class="fine">{{ fit.note }}</div>{% endif %}
+    {% for cit in fit.citations or [] %}
+    <blockquote class="fine">“{{ cit.quote }}”
+      — {% if cit.url %}<a href="{{ cit.url }}" target="_blank" rel="noopener">{{ cit.source }}</a>{% else %}{{ cit.source }}{% endif %}
+      <span class="fine">({{ (cit.fetched_at or '')[:10] }})</span></blockquote>
+    {% endfor %}
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<h2 class="rule-double">Sources</h2>
+{% if prov.source_url %}
+<p><span class="badge ok">{{ prov.confidence }}</span>
+  {% if prov.source %}{{ prov.source }} — {% endif %}<a href="{{ prov.source_url }}" target="_blank" rel="noopener">source</a>
+  {% if prov.verified_by %}<span class="fine">· verified by {{ prov.verified_by }}</span>{% endif %}</p>
+{% else %}
+<p><span class="badge pend">{{ prov.confidence or 'editorial' }}</span> {{ prov.source or 'editorial synthesis' }}</p>
+{% endif %}
+{% if citations %}
+<ul class="plain">
+  {% for cit in citations %}
+  <li><blockquote class="fine">“{{ cit.quote }}”
+    — {% if cit.url %}<a href="{{ cit.url }}" target="_blank" rel="noopener">{{ cit.source }}</a>{% else %}{{ cit.source }}{% endif %}
+    {% if cit.fetched_at %}<span class="fine">(fetched {{ cit.fetched_at[:10] }}{% if cit.sha256 %} · sha {{ cit.sha256 }}{% endif %})</span>{% endif %}
+  </blockquote></li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% if offers_list or components %}
+<h2 class="rule-double">Where to get it</h2>
+<p class="fine">Links attach at the end of the pipe, are always disclosed, and never affect the
+ranking. Manufacturer pages carry no commission; affiliate links are labelled.</p>
+<ul class="plain">
+  {% for o in offers_list %}
+  <li><a href="/out/{{ c.id }}/{{ o.retailer }}?src=kb" target="_blank" rel="sponsored noopener">{{ o.retailer_label or o.retailer }}</a>
+    <span class="fine">({{ o.disclosure }})</span></li>
+  {% endfor %}
+  {% if components %}
+  <li><span class="sc">build it:</span>
+    {% for comp in components %}{{ comp.label }}{% set linked = comp.offers | selectattr('url') | list %}{% for o in linked %}
+      <a href="/out/{{ c.id }}/{{ o.retailer }}?comp={{ comp.id }}&src=kb" target="_blank" rel="sponsored noopener">{{ o.retailer_label or o.retailer }}</a>{% endfor %}{% if not loop.last %} · {% endif %}{% endfor %}
+  </li>
+  {% endif %}
+</ul>
+{% endif %}
+
+{% if alternatives %}
+<h2 class="rule-double">Also works <span class="fine">(same purpose group)</span></h2>
+<p class="fine">Deterministic catalog order — no brand weighting, and the ranking never sees them.</p>
+<ul class="plain">
+  {% for a in alternatives %}<li>{{ a.label }}{% if a.purpose %} <span class="fine">{{ a.purpose }}</span>{% endif %}</li>{% endfor %}
+</ul>
+{% endif %}
+
+<p><a href="/report">Run a report with these conditions →</a> · <a href="/kb">All knowledge-base entries</a></p>
+</div>
+{% endblock %}

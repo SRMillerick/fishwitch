@@ -30,7 +30,9 @@ After=network-online.target
 
 [Service]
 WorkingDirectory=$APPDIR
-ExecStart=$APPDIR/venv/bin/gunicorn --workers 2 --threads 4 --bind 127.0.0.1:7700 --access-logfile - webapp:app
+# --timeout 120: the History layer can retry the Open-Meteo archive 3×45s on
+# a cold cache; gunicorn's 30s default would kill the worker mid-fetch (502).
+ExecStart=$APPDIR/venv/bin/gunicorn --workers 2 --threads 4 --bind 127.0.0.1:7700 --timeout 120 --graceful-timeout 30 --access-logfile - webapp:app
 Restart=on-failure
 RestartSec=5
 

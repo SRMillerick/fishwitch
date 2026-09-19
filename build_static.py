@@ -84,6 +84,8 @@ def save(path: str, body: str):
     body = re.sub(r'<p class="fine">Subscribe to the A/S windows:.*?</p>\s*',
                   '', body, flags=re.S)
     body = re.sub(r'href="/kb\?species=(\w+)"', r'href="kb-\1.html"', body)
+    # entity pages exist only on the live app — link them absolutely
+    body = re.sub(r'href="/kb/([\w-]+)"', r'href="https://baromoon.com/kb/\1"', body)
     body = body.replace('href="/kb"', 'href="kb-bass.html"')
     body = body.replace('href="/interview"', 'href="interview.html"')
     body = body.replace('href="/lakes"', 'href="lakes.html"')
