@@ -428,6 +428,43 @@ def _perf_local(m: dict, a: dict) -> datetime:
     return m["_sky"].loc(a["perfect_jd"])
 
 
+def _lead_paragraph(m: dict, voice: str, emoji: bool, has_box: bool, owned: set) -> str:
+    """The report's opening read: launch hour, the one window that matters,
+    the top pick, the sky event, and the overall call."""
+    lead = f"Launch at **{_fmt_ampm(m['start'])}**"
+    if m["blocks"]:
+        h0 = m["blocks"][0]["hour"]
+        phrase = (HOUR_FISHER.get(h0["ruler"], f"{h0['ruler']} hour") if voice == "fisher"
+                  else f"{h0['ruler']} hour")
+        art = "an" if phrase[:1].lower() in "aeiou" else "a"
+        lead += f" into {art} **{phrase}**"
+    mids = []
+    if m["prime"]:
+        light = LIGHT_LABELS.get(m["prime"]["light"], m["prime"]["light"])
+        mids.append(f"the window that matters is **{_fmt_ampm(m['prime']['start'])}–"
+                    f"{_fmt_ampm(m['prime']['end'])}** ({light})")
+        top = m["prime"]["picks"][0] if m["prime"]["picks"] else None
+        if top:
+            gap_note = " (a gap — not in your box)" if has_box and top[0]["id"] not in owned else ""
+            mids.append(f"parked on the **{top[0]['label'].lower()}**{gap_note}")
+    if m["perfecting"]:
+        a = m["perfecting"][0]
+        amark = f"{a['sym']} " if emoji else ""
+        mids.append("the activity spike lands mid-session" if voice == "fisher"
+                    else f"{a['transit']} {amark}{a['aspect']} natal {a['natal']} perfects on the water")
+    sc = m["scores"]["overall"]
+    if sc >= 7.5:
+        call = f"Overall **{sc}/10** — a genuinely good hand; cash it"
+    elif sc >= 5.5:
+        call = f"Overall **{sc}/10** — solid conditions with one clear prime window; be there for it"
+    else:
+        call = f"Overall **{sc}/10** — a grind-it-out session; let the finesse baits earn it"
+    out = lead
+    if mids:
+        out += "; " + ", ".join(mids)
+    return out + ". " + call + "."
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
     def e(prefix: str) -> str:
@@ -464,6 +501,9 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
     L.append(f"# {e('🎣 ')}{wk} {date} — {_fmt_ampm(m['start'])} SESSION")
     L.append(f"### {m['lake']['name']}" +
              (f", {m['lake']['region']}" if m["lake"].get("region") else "") + " | " + head)
+    L.append("")
+    L.append(f"## {e('🎯 ')}One-paragraph version")
+    L.append(_lead_paragraph(m, voice, emoji, has_box, owned))
     L.append("")
 
     sun = m["sun"]
@@ -785,33 +825,6 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
         L.append(f"- Lake lore: {lore}")
     L.append("")
 
-    L.append(f"## {e('🎯 ')}One-paragraph version")
-    parts = [f"Launch at **{_fmt_ampm(m['start'])}**"]
-    if m["blocks"]:
-        h0 = m["blocks"][0]["hour"]
-        parts[0] += (f" into a **{HOUR_FISHER[h0['ruler']]}**" if voice == "fisher"
-                     else f" into a **{h0['ruler']} hour**")
-    if m["prime"]:
-        top = m["prime"]["picks"][0] if m["prime"]["picks"] else None
-        parts.append(f"— the window that matters is **{_fmt_ampm(m['prime']['start'])}–{_fmt_ampm(m['prime']['end'])}"
-                     + f" ({m['prime']['light']})" + "**")
-        if top:
-            gap_note = (" (a gap — not in your box)" if has_box and top[0]["id"] not in owned else "")
-            parts.append(f"parked on the **{top[0]['label'].lower()}**{gap_note}")
-    if m["perfecting"]:
-        a = m["perfecting"][0]
-        amark = f"{a['sym']} " if emoji else ""
-        parts.append(("with the activity spike landing mid-session" if voice == "fisher"
-                      else f"while {a['transit']} {amark}{a['aspect']} natal {a['natal']} perfects on the water"))
-    sc = m["scores"]["overall"]
-    if sc >= 7.5:
-        parts.append(f"Overall **{sc}/10** — a genuinely good hand; cash it")
-    elif sc >= 5.5:
-        parts.append(f"Overall **{sc}/10** — solid conditions with one clear prime window; be there for it")
-    else:
-        parts.append(f"Overall **{sc}/10** — a grind-it-out session; let the finesse baits earn it")
-    L.append(", ".join(parts[:-1]) + ". " + parts[-1] + ".")
-    L.append("")
     L.append("---")
     core = "fishwitch mvp — weather via Open-Meteo · sky via Swiss Ephemeris · "
     if voice == "fisher":
