@@ -703,3 +703,74 @@ if (printCard) printCard.addEventListener("click", (ev) => {
     }
   });
 })();
+
+// ── field-mode log queue (public site / phone) ─────────────────────────────
+// The server never receives these entries: they live in this browser until the
+// angler exports the JSON and imports it on the local machine's /log page.
+(function () {
+  const form = document.getElementById("log-form");
+  if (!form || form.dataset.mode !== "field") return;
+  const KEY = "fishwitch_log_queue";
+  const count = document.getElementById("queue-count");
+  const table = document.getElementById("queue-table");
+  const tbody = table && table.querySelector("tbody");
+  const ex = document.getElementById("queue-export");
+  const clr = document.getElementById("queue-clear");
+  const flash = document.getElementById("queue-flash");
+  const read = () => {
+    try { const q = JSON.parse(localStorage.getItem(KEY) || "[]"); return Array.isArray(q) ? q : []; }
+    catch { return []; }
+  };
+  const write = (q) => localStorage.setItem(KEY, JSON.stringify(q));
+  function render() {
+    const q = read();
+    if (count) count.textContent = q.length
+      ? q.length + " queued — export before you leave the water" : "nothing queued yet";
+    if (table) table.hidden = !q.length;
+    if (tbody) tbody.innerHTML = q.slice().reverse().map(e => "<tr><td>" + esc(e.ts || "")
+      + "</td><td>" + esc(e.angler || "") + "</td><td>" + esc(e.lake || "") + "</td><td>"
+      + (e.result === "skunk" ? "skunk"
+         : esc(e.lure || "?") + (e.length ? " (" + esc(e.length) + ")" : "")) + "</td></tr>").join("");
+    if (ex) ex.hidden = !q.length;
+    if (clr) clr.hidden = !q.length;
+    form.querySelectorAll('input[name="length"], input[name="lure"], input[name="notes"]')
+      .forEach(i => { i.value = ""; });
+    const sk = form.querySelector('input[name="skunk"]');
+    if (sk) sk.checked = false;
+  }
+  form.addEventListener("submit", (ev) => {
+    ev.preventDefault();
+    const f = new FormData(form);
+    const date = f.get("date") || new Date().toISOString().slice(0, 10);
+    const time = f.get("time") || "18:00";
+    const skunk = f.get("skunk") === "on";
+    let length = (f.get("length") || "").trim();
+    if (/^\d+(\.\d+)?$/.test(length)) length += "lb";
+    const sel = form.querySelector('select[name="lake"]');
+    const entry = {
+      angler: (f.get("angler") || "Angler").trim(),
+      lake: sel ? sel.options[sel.selectedIndex].text : (f.get("lake") || ""),
+      species: skunk ? "bass" : ((f.get("species") || "bass").trim()),
+      lure: skunk ? "" : (f.get("lure") || "").trim(),
+      length: skunk ? "" : length,
+      notes: (f.get("notes") || "").trim(),
+      result: skunk ? "skunk" : "catch",
+      ts: date + "T" + time,
+    };
+    const q = read(); q.push(entry); write(q);
+    render();
+    if (flash) flash.textContent = "✅ added to the queue — log the next one, or export when you're done.";
+  });
+  if (ex) ex.addEventListener("click", () => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(read(), null, 2)], { type: "application/json" }));
+    a.download = "baromoon-field-log-" + new Date().toISOString().slice(0, 10) + ".json";
+    a.click(); URL.revokeObjectURL(a.href);
+  });
+  if (clr) clr.addEventListener("click", () => {
+    if (confirm("Clear the " + read().length + " queued entries? Export first if you haven't.")) {
+      write([]); render();
+    }
+  });
+  render();
+})();

@@ -852,40 +852,64 @@ def service_worker():
                              "Service-Worker-Allowed": "/"})
 
 
-@app.route("/log", methods=["GET", "POST"])
-def log_page():
-    """Local-only catch log — writes the same `config/logbook.jsonl` as
-    `fishwitch log`. One row per fish; the CLI's `length` string convention is
-    kept (a bare number becomes \"4.5lb\")."""
-    if not LOCAL:
-        abort(404)
-    import logbook as lb
-    reg = registry()
-    if request.method == "POST":
-        f = request.form
-        angler = (f.get("angler") or "").strip()[:40] or "Angler"
-        lake_key = (f.get("lake") or "").strip()[:80]
-        lake = (reg.get(lake_key) or {}).get("name") or lake_key
-        species = (f.get("species") or "").strip()[:40]
-        lure = (f.get("lure") or "").strip()[:60]
-        length = (f.get("length") or "").strip()[:20]
-        notes = (f.get("notes") or "").strip()[:500]
-        skunk = f.get("skunk") == "on"
+def _clean_log_entry(f, lake_names: dict) -> dict | None:
+    """Normalize a log entry from a form or an imported/exported dict. Accepts
+    the form shape (registry lake key + date/time + skunk checkbox) and the
+    field-queue shape (lake name + `ts` + `result`)."""
+    def g(k, d=""):
+        v = f.get(k)
+        return d if v is None else v
+    angler = str(g("angler")).strip()[:40] or "Angler"
+    lake_raw = str(g("lake")).strip()[:80]
+    lake = lake_names.get(lake_raw, lake_raw)
+    result = str(g("result")).strip().lower()
+    skunk = result == "skunk" or str(g("skunk")).strip().lower() in ("on", "1", "true", "yes")
+    species = str(g("species")).strip()[:40]
+    lure = str(g("lure")).strip()[:60]
+    length = str(g("length")).strip()[:20]
+    notes = str(g("notes")).strip()[:500]
+    ts = str(g("ts")).strip()[:20]
+    if ts:
         try:
-            ts = datetime.strptime(f"{f.get('date', '')} {f.get('time', '')}",
+            ts = datetime.fromisoformat(ts).isoformat(timespec="minutes")
+        except ValueError:
+            ts = ""
+    if not ts:
+        try:
+            ts = datetime.strptime(f"{str(g('date')).strip()} {str(g('time')).strip()}",
                                    "%Y-%m-%d %H:%M").isoformat(timespec="minutes")
         except ValueError:
             ts = datetime.now().isoformat(timespec="minutes")
-        if re.fullmatch(r"[0-9]+(?:\.[0-9]+)?", length):
-            length += "lb"
-        lb.append(dict(angler=angler, lake=lake,
-                       species=None if skunk else (species or "bass"),
-                       lure=None if skunk else lure,
-                       length="" if skunk else length,
-                       notes=notes, result="skunk" if skunk else "catch", ts=ts))
-        q = urlencode(dict(ok="1", angler=angler, lake=lake_key, date=ts[:10],
-                           time=ts[11:16], species=(species or "bass"),
-                           lure="" if skunk else lure))
+    if re.fullmatch(r"[0-9]+(?:\.[0-9]+)?", length):
+        length += "lb"
+    if not (angler or lake):
+        return None
+    return dict(angler=angler, lake=lake,
+                species=None if skunk else (species or "bass"),
+                lure=None if skunk else lure,
+                length="" if skunk else length,
+                notes=notes, result="skunk" if skunk else "catch", ts=ts)
+
+
+@app.route("/log", methods=["GET", "POST"])
+def log_page():
+    """Catch log. **LOCAL** writes `config/logbook.jsonl` directly (the same
+    shape as `fishwitch log`). **Public/field mode** renders the same form but
+    JS keeps entries in this browser and exports them for import on the home
+    machine — the server never sees them."""
+    import logbook as lb
+    reg = registry()
+    names = {k: v.get("name") for k, v in reg.items()}
+    if request.method == "POST":
+        if not LOCAL:
+            abort(404)
+        entry = _clean_log_entry(request.form, names)
+        if entry is None:
+            abort(400)
+        lb.append(entry)
+        q = urlencode(dict(ok="1", angler=entry["angler"], lake=request.form.get("lake", ""),
+                           date=entry["ts"][:10], time=entry["ts"][11:16],
+                           species=(entry["species"] or "bass"), lure=(entry["lure"] or "")))
         return redirect(f"/log?{q}")
 
     default_angler = ""
@@ -903,12 +927,12 @@ def log_page():
         except ValueError:
             pass
     now = datetime.now()
-    booked = lb.load()
+    booked = lb.load() if LOCAL else []
     lures = sorted({c["label"] for sp in ("bass", "trout", "catfish", "panfish")
                     for c in tx.catalog(sp)})
     return render_template("log.html", local=LOCAL, lakes=lakes_summary(),
                            rows=list(reversed(booked[-8:])),
-                           ok=request.args.get("ok"),
+                           ok=request.args.get("ok"), imported=request.args.get("n"),
                            anglers=sorted({r.get("angler") for r in booked if r.get("angler")}),
                            default_angler=request.args.get("angler") or default_angler,
                            date=date or now.strftime("%Y-%m-%d"),
@@ -916,6 +940,35 @@ def log_page():
                            lake=request.args.get("lake") or "hidden-valley-lake-ca",
                            species=request.args.get("species") or "largemouth bass",
                            lure=request.args.get("lure") or "", lures=lures)
+
+
+@app.route("/log/import", methods=["POST"])
+def log_import():
+    """LOCAL-only: merge a field-queue export (JSON array) into the ledger."""
+    if not LOCAL:
+        abort(404)
+    import logbook as lb
+    data = None
+    f = request.files.get("file")
+    if f is not None:
+        try:
+            data = json.loads(f.read().decode("utf-8", "replace"))
+        except Exception:
+            data = None
+    if data is None:
+        data = request.get_json(silent=True)
+    if not isinstance(data, list):
+        return redirect("/log?ok=import-error")
+    names = {k: v.get("name") for k, v in registry().items()}
+    n = 0
+    for raw in data[:500]:
+        if not isinstance(raw, dict):
+            continue
+        entry = _clean_log_entry(raw, names)
+        if entry:
+            lb.append(entry)
+            n += 1
+    return redirect(f"/log?ok=imported&n={n}")
 
 
 @app.route("/stats")

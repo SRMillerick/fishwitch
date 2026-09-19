@@ -17,6 +17,13 @@ never logged, and never shared. You can export it as a file, or delete it
 from the profile menu at any time. If you never create one, none of this
 exists.</p>
 
+<h2 class="rule-double">Field log (public /log)</h2>
+<p>Catch entries made from the public <code>/log</code> page are stored
+<strong>only in your browser's local storage</strong> — lake, lure, weight and notes are never sent
+to or stored on the server. "Export JSON" downloads them as a file; importing that file on your
+own machine's local <code>/log</code> page merges them into your private ledger. Clearing the queue
+removes them from the browser.</p>
+
 <h2 class="rule-double">What the server sees</h2>
 <ul class="plain">
   <li>Standard request logs (IP address, timestamp, page) for rate limiting
