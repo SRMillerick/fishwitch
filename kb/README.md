@@ -95,6 +95,15 @@ the report and shopping list print:
 - **Profile `setups` override the reference:** when the angler's profile carries
   `setups[rig_id]` (a plain object of part → string), the report prints
   *“your build: …”* from the profile instead of the KB *“build: …”* reference.
+
+## Presentation classes (`kb/presentation.json`)
+
+`{entries: {entry_id: topwater|swim|suspend|fall|bottom}}` — a T5 editorial
+derivation from each entry's cited `technique` string (drop shot hovers =
+suspend; wacky dead-sticks the fall = fall; trig drags = bottom). The scorer
+uses it under post-turnover (suspended fish): suspend +0.5, fall +0.25. It is
+the seed for future clarity/depth dimensions; source each class in a later
+pass (a maker/agency quote that states the bait's fall/suspension behavior).
 - Every component is optional. Sizes are display ranges, not prescriptions.
 - `source`/`confidence` label owner builds (T5) vs sourced maker specs (T1).
   Owner builds that differ from a maker's spec live in the entry anyway,

@@ -89,6 +89,7 @@ _TERMINAL: dict | None = None
 _PRINCIPLES: dict | None = None
 _SUBSTRATE: dict | None = None
 _BAITS: dict | None = None
+_PRESENTATION: dict | None = None
 
 
 def load_terminal() -> dict:
@@ -222,6 +223,20 @@ def substrate_fit(entry_id: str, bottom: str | None) -> tuple[float, str]:
     e = (load_substrate().get("entries") or {}).get(entry_id) or {}
     b = e.get(bottom) or {}
     return float(b.get("fit", 0) or 0), (b.get("note") or "")
+
+
+def load_presentation() -> dict:
+    """Presentation classes (topwater/swim/suspend/fall/bottom) derived from the
+    cited technique strings — section scoring uses them under post-turnover."""
+    global _PRESENTATION
+    if _PRESENTATION is None:
+        p = KB_DIR / "presentation.json"
+        _PRESENTATION = json.loads(p.read_text()) if p.exists() else {"entries": {}}
+    return _PRESENTATION
+
+
+def presentation_class(entry_id: str) -> str:
+    return (load_presentation().get("entries") or {}).get(entry_id) or ""
 
 
 def color_principle(ctx: dict) -> dict | None:
@@ -406,16 +421,31 @@ def score_entry(cat: dict, ctx: dict) -> tuple[float, list[str], str | None]:
                   "Venus": "finesse", "Moon": "finesse", "Saturn": "finesse"}.get(ruler)
     if style_hour and cat["style"] == style_hour:
         score += 1.0; why.append(f"{ruler} hour favors {style_hour} work")
-    if ctx.get("solunar") == "major" and cat["style"] == "reaction":
-        score += 1.0; why.append("solunar major — feed window")
+    if ctx.get("solunar") == "major":
+        if cat["style"] == "reaction":
+            score += 1.0; why.append("solunar major — feed window")
+        elif cat["style"] == "finesse":
+            # feed windows are not reaction-only (ledger: big finesse fish on
+            # majors 9/13, 9/14 eve, 9/17 eve)
+            score += 0.5; why.append("solunar major — finesse feed window")
     if ctx.get("solunar") == "minor" and cat["style"] == "reaction":
         score += 0.5; why.append("solunar minor stirring")
     ls = ctx.get("lake_state") or ""
     if "post-turnover" in ls:
         if cat["style"] == "reaction" and cat["depth"] == "shallow":
-            score -= 2.0; why.append("post-turnover: shallow reaction compressed")
+            # the engine's own dusk rule already carves out golden hour; scale
+            # the turnover suppression by light instead of flat -2
+            if ctx["light"] in ("golden", "sunset/sunrise", "dusk/dawn", "night"):
+                score -= 1.0; why.append("post-turnover: shallow reaction compressed (low-light exception)")
+            else:
+                score -= 2.0; why.append("post-turnover: shallow reaction compressed")
         if cat["depth"] in ("mid", "deep"):
             score += 1.5; why.append("post-turnover: fish holding deep/suspended")
+        pres = presentation_class(cat["id"])
+        if pres == "suspend":
+            score += 0.5; why.append("post-turnover: suspends in the strike zone")
+        elif pres == "fall":
+            score += 0.25; why.append("post-turnover: slow fall stays in the zone")
     sub = ctx.get("bottom")
     if sub:
         fit, note = substrate_fit(cat["id"], sub)
