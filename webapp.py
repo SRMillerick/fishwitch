@@ -508,6 +508,52 @@ def outlook_page():
                            days=days, rows=rows, moon=moon, err=err, local=LOCAL)
 
 
+@app.route("/ledger.ics")
+def ledger_ics():
+    """Subscribeable calendar of the A/S windows — same horizon scan as
+    /outlook, rendered as ICS. No accounts, no email, no tracking."""
+    import feeds
+    lake = resolve_lake(request.args.get("lake"))
+    if not lake:
+        abort(404)
+    try:
+        days = max(1, min(16, int(request.args.get("days") or 10)))
+    except ValueError:
+        days = 10
+    species = (request.args.get("species") or "").strip() or None
+    try:
+        rows, _ = _cached(f"outlook:{lake['name']}:{days}:{species}",
+                          lambda: _horizon(lake, days, species))
+    except Exception:
+        rows = []
+    body = feeds.ical([r for r in rows if r["overall"] >= feeds.MIN_OVERALL], lake)
+    return Response(body, mimetype="text/calendar",
+                    headers={"Content-Disposition": "inline; filename=baromoon.ics",
+                             "Cache-Control": "public, max-age=900"})
+
+
+@app.route("/outlook.rss")
+def outlook_rss():
+    """RSS of the same A/S windows for readers/aggregators."""
+    import feeds
+    lake = resolve_lake(request.args.get("lake"))
+    if not lake:
+        abort(404)
+    try:
+        days = max(1, min(16, int(request.args.get("days") or 10)))
+    except ValueError:
+        days = 10
+    species = (request.args.get("species") or "").strip() or None
+    try:
+        rows, _ = _cached(f"outlook:{lake['name']}:{days}:{species}",
+                          lambda: _horizon(lake, days, species))
+    except Exception:
+        rows = []
+    body = feeds.rss([r for r in rows if r["overall"] >= feeds.MIN_OVERALL], lake)
+    return Response(body, mimetype="application/rss+xml",
+                    headers={"Cache-Control": "public, max-age=900"})
+
+
 def _horizon(lake: dict, days: int, species: str | None, profile: dict | None = None):
     profile = profile or dict(species=species or "bass", astro_display="almanac",
                               arsenal=[])
@@ -516,7 +562,7 @@ def _horizon(lake: dict, days: int, species: str | None, profile: dict | None = 
     from skycalc import Sky
     sky = Sky(lake["lng"], lake["lat"], lake.get("alt_m", 300), wx.utc_offset)
     results = []
-    today = datetime.now().replace(hour=0, minute=0)
+    today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     for d in range(1, days + 1):
         day = today + timedelta(days=d)
         for h in (5, 9, 12, 15, 17, 20):

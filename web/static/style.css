@@ -518,3 +518,23 @@ body.is-loading .nav-progress { width: 88%; opacity: 1;
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+/* ── field mode: print / pocket card ────────────────────────────────────────
+   Light tokens so the journal survives a laser printer; chrome, forms and
+   nav disappear; the ledger, windows and rigs stay. */
+@media print {
+  :root {
+    color-scheme: light;
+    --bg: #fff; --panel: #fff; --panel2: #f3f3f0;
+    --ink: #141810; --dim: #444; --line: #b9b9b3; --line2: #d8d8d2;
+    --gold: #7a5c1e; --lichen: #3d6b2f; --water: #31566b; --ember: #8a5324; --error: #8a2f22;
+  }
+  header, footer, nav, form, #profile-menu, .no-print, .nav-progress,
+  .foot-legal, .menu-body, .menu { display: none !important; }
+  body { background: #fff !important; color: var(--ink) !important; }
+  .narrow { max-width: none; margin: 0; padding: 0; }
+  .report { font-size: 12px; }
+  a { text-decoration: none; }
+  h1 { font-size: 20px; }
+  table { font-size: 11px; }
+}

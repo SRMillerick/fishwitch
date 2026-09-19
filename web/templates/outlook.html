@@ -34,6 +34,10 @@
 <p class="fine">Confidence: ≤3 days high · 4–7 medium · 8+ low (weather forecast
 range). Sky timing holds at all ranges. Windows scored anonymously; a profile
 re-ranks them against your natal chart and arsenal on the report page.</p>
+<p class="fine">Subscribe to the A/S windows:
+<a href="/ledger.ics?lake={{ lake.id if lake.id else lake.name }}&days={{ days }}">calendar (.ics)</a> ·
+<a href="/outlook.rss?lake={{ lake.id if lake.id else lake.name }}&days={{ days }}">RSS</a>
+— no account, no email.</p>
 <h2>Moon over the horizon</h2>
 <p class="moonrow">
 {% for d, ph, il, svg in moon %}<span class="moon {{ 'peak' if il < 8 or il > 92 else '' }}">{{ svg | safe }} {{ d[5:] }} {{ ph }} {{ il }}%</span> {% endfor %}

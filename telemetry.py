@@ -23,7 +23,7 @@ PAGES = Path(__file__).resolve().parent / "logs" / "pages.jsonl"
 
 # routes that are not "pages" for counting purposes
 SKIP_PREFIXES = ("/static/", "/out/", "/api/", "/favicon", "/stats")
-SKIP_EXACT = ("/robots.txt", "/sitemap.xml")
+SKIP_EXACT = ("/robots.txt", "/sitemap.xml", "/ledger.ics", "/outlook.rss")
 
 _LAKE_SAFE = re.compile(r"[^a-z0-9-]")
 
@@ -37,10 +37,12 @@ def should_count(path: str) -> bool:
 
 
 def normalize_lake(value: str | None) -> str:
-    """Registry keys only — free text, coordinates, or anything long is dropped."""
+    """Registry keys only. Free text, coordinates, and anything over the key
+    bound are dropped outright (truncation would let distinct inputs collide
+    into one aggregate bucket)."""
     if not value:
         return ""
-    v = _LAKE_SAFE.sub("", value.strip().lower())[:64]
+    v = _LAKE_SAFE.sub("", value.strip().lower())
     return v if 3 <= len(v) <= 64 else ""
 
 

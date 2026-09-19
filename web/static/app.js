@@ -173,11 +173,13 @@ function renderMenu() {
     h += `<div class="mrow${on}" data-act="use" data-name="${esc(name)}">
             <span>${esc(name)}</span>
             <span class="micons">
+              <a href="#" data-act="edit" data-name="${esc(name)}" title="edit name, tackle box and builds">edit</a>
               <a href="#" data-act="export" data-name="${esc(name)}" title="download profile.json">download</a>
               <a href="#" data-act="forget" data-name="${esc(name)}" title="forget this profile in this browser">forget</a>
             </span></div>`;
   }
   if (!Object.keys(v).length) h += `<div class="mhint">No profiles in this browser yet.</div>`;
+  h += `<div class="mrow" data-act="new">New profile…</div>`;
   h += `<div class="mrow" data-act="import">Import profile.json…</div>`;
   if (active) h += `<div class="mrow" data-act="anon">Browse anonymously</div>`;
   h += `<div class="mhint">Profiles stay in this browser — sent nowhere except to render your reports.</div>`;
@@ -196,6 +198,8 @@ if (menu) {
     const act = t.dataset.act, name = t.dataset.name;
     if (act === "use") { setActive(name); window.location.reload(); }
     else if (act === "anon") { setActive(null); window.location.reload(); }
+    else if (act === "edit") { setActive(name); window.location.href = "/interview"; }
+    else if (act === "new") { setActive(null); window.location.href = "/interview"; }
     else if (act === "export") {
       const p = vault()[name]; if (!p) return;
       const a = document.createElement("a");
@@ -465,6 +469,8 @@ if (iv) {
   // prefill from the active profile (edit mode)
   const cur = getActive();
   if (cur) {
+    const eyebrow = document.querySelector(".eyebrow");
+    if (eyebrow) eyebrow.textContent = "editing " + (cur.name || "your") + " — change the name to create a separate profile";
     iv.querySelector('[name="name"]').value = cur.name || "";
     if (cur.birth) {
       iv.querySelector('[name="bdate"]').value = cur.birth.date || "";
@@ -574,7 +580,8 @@ if (iv) {
       knots: (f.get("knots") || "").split(",").map(s => s.trim()).filter(Boolean),
       home_lake: f.get("home_lake"),
       astro_display: f.get("voice") || "almanac",
-      created: new Date().toISOString(),
+      created: (cur && cur.created) || new Date().toISOString(),   // keep original on edit
+      updated: new Date().toISOString(),
     };
     const setups = {};
     iv.querySelectorAll(".build-card").forEach(card => {
@@ -642,3 +649,10 @@ renderMenu();
     document.body.classList.remove("is-loading");
   });
 })();
+
+// ── field mode: print the report as a pocket card ───────────────────────────
+const printCard = document.getElementById("print-card");
+if (printCard) printCard.addEventListener("click", (ev) => {
+  ev.preventDefault();
+  window.print();
+});
