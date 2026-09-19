@@ -3,7 +3,7 @@
 {% block content %}
 <div class="narrow">
 <span class="eyebrow">make it yours</span>
-<h1>Three steps to your reports</h1>
+<h1>Four steps to your reports</h1>
 <p class="fine">About a minute. Everything you enter lives in <strong>this browser only</strong> —
 baromoon's server never stores it; it's used in-memory to render your reports, then forgotten.</p>
 
@@ -11,6 +11,7 @@ baromoon's server never stores it; it's used in-memory to render your reports, t
   <li class="on" data-step="1"><span>The angler</span></li>
   <li data-step="2"><span>The sky layer</span></li>
   <li data-step="3"><span>The tackle box</span></li>
+  <li data-step="4"><span>Your builds</span></li>
 </ol>
 
 <form id="interview" class="stack">
@@ -105,6 +106,29 @@ baromoon's server never stores it; it's used in-memory to render your reports, t
       <div class="fine">Reports prefer the knots you tie (cited from the knot guides) and flag a
       better fit you don't tie yet. Leave blank for the house defaults.</div>
     </label>
+    <div class="wiz-nav"><button type="button" class="back">← Back</button><button type="button" class="next">Next →</button></div>
+  </fieldset>
+
+  <fieldset class="istep" data-step="4">
+    <legend>4 · Your builds <span class="fine">(optional)</span></legend>
+    <p class="fine">These rigs matched your box. Fill in what you actually run — the report will
+    print <em>“your build”</em> for them instead of the KB reference. Placeholders show the
+    reference build; leave a field blank to keep it. Everything stays in this browser.</p>
+    <div id="builds">
+      {% for r in rig_specs %}
+      <div class="build-card" data-rig="{{ r.id }}"
+           data-aliases="{{ ([r.label] + r.aliases) | join('|') }}" hidden>
+        <div class="build-head"><strong>{{ r.label }}</strong><span class="fine">{{ r.species }}</span></div>
+        <div class="build-grid">
+          {% for p in r.parts %}
+          <label>{{ p.key }}<input data-part="{{ p.key }}" placeholder="{{ p.placeholder }}"></label>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+      <p class="fine" id="builds-empty" hidden>No reference builds matched your box yet — add a
+      rig in step 3 and come back.</p>
+    </div>
     <div class="wiz-nav"><button type="button" class="back">← Back</button><span></span></div>
     <div class="cta">
       <button type="submit">Save profile to this browser</button>

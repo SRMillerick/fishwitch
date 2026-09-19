@@ -263,6 +263,19 @@ fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
 }
 .tag-opt:hover { background: rgba(211, 170, 95, .1); color: var(--ink); }
 
+/* ── interview builds (step 4) ─────────────────────────────────────────── */
+.build-card {
+  border: 1px solid var(--line); border-radius: 4px;
+  padding: .9rem 1rem; margin-bottom: .9rem; background: var(--bg-2);
+}
+.build-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: .55rem; gap: 1rem; }
+.build-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: .5rem .8rem; }
+.build-grid label {
+  display: flex; flex-direction: column; gap: .25rem;
+  color: var(--dim); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase;
+}
+.build-grid input { font-size: .88rem; padding: .45rem .55rem; }
+
 /* ── hero ───────────────────────────────────────────────────────────────── */
 .hero {
   position: relative; display: grid;

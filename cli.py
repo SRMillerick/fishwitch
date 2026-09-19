@@ -639,7 +639,8 @@ def main():
     kp.add_argument("--by", default="human reviewer", help="who verified it")
 
     of = sub.add_parser("offers", help="resolve retailer links for a KB entry (disclosure included)")
-    of.add_argument("--entry", required=True)
+    of.add_argument("--entry")
+    of.add_argument("--category", help="high-AOV category: electronics | rods-reels | kayaks | trips")
     of.add_argument("--shopping-list", action="store_true",
                     help="aggregate components across --entry a,b,c into one shopping list")
     of.add_argument("--add-url", help="register an offer URL")
@@ -773,18 +774,35 @@ def main():
 
     elif args.cmd == "offers":
         import offers
+        if getattr(args, "category", None):
+            cats = offers.categories()
+            if args.category not in cats:
+                print("  categories:", ", ".join(cats) or "(none registered)")
+                return
+            cat = cats[args.category]
+            print(f"  {cat.get('label', args.category)} — {cat.get('note', '')}")
+            for e in offers.category_entries(args.category):
+                print(f"  - {e.get('label', e.get('id'))}")
+                for o in offers.resolve_category(args.category, e["id"]):
+                    print(f"      [{o['retailer_label']:16s}] {o.get('url') or '(pending)'}")
+                    print(f"                        {o['disclosure']}")
+            return
+        if not args.entry:
+            print("  pass --entry <id> or --category <id>")
+            return
         if args.shopping_list:
             ids = [s.strip() for s in args.entry.split(",") if s.strip()]
             entries = []
             for i in ids:
                 c = tx.find_entry(i)
-                entries.append(dict(id=i, label=(c or {}).get("label", i)))
-            rows = offers.shopping_list(entries)
+                entries.append(dict(id=i, label=(c or {}).get("label", i),
+                                    spec=tx.rig_spec(i)))
+            rows = offers.build_shopping(entries)
             if not rows:
                 print("  no component bundles registered for those entries")
             for r in rows:
                 links = " ".join(f"[{o['retailer_label']}]" for o in r["offers"] if o.get("url"))
-                print(f"  {r['label']:38s} for {', '.join(r['for_labels'])}"
+                print(f"  {r['label']:44s} for {', '.join(r['for_labels'])}"
                       + (f"  {links}" if links else "  (no links yet)"))
             return
         if args.add_url:

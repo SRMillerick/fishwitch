@@ -125,6 +125,81 @@ def shopping_list(entries: list[dict]) -> list[dict]:
     return list(rows.values())
 
 
+def build_shopping(rigs: list[dict]) -> list[dict]:
+    """Shopping list from the rig `spec` blocks (dialed labels + sizes), merged
+    across rigs, with component offers attached where the part's `ref` matches a
+    registered component. Rigs without a spec fall back to their component
+    bundle. Presentation only — never enters ranking."""
+    rows: dict[str, dict] = {}
+    for r in rigs or []:
+        rid = r.get("id")
+        rlabel = r.get("label") or rid or ""
+        comps = {c["id"]: c for c in components(rid)}
+        spec = r.get("spec")
+
+        def _row(key: str, label: str, note, offers: list[dict]):
+            row = rows.setdefault(key, dict(id=key, label=label, note=note,
+                                            for_labels=[], offers=[]))
+            if rlabel and rlabel not in row["for_labels"]:
+                row["for_labels"].append(rlabel)
+            for o in offers:
+                sig = (o.get("retailer"), o.get("url"))
+                if o.get("url") and sig not in {(x.get("retailer"), x.get("url"))
+                                                 for x in row["offers"]}:
+                    row["offers"].append(o)
+            return row
+
+        if spec:
+            for part in ("hook", "weight", "ring", "tool", "bead", "swivel", "bait", "line"):
+                p = spec.get(part)
+                if not p:
+                    continue
+                if part == "line":
+                    label = " / ".join(str(x) for x in (p.get("main"), p.get("leader")) if x)
+                else:
+                    label = p.get("ref_label") or p.get("type") or p.get("form") or ""
+                sizes = p.get("sizes") or []
+                if isinstance(sizes, str):
+                    sizes = [sizes]
+                if sizes:
+                    label = (label + " " + "–".join(str(x) for x in sizes[:2])).strip()
+                key = p.get("ref") or f"{rid}:{part}"
+                comp = comps.get(p.get("ref"))
+                offers = []
+                if comp:
+                    for o in comp.get("offers", []):
+                        ro = dict(o); ro["entry"] = rid
+                        offers.append(ro)
+                _row(key, label, p.get("note"), offers)
+        else:
+            for c in comps.values():
+                offers = []
+                for o in c.get("offers", []):
+                    ro = dict(o); ro["entry"] = rid
+                    offers.append(ro)
+                _row(c["id"], c.get("label", c["id"]), c.get("note"), offers)
+    return list(rows.values())
+
+
+def categories() -> dict:
+    """High-AOV category scaffold in `kb/offers.json` (electronics, kayaks…)."""
+    return _load().get("categories", {})
+
+
+def category_entries(cat_id: str) -> list[dict]:
+    cat = categories().get(cat_id) or {}
+    return cat.get("entries", [])
+
+
+def resolve_category(cat_id: str, entry_id: str) -> list[dict]:
+    """Resolved offers for one high-AOV category entry (electronics, kayaks…)."""
+    reg = _load().get("retailers", {})
+    for e in category_entries(cat_id):
+        if e.get("id") == entry_id:
+            return [_resolve(entry_id, o, reg) for o in e.get("offers", [])]
+    return []
+
+
 def add(entry_id: str, retailer: str, url: str | None = None,
         kind: str | None = None, asin: str | None = None):
     """Register/update a product offer. Data-only — no code change to go live."""

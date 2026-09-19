@@ -56,6 +56,10 @@ components they are built from.
   - `components`: `{id, label, offers: [...]}` — what it takes to build a rig
     (hooks, weights, beads, plastics). This monetizes the **rig gap** through
     parts without pretending the rig itself is a product.
+- **`categories`** — high-AOV blocks (`electronics`, `rods-reels`, `kayaks`, `trips`):
+  `{id: {label, note, entries: [{id, label, kind, offers: [...]}]}}`. Same post-ranking,
+  disclosed, `/out/`-counted rules as every offer; links register as programs approve.
+  CLI: `fishwitch offers --category electronics`.
 - Every link resolves through `/out/<entry>/<retailer>[?comp=<component>]` for
   aggregate click counting; destinations are resolved server-side (no open redirect).
 - `fishwitch offers --entry <id>` prints offers + components. `--add-url` /

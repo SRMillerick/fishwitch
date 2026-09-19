@@ -153,7 +153,8 @@ function makeTagField(root) {
     hide();
   }, 120));
   draw(); sync();
-  return { setValues: vs => { values = [...(vs || [])]; draw(); sync(); } };
+  return { setValues: vs => { values = [...(vs || [])]; draw(); sync(); },
+           values: () => [...values] };
 }
 
 // ── header menu ─────────────────────────────────────────────────────────────
@@ -407,11 +408,34 @@ if (iv) {
     if (name) tagFields[name] = makeTagField(el);
   });
 
+  // step 4: show only the reference builds that match the angler's arsenal
+  const builds = document.getElementById("builds");
+  const renderBuilds = () => {
+    if (!builds) return;
+    const owned = (tagFields.arsenal && tagFields.arsenal.values()) || [];
+    const norm = s => (s || "").trim().toLowerCase();
+    const ownedSet = new Set(owned.map(norm));
+    let shown = 0;
+    builds.querySelectorAll(".build-card").forEach(card => {
+      const names = (card.dataset.aliases || "").split("|").map(norm).filter(Boolean);
+      let hit = names.some(n => ownedSet.has(n));          // exact first
+      if (!hit) hit = owned.some(o => {                    // then substring
+        const s = norm(o);
+        return names.some(n => n.includes(s) || s.includes(n));
+      });
+      card.hidden = !hit;
+      if (hit) shown++;
+    });
+    const empty = document.getElementById("builds-empty");
+    if (empty) empty.hidden = shown > 0;
+  };
+
   const showStep = (n) => {
     step = n;
     steps.forEach(s => s.classList.toggle("on", +s.dataset.step === n));
     document.querySelectorAll("#wiz-progress li").forEach(li =>
       li.classList.toggle("on", +li.dataset.step === n));
+    if (n === 4) renderBuilds();
   };
 
   // prefill from the active profile (edit mode)
@@ -435,6 +459,14 @@ if (iv) {
     if (tagFields.baits) tagFields.baits.setValues(cur.baits || []);
     if (tagFields.line) tagFields.line.setValues(cur.line || []);
     if (tagFields.knots) tagFields.knots.setValues(cur.knots || []);
+    if (cur.setups && builds) {   // prefill saved builds (edit mode)
+      builds.querySelectorAll(".build-card").forEach(card => {
+        const s = cur.setups[card.dataset.rig] || {};
+        card.querySelectorAll("input[data-part]").forEach(inp => {
+          if (s[inp.dataset.part]) inp.value = s[inp.dataset.part];
+        });
+      });
+    }
     if (cur.home_lake) iv.querySelector('[name="home_lake"]').value = cur.home_lake;
     iv.querySelector('[name="voice"]').value = cur.astro_display || "almanac";
   }
@@ -482,13 +514,13 @@ if (iv) {
     const err = stepValid(step);
     if (err) { document.getElementById("status").textContent = err; return; }
     document.getElementById("status").textContent = "";
-    showStep(Math.min(step + 1, 3));
+    showStep(Math.min(step + 1, 4));
   };
   iv.querySelectorAll(".next").forEach(b => b.addEventListener("click", tryNext));
   iv.querySelectorAll(".back").forEach(b => b.addEventListener("click", () =>
     showStep(Math.max(step - 1, 1))));
   iv.addEventListener("keydown", (ev) => {   // Enter advances instead of submitting early
-    if (ev.key === "Enter" && ev.target.tagName !== "BUTTON" && step < 3) {
+    if (ev.key === "Enter" && ev.target.tagName !== "BUTTON" && step < 4) {
       ev.preventDefault(); tryNext();
     }
   });
@@ -520,6 +552,17 @@ if (iv) {
       astro_display: f.get("voice") || "almanac",
       created: new Date().toISOString(),
     };
+    const setups = {};
+    iv.querySelectorAll(".build-card").forEach(card => {
+      if (card.hidden) return;
+      const obj = {};
+      card.querySelectorAll("input[data-part]").forEach(inp => {
+        const v = (inp.value || "").trim();
+        if (v) obj[inp.dataset.part] = v;
+      });
+      if (Object.keys(obj).length) setups[card.dataset.rig] = obj;
+    });
+    if (Object.keys(setups).length) p.setups = setups;
     const err = profileError(p);
     if (err) { document.getElementById("status").textContent = err; return; }
     saveProfile(p);

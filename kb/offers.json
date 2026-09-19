@@ -583,5 +583,295 @@
         }
       ]
     }
+  },
+  "categories": {
+    "electronics": {
+      "label": "Electronics",
+      "note": "Sonar, fish finders, trolling motors \u2014 the biggest baskets. Placement resolves after ranking, like every offer.",
+      "entries": [
+        {
+          "id": "fish-finder",
+          "label": "Fish finder / sonar (console or bow)",
+          "kind": "product",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tackledirect",
+              "url": null,
+              "note": "tracked link pending program approval"
+            },
+            {
+              "retailer": "discounttackle",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "trolling-motor",
+          "label": "Trolling motor (GPS / spot-lock)",
+          "kind": "product",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tackledirect",
+              "url": null,
+              "note": "tracked link pending program approval"
+            },
+            {
+              "retailer": "discounttackle",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "shallow-water-anchor",
+          "label": "Shallow-water anchor / stake-out pole",
+          "kind": "product",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tackledirect",
+              "url": null,
+              "note": "tracked link pending program approval"
+            },
+            {
+              "retailer": "discounttackle",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        }
+      ]
+    },
+    "rods-reels": {
+      "label": "Rods & reels",
+      "note": "Technique-matched rods and reels; sizes come from the rig builds, not a catalog guess.",
+      "entries": [
+        {
+          "id": "spinning-rod",
+          "label": "Spinning rod (finesse / drop shot)",
+          "kind": "product",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tackledirect",
+              "url": null,
+              "note": "tracked link pending program approval"
+            },
+            {
+              "retailer": "discounttackle",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "casting-rod",
+          "label": "Casting rod (power / reaction)",
+          "kind": "product",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tackledirect",
+              "url": null,
+              "note": "tracked link pending program approval"
+            },
+            {
+              "retailer": "discounttackle",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "spinning-reel",
+          "label": "Spinning reel (2000\u20133000)",
+          "kind": "product",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tackledirect",
+              "url": null,
+              "note": "tracked link pending program approval"
+            },
+            {
+              "retailer": "discounttackle",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "baitcasting-reel",
+          "label": "Baitcasting reel (low-profile)",
+          "kind": "product",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tackledirect",
+              "url": null,
+              "note": "tracked link pending program approval"
+            },
+            {
+              "retailer": "discounttackle",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        }
+      ]
+    },
+    "kayaks": {
+      "label": "Kayaks & paddle craft",
+      "note": "Human-powered platforms for the waters the registry already covers.",
+      "entries": [
+        {
+          "id": "fishing-kayak",
+          "label": "Sit-on-top fishing kayak",
+          "kind": "product",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tackledirect",
+              "url": null,
+              "note": "tracked link pending program approval"
+            },
+            {
+              "retailer": "discounttackle",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "pedal-kayak",
+          "label": "Pedal-drive fishing kayak",
+          "kind": "product",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tackledirect",
+              "url": null,
+              "note": "tracked link pending program approval"
+            },
+            {
+              "retailer": "discounttackle",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "kayak-sonar",
+          "label": "Kayak sonar / transducer mount",
+          "kind": "product",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tackledirect",
+              "url": null,
+              "note": "tracked link pending program approval"
+            },
+            {
+              "retailer": "discounttackle",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        }
+      ]
+    },
+    "trips": {
+      "label": "Trips & guides",
+      "note": "Guided days and destination trips \u2014 high value, low volume; links attach after ranking.",
+      "entries": [
+        {
+          "id": "guided-trip",
+          "label": "Guided bass trip (half / full day)",
+          "kind": "product",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tackledirect",
+              "url": null,
+              "note": "tracked link pending program approval"
+            },
+            {
+              "retailer": "discounttackle",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        },
+        {
+          "id": "charter",
+          "label": "Charter / destination trip",
+          "kind": "product",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": null,
+              "note": "ASIN pending PA-API access"
+            },
+            {
+              "retailer": "tackledirect",
+              "url": null,
+              "note": "tracked link pending program approval"
+            },
+            {
+              "retailer": "discounttackle",
+              "url": null,
+              "note": "tracked link pending program approval"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

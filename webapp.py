@@ -396,8 +396,8 @@ def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
                         components=offers.components(c["id"])))
     return dict(html=body, overall=m["scores"]["overall"],
                 lake=lake["name"], at=at, rods=rods, gap=gap,
-                shopping=offers.shopping_list(
-                    [{"id": r["id"], "label": r["label"]} for r in rods]),
+                shopping=offers.build_shopping(
+                    [{"id": r["id"], "label": r["label"], "spec": r.get("spec")} for r in rods]),
                 prime_t=prime["start"] if prime else None,
                 prime_lab=(prime["light"] if prime else ""),
                 moon=m.get("moon") or {},
@@ -698,11 +698,20 @@ def interview_page():
             names = [c["label"]] + [a for a in c.get("aliases", []) if 3 < len(a) <= 60]
             if any(w in n.lower() for n in names for w in bait_words):
                 baits.update(names[:4])
+    rig_specs = []
+    for sp in ("bass", "trout", "catfish", "panfish"):
+        for c in tx.catalog(sp):
+            spec = tx.rig_spec(c["id"])
+            if not spec:
+                continue
+            rig_specs.append(dict(id=c["id"], species=sp, label=c["label"],
+                                  aliases=c.get("aliases", []), parts=tx.spec_parts(spec)))
     return render_template("interview.html", lakes=lakes_summary(),
                            suggestions=sorted(sugg),
                            knot_suggestions=sorted({k["label"] for k in tx.load_knots().get("knots", [])}),
                            line_suggestions=line_suggestions,
                            bait_suggestions=sorted(baits),
+                           rig_specs=rig_specs,
                            local=LOCAL)
 
 

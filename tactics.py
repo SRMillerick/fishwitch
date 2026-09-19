@@ -180,6 +180,24 @@ def spec_line(spec: dict | None) -> str:
     return " · ".join(b for b in bits if b)
 
 
+def spec_parts(spec: dict | None) -> list[dict]:
+    """Ordered display parts for a rig spec: [{key, placeholder}] — feeds the
+    interview build editor and the spec-driven shopping list."""
+    if not spec:
+        return []
+    out = []
+    for part in ("hook", "weight", "ring", "tool", "bead", "swivel", "bait", "line"):
+        p = spec.get(part)
+        if not p:
+            continue
+        if part == "line":
+            ph = " / ".join(str(x) for x in (p.get("main"), p.get("leader")) if x)
+        else:
+            ph = _spec_bit(p, size=True)
+        out.append(dict(key=part, placeholder=ph))
+    return out
+
+
 def setup_line(setup: dict | None) -> str:
     """One-line angler build from a profile `setups[rig]` entry — the personal
     layer over the KB reference spec."""
