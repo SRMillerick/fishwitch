@@ -24,6 +24,12 @@ class KBEntityPageTest(unittest.TestCase):
         html = self.c.get("/kb?species=bass").get_data(as_text=True)
         self.assertIn('href="/kb/dropshot"', html)
 
+    def test_service_worker_served_at_root_scope(self):
+        r = self.c.get("/sw.js")
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.headers.get("Service-Worker-Allowed"), "/")
+        self.assertIn("fetch", r.get_data(as_text=True))
+
     def test_sitemap_includes_entities(self):
         xml = self.c.get("/sitemap.xml").get_data(as_text=True)
         self.assertIn("/kb/dropshot", xml)

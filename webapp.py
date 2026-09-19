@@ -841,6 +841,17 @@ def review_page():
 
 
 # ── JSON API (for the browser layer; robots-discouraged) ─────────────────────
+@app.route("/sw.js")
+def service_worker():
+    """Serve the service worker from the ROOT path so its scope is the whole
+    site (a copy under /static/ would only control /static/). no-cache so
+    updates land immediately; the file itself is in web/static/sw.js."""
+    sw = (ROOT / "web" / "static" / "sw.js").read_text()
+    return Response(sw, mimetype="text/javascript",
+                    headers={"Cache-Control": "no-cache",
+                             "Service-Worker-Allowed": "/"})
+
+
 @app.route("/log", methods=["GET", "POST"])
 def log_page():
     """Local-only catch log — writes the same `config/logbook.jsonl` as

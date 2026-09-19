@@ -23,7 +23,7 @@ PAGES = Path(__file__).resolve().parent / "logs" / "pages.jsonl"
 
 # routes that are not "pages" for counting purposes
 SKIP_PREFIXES = ("/static/", "/out/", "/api/", "/favicon", "/stats")
-SKIP_EXACT = ("/robots.txt", "/sitemap.xml", "/ledger.ics", "/outlook.rss")
+SKIP_EXACT = ("/robots.txt", "/sitemap.xml", "/ledger.ics", "/outlook.rss", "/sw.js")
 
 _LAKE_SAFE = re.compile(r"[^a-z0-9-]")
 

@@ -663,3 +663,43 @@ if (printCard) printCard.addEventListener("click", (ev) => {
   ev.preventDefault();
   window.print();
 });
+
+// ── PWA install affordance ──────────────────────────────────────────────────
+// Chrome's native prompt can be dismissed and then goes quiet; this keeps a
+// button in the footer so install is always findable. iOS has no prompt event,
+// so the button shows the Share-sheet instruction instead.
+(function () {
+  const btn = document.getElementById("install-app");
+  const hint = document.getElementById("install-hint");
+  if (!btn) return;
+  if (window.matchMedia("(display-mode: standalone)").matches || navigator.standalone) return;
+  let deferred = null;
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  window.addEventListener("beforeinstallprompt", (ev) => {
+    ev.preventDefault();
+    deferred = ev;
+    btn.hidden = false;
+  });
+  window.addEventListener("appinstalled", () => {
+    btn.hidden = true;
+    if (hint) hint.hidden = true;
+  });
+  // always offer it: Chrome may suppress its own prompt after a dismissal,
+  // and iOS has no prompt event at all — the click falls back to instructions
+  btn.hidden = false;
+  btn.addEventListener("click", async () => {
+    if (deferred) {
+      deferred.prompt();
+      try { await deferred.userChoice; } catch (e) { /* dismissed */ }
+      deferred = null;
+      btn.hidden = true;
+      return;
+    }
+    if (hint) {
+      hint.textContent = isIOS
+        ? "tap Share, then “Add to Home Screen”."
+        : "open your browser menu, then “Install app” / “Add to Home screen”.";
+      hint.hidden = false;
+    }
+  });
+})();

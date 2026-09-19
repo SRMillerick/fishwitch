@@ -542,3 +542,9 @@ body.is-loading .nav-progress { width: 88%; opacity: 1;
 /* ── session timeline (server-rendered SVG) ───────────────────────────────── */
 .timeline { margin: 6px 0 16px; }
 .timeline svg { display: block; width: 100%; height: auto; }
+
+/* ── PWA install affordance ───────────────────────────────────────────────── */
+.foot-install { margin: 10px 0 0; }
+.install-btn { font: inherit; font-size: 13px; color: var(--ink); background: none;
+  border: 1px solid var(--line); border-radius: 5px; padding: 4px 12px; cursor: pointer; }
+.install-btn:hover { border-color: var(--gold); color: var(--gold); }
