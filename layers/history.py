@@ -17,6 +17,22 @@ ARCHIVE = "https://archive-api.open-meteo.com/v1/archive"
 UA = {"User-Agent": "fishwitch-mvp/1.0"}
 
 
+def _fetch(params: dict, attempts: int = 3, timeout: int = 45):
+    """Archive fetch with retries. A transient timeout used to fail silently
+    (webapp catches it; generate() swallows it) which drops the turnover
+    inference — and therefore the post-turnover pick suppression — with no
+    trace in the report. Retry before giving up."""
+    last: Exception | None = None
+    for _ in range(attempts):
+        try:
+            r = requests.get(ARCHIVE, params=params, headers=UA, timeout=timeout)
+            r.raise_for_status()
+            return r
+        except requests.RequestException as ex:
+            last = ex
+    raise last
+
+
 def _c2f(c): return c * 9 / 5 + 32
 
 
@@ -26,14 +42,13 @@ class History:
         max_end = datetime.utcnow().date() - timedelta(days=5)
         end_d = min(end.date(), max_end)
         start_d = end_d - timedelta(days=days)
-        r = requests.get(ARCHIVE, params=dict(
+        r = _fetch(dict(
             latitude=lat, longitude=lng,
             start_date=start_d.strftime("%Y-%m-%d"),
             end_date=end_d.strftime("%Y-%m-%d"),
             daily="temperature_2m_max,temperature_2m_min",
             timezone="auto",
-        ), headers=UA, timeout=20)
-        r.raise_for_status()
+        ))
         d = r.json()["daily"]
         self.series = [dict(
             date=datetime.fromisoformat(t),

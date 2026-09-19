@@ -42,6 +42,7 @@ PROFILES = CONFIG / "profiles"
 PAST_DAYS_CAP = 92      # Open-Meteo forecast-endpoint past_days limit
 SNAP_SLACK_MIN = 90     # tolerated drift for the nearest-hour weather lookup
 GOOD_WINDOW = 5.5       # overall score at/above which a skunk is a calibration miss
+SESSION_GAP_H = 3.0     # a >3h gap within one angler-day = a separate trip
 
 
 # ── small helpers ───────────────────────────────────────────────────────────
@@ -121,14 +122,20 @@ def _grade_timing(ts: datetime, prime: dict | None) -> tuple[str | None, int]:
     return "miss", d
 
 
-def _grade_zone(notes: str, picks: list[tuple]) -> tuple[str | None, str]:
-    """Depth words in notes vs top pick's depth. Both words present → n/a."""
+def _grade_zone(notes: str, picks: list[tuple], state: str = "") -> tuple[str | None, str]:
+    """Depth words in notes vs top pick's depth. Both words present → n/a.
+    Post-turnover the engine's own rule leads deep regardless of the pick's
+    nominal KB depth category, so a 'deep' note against a mid/deep pick is
+    aligned, not a miss."""
     n = (notes or "").lower()
     words = [w for w in ("deep", "shallow") if w in n]
     if len(words) != 1 or not picks:
         return None, ""
     d = picks[0][0].get("depth") or "?"
     hit = words[0] in d
+    if (not hit and words[0] == "deep" and d in ("mid", "deep")
+            and "post-turnover" in (state or "")):
+        return "exact", f"notes: deep · top pick depth: {d} (post-turnover deep lead)"
     return ("exact" if hit else "miss"), f"notes: {words[0]} · top pick depth: {d}"
 
 
@@ -147,39 +154,47 @@ def _lb(length: str | None) -> float | None:
 
 
 def _sessions(rows: list[dict]) -> list[dict]:
-    """Group catch entries into sessions: same angler + same calendar day = one
-    session (the logbook is per-catch; the replay grades per-session)."""
+    """Group catch entries into sessions: same angler + calendar day, split
+    again when entries are more than SESSION_GAP_H apart. A two-trip day
+    grades as two sessions; single-trip days behave exactly as before."""
     by: dict[tuple, list[dict]] = {}
     for r in rows:
         t = _ts(r)
         key = ((r.get("angler") or "").lower(), t.date())
         by.setdefault(key, []).append(r)
     out = []
-    for (angler, day), entries in sorted(by.items()):
-        entries.sort(key=_ts)
-        catches = [e for e in entries if e.get("result") != "skunk"]
-        skunk = not catches
-        # primary lure = most-logged, ties broken by first occurrence
-        counts: dict[str, int] = {}
-        for e in catches:
-            if e.get("lure"):
-                counts.setdefault(e["lure"], 0)
-                counts[e["lure"]] += 1
-        primary = max(counts.items(), key=lambda kv: (kv[1], -list(counts).index(kv[0])))[0] \
-            if counts else None
-        others = [l for l in counts if l != primary]
-        lbs = [_lb(e.get("length")) for e in catches]
-        lbs = [x for x in lbs if x is not None]
-        out.append(dict(
-            angler=entries[0].get("angler"), ts=_ts(entries[0]),
-            lake=entries[0].get("lake"), entries=entries, skunk=skunk,
-            n_fish=len(catches), primary_lure=primary, other_lures=others,
-            species=catches[0].get("species") if catches else None,
-            notes="; ".join(dict.fromkeys(
-                (e.get("notes") or "").strip() for e in entries if e.get("notes"))),
-            best_lb=max(lbs) if lbs else None,
-            total_lb=round(sum(lbs), 1) if lbs else None,
-        ))
+    for (angler, day), day_entries in sorted(by.items()):
+        day_entries.sort(key=_ts)
+        chunks: list[list[dict]] = [[day_entries[0]]]
+        for e in day_entries[1:]:
+            if (_ts(e) - _ts(chunks[-1][-1])).total_seconds() > SESSION_GAP_H * 3600:
+                chunks.append([e])
+            else:
+                chunks[-1].append(e)
+        for entries in chunks:
+            catches = [e for e in entries if e.get("result") != "skunk"]
+            skunk = not catches
+            # primary lure = most-logged, ties broken by first occurrence
+            counts: dict[str, int] = {}
+            for e in catches:
+                if e.get("lure"):
+                    counts.setdefault(e["lure"], 0)
+                    counts[e["lure"]] += 1
+            primary = max(counts.items(), key=lambda kv: (kv[1], -list(counts).index(kv[0])))[0] \
+                if counts else None
+            others = [l for l in counts if l != primary]
+            lbs = [_lb(e.get("length")) for e in catches]
+            lbs = [x for x in lbs if x is not None]
+            out.append(dict(
+                angler=entries[0].get("angler"), ts=_ts(entries[0]),
+                lake=entries[0].get("lake"), entries=entries, skunk=skunk,
+                n_fish=len(catches), primary_lure=primary, other_lures=others,
+                species=catches[0].get("species") if catches else None,
+                notes="; ".join(dict.fromkeys(
+                    (e.get("notes") or "").strip() for e in entries if e.get("notes"))),
+                best_lb=max(lbs) if lbs else None,
+                total_lb=round(sum(lbs), 1) if lbs else None,
+            ))
     return out
 
 
@@ -270,7 +285,8 @@ def collect(angler: str | None = None, since: datetime | None = None,
             pres, pres_why = (None, "") if is_skunk else \
                 _grade_presentation(e.get("primary_lure"), sp, prof, picks)
             tim, tim_d = (None, 0) if is_skunk else _grade_timing(ts, prime)
-            zon, zon_why = _grade_zone(e.get("notes", ""), picks)  # skunks too: wrong-water skunks
+            zon, zon_why = _grade_zone(e.get("notes", ""), picks,
+                                       m.get("lake_state") or "")  # skunks too: wrong-water skunks
             overall = m["scores"]["overall"]
             graded.append(dict(entry=e, ts=ts, skunk=is_skunk, overall=overall,
                                prime=prime, picks=picks, pres=pres, pres_why=pres_why,
