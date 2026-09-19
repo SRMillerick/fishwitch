@@ -1,0 +1,16 @@
+{
+  "name": "baromoon — the moon-ledger for anglers",
+  "short_name": "baromoon",
+  "description": "Deterministic fishing windows from moon, barometer, and water — when to go, where, and what to tie on.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#141810",
+  "theme_color": "#10140d",
+  "icons": [
+    { "src": "/static/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/static/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/static/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/static/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
