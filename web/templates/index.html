@@ -8,7 +8,7 @@
     <p class="lede">baromoon reads moon, barometer, and water — the signals that survive
     calibration, plus everything your lake's sky is doing — and hands you the
     <strong>when</strong>, the <strong>where</strong>, and the <strong>rig</strong>.
-    Deterministic math. No mysticism required, though the moon gets a vote.</p>
+    Same inputs, same report. No mysticism required, though the moon gets a vote.</p>
     <p class="cta">
       <a class="btn primary" href="#ledger">Open the ledger</a>
       <a class="btn ghost" href="/interview">Make it yours · 3 steps</a>
@@ -57,7 +57,7 @@
   B — worth being out · C — the fish have other plans.</p>
 </section>
 
-<div class="divider"><span class="triskele" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M12 12c0-3.2 2.2-5.2 5-5.2"/><path d="M12 12c0 3.2-2.2 5.2-5 5.2" transform="rotate(120 12 12)"/><path d="M12 12c0-3.2 2.2-5.2 5-5.2" transform="rotate(240 12 12)"/></svg></span></div>
+<div class="divider"><span class="triskele triskele-lg" aria-hidden="true"></span></div>
 
 <section class="band cols">
   <div>
@@ -69,15 +69,15 @@
       <li><strong>Sky math</strong> — Swiss-Ephemeris sunrise/sunset, moon,
       solunar majors/minors, planetary hours; optionally transits to your
       natal chart.</li>
-      <li><strong>Knowledge base</strong> — every lure category carries
-      conditions, provenance, and where it came from: manufacturer catalogs
+      <li><strong>Tackle library</strong> — every lure and rig shows its
+      conditions and its source: manufacturer catalogs
       or state-agency guides. <a href="/kb">Read the citations →</a></li>
       <li><strong>Scoring</strong> — fixed arithmetic over all of it, ranked
-      into the ledger. Deterministic: you can re-derive every number.</li>
+      into the ledger. Re-run it and you get the same numbers.</li>
     </ol>
   </div>
   <div>
-    <h2 class="rule-double">Waters in the registry</h2>
+    <h2 class="rule-double">Waters we cover</h2>
     <ul class="plain lakes">
       {% for l in lakes %}
       <li><a href="/lake/{{ l.id }}">{{ l.name }}</a>
@@ -87,7 +87,7 @@
     </ul>
     <p class="fine" style="margin-top:1.1rem"><a href="/lakes">All waters on the map →</a>
     · any water body can be characterized from public data (OSM + Wikidata) and added
-    to the registry.</p>
+    to the map.</p>
   </div>
 </section>
 {% endblock %}

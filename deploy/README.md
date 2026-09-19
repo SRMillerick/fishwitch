@@ -43,6 +43,10 @@ requests carry `?warm=1` and are excluded from page telemetry.
 
 The VPS tracks the PUBLIC repo (clean mirror) — never the private archive.
 
+Traffic and monetization telemetry live on the VPS under `/srv/fishwitch/logs/` and are read
+from the dev box over ssh: `fishwitch stats --remote` (page views) and `fishwitch clicks --remote`
+(outbound clicks). Plain `stats`/`clicks` read the local dev log.
+
 ## 5. Post-launch checklist
 
 - [ ] https://baromoon.com renders the ledger

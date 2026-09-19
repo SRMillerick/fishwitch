@@ -90,6 +90,7 @@ _PRINCIPLES: dict | None = None
 _SUBSTRATE: dict | None = None
 _SEASON: dict | None = None
 _SPAWN: dict | None = None
+_POSITION: dict | None = None
 _BAITS: dict | None = None
 _PRESENTATION: dict | None = None
 _TRENDS: dict | None = None
@@ -337,6 +338,67 @@ def load_presentation() -> dict:
 
 def presentation_class(entry_id: str) -> str:
     return (load_presentation().get("entries") or {}).get(entry_id) or ""
+
+
+def load_position() -> dict:
+    """Derived fish-position states (kb/position.json): T2 trigger facts +
+    T5 class fits. Read with kb/CONDITIONS.md."""
+    global _POSITION
+    if _POSITION is None:
+        p = KB_DIR / "position.json"
+        _POSITION = json.loads(p.read_text()) if p.exists() else {
+            "states": [], "triggers": {}, "class_fits": {}}
+    return _POSITION
+
+
+def position_state(mixing: str | None, water_f, month, lake_state: str | None = "",
+                   phase: str | None = None) -> str:
+    """'stratified' | '' — derived, null-safe.
+
+    Fires only for a stratifying mixing type, at/above the agency-stated
+    summer threshold, in the warm months, and not while another derived state
+    or a spawn phase already owns the position signal (kb/position.json)."""
+    d = load_position()
+    try:
+        if not water_f or not month:
+            return ""
+        t = float(water_f)
+        m = (mixing or "").lower()
+        ls = lake_state or ""
+        for name, tr in (d.get("triggers") or {}).items():
+            if t < float(tr.get("water_f_min", 999)):
+                continue
+            if int(month) not in (tr.get("months") or []):
+                continue
+            if any(x in m for x in (tr.get("mixing_exclude") or [])):
+                continue
+            if not any(x in m for x in (tr.get("mixing_any") or [])):
+                continue
+            if any(x in ls for x in (tr.get("exclude_states") or [])):
+                continue
+            if phase and phase in (tr.get("exclude_phases") or []):
+                continue
+            return name
+    except (TypeError, ValueError):
+        return ""
+    return ""
+
+
+def position_fit(entry_id: str, state: str) -> tuple[float, str]:
+    """(raw fit, note) for this entry's presentation class in a derived state."""
+    if not state:
+        return 0.0, ""
+    cls = presentation_class(entry_id)
+    if not cls:
+        return 0.0, ""
+    f = ((load_position().get("class_fits") or {}).get(state) or {}).get(cls) or {}
+    return float(f.get("fit", 0) or 0), (f.get("note") or "")
+
+
+def position_note(state: str) -> str:
+    if not state:
+        return ""
+    return (load_position().get("state_notes") or {}).get(state) or ""
 
 
 def load_trends() -> dict:
@@ -637,6 +699,15 @@ def score_entry(cat: dict, ctx: dict) -> tuple[float, list[str], str | None]:
                 tie += _fit_delta(sfit)
                 if snote:
                     why.append(f"{season_phase(month)}: {snote}")
+    # derived position state (kb/position.json): only present when the report
+    # could derive one; replay/CLI contexts without it are a null-safe no-op
+    pos = ctx.get("position")
+    if pos:
+        pfit, pnote = position_fit(cat["id"], pos)
+        if pfit:
+            tie += _fit_delta(pfit)
+            if pnote:
+                why.append(f"{pos}: {pnote}")
     if tie:
         score += max(-TIEBREAK_CAP, min(TIEBREAK_CAP, tie))
     if "hot-streak" in ls and ctx["light"] not in ("dusk/dawn", "night"):
@@ -686,6 +757,8 @@ def decision_rules(ctx: dict, picks: list[str]) -> list[str]:
     if "post-turnover" in ls:
         rules.append("**Post-turnover lake →** the water column just mixed; fish are deep/suspended and the mats & back coves are empty. Work the first break and basin edges.")
         rules.append("**Post-turnover dusk →** compress the shallow experiment to the last 30 minutes of light; earn it deep first.")
+    if "stratified" in ls:
+        rules.append("**Stratified summer →** the column is layered and there is no oxygen below the stratification level; work suspended presentations above it instead of dragging the basin floor.")
     if "hot-streak" in ls:
         rules.append("**Multi-day heat →** deep is home; shallow visits are short commutes at first/last light only.")
     if "Walking topwater (Spook/110)" in picks:

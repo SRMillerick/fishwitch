@@ -1,0 +1,451 @@
+{% extends "base.html" %}
+{% block title %}logo studies{% endblock %}
+{% block head %}
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Instrument+Serif&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  .logo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); gap: 1.1rem; margin: 1.3rem 0 2.2rem; }
+  .logo-card { border: 1px solid var(--line); border-radius: 4px; padding: 1rem 1.1rem; background: var(--panel); }
+  .logo-card h3 { margin: 0 0 .2rem; font-size: 1.02rem; }
+  .logo-card .lg-note { margin: .55rem 0 0; }
+  .lg-stage { display: flex; align-items: flex-end; gap: 1rem; margin: .8rem 0 .2rem; flex-wrap: wrap; }
+  .lg { color: var(--gold); display: block; flex: 0 0 auto; }
+  .lg-96 { width: 96px; height: 96px; }
+  .lg-64 { width: 64px; height: 64px; }
+  .lg-40 { width: 40px; height: 40px; }
+  .lg-32 { width: 32px; height: 32px; }
+  .lg-24 { width: 24px; height: 24px; }
+  .lg-16 { width: 16px; height: 16px; }
+  .lg-tile { display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 15px; background: var(--panel-2); border: 1px solid var(--line); color: var(--gold); }
+  .lg-ink { color: var(--ink); }
+  .lg-cap { color: var(--dim); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; align-self: flex-end; }
+  .wm { font-size: 2.05rem; line-height: 1.15; color: var(--ink); }
+  .wm + .wm { margin-top: .75rem; }
+  .wm .oo { display: inline-flex; align-items: baseline; }
+  .wm .oo svg { width: .52em; height: .52em; transform: translateY(.075em); margin: 0 .012em; color: var(--gold); }
+  .wm-cormorant { font-family: "Cormorant Garamond", Georgia, serif; font-weight: 600; }
+  .wm-fraunces { font-family: "Fraunces", Georgia, serif; font-weight: 600; }
+  .wm-newsreader { font-family: "Newsreader", Georgia, serif; font-weight: 600; }
+  .wm-instrument { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; }
+  .wm-grotesk { font-family: "Space Grotesk", system-ui, sans-serif; font-weight: 500; letter-spacing: -.015em; }
+  .lg-navmock { display: inline-flex; align-items: center; gap: .55rem; padding: .5rem .85rem; border: 1px solid var(--line); border-radius: 4px; background: var(--header); }
+  .lg-app { display: inline-flex; align-items: center; justify-content: center; width: 104px; height: 104px; border-radius: 24px; background: var(--panel-2); border: 1px solid var(--line); color: var(--gold); }
+  .lg-divider { margin-top: clamp(2.4rem, 6vw, 3.6rem); }
+  .mkmask { display: inline-block; aspect-ratio: 360 / 344; background-color: var(--gold);
+    -webkit-mask: url("/static/triskelion.svg") center / contain no-repeat;
+    mask: url("/static/triskelion.svg") center / contain no-repeat; }
+  .mkmask.bold { -webkit-mask-image: url("/static/triskelion-bold.svg"); mask-image: url("/static/triskelion-bold.svg"); }
+  .mkmask.fav { -webkit-mask-image: url("/static/triskelion-favicon.svg"); mask-image: url("/static/triskelion-favicon.svg"); }
+</style>
+{% endblock %}
+{% block content %}
+<h1>Logo studies</h1>
+<p class="smallcaps">routes for baromoon · local sketchpad</p>
+<p class="lede">Your triskelion is the chosen mark — vector-traced from the decal, theme-coloured,
+and cut three ways (faithful for large, bold for the header, extra-bold for the favicon/PWA). The
+earlier moon-barometer and pentacle studies stay below for reference. Flip the header toggle to
+check both themes.</p>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="rg0" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+      <path d="M12 12c0-3.2 2.2-5.2 5-5.2"/>
+      <path d="M12 12c0 3.2-2.2 5.2-5 5.2" transform="rotate(120 12 12)"/>
+      <path d="M12 12c0-3.2 2.2-5.2 5-5.2" transform="rotate(240 12 12)"/>
+    </g>
+  </symbol>
+  <symbol id="rg1" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <circle cx="12" cy="10" r="6.1"/>
+      <path d="M12 3.9a6.1 6.1 0 0 1 0 12.2 3.8 3.8 0 0 0 0-12.2Z" fill="currentColor" stroke="none" opacity=".22"/>
+      <path d="M3.4 17.9c2.5 2 5.4 2.9 8.6 2.9s6.1-.9 8.6-2.9"/>
+      <path d="M6.5 20.8c1.7.9 3.6 1.3 5.5 1.3s3.8-.4 5.5-1.3" opacity=".5"/>
+    </g>
+  </symbol>
+  <symbol id="rg2" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <circle cx="12" cy="12" r="8.6"/>
+      <path d="M12 2.6v1.5M21.4 12h-1.5M12 21.4v-1.5M2.6 12h1.5" opacity=".65"/>
+      <path d="M12 12l4.1 5"/>
+      <path d="M16.1 17l1.7-.7M16.1 17l.7 1.7"/>
+      <circle cx="12" cy="12" r="1.15" fill="currentColor" stroke="none"/>
+    </g>
+  </symbol>
+  <symbol id="rg3" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <path d="M20.2 14.4A8.4 8.4 0 0 1 9.6 3.8 8.4 8.4 0 1 0 20.2 14.4Z"/>
+      <path d="M3.6 18.8h16.8M6.4 21.2h11.2" opacity=".8"/>
+    </g>
+  </symbol>
+  <symbol id="rg4" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <path d="M12 3.4a8.6 8.6 0 1 1-8.6 8.6"/>
+      <path d="M12 12l4.8 3.4"/>
+      <circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/>
+      <path d="M15.4 2.2a3 3 0 0 0 3.6 4.7 3.8 3.8 0 0 1-3.6-4.7Z" fill="currentColor" stroke="none"/>
+    </g>
+  </symbol>
+  <symbol id="rg5" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <circle cx="12" cy="12" r="8.4"/>
+      <path d="M13.2 6.6a5.6 5.6 0 1 0 4.3 9.2 6.3 6.3 0 0 1-4.3-9.2Z" fill="currentColor" stroke="none" opacity=".24"/>
+    </g>
+  </symbol>
+  <symbol id="rg6" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <path d="M18.8 11.4A6.8 6.8 0 0 1 10.2 2.8 6.8 6.8 0 1 0 18.8 11.4Z"/>
+      <path d="M2.8 16.8c1.6-1.6 3.2-1.6 4.8 0s3.2 1.6 4.8 0 3.2-1.6 4.8 0 3.2 1.6 4.8 0"/>
+    </g>
+  </symbol>
+  <symbol id="oo-a" viewBox="0 0 20 20">
+    <circle cx="10" cy="10" r="7.4" fill="none" stroke="currentColor" stroke-width="1.8"/>
+    <path d="M11.3 3.4a7.4 7.4 0 1 0 4.9 12.8 8.6 8.6 0 0 1-4.9-12.8Z" fill="currentColor" stroke="none" opacity=".3"/>
+  </symbol>
+  <symbol id="oo-b" viewBox="0 0 20 20">
+    <circle cx="10" cy="10" r="7.4" fill="none" stroke="currentColor" stroke-width="1.8"/>
+    <circle cx="12.8" cy="7.6" r="2.4" fill="currentColor" stroke="none"/>
+  </symbol>
+  <!-- triskelion-pentacle routes: circle + pentagram + triple spiral family -->
+  <symbol id="tp1" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9.35"/>
+      <path d="M12 3.8 16.82 18.63 4.2 9.47 19.8 9.47 7.18 18.63Z"/>
+      <g transform="translate(12 12) scale(.5) translate(-12 -12)" stroke-width="2.2">
+        <path d="M12 12 C11.6 10.2, 12.6 8.6, 14.4 8.3 C16.6 7.9, 18.4 9.4, 18.4 11.5 C18.4 13.9, 16.4 15.6, 14.1 15.2"/>
+        <path d="M12 12 C11.6 10.2, 12.6 8.6, 14.4 8.3 C16.6 7.9, 18.4 9.4, 18.4 11.5 C18.4 13.9, 16.4 15.6, 14.1 15.2" transform="rotate(120 12 12)"/>
+        <path d="M12 12 C11.6 10.2, 12.6 8.6, 14.4 8.3 C16.6 7.9, 18.4 9.4, 18.4 11.5 C18.4 13.9, 16.4 15.6, 14.1 15.2" transform="rotate(240 12 12)"/>
+      </g>
+    </g>
+  </symbol>
+  <symbol id="tp2" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <circle cx="12" cy="12" r="9.2"/>
+      <path d="M12 12 C11.6 10.2, 12.6 8.6, 14.4 8.3 C16.6 7.9, 18.4 9.4, 18.4 11.5 C18.4 13.9, 16.4 15.6, 14.1 15.2"/>
+      <path d="M12 12 C11.6 10.2, 12.6 8.6, 14.4 8.3 C16.6 7.9, 18.4 9.4, 18.4 11.5 C18.4 13.9, 16.4 15.6, 14.1 15.2" transform="rotate(120 12 12)"/>
+      <path d="M12 12 C11.6 10.2, 12.6 8.6, 14.4 8.3 C16.6 7.9, 18.4 9.4, 18.4 11.5 C18.4 13.9, 16.4 15.6, 14.1 15.2" transform="rotate(240 12 12)"/>
+    </g>
+  </symbol>
+  <symbol id="tp3" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9.2"/>
+      <path d="M13.9 3.4a5.4 5.4 0 1 0 4.5 9.4 6.4 6.4 0 0 1-4.5-9.4Z"/>
+      <path d="M13.9 3.4a5.4 5.4 0 1 0 4.5 9.4 6.4 6.4 0 0 1-4.5-9.4Z" transform="rotate(120 12 12)"/>
+      <path d="M13.9 3.4a5.4 5.4 0 1 0 4.5 9.4 6.4 6.4 0 0 1-4.5-9.4Z" transform="rotate(240 12 12)"/>
+    </g>
+  </symbol>
+  <symbol id="tp4" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9.35"/>
+      <path d="M12 3.8 16.82 18.63 4.2 9.47 19.8 9.47 7.18 18.63Z"/>
+      <path d="M13.6 8.6a3.6 3.6 0 1 0 3 6.3 4.2 4.2 0 0 1-3-6.3Z" fill="currentColor" stroke="none" opacity=".85"/>
+    </g>
+  </symbol>
+  <symbol id="tp5" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9.35"/>
+      <path d="M12 3.8 16.82 18.63 4.2 9.47 19.8 9.47 7.18 18.63Z"/>
+      <circle cx="12" cy="3.8" r="1.65"/>
+      <circle cx="19.8" cy="9.47" r="1.65"/>
+      <circle cx="16.82" cy="18.63" r="1.65"/>
+      <circle cx="7.18" cy="18.63" r="1.65"/>
+      <circle cx="4.2" cy="9.47" r="1.65"/>
+    </g>
+  </symbol>
+</defs></svg>
+
+<h2 class="rule-double">Chosen mark · your triskelion (traced)</h2>
+<p class="fine">Vector-traced from the decal you shared: one path, theme-coloured, in three cuts —
+<strong>faithful</strong> for large use, <strong>bold</strong> for the header, <strong>extra-bold</strong>
+for the favicon and PWA icons. The same <code>/static/triskelion*.svg</code> files are used as CSS masks,
+so the mark takes whatever the current theme calls its accent.</p>
+<div class="logo-grid">
+  <div class="logo-card"><h3>Faithful trace</h3>
+    <div class="lg-stage">
+      <span class="mkmask" style="width:128px"></span>
+      <span class="mkmask" style="width:64px"></span>
+      <span class="mkmask" style="width:32px"></span>
+      <span class="lg-tile"><span class="mkmask" style="width:40px"></span></span>
+    </div>
+    <p class="lg-note">The decal, exactly. Holds from about 64px up; soft by 32px.</p>
+  </div>
+  <div class="logo-card"><h3>Bold cut <span class="fine">(header / footer)</span></h3>
+    <div class="lg-stage">
+      <span class="mkmask bold" style="width:64px"></span>
+      <span class="mkmask bold" style="width:32px"></span>
+      <span class="mkmask bold" style="width:24px"></span>
+      <span class="mkmask bold" style="width:18px"></span>
+    </div>
+    <p class="lg-note">Thickened ~2px before tracing; this is what the site header uses.</p>
+  </div>
+  <div class="logo-card"><h3>Extra-bold cut <span class="fine">(favicon / PWA)</span></h3>
+    <div class="lg-stage">
+      <span class="mkmask fav" style="width:64px"></span>
+      <span class="mkmask fav" style="width:32px"></span>
+      <span class="mkmask fav" style="width:24px"></span>
+      <span class="mkmask fav" style="width:16px"></span>
+    </div>
+    <p class="lg-note">Thickened ~4.5px; the small-size cut. Favicon and app icons are built from this.</p>
+  </div>
+  <div class="logo-card"><h3>Lockups</h3>
+    <div class="lg-stage" style="align-items:center">
+      <span class="lg-navmock"><span class="mkmask bold" style="width:20px"></span><span class="wm wm-cormorant" style="font-size:1.35rem">baromoon</span></span>
+    </div>
+    <div class="lg-stage" style="align-items:center">
+      <span class="mkmask" style="width:40px"></span><span class="wm wm-cormorant" style="font-size:1.8rem">baromoon</span>
+    </div>
+    <p class="lg-note">Header lockup (bold, 20px) and large lockup (faithful, 40px).</p>
+  </div>
+</div>
+
+<h2 class="rule-double">Earlier pentacle studies <span class="fine">(not chosen)</span></h2>
+<p class="fine">Your reference is a triskelion-pentacle decal; Etsy is bot-walled from this box,
+so these are the common constructions of that family. All are single-ink and token-driven. The
+honest caveat: pentagram + spiral + ring is a lot of linework for 16px — the small-size column
+will tell us which ones survive.</p>
+<div class="logo-grid">
+  <div class="logo-card">
+    <h3>T1 · Triskelion pentacle <span class="fine">(layered classic)</span></h3>
+    <div class="lg-stage">
+      <svg class="lg lg-96"><use href="#tp1"/></svg>
+      <svg class="lg lg-40"><use href="#tp1"/></svg>
+      <svg class="lg lg-24"><use href="#tp1"/></svg>
+      <svg class="lg lg-16"><use href="#tp1"/></svg>
+      <span class="lg-tile"><svg class="lg lg-40"><use href="#tp1"/></svg></span>
+    </div>
+    <p class="lg-note">Ring + pentagram + triple spiral at the hub. The literal reading of the
+    reference; the most esoteric, the most detail at small sizes.</p>
+  </div>
+  <div class="logo-card">
+    <h3>T2 · Triskele in a ring</h3>
+    <div class="lg-stage">
+      <svg class="lg lg-96"><use href="#tp2"/></svg>
+      <svg class="lg lg-40"><use href="#tp2"/></svg>
+      <svg class="lg lg-24"><use href="#tp2"/></svg>
+      <svg class="lg lg-16"><use href="#tp2"/></svg>
+      <span class="lg-tile"><svg class="lg lg-40"><use href="#tp2"/></svg></span>
+    </div>
+    <p class="lg-note">The triple spiral alone in a ring — the older half of the reference, no
+    pentagram. This is the one I'd bet survives 16px.</p>
+  </div>
+  <div class="logo-card">
+    <h3>T3 · Crescent triskelion</h3>
+    <div class="lg-stage">
+      <svg class="lg lg-96"><use href="#tp3"/></svg>
+      <svg class="lg lg-40"><use href="#tp3"/></svg>
+      <svg class="lg lg-24"><use href="#tp3"/></svg>
+      <svg class="lg lg-16"><use href="#tp3"/></svg>
+      <span class="lg-tile"><svg class="lg lg-40"><use href="#tp3"/></svg></span>
+    </div>
+    <p class="lg-note">Three crescents in rotational symmetry — moon-forward, almanac, and it
+    quietly keeps the triple rhythm without a pentagram.</p>
+  </div>
+  <div class="logo-card">
+    <h3>T4 · Pentacle + moon</h3>
+    <div class="lg-stage">
+      <svg class="lg lg-96"><use href="#tp4"/></svg>
+      <svg class="lg lg-40"><use href="#tp4"/></svg>
+      <svg class="lg lg-24"><use href="#tp4"/></svg>
+      <svg class="lg lg-16"><use href="#tp4"/></svg>
+      <span class="lg-tile"><svg class="lg lg-40"><use href="#tp4"/></svg></span>
+    </div>
+    <p class="lg-note">Ring + pentagram with a crescent set in the hub: the cleanest witchcraft
+    read, and the moon carries the brand name.</p>
+  </div>
+  <div class="logo-card">
+    <h3>T5 · Pentacle + phases</h3>
+    <div class="lg-stage">
+      <svg class="lg lg-96"><use href="#tp5"/></svg>
+      <svg class="lg lg-40"><use href="#tp5"/></svg>
+      <svg class="lg lg-24"><use href="#tp5"/></svg>
+      <svg class="lg lg-16"><use href="#tp5"/></svg>
+      <span class="lg-tile"><svg class="lg lg-40"><use href="#tp5"/></svg></span>
+    </div>
+    <p class="lg-note">A node on each point — reads as full/empty moon phases at large sizes and
+    as a studded star at small ones. The five nodes are where a future phase animation could live.</p>
+  </div>
+  <div class="logo-card">
+    <h3>T2 at favicon size <span class="fine">(small-size test)</span></h3>
+    <div class="lg-stage">
+      <svg class="lg lg-32"><use href="#tp2"/></svg>
+      <svg class="lg lg-24"><use href="#tp2"/></svg>
+      <svg class="lg lg-16"><use href="#tp2"/></svg>
+      <span class="lg-tile" style="width:48px;height:48px;border-radius:12px"><svg class="lg lg-32"><use href="#tp2"/></svg></span>
+    </div>
+    <p class="lg-note">What the triskele looks like when it actually has to be a browser tab. If the
+    spiral arms merge into a pinwheel here, the mark needs a heavier cut for the icon.</p>
+  </div>
+</div>
+
+<h2 class="rule-double">Alternate directions</h2>
+<div class="logo-grid">
+  <div class="logo-card">
+    <h3>R0 · Triskele <span class="fine">(current)</span></h3>
+    <div class="lg-stage">
+      <svg class="lg lg-96"><use href="#rg0"/></svg>
+      <svg class="lg lg-40"><use href="#rg0"/></svg>
+      <svg class="lg lg-24"><use href="#rg0"/></svg>
+      <svg class="lg lg-16"><use href="#rg0"/></svg>
+      <span class="lg-tile"><svg class="lg lg-40"><use href="#rg0"/></svg></span>
+    </div>
+    <p class="lg-note">Three arcs. Reads as an almanac ornament, but there's no moon, no water, no
+    barometer — and at 16px it becomes a knot.</p>
+  </div>
+  <div class="logo-card">
+    <h3>R1 · Isobar moon</h3>
+    <div class="lg-stage">
+      <svg class="lg lg-96"><use href="#rg1"/></svg>
+      <svg class="lg lg-40"><use href="#rg1"/></svg>
+      <svg class="lg lg-24"><use href="#rg1"/></svg>
+      <svg class="lg lg-16"><use href="#rg1"/></svg>
+      <span class="lg-tile"><svg class="lg lg-40"><use href="#rg1"/></svg></span>
+    </div>
+    <p class="lg-note">Moon with two pressure bands beneath — weather-map isobars that double as
+    water. Both halves of the name, one glyph.</p>
+  </div>
+  <div class="logo-card">
+    <h3>R2 · Needle dial</h3>
+    <div class="lg-stage">
+      <svg class="lg lg-96"><use href="#rg2"/></svg>
+      <svg class="lg lg-40"><use href="#rg2"/></svg>
+      <svg class="lg lg-24"><use href="#rg2"/></svg>
+      <svg class="lg lg-16"><use href="#rg2"/></svg>
+      <span class="lg-tile"><svg class="lg lg-40"><use href="#rg2"/></svg></span>
+    </div>
+    <p class="lg-note">Barometer face with a needle and barb; the cardinal ticks read as a compass.
+    Most "instrument," least "moon."</p>
+  </div>
+  <div class="logo-card">
+    <h3>R3 · Rise over water</h3>
+    <div class="lg-stage">
+      <svg class="lg lg-96"><use href="#rg3"/></svg>
+      <svg class="lg lg-40"><use href="#rg3"/></svg>
+      <svg class="lg lg-24"><use href="#rg3"/></svg>
+      <svg class="lg lg-16"><use href="#rg3"/></svg>
+      <span class="lg-tile"><svg class="lg lg-40"><use href="#rg3"/></svg></span>
+    </div>
+    <p class="lg-note">Crescent over water. The simplest read at 16px; reads "night fishing" before
+    it reads anything else.</p>
+  </div>
+  <div class="logo-card">
+    <h3>R4 · Gauge + moon</h3>
+    <div class="lg-stage">
+      <svg class="lg lg-96"><use href="#rg4"/></svg>
+      <svg class="lg lg-40"><use href="#rg4"/></svg>
+      <svg class="lg lg-24"><use href="#rg4"/></svg>
+      <svg class="lg lg-16"><use href="#rg4"/></svg>
+      <span class="lg-tile"><svg class="lg lg-40"><use href="#rg4"/></svg></span>
+    </div>
+    <p class="lg-note">A ¾ gauge arc with the moon in the gap. Instrument-first; the moon is a
+    detail rather than the subject.</p>
+  </div>
+  <div class="logo-card">
+    <h3>R5 · Ring phase</h3>
+    <div class="lg-stage">
+      <svg class="lg lg-96"><use href="#rg5"/></svg>
+      <svg class="lg lg-40"><use href="#rg5"/></svg>
+      <svg class="lg lg-24"><use href="#rg5"/></svg>
+      <svg class="lg lg-16"><use href="#rg5"/></svg>
+      <span class="lg-tile"><svg class="lg lg-40"><use href="#rg5"/></svg></span>
+    </div>
+    <p class="lg-note">A full ring with a phase inside. The most "moon," the least barometer, and
+    about as simple as a mark gets.</p>
+  </div>
+  <div class="logo-card">
+    <h3>R6 · Wave crescent</h3>
+    <div class="lg-stage">
+      <svg class="lg lg-96"><use href="#rg6"/></svg>
+      <svg class="lg lg-40"><use href="#rg6"/></svg>
+      <svg class="lg lg-24"><use href="#rg6"/></svg>
+      <svg class="lg lg-16"><use href="#rg6"/></svg>
+      <span class="lg-tile"><svg class="lg lg-40"><use href="#rg6"/></svg></span>
+    </div>
+    <p class="lg-note">Crescent riding a wave. The fishing read is direct; the wave may fight the
+    table-heavy surfaces in the app.</p>
+  </div>
+</div>
+
+<h2 class="rule-double">Wordmark studies</h2>
+<p class="fine">Same word, four faces, plus a treatment that turns the double-o into two moon
+phases (first waning, second full) in the accent brass. Compare the plain line against the
+phase line — the phase-o idea should survive at nav size or it isn't worth it.</p>
+<div class="logo-grid">
+  <div class="logo-card"><h3>Cormorant Garamond <span class="fine">(current display)</span></h3>
+    <div class="wm wm-cormorant">baromoon</div>
+    <div class="wm wm-cormorant">barom<span class="oo"><svg><use href="#oo-a"/></svg><svg><use href="#oo-b"/></svg></span>n</div>
+  </div>
+  <div class="logo-card"><h3>Fraunces</h3>
+    <div class="wm wm-fraunces">baromoon</div>
+    <div class="wm wm-fraunces">barom<span class="oo"><svg><use href="#oo-a"/></svg><svg><use href="#oo-b"/></svg></span>n</div>
+  </div>
+  <div class="logo-card"><h3>Newsreader</h3>
+    <div class="wm wm-newsreader">baromoon</div>
+    <div class="wm wm-newsreader">barom<span class="oo"><svg><use href="#oo-a"/></svg><svg><use href="#oo-b"/></svg></span>n</div>
+  </div>
+  <div class="logo-card"><h3>Instrument Serif</h3>
+    <div class="wm wm-instrument">baromoon</div>
+    <div class="wm wm-instrument">barom<span class="oo"><svg><use href="#oo-a"/></svg><svg><use href="#oo-b"/></svg></span>n</div>
+  </div>
+  <div class="logo-card"><h3>Space Grotesk</h3>
+    <div class="wm wm-grotesk">baromoon</div>
+    <div class="wm wm-grotesk">barom<span class="oo"><svg><use href="#oo-a"/></svg><svg><use href="#oo-b"/></svg></span>n</div>
+  </div>
+</div>
+
+<h2 class="rule-double lg-divider">Applications</h2>
+<div class="logo-grid">
+  <div class="logo-card"><h3>Nav lockup · R3 + wordmark</h3>
+    <div class="lg-stage">
+      <span class="lg-navmock">
+        <svg class="lg lg-24"><use href="#rg3"/></svg>
+        <span class="wm wm-cormorant" style="font-size:1.35rem">baromoon</span>
+      </span>
+    </div>
+    <p class="lg-note">Mark at 24px next to the current display face. If it works here, it works
+    in the header.</p>
+  </div>
+  <div class="logo-card"><h3>Nav lockup · R1 + wordmark</h3>
+    <div class="lg-stage">
+      <span class="lg-navmock">
+        <svg class="lg lg-24"><use href="#rg1"/></svg>
+        <span class="wm wm-cormorant" style="font-size:1.35rem">baromoon</span>
+      </span>
+    </div>
+    <p class="lg-note">The two-part glyph at nav size; check whether the pressure bands survive
+    at 24px or smear.</p>
+  </div>
+  <div class="logo-card"><h3>App icon</h3>
+    <div class="lg-stage">
+      <span class="lg-app"><svg class="lg lg-64"><use href="#rg3"/></svg></span>
+      <span class="lg-tile" style="width:56px;height:56px;border-radius:13px"><svg class="lg lg-32"><use href="#rg5"/></svg></span>
+    </div>
+    <p class="lg-note">Tile treatment for the PWA icons (currently the old dark tile). One mark per
+    tile, generous padding.</p>
+  </div>
+  <div class="logo-card"><h3>One-color / stamp</h3>
+    <div class="lg-stage lg-ink">
+      <svg class="lg lg-40"><use href="#rg3"/></svg>
+      <svg class="lg lg-32"><use href="#rg1"/></svg>
+      <svg class="lg lg-24"><use href="#rg2"/></svg>
+      <svg class="lg lg-16"><use href="#rg5"/></svg>
+    </div>
+    <p class="lg-note">All marks must hold in a single ink — email, invoice, embroidery, a stamp on
+    a paper map.</p>
+  </div>
+</div>
+
+<h2 class="rule-double lg-divider">Notes</h2>
+<ul class="plain">
+  <li><strong>My shortlist:</strong> <strong>T2</strong> as the mark (triskele in a ring — the
+    oldest half of your reference and the one that survives a tab icon), with <strong>T4</strong> as
+    the fuller esoteric version for large/print use. <strong>T3</strong> is the moon-forward
+    alternative if the pentagram feels too literal for a fishing product.</li>
+  <li><strong>On the reference:</strong> I couldn't open the Etsy decal from this box, so T1-T5 are
+    my reading of the family. Point at the parts you want kept — the ring, the star, the spiral,
+    the point-nodes — and I'll re-cut the geometry from there.</li>
+  <li><strong>Wordmark:</strong> with a Celtic mark, Cormorant or Fraunces plus the phase-o
+    treatment stays the right voice; Space Grotesk would fight it.</li>
+  <li>The phase-o glyphs are placeholder geometry; once a route is chosen I'll draw them to the
+    chosen face's x-height and terminal shapes, and export favicon/PWA sizes.</li>
+</ul>
+<p class="fine">Tell me which routes to refine (one mark + one wordmark is enough), and whether
+the header should carry the mark plus wordmark or the wordmark alone.</p>
+{% endblock %}

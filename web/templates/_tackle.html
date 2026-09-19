@@ -1,11 +1,11 @@
 {% if out and out.rods %}
 <section class="tackle">
   <h2>Tackle for this session — sources &amp; offers</h2>
-  <p class="fine">Ranking never sees these links. They attach after the pipe ends.</p>
+  <p class="fine">These links never affect the ranking — they're added after the picks are set.</p>
   <ul class="plain">
   {% for r in out.rods %}
     <li>
-      <span class="badge {% if r.verified %}ok{% else %}pend{% endif %}">{% if r.verified %}sourced{% else %}editorial{% endif %}</span>
+      <span class="badge {% if r.verified %}ok{% else %}pend{% endif %}">{% if r.verified %}cited{% else %}unverified{% endif %}</span>
       {% if r.owned is defined and r.owned is not none %}
       <span class="badge {% if r.owned %}mine{% else %}gap{% endif %}">{% if r.owned %}in your box{% else %}gap{% endif %}</span>
       {% endif %}
@@ -41,11 +41,11 @@
 <section class="tackle">
   <h2>🧭 The gap in your tackle box</h2>
   <p class="fine">Scored by the same pipe for these exact conditions — you don't own these yet.
-  Links attach after ranking, never before.</p>
+  Links are added after the picks are set, never before.</p>
   <ul class="plain">
   {% for g in gap_products %}
     <li>
-      <span class="badge {% if g.verified %}ok{% else %}pend{% endif %}">{% if g.verified %}sourced{% else %}editorial{% endif %}</span>
+      <span class="badge {% if g.verified %}ok{% else %}pend{% endif %}">{% if g.verified %}cited{% else %}unverified{% endif %}</span>
       <strong>{{ g.label }}</strong> — scores {{ g.score }} here{% if g.why %} · <span class="fine">{{ g.why }}</span>{% endif %}
       {% if g.product_url %}·
         <a href="/out/{{ g.id }}/manufacturer?src=gap" target="_blank" rel="nofollow noopener">{{ g.product or 'manufacturer page' }}</a>

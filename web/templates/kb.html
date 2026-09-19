@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}knowledge base{% endblock %}
+{% block title %}tackle library{% endblock %}
 {% block content %}
-<h1>Knowledge base — {{ species }}</h1>
-<p>Every entry carries provenance. <span class="badge ok">sourced</span> means a
+<h1>Tackle library — {{ species }}</h1>
+<p>Every entry shows its source. <span class="badge ok">cited</span> means a
 manufacturer catalog or agency guide backs it (click through to the source);
-<span class="badge pend">editorial</span> means consensus text awaiting a
-citation — shown as unverified in the pipe until promoted by a human.</p>
+<span class="badge pend">unverified</span> means a plain-language summary still
+waiting on a source — it is marked that way until a person verifies it.</p>
 <form class="grid" method="get" action="/kb">
   <label>Species
     <select name="species">
@@ -30,11 +30,11 @@ citation — shown as unverified in the pipe until promoted by a human.</p>
     <td data-label="water °F">{{ c.tlo }}–{{ c.thi }}</td>
     <td data-label="source">
       {% if c.source_url %}
-        <span class="badge ok">sourced</span>
+        <span class="badge ok">cited</span>
         <a href="{{ c.source_url }}" target="_blank" rel="noopener">{{ c.source[:60] }}</a>
         {% if c.verified_by %}<div class="fine">verified by {{ c.verified_by }}</div>{% endif %}
       {% else %}
-        <span class="badge pend">editorial</span> <span class="fine">{{ c.source[:50] }}</span>
+        <span class="badge pend">unverified</span> <span class="fine">{{ c.source[:50] }}</span>
       {% endif %}
     </td>
   </tr>

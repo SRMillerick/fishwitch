@@ -68,12 +68,10 @@ def _ref_host(ref: str | None) -> str:
         return ""
 
 
-def read(log: Path | None = None) -> list[dict]:
-    p = log or PAGES
-    if not p.exists():
-        return []
+def parse(lines: list[str] | tuple[str, ...]) -> list[dict]:
+    """Parse JSONL page-view lines, dropping malformed or off-shape rows."""
     rows = []
-    for line in p.read_text().splitlines():
+    for line in lines:
         try:
             r = json.loads(line)
             if isinstance(r, dict) and r.get("path"):
@@ -83,24 +81,35 @@ def read(log: Path | None = None) -> list[dict]:
     return rows
 
 
-def summarize(days: int = 30, log: Path | None = None, top: int = 15) -> dict:
-    """Aggregate rows within the trailing `days` window (UTC)."""
+def read(log: Path | None = None) -> list[dict]:
+    p = log or PAGES
+    if not p.exists():
+        return []
+    return parse(p.read_text().splitlines())
+
+
+def summarize(days: int = 30, log: Path | None = None, top: int = 15,
+              rows: list[dict] | None = None) -> dict:
+    """Aggregate rows within the trailing `days` window (UTC).
+
+    Pass `rows` to summarize an already-parsed log (e.g. read from the
+    production box) instead of reading the local file."""
     cutoff = datetime.now(timezone.utc) - timedelta(days=max(1, days))
-    rows = []
-    for r in read(log):
+    window = []
+    for r in (rows if rows is not None else read(log)):
         try:
             ts = datetime.fromisoformat(str(r["ts"]).replace("Z", "+00:00"))
             if ts.tzinfo is None:
                 ts = ts.replace(tzinfo=timezone.utc)
             if ts >= cutoff:
-                rows.append(r)
+                window.append(r)
         except Exception:
             continue
-    by_path = Counter(r.get("path") or "?" for r in rows)
-    by_lake = Counter(r.get("lake") for r in rows if r.get("lake"))
-    by_ref = Counter(r.get("ref") for r in rows if r.get("ref"))
-    by_day = Counter(str(r.get("ts", ""))[:10] for r in rows)
-    return dict(total=len(rows), days=days,
+    by_path = Counter(r.get("path") or "?" for r in window)
+    by_lake = Counter(r.get("lake") for r in window if r.get("lake"))
+    by_ref = Counter(r.get("ref") for r in window if r.get("ref"))
+    by_day = Counter(str(r.get("ts", ""))[:10] for r in window)
+    return dict(total=len(window), days=days,
                 by_path=by_path.most_common(top),
                 by_lake=by_lake.most_common(top),
                 by_ref=by_ref.most_common(top),

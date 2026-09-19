@@ -1,6 +1,7 @@
 """Telemetry contract: aggregate only, no PII, feeds excluded from page counts."""
 import tempfile
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
 
 import telemetry
@@ -38,6 +39,20 @@ class TelemetryTest(unittest.TestCase):
             self.assertFalse(telemetry.should_count(path), path)
         for path in ("/", "/report", "/outlook", "/lakes", "/lake/x", "/kb"):
             self.assertTrue(telemetry.should_count(path), path)
+    def test_parse_drops_malformed_and_offshape(self):
+        rows = telemetry.parse(['{"path": "/"}', "not json",
+                                '{"lake": "x"}', '{"path": "/kb"}'])
+        self.assertEqual([r["path"] for r in rows], ["/", "/kb"])
+
+    def test_summarize_accepts_preparsed_rows(self):
+        now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        rows = telemetry.parse([
+            '{"ts": "%s", "path": "/", "lake": "", "ref": ""}' % now,
+            "not json",
+        ])
+        s = telemetry.summarize(days=1, rows=rows)
+        self.assertEqual(s["total"], 1)
+        self.assertEqual(s["by_path"][0], ("/", 1))
 
 
 if __name__ == "__main__":

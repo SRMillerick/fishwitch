@@ -7,15 +7,17 @@ almanac and means it.*
 
 ## Design Principles
 
-1. **Almanac restraint.** The page is a ledger. Quiet dark surfaces, thin
+1. **Almanac restraint.** The page is a ledger. Quiet surfaces, thin
    manuscript rules, generous margins. Ornament whispers — one spiral, a lunar
-   glyph, a double rule — and never shouts. If it could be described as
-   "Celtic-themed," it has already failed; the feel should read as *old paper
-   kept near water*, not costume.
-2. **Peat, bone, and moonlight.** Colors come from a North Bay lake at last
-   light: loam-black water, moss shadow, dry-rush gray, bone text, one
-   tarnished-brass moon accent, one lichen green for good days. No tech blue,
-   no cyan, no gradients.
+   glyph, a double rule — and never shouts. The <em>mark</em> carries a Celtic
+   motif — the triple-spiral triskelion — but the page itself never costumes:
+   no knotwork borders, no claddaghs, no "Irish" greens (see Ornament Language).
+   The feel should read as *old paper kept near water*, not a Ren-faire booth.
+2. **Paper, water, and moonlight.** Two modes, one palette logic. **First
+   light** (default): paper ground, deep-water ink, a water-teal primary, one
+   tarnished-brass moon accent, lichen green for good days. **Crisp dark**: the
+   same language after dusk — stepped blue-black surfaces, bone text, a
+   water-cyan data accent. No gradients, no glows.
 3. **The angler's flow.** Every screen answers, in descending order of
    decisiveness: *when do I go, where do I go, what do I tie on.* The tier
    ledger is the front door; everything else is depth. No decorative dead ends.
@@ -31,31 +33,49 @@ almanac and means it.*
 
 ## Design Tokens
 
-Dark-first and dark-only (deliberate: this is read at first light and at dusk).
-CSS custom properties in `web/static/style.css`.
+A light/dark pair — **First light** is the default; **Crisp dark** takes over
+when the system prefers dark or the angler flips the header toggle (stored in
+`bm-theme-v2`; `?theme=first-light|crisp-dark|loam|almanac|system` overrides).
+CSS custom properties in `web/static/style.css`; `/styleguide` (local) renders
+every component under each set with live contrast readouts. `loam` (the
+previous dark field-notebook) and `almanac` (print study) survive only as
+styleguide variants.
 
-### Surfaces
+### First light (default)
 | Token | Value | Meaning |
 |---|---|---|
-| `--bg` | `#141810` | loam — page background |
-| `--panel` | `#1b2117` | moss shadow — cards, tables |
-| `--panel2` | `#222a1c` | raised moss — hovers, chips |
+| `--bg` | `#f7f5ef` | paper |
+| `--panel` | `#fffdf8` | card |
+| `--ink` | `#14232a` | deep-water ink |
+| `--dim` | `#4e5c5f` | secondary |
+| `--faint` | `#68726e` | fine print (4.5:1) |
+| `--line` | `#b8b2a0` | hairline (~2:1) |
+| `--gold` | `#8a5f16` | brass — the ONE accent |
+| `--water` | `#17606f` | water-teal — sky/moon data |
+| `--lichen` | `#33663a` | good / S-tier-adjacent green |
+| `--ember` | `#a9551f` | caution |
+| `--error` | `#9c2f22` | errors |
 
-### Text
+### Crisp dark
 | Token | Value | Meaning |
 |---|---|---|
-| `--ink` | `#e8e3d2` | bone |
-| `--dim` | `#a09c85` | dry rush — secondary |
-| `--gold` | `#d3aa5f` | moon-brass — the ONE accent |
-| `--lichen` | `#93b36b` | good / S-tier-adjacent green |
-| `--water` | `#8fa7b8` | twilight water — moon/sky data only |
-| `--ember` | `#c98a52` | caution |
-| `--error` | `#c0604a` | errors |
+| `--bg` | `#0a0f12` | night water |
+| `--panel` | `#16232a` | stepped surface |
+| `--ink` | `#f2efe6` | bone |
+| `--dim` | `#a9b2ab` | secondary |
+| `--faint` | `#7e8b86` | fine print (5.4:1) |
+| `--line` | `#3a5057` | hairline (~2:1) |
+| `--gold` | `#e2b35f` | brass moon — the ONE accent |
+| `--water` | `#8ccadd` | water-cyan — sky data |
+| `--lichen` | `#9ed07b` | good |
+| `--ember` | `#dd9560` | caution |
+| `--error` | `#e3735c` | errors |
 
 ### Lines
-`--line: #37402c` (bracken) · `--line2: #2a321f` (under-rule). Manuscript
-double rules: 1px bracken over 1px darker, 2px apart — used under section
-heads, never as box borders everywhere.
+Hairlines are ~2:1 against their surface in both modes (`--line`), with a
+lighter under-rule (`--line-2`). Manuscript double rules: 1px line over 1px
+under-rule, 2px apart — used under section heads, never as box borders
+everywhere.
 
 ### Typography
 | Use | Face | Notes |
@@ -67,17 +87,20 @@ heads, never as box borders everywhere.
 ### Tier language (the ledger's ranking)
 | Tier | Meaning | Color |
 |---|---|---|
-| **S** | drop everything | moon-brass |
-| **A** | plan around it | lichen |
-| **B** | worth being out | twilight water |
-| **C** | the fish have other plans | dry rush |
+| **S** | drop everything | moon-brass (`--gold`) |
+| **A** | plan around it | lichen (`--lichen`) |
+| **B** | worth being out | water (`--water`) |
+| **C** | the fish have other plans | dim (`--dim`) |
 
 Bands (deterministic, from `overall`): S ≥ 7.5 · A ≥ 7.0 · B ≥ 6.5 · C below.
 
 ## Ornament Language (the whole Celtic budget)
 
-- **Triskele mark** — one small three-arm spiral SVG. Uses: centered section
-  divider (24px, 60% opacity brass), footer mark. Nowhere else.
+- **The mark** — a traced Celtic triskelion (triple spiral), vectorised from
+  the reference decal: `web/static/triskelion.svg` (faithful), `-bold.svg`
+  (header/footer), `-favicon.svg` (favicon/PWA). Single-ink via CSS mask,
+  coloured by the theme. Uses: header lockup, footer mark, favicon/PWA tiles,
+  and — at reduced opacity — the centered section divider. Nowhere else.
 - **Manuscript double rules** under section heads (`.rule-double`).
 - **Lunar glyphs** (●◐☾◑) in the moon calendar and tier rows — data, not
   decoration, so they're exempt from restraint.
@@ -116,5 +139,4 @@ keep it that way. Rank is sacred:
 - No modals, no toasts — inline messages.
 - No horizontal scroll on main content — tables wrap on desktop and stack into
   labeled rows on narrow screens (≤46rem).
-- No light mode (yet) — first-light/dusk tool; revisit if users demand it.
 - No animation beyond 400ms fades; respect `prefers-reduced-motion`.

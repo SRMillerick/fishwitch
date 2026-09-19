@@ -5,15 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>baromoon — best windows · {{ lake.name }}</title>
 <link rel="stylesheet" href="/static/style.css?v={{ asset_v }}">
+<script>(function(){try{var r=document.documentElement,q=new URLSearchParams(location.search).get("theme"),s=null;try{s=localStorage.getItem("bm-theme-v2");}catch(e){}var t=q||s;if(t==="dark")t="crisp-dark";else if(t==="light")t="first-light";if(t==="system")t=null;if(!t&&window.matchMedia)t=matchMedia("(prefers-color-scheme: dark)").matches?"crisp-dark":"first-light";if(t)r.dataset.theme=t;}catch(e){}})();</script>
 <style>
   body { background: var(--bg); margin: 0; }
   .embed { padding: 14px 16px; }
   .embed h1 { font-size: 20px; margin: .15em 0 .6em; }
   .embed .row { display: flex; justify-content: space-between; gap: 12px;
-                padding: 7px 0; border-bottom: 1px solid var(--line2); }
+                padding: 7px 0; border-bottom: 1px solid var(--line-2); }
   .embed .row:last-of-type { border-bottom: 0; }
   .embed .picks { color: var(--dim); text-align: right; }
-  .embed .when strong { color: var(--gold); font-family: var(--mono); }
+  .embed .when strong { color: var(--gold); font-family: var(--font-mono); }
 </style>
 </head>
 <body>

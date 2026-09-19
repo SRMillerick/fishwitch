@@ -9,7 +9,7 @@ baromoon's server never stores it; it's used in-memory to render your reports, t
 
 <ol class="progress" id="wiz-progress">
   <li class="on" data-step="1"><span>The angler</span></li>
-  <li data-step="2"><span>The sky layer</span></li>
+  <li data-step="2"><span>The sky</span></li>
   <li data-step="3"><span>The tackle box</span></li>
   <li data-step="4"><span>Your builds</span></li>
 </ol>
@@ -36,7 +36,7 @@ baromoon's server never stores it; it's used in-memory to render your reports, t
   </fieldset>
 
   <fieldset class="istep" data-step="2">
-    <legend>2 · The sky layer</legend>
+    <legend>2 · The sky</legend>
     <p class="fine">Birth data powers the astrology layer — solunar feeding windows are computed
     from pure astronomy either way. This is identity-grade personal data, so it stays in your
     browser and goes nowhere else. Prefer zero astrology? Choose the <em>fisher</em> voice and
@@ -70,7 +70,7 @@ baromoon's server never stores it; it's used in-memory to render your reports, t
         {% for c in suggestions %}<option value="{{ c }}">{% endfor %}
       </datalist>
       <div class="fine">Reports pick from what you actually own, matched against the
-      <a href="/kb">cited knowledge base</a>. Enter or comma adds an entry; click a suggestion
+      <a href="/kb">tackle library</a>. Enter or comma adds an entry; click a suggestion
       to pick it. Unknown names still work — they just won't get condition-scored.</div>
     </label>
     <label>Baits you use — live/cut/prepared
@@ -112,7 +112,7 @@ baromoon's server never stores it; it's used in-memory to render your reports, t
   <fieldset class="istep" data-step="4">
     <legend>4 · Your builds <span class="fine">(optional)</span></legend>
     <p class="fine">These rigs matched your box. Fill in what you actually run — the report will
-    print <em>“your build”</em> for them instead of the KB reference. Placeholders show the
+    print <em>“your build”</em> for them instead of the default reference. Placeholders show the
     reference build; leave a field blank to keep it. Everything stays in this browser.</p>
     <div id="builds">
       {% for r in rig_specs %}

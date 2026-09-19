@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+{% block title %}styleguide{% endblock %}
+{% block head %}
+<style>
+  .theme-switch { display: flex; gap: .5rem; flex-wrap: wrap; margin: 1.2rem 0 .7rem; }
+  .theme-switch button.on { color: var(--gold); border-color: var(--gold-dim); background: var(--hover); }
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: .6rem; margin: 1rem 0 2.4rem; }
+  .swatch { border: 1px solid var(--line); border-radius: 3px; overflow: hidden; background: var(--panel); }
+  .swatch .chip { height: 2.7rem; }
+  .swatch .meta { padding: .45rem .6rem; font-size: .72rem; color: var(--dim); font-family: var(--font-mono); }
+  .swatch .meta b { display: block; color: var(--ink); font-family: var(--font-body); font-size: .78rem; }
+  .sg-section { margin-top: clamp(2.6rem, 6vw, 4rem); }
+  .sg-row { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; margin: .8rem 0 1.2rem; }
+  .sg-note { border-left: 2px solid var(--gold-dim); padding: .35rem 0 .35rem .9rem; margin: 1rem 0; color: var(--dim); }
+</style>
+{% endblock %}
+{% block content %}
+<h1>Design system</h1>
+<p class="smallcaps">local styleguide · every component under four token sets</p>
+<p class="lede">Switch the token set below and the whole page — and every other local page —
+re-renders. Same markup, same components; only the design tokens change.</p>
+
+<div class="theme-switch" id="theme-switch">
+  <button data-theme="first-light">First light · light</button>
+  <button data-theme="crisp-dark">Crisp dark · dark</button>
+  <button data-theme="system">System</button>
+  <button data-theme="loam">Loam · previous</button>
+  <button data-theme="almanac">Almanac · print study</button>
+</div>
+<p class="fine">Stored in this browser. Open <a href="/">the home page</a>,
+<a href="/report">a report</a>, <a href="/kb">the tackle library</a>, or <a href="/lakes">the map</a>
+under the chosen theme.</p>
+
+<div class="cols">
+  <div>
+    <h2 class="rule-double">Directions</h2>
+    <p class="fine"><strong>First light · light mode.</strong> Paper ground, deep-water ink,
+    water-teal primary, brass accent. The default in light mode.</p>
+  </div>
+  <div>
+    <p class="fine"><strong>Crisp dark · dark mode.</strong> Stepped blue-black surfaces,
+    visible rules, brighter ink, water-cyan data accent. The default when the system prefers
+    dark — or via the header toggle on any page.</p>
+    <p class="fine"><strong>Loam / Almanac</strong> are kept as studies only: the previous dark
+    field-notebook, and a print-first paper variant.</p>
+  </div>
+</div>
+
+<section class="sg-section">
+  <h2 class="rule-double">Tokens</h2>
+  <p class="fine">Each chip shows the token value and its contrast ratio against <code>--bg</code>.
+  Body text should clear 4.5:1; small fine print should get as close as it can.</p>
+  <div class="swatches" id="swatches"></div>
+</section>
+
+<section class="sg-section">
+  <h2 class="rule-double">Typography</h2>
+  <h1>Heading one — when do the fish feed?</h1>
+  <h2>Heading two — the read</h2>
+  <h3>Heading three label</h3>
+  <p>Body copy sits at 16.5px with a 1.66 line height. The quick brown fox jumps over the lazy
+  dog, then reads the barometer. <a href="#">Inline links use the accent</a> and stay legible
+  against the page.</p>
+  <p class="fine">Fine print carries the small supporting detail — sources, caveats, timestamps.</p>
+  <p class="smallcaps">Small caps · section eyebrow</p>
+  <p class="dim">Dimmed text (secondary).</p>
+  <p><span class="eyebrow">Eyebrow block</span></p>
+  <div class="sg-row">
+    <span class="pill">quiet day</span>
+    <span class="pill on">feed window</span>
+    <span class="badge ok">cited</span>
+    <span class="badge pend">unverified</span>
+    <span class="badge mine">in your box</span>
+    <span class="badge gap">gap</span>
+  </div>
+</section>
+
+<section class="sg-section">
+  <h2 class="rule-double">Controls</h2>
+  <div class="sg-row">
+    <a class="btn primary" href="#">Primary</a>
+    <a class="btn ghost" href="#">Ghost</a>
+    <button type="button">Button</button>
+    <button type="button" disabled>Disabled</button>
+  </div>
+  <form class="grid" onsubmit="return false">
+    <label>Lake
+      <select><option>Lake Berryessa</option><option>Lake Sonoma</option></select>
+    </label>
+    <label>Date <input type="date" value="2026-09-20"></label>
+    <label>Species <input type="text" placeholder="largemouth bass"></label>
+    <label>Bottom
+      <select><option>— (skip cover)</option><option>grass</option></select>
+    </label>
+    <button type="submit">Generate</button>
+  </form>
+  <div class="tagfield" style="max-width:34rem">
+    <span class="tag">drop shot <button type="button">×</button></span>
+    <span class="tag">wacky senko <button type="button">×</button></span>
+    <input class="tag-text" placeholder="add another…">
+  </div>
+  <div class="build-card" style="max-width:34rem;margin-top:1rem">
+    <div class="build-head"><strong>Drop shot</strong><span class="fine">your build</span></div>
+    <div class="build-grid">
+      <label>Hook <input value="Owner Mosquito Circle 1/0"></label>
+      <label>Weight <input value="drop-shot 1/8 oz"></label>
+      <label>Plastic <input value="6in Deception worm"></label>
+      <label>Line <input value="fluorocarbon"></label>
+    </div>
+  </div>
+</section>
+
+<section class="sg-section">
+  <h2 class="rule-double">Ledger &amp; readout</h2>
+  <ul class="tier-rows">
+    <li><a class="trow S" href="#">
+      <span class="tier">S</span>
+      <span class="when"><span class="day">Sat</span><span class="clock">6:14–7:16 PM</span>
+        <span class="lune">◐</span></span>
+      <span class="where">Lake Berryessa</span>
+      <span class="rig">Drop shot</span>
+      <span class="score">9.1<i>/10</i></span>
+    </a></li>
+    <li><a class="trow A" href="#">
+      <span class="tier">A</span>
+      <span class="when"><span class="day">Sun</span><span class="clock">5:48–6:52 AM</span>
+        <span class="lune">◑</span></span>
+      <span class="where">Hidden Valley Lake</span>
+      <span class="rig">Walking topwater</span>
+      <span class="score">8.2<i>/10</i></span>
+    </a></li>
+    <li><a class="trow B" href="#">
+      <span class="tier">B</span>
+      <span class="when"><span class="day">Mon</span><span class="clock">7:05–8:10 PM</span>
+        <span class="lune">◕</span></span>
+      <span class="where">Lake Sonoma</span>
+      <span class="rig">Texas-rigged worm</span>
+      <span class="score">7.4<i>/10</i></span>
+    </a></li>
+  </ul>
+  <div class="readout" style="max-width:22rem;margin-top:1.4rem">
+    <div class="r-label">Tonight · Lake Berryessa</div>
+    <div class="r-score">8.6<span>/10</span></div>
+    <dl class="r-meta">
+      <div><dt>Moon</dt><dd>◔ waxing crescent · 24%</dd></div>
+      <div><dt>Prime window</dt><dd>6:14 PM</dd></div>
+      <div><dt>First rod</dt><dd>Drop shot</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="sg-section">
+  <h2 class="rule-double">Report surface</h2>
+  <div class="report" style="max-width:none">
+    <div class="scorebar">overall <strong>8.6/10</strong> · Lake Berryessa ·
+      Sat Aug 29, 6:00 PM</div>
+    <h2>The read</h2>
+    <p>A stable, stratified summer evening: fish hold above the stratification level where the
+    oxygen is, and the drop shot leads the finesse cluster.</p>
+    <h3>Locked numbers</h3>
+    <div class="table-scroll">
+      <table>
+        <tbody>
+          <tr><th>Fish position</th><td><strong>stratified</strong> — bass hold above the
+            stratification level (Iowa DNR)</td></tr>
+          <tr><th>Sky/wind</th><td>18% cloud, 6 mph wind, steady barometer (1014 hPa)</td></tr>
+          <tr><th>Bottom</th><td><strong>grass</strong> — a declared cover type nudges the
+            ranking, never by much</td></tr>
+          <tr><th>Data</th><td>✅ sky+weather · ✅ water-state history · 🟡 est. water temp</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Prime window</h3>
+    <ul>
+      <li><strong>Drop shot</strong> — hover it; shake, never touch bottom; 12–24in leader</li>
+      <li><strong>Wacky-rigged Senko</strong> — skip it under docks, dead-stick the fall</li>
+    </ul>
+    <h3>Decision rules</h3>
+    <ul>
+      <li><strong>Stratified summer →</strong> work suspended presentations above the
+      stratification level instead of dragging the basin floor.</li>
+      <li><strong>Drop-shot fish slapping →</strong> re-cast the same fish one size up.</li>
+    </ul>
+  </div>
+  <div class="tackle">
+    <h2>Tackle for this session — sources &amp; offers</h2>
+    <p class="fine">These links never affect the ranking — they're added after the picks are set.</p>
+    <ul class="plain">
+      <li><span class="badge ok">cited</span> <span class="badge mine">in your box</span>
+        <strong>Drop shot</strong> · <a href="#">manufacturer page</a>
+        <div class="build"><span class="sc">your build</span> Owner Mosquito Circle 1/0 ·
+          drop-shot 1/8 oz · 6in Deception worm</div></li>
+      <li><span class="badge ok">cited</span> <span class="badge gap">gap</span>
+        <strong>Chicken rig</strong> — scores 7.2 here · slow fall stays in the oxygenated layer</li>
+    </ul>
+  </div>
+</section>
+
+<section class="sg-section">
+  <h2 class="rule-double">Tackle library table</h2>
+  <div class="table-scroll">
+    <table class="kb">
+      <thead><tr><th>entry</th><th>style</th><th>depth</th><th>water °F</th><th>source</th></tr></thead>
+      <tbody>
+        <tr>
+          <td data-label="entry"><a href="#"><strong>Drop shot</strong></a>
+            <div class="fine">aka drop-shot rig</div></td>
+          <td data-label="style">finesse</td>
+          <td data-label="depth">deep</td>
+          <td data-label="water °F">50–85</td>
+          <td data-label="source"><span class="badge ok">cited</span>
+            <a href="#">Take Me Fishing · Bass Fishing Rigs</a></td>
+        </tr>
+        <tr>
+          <td data-label="entry"><a href="#"><strong>Chicken rig</strong></a></td>
+          <td data-label="style">finesse</td>
+          <td data-label="depth">mid</td>
+          <td data-label="water °F">55–85</td>
+          <td data-label="source"><span class="badge pend">unverified</span>
+            <span class="fine">plain-language summary</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="stats" style="max-width:42rem">
+    <div><dt>Surface</dt><dd>19,249 ac</dd></div>
+    <div><dt>Elevation</dt><dd>440 ft</dd></div>
+    <div><dt>Mixing</dt><dd>warm-monomictic</dd></div>
+    <div><dt>Max depth</dt><dd>~120 ft</dd></div>
+  </div>
+  <p class="sg-note">Print view: the pocket card drops the chrome and prints light. Try
+  <button type="button" onclick="window.print()" style="padding:.35rem .8rem">print this page</button> —
+  the token sets all fall back to the same paper scheme.</p>
+  <p class="fine"><strong>Known follow-up:</strong> map tiles are CARTO dark on every theme
+  (Leaflet init in <code>lake.html</code>/<code>lakes.html</code>); a light-tile variant for the
+  light themes is a later pass.</p>
+</section>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var buttons = document.querySelectorAll("#theme-switch button");
+  var ORDER = ["first-light", "crisp-dark", "loam", "almanac", "system"];
+  var META = { "first-light": "#f7f5ef", "crisp-dark": "#0a0f12", "loam": "#10140d", "almanac": "#f3eddc" };
+
+  function rgb(x) {
+    x = (x || "").trim();
+    if (x.charAt(0) === "#") {
+      x = x.slice(1);
+      if (x.length === 3) x = x.split("").map(function (c) { return c + c; }).join("");
+      var n = parseInt(x, 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+    var m = x.match(/[\d.]+/g);
+    return m ? m.slice(0, 3).map(Number) : [0, 0, 0];
+  }
+  function lum(c) {
+    var w = [0.2126, 0.7152, 0.0722];
+    return c.map(function (v, i) {
+      v /= 255;
+      return (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)) * w[i];
+    }).reduce(function (a, b) { return a + b; }, 0);
+  }
+  function ratio(a, b) {
+    var la = lum(rgb(a)), lb = lum(rgb(b));
+    var hi = Math.max(la, lb), lo = Math.min(la, lb);
+    return ((hi + 0.05) / (lo + 0.05)).toFixed(2);
+  }
+  var TOKENS = ["--bg", "--bg-2", "--panel", "--panel-2", "--line", "--ink", "--dim",
+                "--faint", "--gold", "--water", "--lichen", "--ember", "--error"];
+  var grid = document.getElementById("swatches");
+
+  function renderSwatches() {
+    var cs = getComputedStyle(root);
+    var bg = cs.getPropertyValue("--bg");
+    grid.innerHTML = TOKENS.map(function (t) {
+      var v = cs.getPropertyValue(t).trim();
+      return '<div class="swatch"><div class="chip" style="background:' + v + '"></div>' +
+             '<div class="meta"><b>' + t + '</b>' + v + '<br>vs bg ' + ratio(v, bg) + ':1</div></div>';
+    }).join("");
+  }
+  function systemTheme() {
+    return (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches)
+      ? "crisp-dark" : "first-light";
+  }
+  function stored() {
+    try { return localStorage.getItem("bm-theme-v2"); } catch (e) { return null; }
+  }
+  function apply(t, persist) {
+    if (t === "system") {
+      try { localStorage.removeItem("bm-theme-v2"); } catch (e) {}
+      t = systemTheme();
+    } else if (ORDER.indexOf(t) < 0) {
+      t = "first-light";
+    } else if (persist !== false) {
+      try { localStorage.setItem("bm-theme-v2", t); } catch (e) {}
+    }
+    root.dataset.theme = t;
+    var m = document.querySelector('meta[name="theme-color"]');
+    if (m && META[t]) m.setAttribute("content", META[t]);
+    var current = stored() || "system";
+    buttons.forEach(function (b) { b.classList.toggle("on", b.dataset.theme === current); });
+    renderSwatches();
+  }
+  buttons.forEach(function (b) { b.addEventListener("click", function () { apply(b.dataset.theme, true); }); });
+  apply(stored() || root.dataset.theme || systemTheme(), false);
+})();
+</script>
+{% endblock %}

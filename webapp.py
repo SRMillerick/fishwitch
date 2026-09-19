@@ -88,7 +88,7 @@ def _count_page(resp):
 
 @app.context_processor
 def inject_asset_v():
-    return dict(asset_v=ASSET_V)
+    return dict(asset_v=ASSET_V, local=LOCAL)
 
 
 # ── shared, cached data layers (one weather call serves many renders) ───────
@@ -396,7 +396,7 @@ def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
                    your_setup_line=tx.setup_line(setups.get(c["id"])),
                    verified=c["provenance"].get("confidence") == "verified"
                    or c["provenance"].get("confidence") == "sourced",
-                   source=c["provenance"].get("source", "editorial consensus"),
+                   source=c["provenance"].get("source", "plain-language summary"),
                    source_url=c["provenance"].get("source_url"),
                    product=mfg.get("product_title"),
                    product_url=mfg.get("product_url"),
@@ -980,6 +980,24 @@ def stats_page():
     days = max(1, min(365, int(request.args.get("days") or 30)))
     s = telemetry.summarize(days=days)
     return render_template("stats.html", s=s, days=days, local=LOCAL)
+
+
+@app.route("/styleguide")
+def styleguide_page():
+    """Local design-system reference: every component under each theme token
+    set (loam / first-light / crisp-dark / almanac). Not shipped publicly."""
+    if not LOCAL:
+        abort(404)
+    return render_template("styleguide.html", local=LOCAL)
+
+
+@app.route("/logo")
+def logo_page():
+    """Local logo sketchpad: mark routes + wordmark studies, at real sizes and
+    in both themes. Not shipped publicly."""
+    if not LOCAL:
+        abort(404)
+    return render_template("logo.html", local=LOCAL)
 
 
 # ── public API v1 (anonymous, read-only, attributed) ────────────────────────

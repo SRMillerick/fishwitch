@@ -16,7 +16,10 @@ Examples:
 """
 from __future__ import annotations
 import json
+import os
 import re
+import shlex
+import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -27,6 +30,47 @@ from fishwitch.report import generate, to_markdown, save
 ROOT = Path(__file__).resolve().parent
 CONFIG = ROOT / "config"
 PROFILES = CONFIG / "profiles"
+REMOTE_DIR = "/srv/fishwitch"
+
+
+def _baromoon_host() -> str:
+    """Production ssh target: $BAROMOON_HOST, else root@deploy/host.txt (as deploy.sh)."""
+    host = os.environ.get("BAROMOON_HOST", "").strip()
+    if not host:
+        f = ROOT / "deploy" / "host.txt"
+        ip = f.read_text().strip() if f.exists() else ""
+        if ip:
+            host = f"root@{ip}"
+    if not host:
+        sys.exit("  no remote host set — use BAROMOON_HOST or deploy/host.txt")
+    return host
+
+
+def _remote_lines(path: str) -> list[str]:
+    """Read an aggregate log file from production over ssh (read-only)."""
+    host = _baromoon_host()
+    try:
+        p = subprocess.run(
+            ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10",
+             host, f"cat {shlex.quote(path)}"],
+            capture_output=True, text=True, timeout=60)
+    except Exception as e:
+        sys.exit(f"  remote read failed ({host}): {e}")
+    if p.returncode != 0:
+        sys.exit(f"  remote read failed ({host}): {(p.stderr or '').strip()[:200]}")
+    return p.stdout.splitlines()
+
+
+def _jsonl(lines: list[str]) -> list[dict]:
+    rows = []
+    for line in lines:
+        try:
+            r = json.loads(line)
+            if isinstance(r, dict):
+                rows.append(r)
+        except Exception:
+            pass
+    return rows
 
 
 def load_json(p: Path, default=None):
@@ -658,10 +702,14 @@ def main():
     cl = sub.add_parser("clicks", help="aggregate outbound-link click counts (no PII)")
     cl.add_argument("--src", help="filter by page section (tackle|gap)")
     cl.add_argument("--top", type=int, default=20)
+    cl.add_argument("--remote", action="store_true",
+                    help="read the production log over ssh (default: local)")
 
     st = sub.add_parser("stats", help="aggregate page-view counts (no PII)")
     st.add_argument("--days", type=int, default=30)
     st.add_argument("--top", type=int, default=15)
+    st.add_argument("--remote", action="store_true",
+                    help="read the production log over ssh (default: local)")
 
     tp = sub.add_parser("terminal", help="terminal tackle KB (hooks, weights, jig heads)")
     tp.add_argument("--show", help="entry id to print")
@@ -854,17 +902,19 @@ def main():
 
     elif args.cmd == "clicks":
         from collections import Counter
-        log = Path(__file__).resolve().parent / "logs" / "out.jsonl"
-        if not log.exists():
-            sys.exit(f"no clicks logged yet ({log})")
-        rows = []
-        for line in log.read_text().splitlines():
-            try:
-                rows.append(json.loads(line))
-            except Exception:
-                pass
+        if args.remote:
+            host = _baromoon_host()
+            src = f"production — {host}:{REMOTE_DIR}/logs/out.jsonl"
+            rows = _jsonl(_remote_lines(f"{REMOTE_DIR}/logs/out.jsonl"))
+        else:
+            log = ROOT / "logs" / "out.jsonl"
+            if not log.exists():
+                sys.exit(f"no clicks logged yet ({log})")
+            src = "local — logs/out.jsonl"
+            rows = _jsonl(log.read_text().splitlines())
         if args.src:
             rows = [r for r in rows if r.get("src") == args.src]
+        print(f"  source: {src}")
         print(f"  {len(rows)} outbound clicks" + (f" (src={args.src})" if args.src else ""))
         for (entry, retailer), n in Counter(
                 (r.get("entry"), r.get("retailer")) for r in rows).most_common(args.top):
@@ -874,10 +924,18 @@ def main():
             print("  by section:", ", ".join(f"{k}={v}" for k, v in by_src.most_common()))
 
     elif args.cmd == "stats":
-        from telemetry import summarize
-        s = summarize(days=args.days, top=args.top)
+        from telemetry import parse, summarize
+        if args.remote:
+            host = _baromoon_host()
+            src = f"production — {host}:{REMOTE_DIR}/logs/pages.jsonl"
+            rows = parse(_remote_lines(f"{REMOTE_DIR}/logs/pages.jsonl"))
+        else:
+            src = "local — logs/pages.jsonl"
+            rows = None
+        s = summarize(days=args.days, top=args.top, rows=rows)
         if not s["total"]:
-            sys.exit("no page views logged yet (logs/pages.jsonl)")
+            sys.exit(f"no page views logged yet ({src})")
+        print(f"  source: {src}")
         print(f"  {s['total']} page views in the trailing {s['days']} days")
         print("  by page:")
         for path, n in s["by_path"]:

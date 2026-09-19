@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block title %}{{ lake.name }} fishing report{% endblock %}
 {% block head %}
-<meta name="description" content="{{ lake.name }} ({{ lake.region }}) — conditions, upcoming windows, and what to tie on. Deterministic fishing report from baromoon.">
+<meta name="description" content="{{ lake.name }} ({{ lake.region }}) — conditions, upcoming windows, and what to tie on. Fishing report from baromoon.">
 <meta property="og:title" content="{{ lake.name }} fishing report — baromoon">
-<meta property="og:description" content="Conditions, upcoming windows, and what to tie on at {{ lake.name }}. Deterministic, cited, free.">
+<meta property="og:description" content="Conditions, upcoming windows, and what to tie on at {{ lake.name }}. Cited, free.">
 <meta property="og:url" content="https://baromoon.com/lake/{{ lake.id }}">
 <link rel="canonical" href="https://baromoon.com/lake/{{ lake.id }}">
 <link rel="stylesheet" href="/static/leaflet/leaflet.css">
@@ -31,7 +31,7 @@
 <div id="map" class="map" role="img" aria-label="Map of {{ lake.name }}"></div>
 
 <div class="section-head">
-  <h2>The engine's read</h2>
+  <h2>The read</h2>
   <span class="smallcaps">next three days · home-water scan</span>
 </div>
 {% if windows %}
@@ -73,10 +73,13 @@ C — the fish have other plans.</p>
 (function () {
   const lat = {{ lake.lat or 39 }}, lng = {{ lake.lng or -122.6 }};
   const map = L.map('map').setView([lat, lng], {{ 11 if lake.lat else 7 }});
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  const tileUrl = (t) => 'https://{s}.basemaps.cartocdn.com/' +
+    ((t === 'crisp-dark' || t === 'loam') ? 'dark_all' : 'light_all') + '/{z}/{x}/{y}{r}.png';
+  const tiles = L.tileLayer(tileUrl(document.documentElement.dataset.theme), {
     maxZoom: 19,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
   }).addTo(map);
+  window.addEventListener('bm:theme', (e) => tiles.setUrl(tileUrl(e.detail.theme)));
   L.marker([lat, lng]).addTo(map).bindPopup('<strong>{{ lake.name | e }}</strong><br>{{ lake.region | e }}');
 })();
 </script>

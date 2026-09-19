@@ -1,5 +1,5 @@
 /* baromoon — the moon-ledger.
-   Design contract: DESIGN.md. Peat, bone, moonlight.
+   Design contract: DESIGN.md. Paper by day, water-dark by night, one brass moon.
    Ornament budget: one triskele, manuscript double rules, lunar glyphs. */
 
 :root {
@@ -35,6 +35,8 @@
   /* measure & rhythm */
   --wrap: 74rem;
   --gutter: clamp(1.25rem, 4vw, 3rem);
+  --header: rgba(16, 20, 13, .9);
+  --hover: rgba(255, 255, 255, .025);
   --shadow: 0 30px 60px -40px rgba(0, 0, 0, .8);
 }
 
@@ -50,7 +52,7 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
-::selection { background: rgba(211, 170, 95, .24); color: var(--ink); }
+::selection { background: color-mix(in srgb, var(--gold) 24%, transparent); color: var(--ink); }
 
 img, svg { max-width: 100%; }
 a { color: var(--gold); text-decoration: none; transition: color .2s ease; }
@@ -77,7 +79,7 @@ code {
 /* ── chrome ─────────────────────────────────────────────────────────────── */
 header {
   position: sticky; top: 0; z-index: 100;
-  background: rgba(16, 20, 13, .9);
+  background: var(--header);
   -webkit-backdrop-filter: saturate(120%) blur(10px);
   backdrop-filter: saturate(120%) blur(10px);
   border-bottom: 1px solid var(--line-2);
@@ -94,7 +96,7 @@ nav {
   letter-spacing: .005em; color: var(--ink); margin-right: .4rem;
 }
 .brand:hover { color: var(--ink); }
-.brand .triskele { color: var(--gold); }
+.brand .triskele { color: var(--gold); width: .72em; }
 nav > a:not(.brand) {
   position: relative; color: var(--dim); padding: .5rem 0;
   font-size: .7rem; font-weight: 500; letter-spacing: .15em; text-transform: uppercase;
@@ -108,7 +110,7 @@ nav > a:not(.brand):hover::after, nav > a:not(.brand).on::after { right: 0; }
 nav > a:not(.brand).on::after { background: var(--gold-dim); }
 
 /* profile vault menu */
-.menu { margin-left: auto; position: relative; }
+.menu { margin-left: .35rem; position: relative; }
 .menu summary {
   list-style: none; cursor: pointer; user-select: none;
   display: inline-flex; align-items: center; gap: .5rem;
@@ -118,6 +120,17 @@ nav > a:not(.brand).on::after { background: var(--gold-dim); }
   transition: color .2s, border-color .2s;
 }
 .menu summary::-webkit-details-marker { display: none; }
+.theme-toggle {
+  margin-left: auto; display: inline-flex; align-items: center; justify-content: center;
+  background: none; border: 1px solid var(--line); border-radius: 2px;
+  color: var(--dim); padding: .42rem .5rem; cursor: pointer;
+  transition: color .2s, border-color .2s;
+}
+.theme-toggle:hover { color: var(--gold); border-color: var(--gold-dim); }
+.theme-toggle svg { display: block; }
+.theme-toggle .i-sun { display: none; }
+html[data-theme="crisp-dark"] .theme-toggle .i-sun { display: block; }
+html[data-theme="crisp-dark"] .theme-toggle .i-moon { display: none; }
 .menu summary:hover { color: var(--gold); border-color: var(--gold-dim); }
 .menu[open] summary { color: var(--gold); border-color: var(--gold-dim); }
 .menu .chev { transition: transform .2s ease; opacity: .7; }
@@ -179,9 +192,16 @@ main {
 }
 .section-head h2 { margin: 0; border: 0; font-size: clamp(1.5rem, 2.6vw, 1.95rem); color: var(--ink); }
 
-/* ── triskele & dividers ────────────────────────────────────────────────── */
-.triskele { display: inline-block; color: var(--gold); opacity: .8; }
-.triskele svg { display: block; }
+/* ── mark (traced triskelion) & dividers ──────────────────────────────────
+   The mark is a mask so it inherits the theme colour: faithful + bold cuts
+   (triskelion.svg / triskelion-bold.svg), extra-bold for the favicon. */
+.triskele {
+  display: inline-block; width: 1.1em; aspect-ratio: 360 / 344;
+  color: var(--gold); background-color: currentColor; opacity: .85;
+  -webkit-mask: url("/static/triskelion-bold.svg") center / contain no-repeat;
+  mask: url("/static/triskelion-bold.svg") center / contain no-repeat;
+}
+.triskele-lg { width: 22px; opacity: .6; }
 .divider { display: flex; align-items: center; gap: 1.1rem; margin: clamp(2rem, 5vw, 3.5rem) 0; }
 .divider::before, .divider::after { content: ""; flex: 1; border-top: 1px solid var(--line-2); }
 
@@ -195,8 +215,8 @@ main {
   transition: background .22s ease, color .22s ease, border-color .22s ease;
 }
 .btn:hover, button:hover:not(:disabled) { color: var(--gold); border-color: var(--gold-dim); }
-.btn.primary { background: var(--gold); border-color: var(--gold); color: #171b0e; font-weight: 600; }
-.btn.primary:hover { background: var(--gold-bright); border-color: var(--gold-bright); color: #171b0e; }
+.btn.primary { background: var(--gold); border-color: var(--gold); color: var(--bg); font-weight: 600; }
+.btn.primary:hover { background: var(--gold-bright); border-color: var(--gold-bright); color: var(--bg); }
 .btn.ghost { border-color: var(--line); color: var(--dim); }
 button:disabled { opacity: .45; cursor: not-allowed; }
 
@@ -238,7 +258,8 @@ fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
 .tag {
   display: inline-flex; align-items: center; gap: .25rem;
   padding: .12rem .18rem .12rem .5rem; border-radius: 2px;
-  background: rgba(211, 170, 95, .09); border: 1px solid rgba(211, 170, 95, .35);
+  background: color-mix(in srgb, var(--gold) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--gold) 35%, transparent);
   color: var(--ink); font-size: .84rem; line-height: 1.5;
 }
 .tag button {
@@ -254,14 +275,14 @@ fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
 .tag-menu {
   position: absolute; z-index: 30; top: calc(100% + .28rem); left: 0; right: 0;
   max-height: 13rem; overflow-y: auto; padding: .22rem;
-  background: var(--panel2); border: 1px solid var(--line); border-radius: 4px;
+  background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px;
   box-shadow: var(--shadow);
 }
 .tag-opt {
   padding: .42rem .6rem; border-radius: 2px; color: var(--dim);
   font-size: .86rem; cursor: pointer;
 }
-.tag-opt:hover { background: rgba(211, 170, 95, .1); color: var(--ink); }
+.tag-opt:hover { background: color-mix(in srgb, var(--gold) 10%, transparent); color: var(--ink); }
 
 /* ── interview builds (step 4) ─────────────────────────────────────────── */
 .build-card {
@@ -322,7 +343,7 @@ fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
   color: var(--ink);
   transition: background .2s ease, padding-left .2s ease;
 }
-.trow:hover { background: rgba(255, 255, 255, .022); padding-left: .55rem; }
+.trow:hover { background: var(--hover); padding-left: .55rem; }
 .trow .tier { grid-column: 1; font-family: var(--font-display); font-size: 1.5rem;
   font-weight: 700; line-height: .9; color: var(--faint); }
 .trow.S .tier { color: var(--gold); }
@@ -371,7 +392,7 @@ th {
   padding: .55rem .7rem; border-bottom: 1px solid var(--line);
 }
 td { padding: .72rem .7rem; border-bottom: 1px solid var(--line-2); vertical-align: top; }
-tr:hover td { background: rgba(255, 255, 255, .02); }
+tr:hover td { background: var(--hover); }
 tbody tr:last-child td { border-bottom: 0; }
 .table-scroll { overflow-x: auto; margin: 1.2rem 0; }
 .table-scroll > table { margin: 0; min-width: 100%; }
@@ -398,21 +419,21 @@ tbody tr:last-child td { border-bottom: 0; }
 .badge { display: inline-block; font-size: .6rem; font-weight: 600; letter-spacing: .1em;
   text-transform: uppercase; padding: .2rem .5rem; border-radius: 2px; margin-right: .4rem;
   border: 1px solid var(--line); color: var(--dim); vertical-align: .06em; }
-.badge.ok { color: var(--lichen); border-color: rgba(147, 179, 107, .42);
-  background: rgba(147, 179, 107, .08); }
-.badge.pend { color: var(--ember); border-color: rgba(201, 138, 82, .4);
-  background: rgba(201, 138, 82, .07); }
-.badge.mine { color: var(--gold); border-color: rgba(211, 170, 95, .45);
-  background: rgba(211, 170, 95, .08); }
-.badge.gap { color: var(--ember); border-color: rgba(201, 138, 82, .45);
-  background: rgba(201, 138, 82, .08); }
+.badge.ok { color: var(--lichen); border-color: color-mix(in srgb, var(--lichen) 45%, transparent);
+  background: color-mix(in srgb, var(--lichen) 9%, transparent); }
+.badge.pend { color: var(--ember); border-color: color-mix(in srgb, var(--ember) 42%, transparent);
+  background: color-mix(in srgb, var(--ember) 8%, transparent); }
+.badge.mine { color: var(--gold); border-color: color-mix(in srgb, var(--gold) 45%, transparent);
+  background: color-mix(in srgb, var(--gold) 9%, transparent); }
+.badge.gap { color: var(--ember); border-color: color-mix(in srgb, var(--ember) 45%, transparent);
+  background: color-mix(in srgb, var(--ember) 9%, transparent); }
 .moonrow { display: flex; flex-wrap: wrap; gap: .5rem .9rem; }
 .moon { color: var(--dim); font-size: .84rem; font-family: var(--font-mono); }
 .moon.peak { color: var(--gold); }
 .pill { display: inline-block; border: 1px solid var(--line); border-radius: 2px;
   padding: .4rem .8rem; font-size: .8rem; color: var(--dim); margin: .6rem 0; }
-.pill.on { border-color: rgba(147, 179, 107, .45); color: var(--lichen);
-  background: rgba(147, 179, 107, .06); }
+.pill.on { border-color: color-mix(in srgb, var(--lichen) 45%, transparent); color: var(--lichen);
+  background: color-mix(in srgb, var(--lichen) 7%, transparent); }
 
 /* review marks (local calibration) */
 .mark { color: var(--gold); }
@@ -463,7 +484,7 @@ tbody tr:last-child td { border-bottom: 0; }
 .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--panel); color: var(--ink);
   border: 1px solid var(--line); box-shadow: none; }
 .leaflet-popup-content a { color: var(--gold); }
-.leaflet-control-attribution { background: rgba(16,20,13,.8) !important; color: var(--faint); }
+.leaflet-control-attribution { background: var(--header) !important; color: var(--faint); }
 .leaflet-control-attribution a { color: var(--dim); }
 
 /* ── wizard ─────────────────────────────────────────────────────────────── */
@@ -482,7 +503,7 @@ tbody tr:last-child td { border-bottom: 0; }
 .vcard { display: flex; flex-direction: column; gap: .25rem; border: 1px solid var(--line);
   border-radius: 3px; padding: .8rem .9rem; cursor: pointer; color: var(--ink);
   transition: border-color .2s, background .2s; }
-.vcard:has(input:checked) { border-color: var(--gold-dim); background: rgba(211, 170, 95, .07); }
+.vcard:has(input:checked) { border-color: var(--gold-dim); background: color-mix(in srgb, var(--gold) 8%, transparent); }
 .vcard input { display: none; }
 .vcard span { color: var(--dim); font-size: .78rem; }
 
@@ -519,15 +540,68 @@ body.is-loading .nav-progress { width: 88%; opacity: 1;
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
 
+/* ── theme variants (local /styleguide; see the styleguide page) ─────────────
+   Same components, swapped tokens. `loam` is the current production theme;
+   `first-light`, `crisp-dark`, and `almanac` are the design directions. */
+html[data-theme="loam"] { color-scheme: dark; }
+
+html[data-theme="first-light"] {
+  color-scheme: light;
+  --bg: #f7f5ef; --bg-2: #efece2; --panel: #fffdf8; --panel-2: #f3f0e7;
+  --line: #b8b2a0; --line-2: #e5e1d5;
+  --ink: #14232a; --dim: #4e5c5f; --faint: #68726e;
+  --gold: #8a5f16; --gold-bright: #a8761f; --gold-dim: #c8b183;
+  --lichen: #33663a; --water: #17606f; --ember: #a9551f; --error: #9c2f22;
+  --header: rgba(247, 245, 239, .88);
+  --hover: rgba(20, 35, 42, .035);
+  --shadow: 0 24px 50px -36px rgba(20, 35, 42, .35);
+}
+html[data-theme="first-light"] select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%234e5c5f' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+html[data-theme="crisp-dark"] {
+  color-scheme: dark;
+  --bg: #0a0f12; --bg-2: #0d1417; --panel: #16232a; --panel-2: #1c2b33;
+  --line: #3a5057; --line-2: #22343b;
+  --ink: #f2efe6; --dim: #a9b2ab; --faint: #7e8b86;
+  --gold: #e2b35f; --gold-bright: #f2ca7e; --gold-dim: #8e7444;
+  --lichen: #9ed07b; --water: #8ccadd; --ember: #dd9560; --error: #e3735c;
+  --header: rgba(10, 15, 18, .9);
+  --hover: rgba(255, 255, 255, .03);
+  --shadow: 0 30px 60px -40px rgba(0, 0, 0, .8);
+}
+html[data-theme="crisp-dark"] select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23a9b2ab' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+html[data-theme="almanac"] {
+  color-scheme: light;
+  --bg: #f3eddc; --bg-2: #ece5d0; --panel: #faf6ea; --panel-2: #f0e9d5;
+  --line: #beb394; --line-2: #ded6bf;
+  --ink: #1c1812; --dim: #565040; --faint: #6f6752;
+  --gold: #7d5310; --gold-bright: #96661a; --gold-dim: #bda87b;
+  --lichen: #41632c; --water: #275668; --ember: #96461e; --error: #872c20;
+  --header: rgba(243, 237, 220, .9);
+  --hover: rgba(28, 24, 18, .035);
+  --shadow: 0 18px 40px -34px rgba(28, 24, 18, .45);
+}
+html[data-theme="almanac"] select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23565040' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
 /* ── field mode: print / pocket card ────────────────────────────────────────
    Light tokens so the journal survives a laser printer; chrome, forms and
    nav disappear; the ledger, windows and rigs stay. */
 @media print {
-  :root {
+  :root, :root[data-theme] {
     color-scheme: light;
-    --bg: #fff; --panel: #fff; --panel2: #f3f3f0;
-    --ink: #141810; --dim: #444; --line: #b9b9b3; --line2: #d8d8d2;
-    --gold: #7a5c1e; --lichen: #3d6b2f; --water: #31566b; --ember: #8a5324; --error: #8a2f22;
+    --bg: #fff; --bg-2: #f7f7f4; --panel: #fff; --panel-2: #f3f3f0;
+    --ink: #141810; --dim: #444; --faint: #666; --line: #b9b9b3; --line-2: #d8d8d2;
+    --gold: #7a5c1e; --gold-bright: #8a6a24; --gold-dim: #a98a4a;
+    --lichen: #3d6b2f; --water: #31566b; --ember: #8a5324; --error: #8a2f22;
+    --header: transparent;
+    --hover: transparent;
   }
   header, footer, nav, form, #profile-menu, .no-print, .nav-progress,
   .foot-legal, .menu-body, .menu { display: none !important; }

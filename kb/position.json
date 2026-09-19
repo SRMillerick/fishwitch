@@ -1,0 +1,71 @@
+{
+  "label": "Fish position (derived)",
+  "_note": "A derived fish-position state. No registry lake has a live thermocline or dissolved-oxygen sensor, so the state is inferred from what the engine already knows: the lake's mixing type (config/lakes.json) plus modeled surface water temperature, month, existing lake state, and spawn phase. While `stratified` is active, presentation classes get a small T5 tie-break translation (kb/CONDITIONS.md): suspended presentations stay in the oxygenated layer above the stratification level; slow-fall presentations stay in that layer. Null-safe: unknown mixing type or water temp means no state, no fit.",
+  "provenance": {
+    "confidence": "sourced",
+    "author": "position-pass/1.0",
+    "seeded_at": "2026-09-19",
+    "verified_by": null,
+    "note": "trigger facts are T2 verbatim; class-fit magnitudes are T5 editorial translations on the capped tie-break layer"
+  },
+  "states": [
+    "stratified"
+  ],
+  "triggers": {
+    "stratified": {
+      "water_f_min": 75.0,
+      "months": [6, 7, 8, 9],
+      "mixing_any": ["warm-monomictic", "weakly stratified", "dimictic"],
+      "mixing_exclude": ["polymictic"],
+      "exclude_states": ["post-turnover", "hot-streak"],
+      "exclude_phases": ["pre-spawn", "spawn", "post-spawn"]
+    }
+  },
+  "state_notes": {
+    "stratified": "bass hold above the stratification level — \u201cThere is no oxygen or fish below the stratification level\u201d (Iowa DNR)"
+  },
+  "class_fits": {
+    "stratified": {
+      "suspend": {
+        "fit": 2,
+        "note": "holds in the oxygenated layer above the stratification level"
+      },
+      "fall": {
+        "fit": 1,
+        "note": "slow fall stays in the oxygenated layer"
+      }
+    }
+  },
+  "citations": [
+    {
+      "claim": "summer position is set by temperature and dissolved oxygen; no fish below the stratification level",
+      "tier": "T2",
+      "source": "Iowa DNR \u2014 Largemouth bass",
+      "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+      "quote": "Along with temperature, dissolved oxygen is a major factor determining where to find bass during summer. Many Iowa lakes stratify at depths from 6 to 20 feet. There is no oxygen or fish below the stratification level.",
+      "found": true,
+      "fetched_at": "2026-09-19T19:44:08+00:00",
+      "sha256": "61488fe86866d536"
+    },
+    {
+      "claim": "summer bass seek 77\u201380\u00b0F and avoid water over 80\u00b0F",
+      "tier": "T2",
+      "source": "Iowa DNR \u2014 Largemouth bass",
+      "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+      "quote": "Most bass avoid water that exceeds 80 degrees and seek 77 to 80 degrees places.",
+      "found": true,
+      "fetched_at": "2026-09-19T19:44:08+00:00",
+      "sha256": "61488fe86866d536"
+    },
+    {
+      "claim": "drop shot presents a bait to suspended bass above the bottom",
+      "tier": "T2",
+      "source": "Take Me Fishing \u2014 Bass Fishing Rigs",
+      "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/bass-fishing-rigs/",
+      "quote": "Drop shot rigs are also popular bass fishing rigs as they allow you to present a soft plastic lure above the bottom to bass that are suspended just above the bottom.",
+      "found": true,
+      "fetched_at": "2026-09-19T19:44:08+00:00",
+      "sha256": "cac6386f34202fdc"
+    }
+  ]
+}

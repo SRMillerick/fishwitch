@@ -28,7 +28,7 @@ deterministically, without letting any one signal drive a tie.
 | Dimension | Home (data) | Input that activates it | Score role |
 |---|---|---|---|
 | **Cover** | `kb/substrate.json` (`entries[id][bottom]`) | `--bottom grass\|muck\|sand\|rock\|wood` (CLI + web form) | tie-break fit, this pass |
-| **Mood** | `kb/presentation.json` (classes) | `lake_state` (post-turnover → suspended fish) | existing: suspend +0.5, fall +0.25; classes now cited (`class_sources`) |
+| **Mood** | `kb/presentation.json` (classes) + `kb/position.json` (derived state) | `lake_state` (post-turnover; derived `stratified`) | post-turnover: suspend +0.5, fall +0.25 (condition layer); stratified: suspend +2, fall +1 (capped tie-break) |
 | **Clarity** | `kb/principles.json` (color rules) | light + cloud + lake_state | color selection only — **no rig score** (a rig fit here would double-count light/cloud) |
 | **Season** | `kb/season.json` | report month (N. hemisphere) | shipped: T2-sourced summer/fall fits; spring/winter null |
 | **Spawn** | `kb/spawn.json` | water temp + warming months | shipped: T2 bands, T5 fits; supersedes season while active |
@@ -128,6 +128,36 @@ report diff shows the phase row, the cited decision rule, and the spawn fits
 moving the finesse cluster — `reports/spawn-pass-{before,after}.md`. Spring
 rig fits remain T5 until spring sessions exist in the ledger.
 
+## Fish position — shipped (derived, 2026-09-19)
+
+No registry lake has a live thermocline or dissolved-oxygen sensor (USGS layer
+is fixed + 30 km-guarded; CDEC is river-only). The position input is therefore
+**derived** from what the engine already knows — the lake's mixing type
+(`config/lakes.json`) plus modeled surface water temperature, month, existing
+lake state, and spawn phase (`kb/position.json`).
+
+| Trigger | Derivation | T2 basis |
+|---|---|---|
+| `stratified` | stratifying mixing type (`warm-monomictic` / `weakly stratified` / `dimictic`; never `polymictic`) + water ≥ 75°F + Jun–Sep + no post-turnover / hot-streak / spawn phase | Iowa DNR — "Many Iowa lakes stratify at depths from 6 to 20 feet. There is no oxygen or fish below the stratification level"; "Most bass avoid water that exceeds 80 degrees and seek 77 to 80 degrees places" |
+
+Class fits while `stratified` is active (T5 translation, ×0.25, per-dimension
+cap ±0.5, shared total cap ±1.0): **suspend +2**, **fall +1**, bottom 0. The
+suspend class is the agency-tied presentation for fish held above the
+stratification level (Take Me Fishing — drop shot "present[s] a soft plastic
+lure above the bottom to bass that are suspended just above the bottom").
+Bottom-drag rigs are not penalized: shallow bank fishing is above the
+stratification level too, and the agency text does not claim otherwise.
+
+Acceptance (2026-09-19): the 12-session replay holds **5 exact / 3 style /
+2 miss**; a Lake Berryessa stable-summer before/after is in
+`reports/position-pass-{before,after}.md` (drop shot 7.2 → 7.8, wacky 7.2 →
+7.5, plus the Fish position row and the stratified decision rule).
+
+**Still open:** winter/spring stable conditions remain unsourced — the
+derivation reaches only the agency-stated summer stratification window. A real
+per-lake thermocline/DO feed (or a sourced registry `position` field per
+water) would let the cold half ship without inventing it.
+
 ## Deferred dimensions (evidence recorded, not scored)
 
 - **Ned season (recorded, not scored).** T2 Take Me Fishing: the Ned rig "can
@@ -135,17 +165,11 @@ rig fits remain T5 until spring sessions exist in the ledger.
   when largemouth get lethargic." Ned is not in the tie cluster and its
   existing 40–70°F band already covers the cold window — scoring this too
   would double-count temperature.
-- **Mood — classes sourced (2026-09-19).** Every class in
-  `kb/presentation.json` now carries a T1/T2 `class_sources` citation: topwater
-  (6th Sense CatWalk), swim (Z-Man ChatterBait), suspend (Take Me Fishing —
-  drop shot "suspended just above the bottom"), fall (Z-Man ZinkerZ "slow and
-  tantalizing sink rate"), bottom (Take Me Fishing — Carolina
-  "bottom-hugging bass"). The **entry→class mapping remains editorial**. A
-  behavioral mood input still doesn't exist: outside post-turnover the engine
-  has no fish-position signal, so stable-condition ties persist. The evidence
-  that would separate them: an agency source tying a rig to a *derivable*
-  position input (thermocline depth, dissolved oxygen, or a lake-registry
-  `position` field). Do not force it.
+- **Mood — class fixtures shipped; cold half open.** Every class in
+  `kb/presentation.json` carries a T1/T2 `class_sources` citation, and the
+  derived summer position state is shipped (see **Fish position** above). The
+  **entry→class mapping remains editorial**. Stable winter/spring position is
+  still unsourced; do not force it.
 - **Clarity.** The existing color principles already carry the clarity rules
   (contrast vs. color, clear water rewards color). Wiring a clarity *input*
   (lake registry or angler) is a later data-layer task; until then, no rig
@@ -160,5 +184,9 @@ rig fits remain T5 until spring sessions exist in the ledger.
 2. **Evidence:** before/after `fishwitch report --bottom <type>` diffs on the
    tied rigs — a declared bottom must order them on the 0.25 grid instead of
    clustering, e.g. grass: drop shot > wacky > Texas > Carolina > Neko.
-3. Promote drafts only through `fishwitch kb-promote --species substrate
+3. **Position evidence:** before/after `fishwitch report` on a stratifying lake
+   above 75°F — a Fish position row, the stratified decision rule, and the
+   suspend/fall class fits inside the cap
+   (`reports/position-pass-{before,after}.md`).
+4. Promote drafts only through `fishwitch kb-promote --species substrate
    --entry <id> --by <you>` (human gate). Reject with `kb-reject` (logged).

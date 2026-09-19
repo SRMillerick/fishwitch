@@ -138,6 +138,13 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
     except Exception:
         water_trend = None
     bass_phase = tx.spawn_phase(water_f, start.month, water_trend)
+    # derived fish position (kb/position.json): mixing type + summer water temp,
+    # appended to lake_state so display and scoring see the same string. Null-safe.
+    position = tx.position_state(lake.get("mixing"), water_f, start.month,
+                                 lake_state, bass_phase)
+    if position:
+        lake_state_parts.append(position)
+        lake_state = "+".join(lake_state_parts)
     # wind exposure from the cached OSM shoreline: where the wind stacks bait
     shoreline = None
     try:
@@ -154,7 +161,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         _acc = sky.access_window(start, lake.get("access"))
         if _acc:
             ao, ac, note = _acc
-            acc_note = f"on-water {ao:%-I:%M %p}–{ac:%-I:%M %p} ({note}) — per registry access rules"
+            acc_note = f"on-water {ao:%-I:%M %p}–{ac:%-I:%M %p} ({note}) — per the lake's posted access rules"
             if end > ac:
                 end = ac
                 acc_note += " · session clamped to close"
@@ -241,7 +248,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
                    solunar=sol, moon_fruitful=(mn["fruitful"] if mn else None),
                    pressure_word=wscore["trend"]["word"], clarity=clarity_eff,
                    structure_notes=lake.get("structure", []), month=mid.month,
-                   lake_state=lake_state, bottom=bottom)
+                   lake_state=lake_state, bottom=bottom, position=position)
         picks = tx.recommend(ctx, candidates, top_n=2)
         blocks.append(dict(start=a, end=b, light=light, sun_alt=round(sun_alt, 1),
                            hour=hour, solunar=sol, events=ev_notes, picks=picks, wx=w))
@@ -328,7 +335,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
                     pressure_word=wscore["trend"]["word"], month=prime["start"].month,
                     clarity=clarity_eff,
                     structure_notes=lake.get("structure", []), lake_state=lake_state,
-                    bottom=bottom)
+                    bottom=bottom, position=position)
         for c in tx.catalog(species):
             entries = tx.trends_for(c["id"])
             if not entries:
@@ -359,7 +366,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
                        pressure_word=wscore["trend"]["word"], month=pblk["start"].month,
                        clarity=clarity_eff,
                        structure_notes=lake.get("structure", []), lake_state=lake_state,
-                       bottom=bottom)
+                       bottom=bottom, position=position)
         owned = owned_ids
         full = [(c, s, why) for c, s, why in
                 tx.recommend(gap_ctx, [(c, c["label"]) for c in tx.catalog(species)
@@ -407,7 +414,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         blocks=blocks, rods=rods, prime=prime, prime_score=prime_s, utc_off=wx.utc_offset,
         knots=knots, knot_notes=knot_notes, angler_knots=angler_knots, line=line, color=color, gap=gap,
         angler_line=angler_line, owned_ids=owned_ids, has_baseline=has_baseline,
-        bottom=bottom, trends=trends, box_check=box_check,
+        bottom=bottom, trends=trends, box_check=box_check, position=position,
         logbook=lb.summary_for(lake.get("name", ""), angler=profile.get("name")),
         lake_state=lake_state, days_since_turnover=days_since_turnover,
         heat_streak=streak, state_basis=state_basis, access_note=acc_note,
@@ -534,14 +541,14 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
     lake_sp = [s.lower() for s in m["lake"].get("species", [])]
     sp_word = m["species"].split()[0]
     if lake_sp and not any(sp_word in s for s in lake_sp):
-        rows.append(("Species check", f"{e('⚠️ ')}lake registry does not list {m['species']} for this water — verify before trusting the tactics"))
+        rows.append(("Species check", f"{e('⚠️ ')}our lake list does not include {m['species']} for this water — verify before trusting the tactics"))
     elif lake_sp:
         logged = any(sp_word in (str(r.get("species") or "")).lower()
                      for r in lb.load() if r.get("result") != "skunk"
                      and (r.get("lake") or "").lower() in m["lake"]["name"].lower())
         presence = (("✅ " if emoji else "") + "angler-verified in logbook") if logged \
             else (("🟡 " if emoji else "") + "not yet confirmed by a logged catch")
-        rows.append(("Species presence", "listed in registry · " + presence))
+        rows.append(("Species presence", "on our lake list · " + presence))
     if m.get("stocking"):
         s = m["stocking"][-1]
         rows.append(("Stocking", f"{s['species']} planted {s['date']:%b %-d} — fresh stockers = shallow forage event"))
@@ -560,6 +567,8 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
     if m.get("bass_phase"):
         _pnote, _ = tx.spawn_note(m["bass_phase"])
         rows.append(("Bass phase", f"**{m['bass_phase']}** — {_pnote}"))
+    if m.get("position"):
+        rows.append(("Fish position", f"**{m['position']}** — {tx.position_note(m['position'])}"))
     if m.get("access_note"):
         rows.append((("Lake hours 🚤" if emoji else "Lake hours"), m["access_note"]))
     rows.append(("Sky/wind", f"{w['cloud']}% cloud, {w['wind_mph']:.0f} mph wind, "
@@ -573,7 +582,7 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
                                  if m["clarity"] == "high"
                                  else "**stained** — contrast beats colour; go dark/solid or high-viz")))
     if m.get("bottom"):
-        rows.append(("Bottom", f"**{m['bottom']}** — substrate fit applied as a capped tie-break (kb/CONDITIONS.md)"))
+        rows.append(("Bottom", f"**{m['bottom']}** — a declared cover type nudges the ranking, never by much"))
     if m["solunar"]:
         in_win = [e for e in m["solunar"] if e["end"] >= m["start"] and e["start"] <= m["end"]]
         near = [e for e in m["solunar"] if e not in in_win]
@@ -596,7 +605,7 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
             "✅ stocking data" if m.get("stocking") else "🟡 no stocking intel",
             ('✅' if m.get('logbook') else '🟡') + " logbook"
             + (f" ({m['logbook']['n']})" if m.get("logbook") else ""),
-            "🟡 bathymetry (registry notes only)",
+            "🟡 depth map (lake notes only)",
         ]
     else:
         tiers = [
@@ -609,9 +618,9 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
             else "water temp estimated (no gauge nearby)",
             "stocking data" if m.get("stocking") else "no stocking intel",
             "logbook" + (f" ({m['logbook']['n']})" if m.get("logbook") else " (none)"),
-            "bathymetry: registry notes only",
+            "depth map: lake notes only",
         ]
-    rows.append(("Data layers", " · ".join(tiers)))
+    rows.append(("Data", " · ".join(tiers)))
     L.append(f"## {e('🔒 ')}The locked numbers")
     L.append("| | |"); L.append("|---|---|")
     for k, v in rows:
@@ -622,8 +631,16 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
     for n in m["weather"]["score"]["notes"]:
         L.append(f"- {n}")
     if m.get("lake_state"):
-        L.append(f"- {e('⚠️ ')}**Lake state: {m['lake_state']}** — turnover redistributes oxygen and bait;"
-                 " deep presentations lead until the lake re-stratifies")
+        _ls = m["lake_state"]
+        if "post-turnover" in _ls:
+            _ls_note = ("turnover redistributes oxygen and bait; deep presentations lead "
+                        "until the lake re-stratifies")
+        elif "stratified" in _ls:
+            _ls_note = ("the water column is layered — fish hold above the stratification "
+                        "level where the oxygen is; suspended presentations lead")
+        else:
+            _ls_note = "fish position altered, see rules"
+        L.append(f"- {e('⚠️ ')}**Lake state: {_ls}** — {_ls_note}")
     # species thermal fit: is the water inside the KB band of the top picks?
     if m["weather"]["water_f"] and m["rods"]:
         hi = max(c["conditions"]["water_temp_f"][1] for c in m["rods"])
@@ -738,7 +755,7 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
         L.append(f"## {e('🔎 ')}Why not your usual?")
         L.append("*Every bait in your box was scored for the prime window"
                  + (f" (top pick {_top:g})" if _top is not None else "")
-                 + " — the notes are the engine's own fit reasons.*")
+                 + " — the notes are the scoring's own reasons.*")
         for r in m["box_check"]:
             if r["out"]:
                 L.append(f"- **{r['label']}** — out of band: {r['reason']}")
@@ -799,7 +816,7 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
 
         if products:
             L.append(f"## {e('🧭 ')}The gap in your tackle box")
-            L.append("*Scored by the same pipe for these exact conditions — you don't own these yet. "
+            L.append("*Scored the same way for these exact conditions — you don't own these yet. "
                      "Offers attach after ranking, never before.*")
             for c, s, why in products:
                 L.append(_gap_line(c, s, why))

@@ -377,7 +377,7 @@ function renderTackle(rods) {
     '<p class="fine">Ranking never sees these links. They attach after the pipe ends.</p><ul class="plain">';
   for (const r of rods) {
     h += "<li><span class='badge " + (r.verified ? "ok" : "pend") + "'>" +
-      (r.verified ? "sourced" : "editorial") + "</span>";
+      (r.verified ? "cited" : "unverified") + "</span>";
     if (r.owned !== undefined && r.owned !== null)
       h += " <span class='badge " + (r.owned ? "mine" : "gap") + "'>" +
         (r.owned ? "in your box" : "gap") + "</span>";
@@ -407,7 +407,7 @@ function renderGap(gap) {
       'Links attach after ranking, never before.</p><ul class="plain">';
     for (const g of products) {
       h += "<li><span class='badge " + (g.verified ? "ok" : "pend") + "'>" +
-        (g.verified ? "sourced" : "editorial") + "</span> <strong>" + esc(g.label) + "</strong> — scores " +
+        (g.verified ? "cited" : "unverified") + "</span> <strong>" + esc(g.label) + "</strong> — scores " +
         g.score + " here" + (g.why ? " · <span class='fine'>" + esc(g.why) + "</span>" : "");
       if (g.product_url) h += " · <a href='/out/" + encodeURIComponent(g.id) + "/manufacturer?src=gap' target='_blank' rel='nofollow noopener'>" +
         esc(g.product || "manufacturer page") + "</a>";
@@ -773,4 +773,38 @@ if (printCard) printCard.addEventListener("click", (ev) => {
     }
   });
   render();
+})();
+
+// ── theme pair: first-light / crisp-dark (system-aware, manual override) ────
+(function () {
+  const root = document.documentElement;
+  const KEY = "bm-theme-v2";
+  const COLORS = { "first-light": "#f7f5ef", "crisp-dark": "#0a0f12", "loam": "#10140d", "almanac": "#f3eddc" };
+  const systemTheme = () => (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches)
+    ? "crisp-dark" : "first-light";
+  const paint = (t) => {
+    root.dataset.theme = t;
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta && COLORS[t]) meta.setAttribute("content", COLORS[t]);
+    const btn = document.getElementById("theme-toggle");
+    if (btn) btn.setAttribute("aria-label",
+      t === "crisp-dark" ? "Switch to light theme" : "Switch to dark theme");
+    window.dispatchEvent(new CustomEvent("bm:theme", { detail: { theme: t } }));
+  };
+  const btn = document.getElementById("theme-toggle");
+  if (btn) btn.addEventListener("click", () => {
+    const t = root.dataset.theme === "crisp-dark" ? "first-light" : "crisp-dark";
+    try { localStorage.setItem(KEY, t); } catch (e) {}
+    paint(t);
+  });
+  if (window.matchMedia) {
+    const mq = matchMedia("(prefers-color-scheme: dark)");
+    const onChange = (e) => {
+      let chosen = null;
+      try { chosen = localStorage.getItem(KEY); } catch (err) {}
+      if (!chosen || chosen === "system") paint(e.matches ? "crisp-dark" : "first-light");
+    };
+    if (mq.addEventListener) mq.addEventListener("change", onChange);
+    else if (mq.addListener) mq.addListener(onChange);
+  }
 })();

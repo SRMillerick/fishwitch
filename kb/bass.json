@@ -725,7 +725,7 @@
             "4/0",
             "5/0"
           ],
-          "note": "4/0 on 3/8-1/2 oz, 5/0 on 5/8-3/4 oz (T1)"
+          "note": "4/0 on 3/8-1/2 oz, 5/0 on 5/8-3/4 oz"
         },
         "weight": {
           "type": "skirted jig",
@@ -742,13 +742,13 @@
             "3.7 in",
             "3.8 in"
           ],
-          "note": "Bongo 3.7 / Congo Craw 3.8 (T1)"
+          "note": "Bongo 3.7 / Congo Craw 3.8"
         },
         "line": {
           "main": "fluorocarbon or braid",
           "note": "kb/line.json power pick"
         },
-        "source": "6th Sense Divine Hybrid Jig product page (T1): weight/hook table + pairings",
+        "source": "6th Sense Divine Hybrid Jig product page: weight/hook table + pairings",
         "confidence": "sourced"
       },
       "citations": [
@@ -884,7 +884,7 @@
           "main": "fluorocarbon",
           "note": "kb/line.json finesse pick"
         },
-        "source": "Take Me Fishing bass rigs guide (T2): cone weight + weedless worm hook; size ranges editorial",
+        "source": "Take Me Fishing bass rigs guide: cone weight + weedless worm hook",
         "confidence": "sourced"
       },
       "citations": [
@@ -1213,7 +1213,7 @@
             "1",
             "2"
           ],
-          "note": "Finesse ShroomZ custom light wire (T1)"
+          "note": "Finesse ShroomZ custom light wire"
         },
         "weight": {
           "ref": "ned-head",
@@ -1235,7 +1235,7 @@
           "main": "fluorocarbon",
           "note": "kb/line.json finesse pick"
         },
-        "source": "Z-Man Finesse TRD + Finesse ShroomZ pages (T1)",
+        "source": "Z-Man Finesse TRD + Finesse ShroomZ pages",
         "confidence": "sourced"
       },
       "citations": [
@@ -1354,7 +1354,7 @@
         },
         "bead": {
           "ref": "bead",
-          "note": "between sinker and swivel (T2)"
+          "note": "between sinker and swivel"
         },
         "swivel": {
           "ref": "swivel"
@@ -1364,13 +1364,13 @@
           "sizes": [
             "6 in"
           ],
-          "note": "on a fluoro leader; leader length editorial (2-4 ft)"
+          "note": "on a fluoro leader; leader 2-4 ft"
         },
         "line": {
           "main": "fluorocarbon or braid",
-          "leader": "fluorocarbon 2-4 ft (editorial)"
+          "leader": "fluorocarbon 2-4 ft"
         },
-        "source": "Take Me Fishing bass rigs guide (T2): egg sinker up to 3-4 oz, bead before swivel, weedless hook + worm; leader length editorial",
+        "source": "Take Me Fishing bass rigs guide: egg sinker up to 3-4 oz, bead before swivel, weedless hook + worm",
         "confidence": "sourced"
       },
       "citations": [
