@@ -83,6 +83,10 @@ def _count_page(resp):
                              ref=request.referrer)
     except Exception:
         pass
+    # installed PWAs keep asking for the un-versioned manifest URL; let them
+    # revalidate so icon changes actually land (see the versioned icons)
+    if request.path == "/static/manifest.webmanifest":
+        resp.headers["Cache-Control"] = "no-cache"
     return resp
 
 
