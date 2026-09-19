@@ -71,6 +71,81 @@ function profileError(p) {
 const esc = s => String(s).replace(/[&<>"']/g, c =>
   ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
+// ── tag fields — one consistent multi-value control for the interview ───────
+// The native datalist only helps with the FIRST comma-separated item; every
+// later value had to be typed blind. This behaves the same for all fields:
+// chips for what's chosen, a suggestion menu while typing, Enter/comma adds,
+// free text still accepted, hidden input keeps the form contract unchanged.
+function makeTagField(root) {
+  const dl = document.getElementById(root.dataset.suggest || "");
+  const all = dl ? [...dl.options].map(o => o.value) : [];
+  const hidden = root.querySelector('input[type="hidden"]');
+  const chips = document.createElement("span"); chips.className = "tag-chips";
+  const input = document.createElement("input");
+  input.type = "text"; input.className = "tag-text";
+  input.placeholder = root.dataset.placeholder || "";
+  input.setAttribute("autocomplete", "off");
+  input.setAttribute("role", "combobox");
+  input.setAttribute("aria-expanded", "false");
+  const menu = document.createElement("div"); menu.className = "tag-menu"; menu.hidden = true;
+  menu.setAttribute("role", "listbox");
+  root.append(chips, input, menu);
+
+  let values = [];
+  const sync = () => { if (hidden) hidden.value = values.join(", "); };
+  const draw = () => {
+    chips.textContent = "";
+    values.forEach((v, i) => {
+      const chip = document.createElement("span"); chip.className = "tag";
+      chip.appendChild(document.createTextNode(v));
+      const x = document.createElement("button");
+      x.type = "button"; x.tabIndex = -1; x.textContent = "\u00d7";
+      x.setAttribute("aria-label", "remove " + v);
+      x.addEventListener("click", () => { values.splice(i, 1); draw(); sync(); input.focus(); });
+      chip.appendChild(x); chips.appendChild(chip);
+    });
+  };
+  const hide = () => { menu.hidden = true; input.setAttribute("aria-expanded", "false"); };
+  const matches = () => {
+    const q = input.value.trim().toLowerCase();
+    const have = new Set(values.map(v => v.toLowerCase()));
+    return all.filter(s => !have.has(s.toLowerCase()) && (!q || s.toLowerCase().includes(q))).slice(0, 8);
+  };
+  const show = () => {
+    const opts = matches();
+    if (!opts.length) { hide(); return; }
+    menu.textContent = "";
+    for (const s of opts) {
+      const o = document.createElement("div");
+      o.className = "tag-opt"; o.setAttribute("role", "option"); o.textContent = s;
+      o.addEventListener("mousedown", ev => { ev.preventDefault(); add(s); input.focus(); });
+      menu.appendChild(o);
+    }
+    menu.hidden = false; input.setAttribute("aria-expanded", "true");
+  };
+  const add = raw => {
+    const v = String(raw || "").replace(/,+$/, "").trim();
+    if (!v) { input.value = ""; hide(); return; }
+    if (!values.some(x => x.toLowerCase() === v.toLowerCase())) values.push(v);
+    input.value = ""; draw(); sync(); show();
+  };
+  input.addEventListener("input", show);
+  input.addEventListener("focus", show);
+  input.addEventListener("keydown", ev => {
+    if (ev.key === "Enter" || ev.key === ",") {
+      ev.preventDefault(); ev.stopPropagation(); add(input.value);
+    } else if (ev.key === "Backspace" && !input.value && values.length) {
+      values.pop(); draw(); sync();
+    } else if (ev.key === "Escape") hide();
+  });
+  input.addEventListener("blur", () => setTimeout(() => {
+    if (input.value.trim()) add(input.value);
+    hide();
+  }, 120));
+  draw(); sync();
+  return { setValues: vs => { values = [...(vs || [])]; draw(); sync(); } };
+}
+
 // ── header menu ─────────────────────────────────────────────────────────────
 const menu = document.getElementById("profile-menu");
 
@@ -290,6 +365,11 @@ if (iv) {
   let picked = null;
   let step = 1;
   const steps = [...iv.querySelectorAll(".istep")];
+  const tagFields = {};
+  iv.querySelectorAll("[data-tagfield]").forEach(el => {
+    const name = (el.querySelector('input[type="hidden"]') || {}).name;
+    if (name) tagFields[name] = makeTagField(el);
+  });
 
   const showStep = (n) => {
     step = n;
@@ -315,10 +395,10 @@ if (iv) {
         "→ from saved profile (" + (+cur.birth.lat).toFixed(3) + ", " + (+cur.birth.lng).toFixed(3) + ", " + cur.birth.tz + ")";
     }
     iv.querySelector('[name="species"]').value = cur.species || "largemouth bass";
-    iv.querySelector('[name="arsenal"]').value = (cur.arsenal || []).join(", ");
-    iv.querySelector('[name="baits"]').value = (cur.baits || []).join(", ");
-    iv.querySelector('[name="line"]').value = (cur.line || []).join(", ");
-    iv.querySelector('[name="knots"]').value = (cur.knots || []).join(", ");
+    if (tagFields.arsenal) tagFields.arsenal.setValues(cur.arsenal || []);
+    if (tagFields.baits) tagFields.baits.setValues(cur.baits || []);
+    if (tagFields.line) tagFields.line.setValues(cur.line || []);
+    if (tagFields.knots) tagFields.knots.setValues(cur.knots || []);
     if (cur.home_lake) iv.querySelector('[name="home_lake"]').value = cur.home_lake;
     iv.querySelector('[name="voice"]').value = cur.astro_display || "almanac";
   }

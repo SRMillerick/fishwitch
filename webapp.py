@@ -310,6 +310,37 @@ def _rate_ok(bucket: str, limit: int, window_s: int = 3600) -> bool:
     return True
 
 
+_TD_RE = re.compile(r"<td([^>]*)>")
+
+
+def _responsive_tables(html: str) -> str:
+    """Wrap rendered markdown tables for responsive display and tag every cell
+    with its column header, so narrow screens can stack rows (label above
+    value) instead of forcing horizontal scroll. Desktop rendering is
+    unchanged — the data-label is inert until the mobile breakpoint."""
+    def fix(m):
+        table = m.group(1)
+        heads = [re.sub(r"<[^>]+>", "", h).strip().replace('"', "&quot;")
+                 for h in re.findall(r"<th[^>]*>(.*?)</th>", table, re.S)]
+        out = []
+        for part in table.split("<tr>"):
+            if heads and "<td" in part:
+                i = [0]
+
+                def label(mo):
+                    attrs = mo.group(1)
+                    if "data-label" in attrs:
+                        return mo.group(0)
+                    lbl = heads[i[0] % len(heads)]
+                    i[0] += 1
+                    return f'<td{attrs} data-label="{lbl}">'
+                part = _TD_RE.sub(label, part)
+            out.append(part)
+        table = "<tr>".join(out)
+        return f'<div class="table-scroll"><table>{table}</table></div>'
+    return re.sub(r"<table>(.*?)</table>", fix, html, flags=re.S)
+
+
 def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
                    voice: str | None, species: str | None) -> dict:
     wx = shared_weather(lake["lat"], lake["lng"])
@@ -318,8 +349,7 @@ def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
             voice=voice or profile.get("astro_display") or "almanac",
             wx=wx, hist=hist)
     body = _md.markdown(to_markdown(m, emoji=False, show_gap=False), extensions=["tables"])
-    body = (body.replace("<table>", '<div class="table-scroll"><table>')
-                .replace("</table>", "</table></div>"))
+    body = _responsive_tables(body)
     prime = m.get("prime")
     rods = []
     for c in m["rods"]:

@@ -15,18 +15,20 @@
 {% if err %}<p class="error">{{ err }}</p>{% endif %}
 {% if rows %}
 <h2>Top windows of the horizon</h2>
-<div class="table-scroll wide">
+<div class="table-scroll">
 <table>
-  <tr><th>when</th><th>score</th><th>confidence</th><th>prime</th><th>approach</th></tr>
+  <thead><tr><th>when</th><th>score</th><th>confidence</th><th>prime</th><th>approach</th></tr></thead>
+  <tbody>
   {% for r in rows %}
   <tr>
-    <td>{{ r.start.strftime('%a %b %-d · %-I:%M %p') }}–{{ r.end.strftime('%-I %p') }}</td>
-    <td><strong>{{ r.overall }}/10</strong></td>
-    <td>{{ r.conf }}</td>
-    <td>{{ r.prime.strftime('%-I:%M %p') if r.prime else '—' }}</td>
-    <td>{{ ' + '.join(r.picks) }}</td>
+    <td data-label="when">{{ r.start.strftime('%a %b %-d · %-I:%M %p') }}–{{ r.end.strftime('%-I %p') }}</td>
+    <td data-label="score"><strong>{{ r.overall }}/10</strong></td>
+    <td data-label="confidence">{{ r.conf }}</td>
+    <td data-label="prime">{{ r.prime.strftime('%-I:%M %p') if r.prime else '—' }}</td>
+    <td data-label="approach">{{ ' + '.join(r.picks) }}</td>
   </tr>
   {% endfor %}
+  </tbody>
 </table>
 </div>
 <p class="fine">Confidence: ≤3 days high · 4–7 medium · 8+ low (weather forecast

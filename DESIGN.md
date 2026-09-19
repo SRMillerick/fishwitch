@@ -96,6 +96,7 @@ Disclosures stated once, plainly, like a shopkeeper's sign.
 
 - No spinners — pulsing "casting…" text or skeleton rows.
 - No modals, no toasts — inline messages.
-- No horizontal scroll on main content (tables scroll inside their block).
+- No horizontal scroll on main content — tables wrap on desktop and stack into
+  labeled rows on narrow screens (≤46rem).
 - No light mode (yet) — first-light/dusk tool; revisit if users demand it.
 - No animation beyond 400ms fades; respect `prefers-reduced-motion`.

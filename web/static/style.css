@@ -226,6 +226,43 @@ label.inline { flex-direction: row; align-items: center; gap: .5rem; color: var(
 label.inline input { width: auto; }
 fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
 
+/* ── tag fields (interview multi-value inputs) ──────────────────────────── */
+.tagfield {
+  position: relative; display: flex; flex-wrap: wrap; align-items: center;
+  gap: .3rem .35rem; min-height: 2.62rem; padding: .32rem .45rem;
+  background: var(--bg-2); border: 1px solid var(--line); border-radius: 2px;
+  transition: border-color .2s ease;
+}
+.tagfield:hover, .tagfield:focus-within { border-color: var(--gold-dim); }
+.tag-chips { display: contents; }
+.tag {
+  display: inline-flex; align-items: center; gap: .25rem;
+  padding: .12rem .18rem .12rem .5rem; border-radius: 2px;
+  background: rgba(211, 170, 95, .09); border: 1px solid rgba(211, 170, 95, .35);
+  color: var(--ink); font-size: .84rem; line-height: 1.5;
+}
+.tag button {
+  border: 0; background: none; padding: 0 .18rem; cursor: pointer;
+  color: var(--dim); font-size: .95rem; line-height: 1;
+}
+.tag button:hover { color: var(--error); }
+.tagfield input.tag-text {
+  flex: 1 1 7rem; width: auto; min-width: 7rem; padding: .2rem .15rem;
+  border: 0; background: none; font-size: .95rem;
+}
+.tagfield input.tag-text:focus-visible { outline: none; }
+.tag-menu {
+  position: absolute; z-index: 30; top: calc(100% + .28rem); left: 0; right: 0;
+  max-height: 13rem; overflow-y: auto; padding: .22rem;
+  background: var(--panel2); border: 1px solid var(--line); border-radius: 4px;
+  box-shadow: var(--shadow);
+}
+.tag-opt {
+  padding: .42rem .6rem; border-radius: 2px; color: var(--dim);
+  font-size: .86rem; cursor: pointer;
+}
+.tag-opt:hover { background: rgba(211, 170, 95, .1); color: var(--ink); }
+
 /* ── hero ───────────────────────────────────────────────────────────────── */
 .hero {
   position: relative; display: grid;
@@ -325,7 +362,24 @@ tr:hover td { background: rgba(255, 255, 255, .02); }
 tbody tr:last-child td { border-bottom: 0; }
 .table-scroll { overflow-x: auto; margin: 1.2rem 0; }
 .table-scroll > table { margin: 0; min-width: 100%; }
-.table-scroll.wide > table { white-space: nowrap; }
+.table-scroll td, .table-scroll th { overflow-wrap: anywhere; }
+
+/* no side-scroll on small screens: each row becomes a labeled ledger entry */
+@media (max-width: 46rem) {
+  .table-scroll { overflow-x: visible; }
+  .table-scroll table, .table-scroll tbody { display: block; }
+  .table-scroll thead { display: none; }
+  .table-scroll tr { display: block; padding: .7rem 0; border-top: 1px solid var(--line); }
+  .table-scroll tbody tr:first-child { border-top: 0; padding-top: 0; }
+  .table-scroll td { display: block; padding: .22rem 0; border-bottom: 0; }
+  .table-scroll td::before {
+    content: attr(data-label); display: block; margin-bottom: .12rem;
+    font-size: .62rem; font-weight: 600; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--faint);
+  }
+  .table-scroll td[data-label=""]::before { display: none; }
+  tr:hover td { background: none; }
+}
 
 /* ── badges, pills, moon row ────────────────────────────────────────────── */
 .badge { display: inline-block; font-size: .6rem; font-weight: 600; letter-spacing: .1em;

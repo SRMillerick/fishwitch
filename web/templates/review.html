@@ -10,23 +10,25 @@ Read-only; the logbook itself never leaves this machine.</p>
 <p class="scorebar">separation: catches vs skunks
 {% if sep is not none %} <strong>{{ '%+.1f'| format(sep) }}</strong>{% else %} — needs at least one of each{% endif %}
 · {{ n_catch }} catches · {{ n_skunk }} skunks</p>
-<div class="table-scroll wide">
+<div class="table-scroll">
 <table>
-  <tr><th>session</th><th>angler</th><th>result</th><th>model said</th><th>presentation</th><th>timing</th><th>zone</th></tr>
+  <thead><tr><th>session</th><th>angler</th><th>result</th><th>model said</th><th>presentation</th><th>timing</th><th>zone</th></tr></thead>
+  <tbody>
   {% for r in rows %}
   <tr>
-    <td>{{ r.ts }}</td>
-    <td>{{ r.angler }}</td>
-    <td>{% if r.skunk %}<span class="mark miss">skunk</span>{% else %}{{ r.n_fish }} fish{% if r.best_lb is not none %}, best {{ r.best_lb }} lb{% endif %}{% if r.total_lb is not none %}, {{ r.total_lb }} lb known{% endif %} on {{ r.lure }}{% endif %}
+    <td data-label="session">{{ r.ts }}</td>
+    <td data-label="angler">{{ r.angler }}</td>
+    <td data-label="result">{% if r.skunk %}<span class="mark miss">skunk</span>{% else %}{{ r.n_fish }} fish{% if r.best_lb is not none %}, best {{ r.best_lb }} lb{% endif %}{% if r.total_lb is not none %}, {{ r.total_lb }} lb known{% endif %} on {{ r.lure }}{% endif %}
       {% if r.notes %}<div class="fine">{{ r.notes }}</div>{% endif %}</td>
-    <td>{{ r.overall }}/10{% if r.prime %} · prime {{ r.prime.strftime('%-I:%M %p') }}{% endif %}
+    <td data-label="model said">{{ r.overall }}/10{% if r.prime %} · prime {{ r.prime.strftime('%-I:%M %p') }}{% endif %}
       {% if r.state %}<div class="fine">{{ r.state }}</div>{% endif %}
       {% if r.picks %}<div class="fine">{{ r.picks }}</div>{% endif %}</td>
-    <td class="mark {{ r.pres or 'na' }}">{{ r.pres or '·' }}</td>
-    <td class="mark {{ r.tim or 'na' }}">{% if r.tim %}{{ r.tim }}{% if r.tim != 'na' %} ({{ r.tim_d }}m){% endif %}{% else %}·{% endif %}</td>
-    <td class="mark {{ r.zon or 'na' }}">{{ r.zon or '·' }}</td>
+    <td data-label="presentation" class="mark {{ r.pres or 'na' }}">{{ r.pres or '·' }}</td>
+    <td data-label="timing" class="mark {{ r.tim or 'na' }}">{% if r.tim %}{{ r.tim }}{% if r.tim != 'na' %} ({{ r.tim_d }}m){% endif %}{% else %}·{% endif %}</td>
+    <td data-label="zone" class="mark {{ r.zon or 'na' }}">{{ r.zon or '·' }}</td>
   </tr>
   {% endfor %}
+  </tbody>
 </table>
 </div>
 <p class="fine">presentation: exact = model's prime pick · style = right family ·

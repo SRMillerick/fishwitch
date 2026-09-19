@@ -60,37 +60,45 @@ baromoon's server never stores it; it's used in-memory to render your reports, t
 
   <fieldset class="istep" data-step="3">
     <legend>3 · The tackle box</legend>
-    <label>Your lures/rigs — comma-separated, in your own words
-      <input name="arsenal" list="arsenal-suggestions"
-             placeholder="drop shot, wacky senko, chatterbait, squarebill">
+    <label>Your lures/rigs — pick from the list or type your own
+      <div class="tagfield" data-tagfield data-suggest="arsenal-suggestions"
+           data-placeholder="drop shot, wacky senko, chatterbait…">
+        <input type="hidden" name="arsenal">
+      </div>
       <datalist id="arsenal-suggestions">
         {% for c in suggestions %}<option value="{{ c }}">{% endfor %}
       </datalist>
       <div class="fine">Reports pick from what you actually own, matched against the
-      <a href="/kb">cited knowledge base</a>. Unknown names still work — they just won't get
-      condition-scored.</div>
+      <a href="/kb">cited knowledge base</a>. Enter or comma adds an entry; click a suggestion
+      to pick it. Unknown names still work — they just won't get condition-scored.</div>
     </label>
-    <label>Baits you use — live/cut/prepared, comma-separated
-      <input name="baits" list="bait-suggestions"
-             placeholder="nightcrawlers, powerbait, cut bait">
+    <label>Baits you use — live/cut/prepared
+      <div class="tagfield" data-tagfield data-suggest="bait-suggestions"
+           data-placeholder="nightcrawlers, powerbait, cut bait…">
+        <input type="hidden" name="baits">
+      </div>
       <datalist id="bait-suggestions">
         {% for b in bait_suggestions %}<option value="{{ b }}">{% endfor %}
       </datalist>
       <div class="fine">Bait fished as bait, not lures — scored against the same cited KB and
       kept out of your gap lane. Leave blank if you're artificials-only.</div>
     </label>
-    <label>Line you spool — comma-separated
-      <input name="line" list="line-suggestions"
-             placeholder="fluorocarbon, braid">
+    <label>Line you spool
+      <div class="tagfield" data-tagfield data-suggest="line-suggestions"
+           data-placeholder="fluorocarbon, braid…">
+        <input type="hidden" name="line">
+      </div>
       <datalist id="line-suggestions">
         {% for l in line_suggestions %}<option value="{{ l }}">{% endfor %}
       </datalist>
       <div class="fine">Reports pick the line that fits the rigs, and flag a better fit you
       don't spool yet (cited properties, not brand claims).</div>
     </label>
-    <label>Knots you tie — comma-separated
-      <input name="knots" list="knot-suggestions"
-             placeholder="palomar, uni, snell, crazy alberto, san diego jam">
+    <label>Knots you tie
+      <div class="tagfield" data-tagfield data-suggest="knot-suggestions"
+           data-placeholder="palomar, uni, snell…">
+        <input type="hidden" name="knots">
+      </div>
       <datalist id="knot-suggestions">
         {% for k in knot_suggestions %}<option value="{{ k }}">{% endfor %}
       </datalist>

@@ -16,18 +16,19 @@ citation — shown as unverified in the pipe until promoted by a human.</p>
   </label>
   <button type="submit">Browse</button>
 </form>
-<div class="table-scroll wide">
+<div class="table-scroll">
 <table class="kb">
-  <tr><th>entry</th><th>style</th><th>depth</th><th>light</th><th>wind</th><th>water °F</th><th>source</th></tr>
+  <thead><tr><th>entry</th><th>style</th><th>depth</th><th>light</th><th>wind</th><th>water °F</th><th>source</th></tr></thead>
+  <tbody>
   {% for c in cats %}
   <tr>
-    <td><strong>{{ c.label }}</strong><div class="fine">aka {{ c.aliases | join(', ') }}</div></td>
-    <td>{{ c.style }}</td>
-    <td>{{ c.depth }}</td>
-    <td>{{ c.light }}</td>
-    <td>{{ c.wind }}</td>
-    <td>{{ c.tlo }}–{{ c.thi }}</td>
-    <td>
+    <td data-label="entry"><strong>{{ c.label }}</strong><div class="fine">aka {{ c.aliases | join(', ') }}</div></td>
+    <td data-label="style">{{ c.style }}</td>
+    <td data-label="depth">{{ c.depth }}</td>
+    <td data-label="light">{{ c.light }}</td>
+    <td data-label="wind">{{ c.wind }}</td>
+    <td data-label="water °F">{{ c.tlo }}–{{ c.thi }}</td>
+    <td data-label="source">
       {% if c.source_url %}
         <span class="badge ok">sourced</span>
         <a href="{{ c.source_url }}" target="_blank" rel="noopener">{{ c.source[:60] }}</a>
@@ -38,6 +39,7 @@ citation — shown as unverified in the pipe until promoted by a human.</p>
     </td>
   </tr>
   {% endfor %}
+  </tbody>
 </table>
 </div>
 {% endblock %}
