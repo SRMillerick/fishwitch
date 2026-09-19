@@ -12,6 +12,11 @@
 <meta property="og:description" content="When do the fish feed near you? Moon, barometer, and water, scored into a deterministic ledger.">
 <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
 <link rel="manifest" href="/static/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="baromoon">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
@@ -28,6 +33,7 @@
     <a href="/lakes" class="{% if here == '/lakes' %}on{% endif %}">Waters</a>
     <a href="/kb" class="{% if here == '/kb' %}on{% endif %}">Knowledge Base</a>
     <a href="/interview" class="{% if here == '/interview' %}on{% endif %}">Interview</a>
+    {% if local %}<a href="/log" class="{% if here == '/log' %}on{% endif %}">Log</a>{% endif %}
     {% if local %}<a href="/review" class="{% if here == '/review' %}on{% endif %}">Calibration</a>{% endif %}
     <details id="profile-menu" class="menu">
       <summary><span class="who">Anonymous</span><svg class="chev" width="9" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></summary>

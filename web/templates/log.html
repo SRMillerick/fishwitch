@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}log a fish{% endblock %}
+{% block content %}
+<div class="narrow">
+<span class="eyebrow">local · never leaves this machine</span>
+<h1>Log a fish</h1>
+{% if ok %}<p class="pill on">✅ logged — effort counts too. Keep going, or
+<a href="/review">see the calibration</a>.</p>{% endif %}
+<p class="fine">One row per fish — the same shape as <code>fishwitch log</code>. The logbook stays in
+<code>config/logbook.jsonl</code> on this machine and feeds <a href="/review">blind calibration</a>.
+Log the skunks too; they are the other half of the calibration.</p>
+
+<form method="post" action="/log" class="stack">
+  <div class="grid">
+    <label>Angler
+      <input name="angler" list="angler-list" value="{{ default_angler }}" required>
+      <datalist id="angler-list">{% for a in anglers %}<option value="{{ a }}"></option>{% endfor %}</datalist>
+    </label>
+    <label>Date <input type="date" name="date" value="{{ date }}"></label>
+    <label>Time <input type="time" name="time" value="{{ time }}"></label>
+    <label>Lake
+      <select name="lake">{% for l in lakes %}<option value="{{ l.id }}" {% if l.id == lake %}selected{% endif %}>{{ l.name }}</option>{% endfor %}</select>
+    </label>
+    <label>Species <input name="species" value="{{ species }}"></label>
+    <label>Weight <input name="length" placeholder="4.5 or 4.5lb"></label>
+  </div>
+  <label>Lure / bait
+    <input name="lure" list="lure-list" value="{{ lure }}" placeholder="drop shot, Roboworm MMIII…">
+    <datalist id="lure-list">{% for l in lures %}<option value="{{ l }}"></option>{% endfor %}</datalist>
+  </label>
+  <label>Notes <input name="notes" placeholder="8–9 ft, left dock corner, grass edge…"></label>
+  <label class="inline"><input type="checkbox" name="skunk"> skunk — no fish, but the effort calibrates</label>
+  <div class="cta"><button type="submit">Log it</button></div>
+</form>
+
+{% if rows %}
+<h2 class="rule-double">Last logged</h2>
+<ul class="plain">
+  {% for r in rows %}
+  <li><strong>{{ r.ts }}</strong> · {{ r.angler }} · {{ r.lake }} —
+    {% if r.result == 'skunk' %}skunk{% else %}{{ r.lure or '?' }}{% if r.length %} ({{ r.length }}){% endif %}{% endif %}
+    {% if r.notes %}<div class="fine">{{ r.notes }}</div>{% endif %}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+</div>
+{% endblock %}

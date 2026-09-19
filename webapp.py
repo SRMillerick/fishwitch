@@ -30,6 +30,7 @@ import sys
 import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from urllib.parse import urlencode
 
 from flask import Flask, Response, abort, jsonify, redirect, render_template, request
 
@@ -840,6 +841,72 @@ def review_page():
 
 
 # ── JSON API (for the browser layer; robots-discouraged) ─────────────────────
+@app.route("/log", methods=["GET", "POST"])
+def log_page():
+    """Local-only catch log — writes the same `config/logbook.jsonl` as
+    `fishwitch log`. One row per fish; the CLI's `length` string convention is
+    kept (a bare number becomes \"4.5lb\")."""
+    if not LOCAL:
+        abort(404)
+    import logbook as lb
+    reg = registry()
+    if request.method == "POST":
+        f = request.form
+        angler = (f.get("angler") or "").strip()[:40] or "Angler"
+        lake_key = (f.get("lake") or "").strip()[:80]
+        lake = (reg.get(lake_key) or {}).get("name") or lake_key
+        species = (f.get("species") or "").strip()[:40]
+        lure = (f.get("lure") or "").strip()[:60]
+        length = (f.get("length") or "").strip()[:20]
+        notes = (f.get("notes") or "").strip()[:500]
+        skunk = f.get("skunk") == "on"
+        try:
+            ts = datetime.strptime(f"{f.get('date', '')} {f.get('time', '')}",
+                                   "%Y-%m-%d %H:%M").isoformat(timespec="minutes")
+        except ValueError:
+            ts = datetime.now().isoformat(timespec="minutes")
+        if re.fullmatch(r"[0-9]+(?:\.[0-9]+)?", length):
+            length += "lb"
+        lb.append(dict(angler=angler, lake=lake,
+                       species=None if skunk else (species or "bass"),
+                       lure=None if skunk else lure,
+                       length="" if skunk else length,
+                       notes=notes, result="skunk" if skunk else "catch", ts=ts))
+        q = urlencode(dict(ok="1", angler=angler, lake=lake_key, date=ts[:10],
+                           time=ts[11:16], species=(species or "bass"),
+                           lure="" if skunk else lure))
+        return redirect(f"/log?{q}")
+
+    default_angler = ""
+    try:
+        default_angler = (json.loads((CONFIG / "profiles" / "default.json").read_text())
+                          or {}).get("name", "")
+    except Exception:
+        pass
+    date, time = request.args.get("date") or "", request.args.get("time") or ""
+    at = (request.args.get("at") or "").strip()
+    if at and not date:
+        try:
+            dt = datetime.strptime(at, "%Y-%m-%d %H:%M")
+            date, time = dt.strftime("%Y-%m-%d"), dt.strftime("%H:%M")
+        except ValueError:
+            pass
+    now = datetime.now()
+    booked = lb.load()
+    lures = sorted({c["label"] for sp in ("bass", "trout", "catfish", "panfish")
+                    for c in tx.catalog(sp)})
+    return render_template("log.html", local=LOCAL, lakes=lakes_summary(),
+                           rows=list(reversed(booked[-8:])),
+                           ok=request.args.get("ok"),
+                           anglers=sorted({r.get("angler") for r in booked if r.get("angler")}),
+                           default_angler=request.args.get("angler") or default_angler,
+                           date=date or now.strftime("%Y-%m-%d"),
+                           time=time or now.strftime("%H:%M"),
+                           lake=request.args.get("lake") or "hidden-valley-lake-ca",
+                           species=request.args.get("species") or "largemouth bass",
+                           lure=request.args.get("lure") or "", lures=lures)
+
+
 @app.route("/stats")
 def stats_page():
     if not LOCAL:

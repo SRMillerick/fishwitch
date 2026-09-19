@@ -65,7 +65,7 @@ fishwitch review --angler Jack --since 2026-09-01
 fishwitch clicks                        # aggregate outbound clicks (no PII)
 fishwitch stats                         # aggregate page views (no PII)
 ./webapp                                 # web front door → http://127.0.0.1:7700
-FISHWITCH_LOCAL=1 ./webapp               # + /review and /stats panels (self-host only)
+FISHWITCH_LOCAL=1 ./webapp               # + /review, /log and /stats panels (self-host only)
 ~/.astro-venv/bin/python -m unittest discover -s tests -t .   # 58 tests, no network
 FISHWITCH_WEB_HOST=0.0.0.0 ./webapp     # public deploy (gunicorn+nginx in front)
 fishwitch report --profile config/profiles/sean.json --lake hidden-valley-lake-ca

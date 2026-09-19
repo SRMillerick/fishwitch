@@ -304,6 +304,13 @@ if (form) {
       out.innerHTML =
         '<div class="scorebar">overall <strong>' + j.overall + "/10</strong> · " + esc(j.lake) + "</div>"
         + j.html + renderTackle(j.rods) + renderTrends(j.trends) + renderShopping(j.shopping) + renderGap(j.gap);
+      const logLink = document.getElementById("log-session");
+      if (logLink) {
+        logLink.href = "/log?" + new URLSearchParams({
+          lake: f.get("lake") || "", at: date + " " + time,
+          species: f.get("species") || "", lure: (j.picks && j.picks[0]) || "",
+        }).toString();
+      }
     } catch (e) {
       out.innerHTML = '<p class="error">render failed: ' + esc(String(e)) + "</p>";
     }
