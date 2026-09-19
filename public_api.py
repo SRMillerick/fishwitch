@@ -114,6 +114,7 @@ def report(m: dict, lake_id: str, lake: dict, at: datetime, hours: float,
         "conditions": {
             "water_temp_f": (m.get("weather") or {}).get("water_f"),
             "water_temp_source": "gauge" if m.get("water_temp_source") else "estimate",
+            "water_temp_trend_f_per_week": m.get("water_trend"),
             "lake_state": m.get("lake_state") or None,
             "state_basis": m.get("state_basis") or None,
             "bass_phase": m.get("bass_phase") or None,

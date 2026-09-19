@@ -128,8 +128,14 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
     except Exception:
         forecast = None
     # bass spawn phase: T2 water-temp triggers during the warming half of the
-    # year; T5 rig fits ride the capped tie-break layer (kb/spawn.json)
-    bass_phase = tx.spawn_phase(water_f, start.month)
+    # year; T5 rig fits ride the capped tie-break layer (kb/spawn.json). The
+    # 7-day water trend vetoes a phase in actively cooling water.
+    water_trend = None
+    try:
+        water_trend = wx.water_trend_f_per_week(start)
+    except Exception:
+        water_trend = None
+    bass_phase = tx.spawn_phase(water_f, start.month, water_trend)
     # wind exposure from the cached OSM shoreline: where the wind stacks bait
     shoreline = None
     try:
@@ -403,7 +409,7 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         heat_streak=streak, state_basis=state_basis, access_note=acc_note,
         water_temp_source=bool(real_temp), water_temp_label=water_temp_label,
         stocking=stocking, forecast=forecast, shoreline=shoreline,
-        bass_phase=bass_phase,
+        bass_phase=bass_phase, water_trend=water_trend,
         scores=dict(weather=wscore["score"], solunar=round(sol_score, 1),
                     astro=round(astro_score, 1), overall=overall,
                     astro_notes=astro_notes),
@@ -475,7 +481,11 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
     ]
     if m["weather"]["water_f"]:
         src = ((m.get("water_temp_label") or "gauge") if m.get("water_temp_source")
-               else "air-temp estimate — small-lake assumption, no gauge within 30 km")
+               else "air-temp lag — small-lake estimate, no gauge within 30 km")
+        _wt = m.get("water_trend")
+        if _wt is not None:
+            src += (f"; {'warming' if _wt > 0 else ('cooling' if _wt < 0 else 'steady')} "
+                    f"{_wt:+.1f}°F/wk")
         rows.append(("Water", f"~{m['weather']['water_f']:.0f}°F ({src})"))
     lake_sp = [s.lower() for s in m["lake"].get("species", [])]
     sp_word = m["species"].split()[0]
@@ -757,6 +767,7 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
     ctx = dict(wind_mph=m["weather"]["start"]["wind_mph"], cloud=m["weather"]["start"]["cloud"],
                wind_dir=m["weather"]["start"].get("dir"),
                water_f=m["weather"].get("water_f"), month=m["start"].month,
+               water_trend=m.get("water_trend"),
                moon_fruitful=(m["moon_note"]["fruitful"] if m["moon_note"] else None),
                pressure_word=m["weather"]["score"]["trend"]["word"],
                structure_notes=m["lake"].get("structure", []),

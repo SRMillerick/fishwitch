@@ -25,7 +25,7 @@ def _c2f(c): return c * 9 / 5 + 32
 
 class Weather:
     def __init__(self, lat: float, lng: float, forecast_days: int = 3,
-                 past_days: int = 2):
+                 past_days: int = 30):
         r = requests.get(FORECAST, params=dict(
             latitude=lat, longitude=lng, timezone="auto",
             past_days=past_days, forecast_days=forecast_days,
@@ -97,15 +97,55 @@ class Weather:
             word = "steady"
         return dict(now=now, delta6=round(delta, 1), delta24=round(delta24, 1), word=word)
 
+    # surface water is an air-temperature integrator; a first-order lag over
+    # daily means is the simple physical model (still an estimate — no buoy).
+    WATER_TAU_DAYS = 4.0
+    WATER_BIAS_F = 2.0          # small shallow lake runs a touch warm
+    WATER_SEED_DAYS = 3
+
+    def _water_series(self) -> list[tuple[datetime, float]]:
+        """[(day, water_F)] stepped exponentially through the daily means."""
+        if hasattr(self, "_wseries"):
+            return self._wseries
+        means = [((d["tmax_f"] + d["tmin_f"]) / 2, d["dt"]) for d in self.daily]
+        if len(means) < self.WATER_SEED_DAYS:
+            self._wseries = []
+            return self._wseries
+        k = 1 - math.exp(-1.0 / self.WATER_TAU_DAYS)
+        w = sum(m for m, _ in means[:self.WATER_SEED_DAYS]) / self.WATER_SEED_DAYS
+        # one point per day (the warm start repeated over the seed days)
+        out = [(means[0][1], round(w + self.WATER_BIAS_F, 1))]
+        for m, dt in means[1:]:
+            w += k * (m - w)
+            out.append((dt, round(w + self.WATER_BIAS_F, 1)))
+        self._wseries = out
+        return out
+
     def est_water_f(self, dt: datetime) -> float | None:
-        """Rough surface-water estimate from trailing 3-day air means (+2F lag
-        bias for small shallow lakes). Clearly an estimate — no buoy data."""
-        prior = [d for d in self.daily if d["dt"] < dt.replace(hour=0, minute=0)]
-        prior = prior[-3:]
+        """Surface-water estimate: first-order air-temp lag (tau ~4 days) with a
+        small-lake warm bias. Falls back to the trailing 3-day mean when the
+        fetched history is too short."""
+        series = self._water_series()
+        if series:
+            prior = [x for x in series if x[0] < dt.replace(hour=0, minute=0)]
+            if prior:
+                return prior[-1][1]
+        prior = [d for d in self.daily if d["dt"] < dt.replace(hour=0, minute=0)][-3:]
         if len(prior) < 3:
             return None
         mean_air = sum((d["tmax_f"] + d["tmin_f"]) / 2 for d in prior) / 3
-        return round(mean_air + 2, 0)
+        return round(mean_air + self.WATER_BIAS_F, 0)
+
+    def water_trend_f_per_week(self, dt: datetime) -> float | None:
+        """Water estimate now vs 7 days ago (°F/week) from the same model —
+        the warming/cooling gate for the spawn phase."""
+        series = self._water_series()
+        cut = (dt - timedelta(days=7)).replace(hour=0, minute=0)
+        now = [x for x in series if x[0] < dt.replace(hour=0, minute=0)]
+        week = [x for x in series if x[0] < cut]
+        if not now or not week:
+            return None
+        return round(now[-1][1] - week[-1][1], 1)
 
     def heat_streak(self, dt: datetime) -> int:
         """Consecutive days with tmax >= 90F ending at dt."""

@@ -81,5 +81,32 @@ class AgreementTest(unittest.TestCase):
         self.assertIsNone(wx._agree_label(None, 2.0))
 
 
+class WaterModelTest(unittest.TestCase):
+    def _wx(self, means):
+        w = wx.Weather.__new__(wx.Weather)
+        base = datetime(2026, 4, 1)
+        w.daily = [dict(dt=base + timedelta(days=i), tmax_f=m + 6, tmin_f=m - 6, pop=0)
+                   for i, m in enumerate(means)]
+        if hasattr(w, "_wseries"):
+            del w._wseries
+        return w
+
+    def test_warms_with_the_air_and_lags_it(self):
+        w = self._wx([50] * 4 + [54] * 4 + [58] * 4 + [62] * 4)
+        at = datetime(2026, 4, 16)
+        self.assertGreater(w.water_trend_f_per_week(at), 0)
+        self.assertLess(w.est_water_f(at), 62 + wx.Weather.WATER_BIAS_F)
+
+    def test_cooling_trend_is_negative(self):
+        w = self._wx([70] * 4 + [66] * 4 + [62] * 4 + [58] * 4)
+        self.assertLess(w.water_trend_f_per_week(datetime(2026, 4, 16)), 0)
+
+    def test_short_history_is_null_safe(self):
+        w = self._wx([60, 60])            # fewer days than the seed window
+        self.assertEqual(w._water_series(), [])
+        self.assertIsNone(w.est_water_f(datetime(2026, 4, 3)))
+        self.assertIsNone(w.water_trend_f_per_week(datetime(2026, 4, 3)))
+
+
 if __name__ == "__main__":
     unittest.main()

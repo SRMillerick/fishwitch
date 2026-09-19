@@ -34,6 +34,11 @@ class SpawnPhaseTest(unittest.TestCase):
         self.assertEqual(tx.spawn_phase(64, None), "")
         self.assertEqual(tx.spawn_phase("nope", 4), "")
 
+    def test_cooling_water_vetoes_the_phase(self):
+        self.assertEqual(tx.spawn_phase(64, 4, trend=-1.0), "")
+        self.assertEqual(tx.spawn_phase(64, 4, trend=0.5), "spawn")
+        self.assertEqual(tx.spawn_phase(64, 4, trend=None), "spawn")   # month gate only
+
     def test_fits_are_t5_and_missing_phases_are_zero(self):
         self.assertGreater(tx.spawn_fit("trig", "pre-spawn")[0],
                            tx.spawn_fit("dropshot", "pre-spawn")[0])

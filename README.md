@@ -132,7 +132,9 @@ line, color, sky times, conditions, **model-agreement confidence**, and links.
   called out because cloud drives the light scoring. It is disclosed, never scored —
   uncertainty changes the ranking only if the calibration ledger earns it.
 - Forecast range ~3 days out (Open-Meteo free tier). Further = sky/astro only.
-- Water temp is an air-temp-lagged estimate unless NMEA/Signal K is live.
+- Water temp is a first-order air-temp-lag estimate (tau ~4 days, 30-day
+  spin-up) unless a gauge is live; the report shows the estimate and its 7-day
+  warming/cooling trend.
 - Solunar majors/minors follow the classic overhead/underfoot model.
 - Planetary hours use the unbroken Chaldean sequence from the sunrise ruler.
 - Birth time unknown → noon stand-in; Asc/house-dependent lines are hidden.

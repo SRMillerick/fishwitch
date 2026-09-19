@@ -108,7 +108,9 @@ landed (2026-09-19), and before/after reports are in
 
 `kb/spawn.json` derives a bass phase from **water temperature during the
 warming half of the year** (N. hemisphere: Feb–Jun). Outside that window, or
-inside the band during cooling months, no phase applies.
+inside the band during cooling months, no phase applies; since 2026-09-19 the
+7-day water trend also vetoes a phase in **actively cooling water** (< 0°F/wk),
+so a cold front silences it even in April.
 
 | Phase | Water | T2 basis |
 |---|---|---|

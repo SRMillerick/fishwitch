@@ -285,12 +285,19 @@ def load_spawn() -> dict:
     return _SPAWN
 
 
-def spawn_phase(water_f, month) -> str:
-    """'pre-spawn' | 'spawn' | 'post-spawn' | '' — null-safe."""
+def spawn_phase(water_f, month, trend: float | None = None) -> str:
+    """'pre-spawn' | 'spawn' | 'post-spawn' | '' — null-safe.
+
+    `trend` is the 7-day water trend (°F/week). When supplied, actively
+    cooling or flat water vetoes the phase even inside the month window;
+    when None (short history) the month gate alone applies.
+    """
     d = load_spawn()
     try:
         if not water_f or not month or int(month) not in (d.get("warming_months") or []):
             return ""
+        if trend is not None and float(trend) < 0:
+            return ""          # cooling water is not a spawn phase
         t = float(water_f)
         for ph in ("pre-spawn", "spawn", "post-spawn"):
             lo, hi = (d.get("triggers") or {}).get(ph, {}).get("water_f", (None, None))
@@ -600,7 +607,7 @@ def score_entry(cat: dict, ctx: dict) -> tuple[float, list[str], str | None]:
                 why.append(f"{sub}: {note}")
     # a live spawn phase is the more specific signal: it supersedes the
     # month-based season fits, so the two can never stack (kb/CONDITIONS.md)
-    phase = spawn_phase(ctx.get("water_f"), ctx.get("month"))
+    phase = spawn_phase(ctx.get("water_f"), ctx.get("month"), ctx.get("water_trend"))
     if phase:
         pfit, pnote = spawn_fit(cat["id"], phase)
         if pfit:
@@ -670,7 +677,7 @@ def decision_rules(ctx: dict, picks: list[str]) -> list[str]:
         rules.append("**Swirls/short strikes on topwater →** don't speed up; slow down, longer pauses. Still missing → upsize the profile.")
     if "Drop shot" in picks:
         rules.append("**Drop-shot fish slapping →** re-cast the same fish one size up — change profile, not color.")
-    phase = spawn_phase(ctx.get("water_f"), ctx.get("month"))
+    phase = spawn_phase(ctx.get("water_f"), ctx.get("month"), ctx.get("water_trend"))
     if phase:
         note, _ = spawn_note(phase)
         if note:
