@@ -44,6 +44,7 @@ BANNER = (f'<p class="fine snap">Static snapshot — built {STAMP}. '
           'The live pipe re-renders these in real time.</p>')
 
 c = webapp.app.test_client()
+_bait_ids = {b["id"] for b in webapp.tx.load_baits().get("baits", [])}
 OUT = ROOT / "site"
 (OUT / "static").mkdir(parents=True, exist_ok=True)
 import shutil  # noqa: E402
@@ -84,8 +85,10 @@ def save(path: str, body: str):
     body = re.sub(r'<p class="fine">Subscribe to the A/S windows:.*?</p>\s*',
                   '', body, flags=re.S)
     body = re.sub(r'href="/kb\?species=(\w+)"', r'href="kb-\1.html"', body)
-    # entity pages exist only on the live app — link them absolutely
-    body = re.sub(r'href="/kb/([\w-]+)"', r'href="https://baromoon.com/kb/\1"', body)
+    # rig entity pages live on the live app; bait pages ship in this snapshot
+    body = re.sub(r'href="/kb/([\w-]+)"',
+                  lambda m: (f'href="kb-bait-{m.group(1)}.html"' if m.group(1) in _bait_ids
+                             else f'href="https://baromoon.com/kb/{m.group(1)}"'), body)
     body = body.replace('href="/kb"', 'href="kb-bass.html"')
     body = body.replace('href="/interview"', 'href="interview.html"')
     body = body.replace('href="/lakes"', 'href="lakes.html"')
@@ -120,6 +123,8 @@ for _lk in _reg:
     save(f"lake-{_lk}.html", c.get(f"/lake/{_lk}").get_data(as_text=True))
 for sp in ("bass", "trout", "catfish", "panfish"):
     save(f"kb-{sp}.html", c.get(f"/kb?species={sp}").get_data(as_text=True))
+for _b in webapp.tx.load_baits().get("baits", []):
+    save(f"kb-bait-{_b['id']}.html", c.get(f"/kb/{_b['id']}").get_data(as_text=True))
 save("outlook.html", c.get("/outlook?lake=hidden-valley-lake-ca&days=10")
      .get_data(as_text=True))
 

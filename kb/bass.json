@@ -1552,9 +1552,7 @@
       "aliases": [
         "neko",
         "neko rig",
-        "nail weight",
-        "abstract",
-        "the abstract"
+        "nail weight"
       ],
       "conditions": {
         "light": [
@@ -1579,64 +1577,99 @@
       },
       "note": "weighted wacky: the nail weight stands the bait up; rods that shake it win",
       "provenance": {
-        "seed_author": "kb-ingest/1.0",
-        "source": "6th Sense catalog (6thsensefishing.com, Shopify products.json)",
-        "source_url": "https://6thsensefishing.com/products/abstract",
-        "confidence": "sourced",
+        "seed_author": "kb synthesis (owner technique note)",
+        "source": "owner field observation \u2014 Neko rig technique",
+        "source_url": null,
+        "confidence": "unverified-editorial",
         "verified_by": "sean",
-        "verified_at": "2026-09-16T23:56:47+00:00",
-        "note": "catalog sha 1a7fd4d872a0eaab; technique text human-edited from spec quotes"
-      },
-      "manufacturer_specs": {
-        "manufacturer": "6th Sense Fishing (ET)",
-        "product_title": "The Abstract",
-        "product_url": "https://6thsensefishing.com/products/abstract",
-        "product_type": "Soft Plastic",
-        "variants": [
-          "12mm / Blood Apple",
-          "12mm / Ghost",
-          "12mm / Watermelon Candy",
-          "12mm / Rose Dust",
-          "12mm / Black N' Blue",
-          "12mm / Green Pumpkin Blue",
-          "12mm / Green Pumpkin",
-          "12mm / Gill Dust"
-        ],
-        "depth": null,
-        "retrieve": {
-          "quote": "Snap it aggressively, shake it in place, swim it steadily, or let it fall on slack line\u2014the legs quiver, pulse, and flow around the body",
-          "match": "Snap it aggressively, shake it in place, swim it steadily, or let it fall on sla"
-        },
-        "rigging": {
-          "quote": "The Abstract Description The Abstract takes the proven urchin-style profile and pushes it further with increased water displacement, responsive appendage action, and exceptional rigging versatility",
-          "match": "The Abstract Description The Abstract takes the proven urchin-style profile and "
-        }
+        "verified_at": "2026-09-19T21:45:00+00:00",
+        "note": "the Neko rig is a presentation, not a product; urchin/dice-style baits (The Abstract, Coike, Omoeba, Prickly Pear) are their own bait family in kb/baits.json"
       },
       "citations": [
         {
-          "claim": "owner neko/urchin build",
+          "claim": "Neko rig technique + owner bait",
           "tier": "T5",
-          "source": "owner field observation \u2014 Sean Millerick, 2026-09-18",
+          "source": "owner field observation \u2014 Sean Millerick, 2026-09-19",
           "url": null,
-          "quote": "neko/urchin: 24mm Abstract (green/blue), treble 1/0-3/0, two 1/8 oz tungsten screws (Sean) / 3/16 oz VMC (Jack), medium-heavy rod; Jack ran braid direct, no leader",
+          "quote": "Nail weight in one end, hook through mid-body; the bait stands up and quivers \u2014 shake in place, dead-stick, slow drag. Owner bait: 6in X-Zone Deception 309.",
           "found": true,
-          "fetched_at": "2026-09-19T03:56:42+00:00",
+          "fetched_at": "2026-09-19T22:10:00+00:00",
+          "sha256": null
+        }
+      ]
+    },
+    {
+      "id": "urchin",
+      "label": "Urchin/dice rig (treble + screw weights)",
+      "style": "finesse",
+      "depth": "mid",
+      "kind": "rig",
+      "aliases": [
+        "urchin",
+        "urchin rig",
+        "dice",
+        "dice rig",
+        "abstract",
+        "the abstract",
+        "coike",
+        "omoeba",
+        "amoeba"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day",
+          "dusk/dawn",
+          "golden",
+          "night"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          50,
+          95
+        ]
+      },
+      "technique": "urchin/dice-style bait on a treble, weighted with screw-in weights; stands and quivers on the bottom \u2014 shake in place, slow drag, dead-stick",
+      "colors": {
+        "clear": "green pumpkin blue"
+      },
+      "note": "treble presentation for urchin/dice baits (The Abstract, Coike, Omoeba, Prickly Pear); kept separate from the Neko rig",
+      "provenance": {
+        "seed_author": "kb synthesis (owner logs)",
+        "source": "owner field observations (Sean + Jack)",
+        "source_url": null,
+        "confidence": "unverified-editorial",
+        "verified_by": null,
+        "verified_at": null,
+        "note": "conditions bands copied from the finesse-bottom cluster (T5); owner logs are the two citations; promote/adjust once the ledger has urchin-rig sessions"
+      },
+      "citations": [
+        {
+          "claim": "owner urchin build (Jack, 9/13)",
+          "tier": "T5",
+          "source": "owner field observation \u2014 Jack, 2026-09-13",
+          "url": null,
+          "quote": "24mm green pumpkin blue Abstract, 1/0 treble, 3/16 oz nail weight \u2014 12 lb (lake-record class) plus 7/6/5/3/3 in one Sunday session.",
+          "found": true,
+          "fetched_at": "2026-09-19T22:10:00+00:00",
           "sha256": null
         },
         {
-          "claim": "owner neko build refs",
+          "claim": "owner urchin build (Sean, 9/14)",
           "tier": "T5",
-          "source": "owner field observation \u2014 Sean Millerick, 2026-09-18",
+          "source": "owner field observation \u2014 Sean Millerick, 2026-09-14",
           "url": null,
-          "quote": "kit sheet (2026-09-18)",
+          "quote": "24mm green/blue Abstract, 3/0 treble, two 1/8 oz tungsten screw weights, MH rod; bite sudden, hookup instant \u2014 4.5 lb plus smalls.",
           "found": true,
-          "fetched_at": "2026-09-19T04:09:05+00:00",
+          "fetched_at": "2026-09-19T22:10:00+00:00",
           "sha256": null
         }
       ],
       "spec": {
         "hook": {
-          "type": "treble or wacky/octopus hook",
           "sizes": [
             "1/0",
             "3/0"
@@ -1658,7 +1691,7 @@
           "note": "green pumpkin blue"
         },
         "line": {
-          "main": "fluorocarbon",
+          "main": "braid",
           "note": "Jack ran braid direct, no leader"
         },
         "source": "owner field observations (sean, 2026-09-18)",

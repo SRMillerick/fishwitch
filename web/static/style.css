@@ -140,6 +140,15 @@ html[data-theme="crisp-dark"] .theme-toggle .i-moon { display: none; }
   background: var(--panel); border: 1px solid var(--line); border-radius: 3px;
   padding: .4rem; z-index: 50; box-shadow: var(--shadow);
 }
+/* Narrow screens: the summary can wrap to the left edge, so a right-anchored
+   dropdown opened off-screen. Anchor it to the header instead, full width. */
+@media (max-width: 46rem) {
+  .menu { position: static; }
+  .menu-body {
+    left: 0; right: 0; top: 100%; min-width: 0; width: auto;
+    max-height: 70vh; overflow-y: auto; border-radius: 0 0 3px 3px;
+  }
+}
 .mrow {
   display: flex; justify-content: space-between; align-items: center; gap: .6rem;
   padding: .5rem .6rem; border-radius: 2px; cursor: pointer;

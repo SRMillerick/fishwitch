@@ -14,20 +14,20 @@
       "material": "HyperStretch",
       "profile": "barrel-shaped body with flat ends; wide flat appendages; urchin-style",
       "buoyancy": "enhanced",
-      "weight_slot": "integrated Neko nail-weight slot",
+      "weight_slot": "integrated nail-weight slot",
       "rigs": [
-        "neko",
         "wacky",
-        "trig"
+        "trig",
+        "urchin"
       ],
-      "note": "urchin-style plastic with a Neko nail-weight slot; owner cross-refs: Hideout Coike, Berkley Omoeba",
+      "note": "urchin/dice-style bait family (separate from the Neko rig); owner cross-refs: Hideout Coike, Berkley Omoeba, Hag's Prickly Pear",
       "rigging_rule": "the hook needs to be larger/wider than the central ball of that kind of bait; if the hook doesn't extend beyond that central ball, you will lose fish or miss your hookset",
       "field_notes": [
-        "owner rig: 24mm green/blue Abstract, 3/0 treble hook, two 1/8 oz tungsten screw neko-style weights (1/4 oz total)",
+        "owner rig: 24mm green/blue Abstract, 3/0 treble hook, two 1/8 oz tungsten screw nail weights (1/4 oz total)",
         "owner: medium-heavy rod required \u2014 lighter rods feel loaded like weeds; casting is challenging (poor aerodynamics)",
         "owner: bite is sudden, hookup instant/hard",
         "owner buoyancy: neutral \u2014 TPE urchin baits weigh a bit but won't sink unless weighted (maker copy says 'floating')",
-        "Jack's setup (2026-09-13): 24mm green pumpkin blue Abstract, 1/0 treble, 3/16 oz VMC neko weight \u2014 12 lb (lake-record class) plus 7/6/5/3/3 in one Sunday session",
+        "Jack's setup (2026-09-13): 24mm green pumpkin blue Abstract, 1/0 treble, 3/16 oz VMC nail weight \u2014 12 lb (lake-record class) plus 7/6/5/3/3 in one Sunday session",
         "Jack's line (2026-09-13): braid tied directly to the hook with no leader \u2014 against the finesse-leader convention, and it still produced the 12 lb"
       ],
       "citations": [
@@ -172,7 +172,7 @@
         "verified_at": "2026-09-19T03:55:28+00:00",
         "note": "text sha 0a2f44142840e7bf; fetched 2026-09-19T03:42:11+00:00; maker specs quoted (T1); hook-width rule is T5 owner observation"
       },
-      "purpose": "urchin-bait"
+      "purpose": "urchin-dice"
     },
     {
       "id": "prickly-pear",
@@ -288,7 +288,7 @@
         "verified_at": "2026-09-19T03:55:28+00:00",
         "note": "text sha 3ded6e14f9b9a685; fetched 2026-09-19T03:42:11+00:00; maker specs quoted (T1); hook-width rule is T5 owner observation"
       },
-      "purpose": "urchin-bait"
+      "purpose": "urchin-dice"
     }
   ],
   "label": "Baits",

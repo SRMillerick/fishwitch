@@ -34,7 +34,8 @@
     "neko": "bottom",
     "dropshot": "suspend",
     "wacky": "fall",
-    "chicken": "fall"
+    "chicken": "fall",
+    "urchin": "bottom"
   },
   "class_sources": {
     "topwater": {

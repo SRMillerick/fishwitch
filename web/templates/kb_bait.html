@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}{{ b.label }} — tackle library{% endblock %}
+{% block head %}
+<meta name="description" content="{{ b.label }} — {{ (b.note or '')[:140] }}">
+<link rel="canonical" href="https://baromoon.com/kb/{{ b.id }}">
+{% endblock %}
+{% block content %}
+<div class="narrow">
+<span class="eyebrow">{{ b.kind or 'bait' }} · {{ b.purpose or 'bait' }}</span>
+<h1>{{ b.label }}</h1>
+{% if b.aliases %}<p class="fine">aka {{ b.aliases | join(' · ') }}</p>{% endif %}
+<p><strong>{{ b.note }}</strong></p>
+
+<h2 class="rule-double">The bait</h2>
+<div class="table-scroll">
+<table>
+  <tbody>
+    <tr><th>Style</th><td>{{ b.style }}{% if b.profile %} · {{ b.profile }}{% endif %}</td></tr>
+    {% if b.sizes %}<tr><th>Sizes</th><td>{{ b.sizes | join(' · ') }}</td></tr>{% endif %}
+    {% if b.material %}<tr><th>Material</th><td>{{ b.material }}</td></tr>{% endif %}
+    {% if b.buoyancy %}<tr><th>Buoyancy</th><td>{{ b.buoyancy }}</td></tr>{% endif %}
+    {% if b.weight_slot %}<tr><th>Weight slot</th><td>{{ b.weight_slot }}</td></tr>{% endif %}
+    {% if b.rigs %}<tr><th>Rigs</th><td>
+      {% for r in b.rigs %}<a href="/kb/{{ r }}">{{ r }}</a>{% if not loop.last %} · {% endif %}{% endfor %}
+    </td></tr>{% endif %}
+  </tbody>
+</table>
+</div>
+{% if b.rigging_rule %}<p class="fine"><strong>Rigging rule:</strong> {{ b.rigging_rule }}</p>{% endif %}
+
+{% if b.field_notes %}
+<h2 class="rule-double">Field notes <span class="fine">(owner observations)</span></h2>
+<ul class="plain">
+  {% for n in b.field_notes %}<li>{{ n }}</li>{% endfor %}
+</ul>
+{% endif %}
+
+{% if citations %}
+<h2 class="rule-double">Sources</h2>
+<ul class="plain">
+  {% for cit in citations %}
+  <li><blockquote class="fine">“{{ cit.quote }}”
+    — {% if cit.url %}<a href="{{ cit.url }}" target="_blank" rel="noopener">{{ cit.source }}</a>{% else %}{{ cit.source }}{% endif %}
+    {% if cit.fetched_at %}<span class="fine">(checked {{ cit.fetched_at[:10] }})</span>{% endif %}
+  </blockquote></li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% if offers_list or components %}
+<h2 class="rule-double">Where to get it</h2>
+<p class="fine">Links are added after the picks are set, are always disclosed, and never affect the
+ranking. Manufacturer pages carry no commission; affiliate links are labelled.</p>
+<ul class="plain">
+  {% for o in offers_list %}
+  <li><a href="/out/{{ b.id }}/{{ o.retailer }}?src=kb" target="_blank" rel="sponsored noopener">{{ o.retailer_label or o.retailer }}</a>
+    <span class="fine">({{ o.disclosure }})</span></li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% if alternatives %}
+<h2 class="rule-double">Also in this family <span class="fine">(same style)</span></h2>
+<ul class="plain">
+  {% for a in alternatives %}<li><a href="/kb/{{ a.id }}">{{ a.label }}</a></li>{% endfor %}
+</ul>
+{% endif %}
+
+<p><a href="/report">Run a report with these conditions →</a> · <a href="/kb">All tackle-library entries</a></p>
+</div>
+{% endblock %}

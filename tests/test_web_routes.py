@@ -24,6 +24,21 @@ class KBEntityPageTest(unittest.TestCase):
         html = self.c.get("/kb?species=bass").get_data(as_text=True)
         self.assertIn('href="/kb/dropshot"', html)
 
+    def test_bait_entity_renders(self):
+        r = self.c.get("/kb/abstract")
+        self.assertEqual(r.status_code, 200)
+        html = r.get_data(as_text=True)
+        for needle in ("The Abstract", "urchin-dice", "Field notes", "Sources"):
+            self.assertIn(needle, html)
+
+    def test_kb_index_lists_baits_and_family(self):
+        html = self.c.get("/kb?species=bass").get_data(as_text=True)
+        self.assertIn("Cross-species baits", html)
+        self.assertIn('href="/kb/abstract"', html)
+        # the family link is on the bait page
+        bait = self.c.get("/kb/abstract").get_data(as_text=True)
+        self.assertIn('href="/kb/prickly-pear"', bait)
+
     def test_service_worker_served_at_root_scope(self):
         r = self.c.get("/sw.js")
         self.assertEqual(r.status_code, 200)

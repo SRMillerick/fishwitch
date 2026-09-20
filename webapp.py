@@ -749,18 +749,29 @@ def kb_page():
             confidence=p.get("confidence", ""),
             source=p.get("source", ""), source_url=p.get("source_url"),
             verified_by=p.get("verified_by", "")))
-    return render_template("kb.html", species=species, cats=cats, local=LOCAL)
+    return render_template("kb.html", species=species, cats=cats,
+                           baits=tx.load_baits().get("baits", []), local=LOCAL)
 
 
 @app.route("/kb/<entry_id>")
 def kb_entry_page(entry_id):
     """Canonical page for one KB entity — the citeable home for a rig/lure:
     conditions, the concrete build, substrate fits, every citation verbatim,
-    disclosed offers, and same-purpose alternatives."""
+    disclosed offers, and same-purpose alternatives. Cross-species bait
+    entities (kb/baits.json) get their own shape."""
     entry_id = re.sub(r"[^a-z0-9_-]", "", (entry_id or "").lower())[:40]
     c = tx.find_entry(entry_id)
     if not c:
-        abort(404)
+        b = tx.bait_entry(entry_id)
+        if not b:
+            abort(404)
+        return render_template(
+            "kb_bait.html", b=b,
+            citations=list(b.get("citations") or []),
+            alternatives=[a for a in tx.alternatives(entry_id)
+                          if a.get("id") != entry_id],
+            offers_list=[o for o in offers.resolve(entry_id) if o.get("url")],
+            components=offers.components(entry_id), local=LOCAL)
     spec = tx.rig_spec(entry_id)
     substrate = {b: v for b, v in
                  ((tx.load_substrate().get("entries") or {}).get(entry_id) or {}).items()
@@ -1161,6 +1172,7 @@ def sitemap():
     urls += [f"/lake/{l['id']}" for l in lakes_summary()]
     urls += [f"/kb/{c['id']}" for sp in ("bass", "trout", "catfish", "panfish")
              for c in tx.catalog(sp)]
+    urls += [f"/kb/{b['id']}" for b in tx.load_baits().get("baits", [])]
     body = ['<?xml version="1.0" encoding="UTF-8"?>',
             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     body += [f"<url><loc>{base}{u}</loc></url>" for u in urls]
