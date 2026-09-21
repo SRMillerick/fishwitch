@@ -172,24 +172,37 @@ def simplify(ring: list[tuple[float, float]], tol_deg: float) -> list[tuple[floa
     return [p for p, k in zip(ring, keep) if k]
 
 
+def _pick_ring(elements: list[dict], lat: float, lng: float) -> list[tuple[float, float]] | None:
+    """The shoreline ring for a registry point: containing rings win; else
+    rings whose shore passes within 800 m. Within the chosen pool the largest
+    ring wins — a big lake beats the pond the point happens to sit in, but a
+    larger neighbouring lake can never steal a point that sits inside its own
+    polygon (Fain Lake vs Mesa Reservoir, 2026-09-20)."""
+    contained: list[list[tuple[float, float]]] = []
+    nearby: list[list[tuple[float, float]]] = []
+    for el in elements:
+        for ring in _rings(el):
+            if _contains(ring, lat, lng):
+                contained.append(ring)
+            elif _dist_to_ring(ring, lat, lng) <= 800:
+                nearby.append(ring)
+    best, best_area = None, 0.0
+    for ring in (contained or nearby):
+        a = _area_m2(ring)
+        if a > best_area:
+            best, best_area = ring, a
+    return best
+
+
 def fetch_lake(key: str, lake: dict) -> dict | None:
     lat, lng = lake["lat"], lake["lng"]
     acres = lake.get("area_acres") or 0
     radius = 4000 if acres < 5000 else 12000
     data = _get(_query(lat, lng, radius))
-    # A candidate is relevant if it contains the point or its shore is within
-    # 800 m. Among relevant rings take the largest — a lake beats the pond the
-    # point happens to sit in, and an 18 km-away lake can never win.
-    best, best_area = None, 0.0
-    for el in data.get("elements", []):
-        for ring in _rings(el):
-            if not (_contains(ring, lat, lng) or _dist_to_ring(ring, lat, lng) <= 800):
-                continue
-            a = _area_m2(ring)
-            if a > best_area:
-                best, best_area = ring, a
+    best = _pick_ring(data.get("elements", []), lat, lng)
     if best is None:
         return None
+    best_area = _area_m2(best)
     tol_deg = TOLERANCE_M / 111320.0
     simple = simplify(best, tol_deg)
     return dict(name=lake.get("name", key), polygon=[[round(a, 6), round(b, 6)] for a, b in simple],

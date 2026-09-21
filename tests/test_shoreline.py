@@ -37,5 +37,33 @@ class ShorelineTest(unittest.TestCase):
         self.assertIsNone(shoreline.wind_shore("test-lake", None))
 
 
+class AdapterRingPickTest(unittest.TestCase):
+    """The shoreline adapter must not let a nearby bigger lake steal the
+    registry point's own polygon (Fain Lake vs Mesa Reservoir, 2026-09-20)."""
+
+    @staticmethod
+    def _way(ring):
+        return {"type": "way",
+                "geometry": [{"lat": p[0], "lon": p[1]} for p in ring]}
+
+    def test_containing_ring_wins_over_nearby_bigger_ring(self):
+        from adapters import shorelines as sh
+        small = [[34.5750, -112.3524], [34.5750, -112.3522],
+                 [34.5752, -112.3522], [34.5752, -112.3524]]   # Fain Lake
+        big = [[34.5750, -112.3470], [34.5750, -112.3420],
+               [34.5800, -112.3420], [34.5800, -112.3470]]   # Mesa, ~500 m E
+        ring = sh._pick_ring([self._way(big), self._way(small)], 34.5751, -112.3523)
+        self.assertEqual(ring, [tuple(p) for p in small])
+
+    def test_largest_containing_ring_wins(self):
+        from adapters import shorelines as sh
+        pond = [[34.5750, -112.3524], [34.5750, -112.3522],
+                [34.5752, -112.3522], [34.5752, -112.3524]]
+        lake = [[34.5700, -112.3600], [34.5700, -112.3400],
+                [34.5900, -112.3400], [34.5900, -112.3600]]
+        ring = sh._pick_ring([self._way(pond), self._way(lake)], 34.5751, -112.3523)
+        self.assertEqual(ring, [tuple(p) for p in lake])
+
+
 if __name__ == "__main__":
     unittest.main()
