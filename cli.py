@@ -679,6 +679,11 @@ def main():
     kj.add_argument("--entry", required=True)
     kj.add_argument("--by", default="human reviewer")
     kj.add_argument("--reason", help="why (matched wrong product, etc.)")
+    kt = sub.add_parser("kb-retire", help="retire a promoted entry — logged, entry archived")
+    kt.add_argument("--species", default="trends", required=True)
+    kt.add_argument("--entry", required=True)
+    kt.add_argument("--by", default="human reviewer")
+    kt.add_argument("--reason", help="why (superseded, stale, wrong match, ...)")
     kp = sub.add_parser("kb-promote", help="merge a reviewed draft into the KB")
     kp.add_argument("--species", default="bass", required=True)
     kp.add_argument("--entry", required=True)
@@ -830,6 +835,14 @@ def main():
             print(f"  🗑 rejected {args.entry} — decision logged to {log}")
         else:
             sys.exit(f"no pending draft for {args.species}/{args.entry}")
+
+    elif args.cmd == "kb-retire":
+        from adapters import kb_ingest
+        log = kb_ingest.retire(args.species, args.entry, args.by, args.reason or "")
+        if log:
+            print(f"  🗄 retired {args.entry} — archived in {log}")
+        else:
+            sys.exit(f"no promoted entry {args.species}/{args.entry}")
 
     elif args.cmd == "offers":
         import offers

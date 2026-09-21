@@ -242,6 +242,44 @@ def reject(species: str, entry_id: str, by: str, reason: str = "") -> Path | Non
     return log
 
 
+def _pop_entry(kb: dict, entry_id: str):
+    """Remove an entry by id from any collection shape a KB file uses:
+    a list of `{"id": …}` dicts (`cats`, `trends`) or a dict keyed by id
+    (`entries`). Returns (entry, collection_key) or (None, None)."""
+    for key, coll in kb.items():
+        if isinstance(coll, list):
+            for i, c in enumerate(coll):
+                if isinstance(c, dict) and c.get("id") == entry_id:
+                    return coll.pop(i), key
+        elif isinstance(coll, dict) and isinstance(coll.get(entry_id), dict):
+            return coll.pop(entry_id), key
+    return None, None
+
+
+def retire(species: str, entry_id: str, by: str, reason: str = "") -> Path | None:
+    """Retire a promoted entry: pull it out of its active collection and
+    append the full entry to kb/retired.log. The log is append-only, so the
+    data stays auditable and recoverable — unlike reject(), which removes a
+    pending draft (also logged). Returns the log path, or None if the entry
+    isn't in the KB."""
+    kb_file = KB / ("trends.json" if species == "trends" else f"{species}.json")
+    if kb_file.exists():
+        kb = json.loads(kb_file.read_text())
+    else:
+        return None
+    entry, key = _pop_entry(kb, entry_id)
+    if entry is None:
+        return None
+    log = KB / "retired.log"
+    with log.open("a") as f:
+        f.write(json.dumps(dict(
+            ts=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            species=species, entry_id=entry_id, by=by,
+            reason=reason or "(none given)", collection=key, entry=entry)) + "\n")
+    kb_file.write_text(json.dumps(kb, indent=2) + "\n")
+    return log
+
+
 def review_queue() -> list[Path]:
     return sorted(PENDING.glob("*/*.json")) if PENDING.exists() else []
 

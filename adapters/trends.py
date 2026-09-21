@@ -207,6 +207,23 @@ def promoted_urls() -> set[str]:
         return set()
 
 
+def retired_urls() -> set[str]:
+    """URLs of retired trends (kb/retired.log) — never re-draft those either."""
+    out: set[str] = set()
+    try:
+        for line in (KB / "retired.log").read_text().splitlines():
+            try:
+                r = json.loads(line)
+            except Exception:
+                continue
+            url = (r.get("entry") or {}).get("url")
+            if url:
+                out.add(url)
+    except Exception:
+        pass
+    return out
+
+
 def rejected_pairs() -> set[tuple[str, str]]:
     """(entity_id, url) pairs a human rejected — never re-draft those either."""
     out: set[tuple[str, str]] = set()
@@ -229,7 +246,7 @@ def draft(limit_per_feed: int = 4, limit_per_creator: int = 8) -> list[Path]:
     index = kb_index()
     by_len = sorted(index.items(), key=lambda kv: -len(kv[0]))
     written: list[Path] = []
-    promoted = promoted_urls()
+    promoted = promoted_urls() | retired_urls()
     rejected = rejected_pairs()
 
     for item in poll()[:limit_per_feed * len(FEEDS)]:

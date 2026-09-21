@@ -44,5 +44,15 @@ class TrendDraftTest(unittest.TestCase):
         self.assertEqual(d["target_key"], "trends")
 
 
+class RetiredUrlTest(unittest.TestCase):
+    def test_retired_log_urls_are_collected(self):
+        with tempfile.TemporaryDirectory() as td:
+            (Path(td) / "retired.log").write_text(json.dumps({
+                "entry_id": "old",
+                "entry": {"url": "https://x.test/gone"}}) + "\n")
+            with mock.patch.object(tra, "KB", Path(td)):
+                self.assertIn("https://x.test/gone", tra.retired_urls())
+
+
 if __name__ == "__main__":
     unittest.main()
