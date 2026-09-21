@@ -3,7 +3,7 @@
 {% block content %}
 <section class="hero">
   <div class="hero-copy">
-    <span class="eyebrow">the moon-ledger · North Bay</span>
+    <span class="eyebrow">the moon-ledger · any water</span>
     <h1>When do the fish <em>feed?</em></h1>
     <p class="lede">baromoon reads moon, barometer, and water — the signals that survive
     calibration, plus everything your lake's sky is doing — and hands you the
@@ -37,10 +37,12 @@
 <section class="ledger" id="ledger">
   <div class="section-head">
     <h2>The ledger</h2>
-    <span class="smallcaps" id="ledger-scope">Home water · next three days</span>
+    <span class="smallcaps" id="ledger-scope">{{ home.name if home else 'Nearby water' }} · next three days</span>
   </div>
   <p class="fine ledger-note" id="ledger-note">The best upcoming windows, tiered — open a
   line for the full report. With a profile, this becomes your waters and your sky.</p>
+  <p class="fine" id="near-me-wrap" hidden><a href="#" id="near-me">Waters near me</a>
+  — your browser picks the closest water; the location never leaves this page.<span id="near-me-note"></span></p>
   <ul class="tier-rows" id="ledger-rows">
     {% for r in ledger or [] %}
     <li><a class="trow {{ r.tier }}" href="/report?lake={{ r.lake_id }}&at={{ r.start.strftime('%Y-%m-%d %H:%M') }}&hours=2&voice=almanac">
@@ -78,9 +80,9 @@
   </div>
   <div>
     <h2 class="rule-double">Waters we cover</h2>
-    <ul class="plain lakes">
+    <ul class="plain lakes" id="waters-list">
       {% for l in lakes %}
-      <li><a href="/lake/{{ l.id }}">{{ l.name }}</a>
+      <li{% if l.lat is not none and l.lng is not none %} data-lat="{{ l.lat }}" data-lng="{{ l.lng }}"{% endif %}><a href="/lake/{{ l.id }}">{{ l.name }}</a>
           <span class="fine">{{ l.region }}{% if l.lat %} ·
             <a href="https://www.openstreetmap.org/?mlat={{ l.lat }}&mlon={{ l.lng }}#map=13/{{ l.lat }}/{{ l.lng }}" target="_blank" rel="noopener">map</a>{% endif %}</span></li>
       {% endfor %}
@@ -90,4 +92,5 @@
     to the map.</p>
   </div>
 </section>
+<script type="application/json" id="bm-waters">{{ waters_json | safe }}</script>
 {% endblock %}

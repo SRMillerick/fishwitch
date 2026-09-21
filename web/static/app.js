@@ -261,6 +261,77 @@ if (ledgerRows) {
   }
 }
 
+// ── landing: nearest-water preview for anonymous visitors ────────────────
+// The registry ride-along (#bm-waters) is enough to pick the closest water
+// in-browser. Coordinates never leave this page: we only navigate to
+// /?lake=<id> once we know which public water won.
+const watersEl = document.getElementById("bm-waters");
+const nearWrap = document.getElementById("near-me-wrap");
+const nearLink = document.getElementById("near-me");
+const nearNote = document.getElementById("near-me-note");
+if (ledgerRows && watersEl) {
+  let waters = [];
+  try { waters = JSON.parse(watersEl.textContent || "[]") || []; } catch {}
+  const params = new URLSearchParams(location.search);
+  const chosen = params.get("lake");
+  const rad = (d) => d * Math.PI / 180;
+  const km = (lat, lng, w) => {
+    const dLat = rad(w.lat - lat), dLng = rad(w.lng - lng);
+    const h = Math.sin(dLat / 2) ** 2 +
+      Math.cos(rad(lat)) * Math.cos(rad(w.lat)) * Math.sin(dLng / 2) ** 2;
+    return 2 * 6371 * Math.asin(Math.min(1, Math.sqrt(h)));
+  };
+  const nearest = (lat, lng) => waters
+    .filter(w => w.lat != null && w.lng != null)
+    .sort((a, b) => km(lat, lng, a) - km(lat, lng, b))[0];
+  const sortWaters = (lat, lng) => {
+    const ul = document.getElementById("waters-list");
+    if (!ul) return;
+    [...ul.children]
+      .map(li => [li, li.dataset.lat && li.dataset.lng
+        ? km(lat, lng, { lat: +li.dataset.lat, lng: +li.dataset.lng }) : Infinity])
+      .sort((a, b) => a[1] - b[1])
+      .forEach(([li]) => ul.appendChild(li));
+  };
+  const locate = () => new Promise((resolve) => {
+    if (!navigator.geolocation) return resolve(null);
+    navigator.geolocation.getCurrentPosition(
+      (p) => resolve([p.coords.latitude, p.coords.longitude]),
+      () => resolve(null), { maximumAge: 86400000, timeout: 8000 });
+  });
+  const apply = (fix) => {
+    if (!fix) {
+      if (nearLink) nearLink.textContent = "Waters near me";
+      if (nearNote) nearNote.textContent = " — location unavailable; showing the demo water.";
+      return;
+    }
+    sortWaters(fix[0], fix[1]);
+    const w = nearest(fix[0], fix[1]);
+    if (w && !chosen) location.replace("/?lake=" + encodeURIComponent(w.id) + "#ledger");
+  };
+  const ask = () => {
+    if (nearLink) nearLink.textContent = "locating…";
+    locate().then(apply);
+  };
+  if (nearLink) nearLink.addEventListener("click", (ev) => {
+    ev.preventDefault();
+    if (nearNote) nearNote.textContent = "";
+    ask();
+  });
+  if (!getActive()) {
+    let perm = null;
+    try { perm = navigator.permissions && navigator.permissions.query({ name: "geolocation" }); } catch {}
+    if (perm) {
+      perm.then((p) => {
+        if (p.state === "granted") ask();          // silent when already allowed
+        else if (!chosen && nearWrap) nearWrap.hidden = false;
+      }).catch(() => { if (!chosen && nearWrap) nearWrap.hidden = false; });
+    } else if (!chosen && nearWrap) {
+      nearWrap.hidden = false;                      // no Permissions API: offer it inline
+    }
+  }
+}
+
 // ── report form: POST the active profile with the query ────────────────────
 const form = document.getElementById("report-form");
 if (form) {

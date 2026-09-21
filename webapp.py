@@ -463,25 +463,36 @@ def _report_response(payload: dict, anonymous: bool) -> dict:
 # ── pages ────────────────────────────────────────────────────────────────────
 @app.route("/")
 def index():
+    """The landing ledger. Anonymous visitors get a demo water (Hidden Valley)
+    unless `?lake=<id>` names one — the browser layer uses that param to
+    re-render for the water nearest the visitor. The nearest-water pick is made
+    in the browser; coordinates never reach this server."""
     teaser = None
     ledger = None
+    requested = (request.args.get("lake") or "").strip()
+    home = resolve_lake(requested or None)
+    if home is None:  # unknown name/id: fall back to the demo water
+        home = resolve_lake(None)
+    lake_id = home.get("id") if home else None
     try:
-        first = lakes_summary()[0]["id"] if lakes_summary() else None
         tonight = datetime.now().replace(hour=18, minute=0, second=0, microsecond=0)
-        out = _report_response(dict(lake=first, at=tonight.strftime("%Y-%m-%d %H:%M"),
+        out = _report_response(dict(lake=lake_id, at=tonight.strftime("%Y-%m-%d %H:%M"),
                                      hours="2.5", voice="almanac"), anonymous=True)
         if "error" not in out:
             teaser = out
     except Exception:
         pass
-    try:
-        home = resolve_lake(None)
-        ledger = _cached("ledger:anon:home:3:v2",
-                         lambda: _ledger(home, 3, None, None, span=0, limit=6))
-    except Exception:
-        pass
+    if home:
+        try:
+            ledger = _cached(f"ledger:anon:{lake_id}:3:v3",
+                             lambda: _ledger(home, 3, None, None, span=0, limit=6))
+        except Exception:
+            pass
+    waters = [dict(id=l["id"], name=l["name"], lat=l["lat"], lng=l["lng"])
+              for l in lakes_summary() if l.get("lat") is not None and l.get("lng") is not None]
     return render_template("index.html", lakes=lakes_summary(), local=LOCAL,
-                           teaser=teaser, ledger=ledger)
+                           teaser=teaser, ledger=ledger, home=home,
+                           waters_json=json.dumps(waters))
 
 
 @app.route("/report")
