@@ -235,6 +235,7 @@ def reject(species: str, entry_id: str, by: str, reason: str = "") -> Path | Non
         f.write(json.dumps(dict(
             ts=datetime.now(timezone.utc).isoformat(timespec="seconds"),
             species=species, entry_id=entry_id, by=by, reason=reason or "(none given)",
+            entity_id=draft["proposed"].get("entity_id"),
             product=draft["proposed"].get("product_title"),
             source_url=draft["provenance"].get("source_url"))) + "\n")
     p.unlink()

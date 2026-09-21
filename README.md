@@ -68,7 +68,7 @@ fishwitch stats [--remote]              # aggregate page views (no PII; --remote
 ./webapp                                 # web front door → http://127.0.0.1:7700
 FISHWITCH_LOCAL=1 ./webapp               # + /review, /stats, and ledger-writing /log (self-host)
 # public /log is field mode: entries queue in the browser and export as JSON for import
-~/.astro-venv/bin/python -m unittest discover -s tests -t .   # 112 tests, no network
+~/.astro-venv/bin/python -m unittest discover -s tests -t .   # 116 tests, no network
 FISHWITCH_WEB_HOST=0.0.0.0 ./webapp     # public deploy (gunicorn+nginx in front)
 fishwitch report --profile config/profiles/sean.json --lake hidden-valley-lake-ca
 fishwitch report --birth "1988-01-18 17:35" --place "Santa Rosa, CA, US" \

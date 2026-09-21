@@ -166,11 +166,14 @@ def _sentences(text: str, alias: str) -> list[str]:
 
 def _write_draft(entity_id: str, source: str, url: str, quote: str, title: str,
                  signal: str, observed_at: str, sha: str | None,
-                 slug_hint: str = "") -> Path | None:
+                 slug_hint: str = "", promoted_urls: set[str] | None = None,
+                 rejected_pairs: set[tuple[str, str]] | None = None) -> Path | None:
     slug = re.sub(r"[^a-z0-9]+", "-",
                   f"{slug_hint or source}-{entity_id}".lower()).strip("-")
     path = PENDING / f"{slug}.json"
-    if path.exists():
+    if (path.exists()
+            or (promoted_urls and url in promoted_urls)
+            or (rejected_pairs and (entity_id, url) in rejected_pairs)):
         return None
     now = _now()
     draft = {
@@ -195,12 +198,39 @@ def _write_draft(entity_id: str, source: str, url: str, quote: str, title: str,
     return path
 
 
+def promoted_urls() -> set[str]:
+    """URLs already promoted in kb/trends.json — never re-draft them."""
+    try:
+        import tactics as tx
+        return {t.get("url") for t in tx.load_trends().get("trends", []) if t.get("url")}
+    except Exception:
+        return set()
+
+
+def rejected_pairs() -> set[tuple[str, str]]:
+    """(entity_id, url) pairs a human rejected — never re-draft those either."""
+    out: set[tuple[str, str]] = set()
+    try:
+        for line in (KB / "rejected.log").read_text().splitlines():
+            try:
+                r = json.loads(line)
+            except Exception:
+                continue
+            if r.get("entity_id") and r.get("source_url"):
+                out.add((r["entity_id"], r["source_url"]))
+    except Exception:
+        pass
+    return out
+
+
 def draft(limit_per_feed: int = 4, limit_per_creator: int = 8) -> list[Path]:
     """Fetch feeds + creator channels, find KB entities, write trend drafts."""
     PENDING.mkdir(parents=True, exist_ok=True)
     index = kb_index()
     by_len = sorted(index.items(), key=lambda kv: -len(kv[0]))
     written: list[Path] = []
+    promoted = promoted_urls()
+    rejected = rejected_pairs()
 
     for item in poll()[:limit_per_feed * len(FEEDS)]:
         url = item.get("url")
@@ -220,7 +250,8 @@ def draft(limit_per_feed: int = 4, limit_per_creator: int = 8) -> list[Path]:
                 src = item["feed"].upper() if item["feed"] == "mlf" else item["feed"].title()
                 p = _write_draft(eid, f"{src} — {item['title'][:70]}", url, sents[0],
                                  item["title"], "tournament", item.get("date", "")[:16],
-                                 sha, slug_hint=f"{item['feed']}-{item.get('date','')[:10]}")
+                                 sha, slug_hint=f"{item['feed']}-{item.get('date','')[:10]}",
+                                 promoted_urls=promoted, rejected_pairs=rejected)
                 if p:
                     written.append(p)
 
@@ -231,7 +262,8 @@ def draft(limit_per_feed: int = 4, limit_per_creator: int = 8) -> list[Path]:
                     url = f"https://www.youtube.com/watch?v={v['video_id']}"
                     p = _write_draft(eid, f"YouTube — {c['name']}", url, v["title"],
                                      v["title"], "creator", v.get("published") or _now()[:10],
-                                     None, slug_hint=f"yt-{c['id']}")
+                                     None, slug_hint=f"yt-{c['id']}", promoted_urls=promoted,
+                                     rejected_pairs=rejected)
                     if p:
                         written.append(p)
                     break

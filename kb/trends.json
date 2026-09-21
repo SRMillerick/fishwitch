@@ -94,6 +94,99 @@
         "verified_at": "2026-09-19T04:40:44+00:00",
         "note": "fetched 2026-09-19T04:40:06+00:00; Carolina Rig Masterclass From the Guy Who Perfected It \u2014 creator signal from YouTube \u2014 Tom Redington"
       }
+    },
+    {
+      "id": "mlf-sun-20-se-dropshot",
+      "entity_id": "dropshot",
+      "signal": "tournament",
+      "source": "MLF \u2014 Gill does it again, wins Tackle Warehouse Pro Circuit Championship on ",
+      "url": "https://majorleaguefishing.com/pro-circuit/gill-does-it-again-wins-pro-circuit-championship-on-kissimmee-chain/",
+      "observed_at": "Sun, 20 Sep 2026",
+      "quote": "Gill's primary bait on the first two days was the venerable 7-inch Big Bite Baits Nekorama in matte margarita on a drop-shot.",
+      "note": "Gill does it again, wins Tackle Warehouse Pro Circuit Championship on Kissimmee Chain",
+      "citations": [
+        {
+          "claim": "tournament mention",
+          "tier": "T5",
+          "source": "MLF \u2014 Gill does it again, wins Tackle Warehouse Pro Circuit Championship on ",
+          "url": "https://majorleaguefishing.com/pro-circuit/gill-does-it-again-wins-pro-circuit-championship-on-kissimmee-chain/",
+          "quote": "Gill's primary bait on the first two days was the venerable 7-inch Big Bite Baits Nekorama in matte margarita on a drop-shot.",
+          "found": true,
+          "fetched_at": "2026-09-21T02:58:54+00:00",
+          "sha256": "1638688ce9edcc6f"
+        }
+      ],
+      "provenance": {
+        "seed_author": "trends/1.0",
+        "source": "MLF \u2014 Gill does it again, wins Tackle Warehouse Pro Circuit Championship on ",
+        "source_url": "https://majorleaguefishing.com/pro-circuit/gill-does-it-again-wins-pro-circuit-championship-on-kissimmee-chain/",
+        "confidence": "unverified-editorial",
+        "verified_by": "sean",
+        "verified_at": "2026-09-21T02:59:51+00:00",
+        "note": "text sha 1638688ce9edcc6f; fetched 2026-09-21T02:58:54+00:00; Gill does it again, wins Tackle Warehouse Pro Circuit Championship on Kissimmee Chain \u2014 tournament signal from MLF \u2014 Gill does it again, wins Tackle Warehouse Pro Circuit Championship on "
+      }
+    },
+    {
+      "id": "mlf-sun-20-se-urchin",
+      "entity_id": "urchin",
+      "signal": "tournament",
+      "source": "MLF \u2014 Gill does it again, wins Tackle Warehouse Pro Circuit Championship on ",
+      "url": "https://majorleaguefishing.com/pro-circuit/gill-does-it-again-wins-pro-circuit-championship-on-kissimmee-chain/",
+      "observed_at": "Sun, 20 Sep 2026",
+      "quote": "I went out with 38 rods on my deck, because I didn't have a blockbuster deal on that area, and I'll be danged, every fish in that area wanted to bite the urchin. It was lights-out - you hit one with it, and it bit.",
+      "note": "Drew Gill, MLF Pro Circuit Championship winner: winning-area bait was the urchin",
+      "citations": [
+        {
+          "claim": "tournament mention",
+          "tier": "T5",
+          "source": "MLF \u2014 Gill does it again, wins Tackle Warehouse Pro Circuit Championship on ",
+          "url": "https://majorleaguefishing.com/pro-circuit/gill-does-it-again-wins-pro-circuit-championship-on-kissimmee-chain/",
+          "quote": "I went out with 38 rods on my deck, because I didn't have a blockbuster deal on that area, and I'll be danged, every fish in that area wanted to bite the urchin. It was lights-out - you hit one with it, and it bit.",
+          "found": true,
+          "fetched_at": "2026-09-21T02:58:55+00:00",
+          "sha256": "1638688ce9edcc6f"
+        }
+      ],
+      "provenance": {
+        "seed_author": "trends/1.0",
+        "source": "MLF \u2014 Gill does it again, wins Tackle Warehouse Pro Circuit Championship on ",
+        "source_url": "https://majorleaguefishing.com/pro-circuit/gill-does-it-again-wins-pro-circuit-championship-on-kissimmee-chain/",
+        "confidence": "unverified-editorial",
+        "verified_by": "sean",
+        "verified_at": "2026-09-21T02:59:51+00:00",
+        "note": "text sha 1638688ce9edcc6f; fetched 2026-09-21T02:58:55+00:00; Gill does it again, wins Tackle Warehouse Pro Circuit Championship on Kissimmee Chain \u2014 tournament signal from MLF \u2014 Gill does it again, wins Tackle Warehouse Pro Circuit Championship on "
+      }
+    },
+    {
+      "id": "yt-brian-latimer-crank-mid",
+      "entity_id": "crank-mid",
+      "signal": "creator",
+      "source": "YouTube \u2014 Brian Latimer",
+      "url": "https://www.youtube.com/watch?v=dbLPDxH7Wkg",
+      "observed_at": "2026-09-19",
+      "quote": "RED CRANKBAITS - THE REAL REASON IT WORKS",
+      "note": "RED CRANKBAITS - THE REAL REASON IT WORKS",
+      "citations": [
+        {
+          "claim": "creator mention",
+          "tier": "T5",
+          "source": "YouTube \u2014 Brian Latimer",
+          "url": "https://www.youtube.com/watch?v=dbLPDxH7Wkg",
+          "quote": "RED CRANKBAITS - THE REAL REASON IT WORKS",
+          "found": true,
+          "fetched_at": "2026-09-21T02:58:58+00:00",
+          "sha256": null
+        }
+      ],
+      "provenance": {
+        "seed_author": "trends/1.0",
+        "source": "YouTube \u2014 Brian Latimer",
+        "source_url": "https://www.youtube.com/watch?v=dbLPDxH7Wkg",
+        "confidence": "unverified-editorial",
+        "verified_by": "sean",
+        "verified_at": "2026-09-21T02:59:52+00:00",
+        "note": "fetched 2026-09-21T02:58:58+00:00;  RED CRANKBAITS - THE REAL REASON IT WORKS \u2014 creator signal from YouTube \u2014 Brian Latimer"
+      }
     }
   ]
 }
