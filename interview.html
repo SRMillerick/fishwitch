@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en" data-theme="first-light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>interview — the moon-ledger for anglers</title>
+<meta name="description" content="baromoon reads your lake — barometer, water temp, wind, light, and cover — and hands you the window, the bank, and the rig. Cited, deterministic, free.">
+<meta name="theme-color" content="#f7f5ef">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="baromoon">
+<meta property="og:title" content="baromoon — the moon-ledger for anglers">
+<meta property="og:description" content="When to go and what to throw. baromoon reads your lake's weather, water, and sky into a cited session plan.">
+<link rel="icon" type="image/svg+xml" href="static/favicon.svg?v=1790132989">
+<link rel="manifest" href="static/manifest.webmanifest?v=1790132989">
+<link rel="apple-touch-icon" href="static/apple-touch-icon-v2.png?v=1790132989">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="baromoon">
+<script>(function(){try{var r=document.documentElement,q=new URLSearchParams(location.search).get("theme"),s=null;try{s=localStorage.getItem("bm-theme-v2");}catch(e){}var t=q||s;if(t==="dark")t="crisp-dark";else if(t==="light")t="first-light";if(t==="system")t=null;if(!t&&window.matchMedia)t=matchMedia("(prefers-color-scheme: dark)").matches?"crisp-dark":"first-light";if(t)r.dataset.theme=t;var c={"first-light":"#f7f5ef","crisp-dark":"#0a0f12","loam":"#10140d","almanac":"#f3eddc"},m=document.querySelector('meta[name="theme-color"]'),tc=t||r.dataset.theme;if(m&&c[tc])m.setAttribute("content",c[tc]);}catch(e){}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/style.css?v=1790132989">
+
+</head>
+<body>
+<header>
+  <nav>
+    
+    <a class="brand" href="index.html"><span class="triskele" aria-hidden="true"></span> baromoon</a>
+    <div class="nav-links" id="nav-links">
+      <a href="report-tonight.html" class="">Report</a>
+      <a href="outlook.html" class="">Outlook</a>
+      <a href="lakes.html" class="">Waters</a>
+      <a href="kb-bass.html" class="">Tackle Library</a>
+      <a href="interview.html" class="on">Interview</a>
+      
+      
+      
+      
+    </div>
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-controls="nav-links"
+            aria-expanded="false" aria-label="Menu">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16"/>
+      </svg>
+    </button>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark theme" title="Switch light / dark">
+      <svg class="i-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3 17 7M7 17l-1.7 1.7"/></svg>
+      <svg class="i-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M20.2 14.5A8.2 8.2 0 0 1 9.5 3.8a8.3 8.3 0 1 0 10.7 10.7Z"/></svg>
+    </button>
+    <details id="profile-menu" class="menu">
+      <summary><span class="who">Anonymous</span><svg class="chev" width="9" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></summary>
+      <div class="menu-body"></div>
+    </details>
+  </nav>
+</header>
+<main><p class="fine snap">Static snapshot — built Tuesday Sep 22, 8:19 PM. The live pipe re-renders these in real time.</p>
+
+<div class="narrow">
+<span class="eyebrow">make it yours</span>
+<h1>Four steps to your reports</h1>
+<p class="fine">About a minute. Everything you enter lives in <strong>this browser only</strong> —
+baromoon's server never stores it; it's used in-memory to render your reports, then forgotten.</p>
+
+<ol class="progress" id="wiz-progress">
+  <li class="on" data-step="1"><span>The angler</span></li>
+  <li data-step="2"><span>The sky</span></li>
+  <li data-step="3"><span>The tackle box</span></li>
+  <li data-step="4"><span>Your builds</span></li>
+</ol>
+
+<form id="interview" class="stack">
+  <fieldset class="istep on" data-step="1">
+    <legend>1 · The angler</legend>
+    <label>Your name <input name="name" required placeholder="what your friends call you"></label>
+    <label>Species you're usually after
+      <input name="species" list="species-suggestions" value="largemouth bass">
+      <datalist id="species-suggestions">
+        <option value="largemouth bass"><option value="smallmouth bass">
+        <option value="trout"><option value="rainbow trout"><option value="brown trout">
+        <option value="catfish"><option value="channel catfish">
+        <option value="panfish"><option value="crappie"><option value="bluegill">
+      </datalist>
+    </label>
+    <label>Home water
+      <select name="home_lake">
+        <option value="hidden-valley-lake-ca">Hidden Valley Lake — Middletown, Lake County, CA</option><option value="lake-berryessa">Lake Berryessa — Napa County, California, United States</option><option value="lake-sonoma">Lake Sonoma — Sonoma County, California, United States</option><option value="lake-ralphine">Lake Ralphine — Santa Rosa, Sonoma County, California, United States</option><option value="lake-hennessey">Lake Hennessey — Napa County, California, United States</option><option value="clear-lake">Clear Lake — Lakeport, Lake County, California, United States</option><option value="indian-valley-reservoir">Indian Valley Reservoir — Lake County, California, United States</option><option value="lake-pillsbury">Lake Pillsbury — Lake County, California, United States</option><option value="spring-lake">Spring Lake — Sonoma County, CA, USA</option><option value="blue-lake">Blue Lake (Upper Blue Lakes) — Midlakes, Lake County, California, United States</option><option value="highland-springs-reservoir">Highland Springs Reservoir — Lake County, CA, USA</option><option value="watson-lake-az">Watson Lake — Prescott, Yavapai County, AZ, USA</option><option value="willow-lake-az">Willow Lake — Prescott, Yavapai County, AZ, USA</option><option value="goldwater-lake-az">Goldwater Lake — Prescott, Yavapai County, AZ, USA</option><option value="lynx-lake-az">Lynx Lake — Prescott National Forest, Yavapai County, AZ, USA</option><option value="granite-basin-lake-az">Granite Basin Lake — Prescott National Forest, Yavapai County, AZ, USA</option><option value="fain-lake-az">Fain Lake — Prescott Valley, Yavapai County, AZ, USA</option><option value="yavapai-lakes-az">Yavapai Lakes — Prescott Valley, Yavapai County, AZ, USA</option>
+      </select>
+    </label>
+    <div class="wiz-nav"><span></span><button type="button" class="next">Next →</button></div>
+  </fieldset>
+
+  <fieldset class="istep" data-step="2">
+    <legend>2 · The sky</legend>
+    <p class="fine">Birth data powers the astrology layer — solunar feeding windows are computed
+    from pure astronomy either way. This is identity-grade personal data, so it stays in your
+    browser and goes nowhere else. Prefer zero astrology? Choose the <em>fisher</em> voice and
+    everything birth-related is skipped at render time.</p>
+    <label>Birth date <input type="date" name="bdate" required></label>
+    <label>Birth time <input type="time" name="btime">
+      <label class="inline"><input type="checkbox" name="time_unknown"> time unknown (noon stand-in — houses/Asc hidden)</label>
+    </label>
+    <label>Birth place <input name="bplace" placeholder="City, State — geocoding runs on the live app" readonly>
+      <div id="geocode-out" class="fine"></div>
+    </label>
+    <div class="voice-cards" role="radiogroup" aria-label="sky layer presentation">
+      <label class="vcard"><input type="radio" name="voice" value="almanac" checked>
+        <strong>Almanac</strong><span>moon signs &amp; feeding windows, old-timer style</span></label>
+      <label class="vcard"><input type="radio" name="voice" value="fisher">
+        <strong>Fisher</strong><span>plain fishing English, zero astrology</span></label>
+      <label class="vcard"><input type="radio" name="voice" value="astro">
+        <strong>Astro</strong><span>full natal transits, for the initiated</span></label>
+    </div>
+    <div class="wiz-nav"><button type="button" class="back">← Back</button><button type="button" class="next">Next →</button></div>
+  </fieldset>
+
+  <fieldset class="istep" data-step="3">
+    <legend>3 · The tackle box</legend>
+    <label>Your lures/rigs — pick from the list or type your own
+      <div class="tagfield" data-tagfield data-suggest="arsenal-suggestions"
+           data-placeholder="drop shot, wacky senko, chatterbait…">
+        <input type="hidden" name="arsenal">
+      </div>
+      <datalist id="arsenal-suggestions">
+        <option value="Bobber + jig (crappie tube)"><option value="Buzzbait"><option value="Carolina rig"><option value="Chatterbait (bladed jig)"><option value="Chicken rig (backward weighted Kut Tail)"><option value="Cricket / grasshopper"><option value="Cut bait"><option value="Drop shot"><option value="Fly (wooly bugger / midge)"><option value="Hollow-body frog"><option value="Inline spinner / spoon (kastmaster)"><option value="Jerkbait"><option value="Jig (+craw trailer)"><option value="Live bait (bluegill/worm) under bobber"><option value="Live crayfish"><option value="Live minnow"><option value="Live worm (panfish)"><option value="Mid-depth crankbait"><option value="Ned rig"><option value="Neko rig (nail-weight finesse)"><option value="Nightcrawler"><option value="Popper"><option value="Powerbait / floating bait off bottom"><option value="Prepared stink bait"><option value="Small spinner (roostertail)"><option value="Spinnerbait"><option value="Squarebill crankbait"><option value="Swimbait"><option value="Texas-rigged worm"><option value="Urchin/dice rig (treble + screw weights)"><option value="Wacky-rigged Senko"><option value="Walking topwater (Spook/110)"><option value="Whopper Plopper / prop bait"><option value="beetle spin"><option value="bladed jig"><option value="bluegill"><option value="bobber"><option value="buzz"><option value="buzzbait"><option value="bwwk"><option value="c-rig"><option value="carolina"><option value="carolina rig"><option value="chatter"><option value="chatterbait"><option value="chicken"><option value="chicken rig"><option value="crank"><option value="crankbait"><option value="crawdad"><option value="crawfish"><option value="crawler"><option value="crawlers"><option value="crayfish"><option value="crickets"><option value="cut bait"><option value="cut shad"><option value="dice"><option value="dough bait"><option value="drop shot"><option value="drop-shot"><option value="dropshot"><option value="flipping jig"><option value="fly rod"><option value="football jig"><option value="frog"><option value="grasshopper"><option value="grasshoppers"><option value="hollow body"><option value="huddleston"><option value="jerk bait"><option value="jerkbait"><option value="kastmaster"><option value="live bait"><option value="live minnows"><option value="medium diver"><option value="minnow"><option value="nail weight"><option value="ned rig"><option value="neko"><option value="neko rig"><option value="nightcrawler"><option value="nightcrawlers"><option value="pencil popper"><option value="piece of worm"><option value="plopper"><option value="pop-r"><option value="popper"><option value="power bait"><option value="powerbait"><option value="prepared bait"><option value="prop"><option value="rooster tail"><option value="roostertail"><option value="senko"><option value="shad"><option value="shiner"><option value="spinner"><option value="spinner bait"><option value="spinnerbait"><option value="spook"><option value="spoon"><option value="square"><option value="square bill"><option value="squarebill"><option value="stink bait"><option value="stinkbait"><option value="swim bait"><option value="swimbait"><option value="t-rig"><option value="texas"><option value="texas rig"><option value="tube"><option value="urchin"><option value="urchin rig"><option value="vision 110"><option value="wacky"><option value="wacky rig"><option value="walker"><option value="whopper"><option value="willow"><option value="wooly"><option value="worm"><option value="worms"><option value="zara">
+      </datalist>
+      <div class="fine">Reports pick from what you actually own, matched against the
+      <a href="kb-bass.html">tackle library</a>. Enter or comma adds an entry; click a suggestion
+      to pick it. Unknown names still work — they just won't get condition-scored.</div>
+    </label>
+    <label>Baits you use — live/cut/prepared
+      <div class="tagfield" data-tagfield data-suggest="bait-suggestions"
+           data-placeholder="nightcrawlers, powerbait, cut bait…">
+        <input type="hidden" name="baits">
+      </div>
+      <datalist id="bait-suggestions">
+        <option value="Buzzbait"><option value="Chatterbait (bladed jig)"><option value="Cricket / grasshopper"><option value="Cut bait"><option value="Drop shot"><option value="Jerkbait"><option value="Live bait (bluegill/worm) under bobber"><option value="Live crayfish"><option value="Live minnow"><option value="Live worm (panfish)"><option value="Mid-depth crankbait"><option value="Nightcrawler"><option value="Powerbait / floating bait off bottom"><option value="Prepared stink bait"><option value="Spinnerbait"><option value="Squarebill crankbait"><option value="Swimbait"><option value="Texas-rigged worm"><option value="Walking topwater (Spook/110)"><option value="Whopper Plopper / prop bait"><option value="bladed jig"><option value="bluegill"><option value="buzz"><option value="buzzbait"><option value="chatter"><option value="chatterbait"><option value="crank"><option value="crankbait"><option value="crawdad"><option value="crawfish"><option value="crawler"><option value="crawlers"><option value="crayfish"><option value="crickets"><option value="cut bait"><option value="cut shad"><option value="dough bait"><option value="drop shot"><option value="drop-shot"><option value="dropshot"><option value="grasshopper"><option value="grasshoppers"><option value="huddleston"><option value="jerk bait"><option value="jerkbait"><option value="live bait"><option value="live minnows"><option value="medium diver"><option value="minnow"><option value="nightcrawler"><option value="nightcrawlers"><option value="piece of worm"><option value="plopper"><option value="power bait"><option value="powerbait"><option value="prepared bait"><option value="prop"><option value="shad"><option value="shiner"><option value="spinner bait"><option value="spinnerbait"><option value="spook"><option value="square"><option value="square bill"><option value="squarebill"><option value="stink bait"><option value="stinkbait"><option value="swim bait"><option value="swimbait"><option value="t-rig"><option value="texas"><option value="texas rig"><option value="vision 110"><option value="walker"><option value="whopper"><option value="willow"><option value="worm"><option value="worms"><option value="zara">
+      </datalist>
+      <div class="fine">Bait fished as bait, not lures — scored against the same cited KB and
+      kept out of your gap lane. Leave blank if you're artificials-only.</div>
+    </label>
+    <label>Line you spool
+      <div class="tagfield" data-tagfield data-suggest="line-suggestions"
+           data-placeholder="fluorocarbon, braid…">
+        <input type="hidden" name="line">
+      </div>
+      <datalist id="line-suggestions">
+        <option value="Braid (PE / superline)"><option value="Copolymer"><option value="Fluorocarbon (PVDF)"><option value="Monofilament (nylon)"><option value="braid"><option value="braided"><option value="copoly"><option value="copolymer"><option value="fc"><option value="fluoro"><option value="fluorocarbon"><option value="mono"><option value="monofilament"><option value="nylon"><option value="pe"><option value="pvdf"><option value="superline"><option value="tripolymer">
+      </datalist>
+      <div class="fine">Reports pick the line that fits the rigs, and flag a better fit you
+      don't spool yet (cited properties, not brand claims).</div>
+    </label>
+    <label>Knots you tie
+      <div class="tagfield" data-tagfield data-suggest="knot-suggestions"
+           data-placeholder="palomar, uni, snell…">
+        <input type="hidden" name="knots">
+      </div>
+      <datalist id="knot-suggestions">
+        <option value="Alberto knot"><option value="Albright special"><option value="Double surgeon&#39;s knot"><option value="Drop shot knot"><option value="Improved clinch knot"><option value="Nail knot"><option value="Palomar knot"><option value="San Diego jam knot"><option value="Snell knot"><option value="Surgeon&#39;s loop"><option value="Uni knot">
+      </datalist>
+      <div class="fine">Reports prefer the knots you tie (cited from the knot guides) and flag a
+      better fit you don't tie yet. Leave blank for the house defaults.</div>
+    </label>
+    <div class="wiz-nav"><button type="button" class="back">← Back</button><button type="button" class="next">Next →</button></div>
+  </fieldset>
+
+  <fieldset class="istep" data-step="4">
+    <legend>4 · Your builds <span class="fine">(optional)</span></legend>
+    <p class="fine">These rigs matched your box. Fill in what you actually run — the report will
+    print <em>“your build”</em> for them instead of the default reference. Placeholders show the
+    reference build; leave a field blank to keep it. Everything stays in this browser.</p>
+    <div id="builds">
+      
+      <div class="build-card" data-rig="jig"
+           data-aliases="Jig (+craw trailer)|jig|flipping jig|football jig|arkey" hidden>
+        <div class="build-head"><strong>Jig (+craw trailer)</strong><span class="fine">bass</span></div>
+        <div class="build-grid">
+          
+          <label>hook<input data-part="hook" placeholder="integrated jig hook 4/0–5/0"></label>
+          
+          <label>weight<input data-part="weight" placeholder="skirted jig 3/8 oz–1/2 oz"></label>
+          
+          <label>bait<input data-part="bait" placeholder="craw/creature trailer 3.7 in–3.8 in"></label>
+          
+          <label>line<input data-part="line" placeholder="fluorocarbon or braid"></label>
+          
+        </div>
+      </div>
+      
+      <div class="build-card" data-rig="trig"
+           data-aliases="Texas-rigged worm|texas rig|t-rig|texas|trig|worm" hidden>
+        <div class="build-head"><strong>Texas-rigged worm</strong><span class="fine">bass</span></div>
+        <div class="build-grid">
+          
+          <label>hook<input data-part="hook" placeholder="Offset worm hook (EWG) 3/0–4/0"></label>
+          
+          <label>weight<input data-part="weight" placeholder="cone/bullet weight 1/8 oz–3/8 oz"></label>
+          
+          <label>bait<input data-part="bait" placeholder="soft plastic worm/creature 6 in–7 in"></label>
+          
+          <label>line<input data-part="line" placeholder="fluorocarbon"></label>
+          
+        </div>
+      </div>
+      
+      <div class="build-card" data-rig="dropshot"
+           data-aliases="Drop shot|drop shot|dropshot|drop-shot|roboworm" hidden>
+        <div class="build-head"><strong>Drop shot</strong><span class="fine">bass</span></div>
+        <div class="build-grid">
+          
+          <label>hook<input data-part="hook" placeholder="Owner Mosquito Circle 1/0"></label>
+          
+          <label>weight<input data-part="weight" placeholder="drop-shot weight 1/8 oz"></label>
+          
+          <label>bait<input data-part="bait" placeholder="6in Deception worm / Roboworm MMIII 6 in"></label>
+          
+          <label>line<input data-part="line" placeholder="fluorocarbon"></label>
+          
+        </div>
+      </div>
+      
+      <div class="build-card" data-rig="wacky"
+           data-aliases="Wacky-rigged Senko|senko|wacky|wacky rig" hidden>
+        <div class="build-head"><strong>Wacky-rigged Senko</strong><span class="fine">bass</span></div>
+        <div class="build-grid">
+          
+          <label>hook<input data-part="hook" placeholder="Owner Jungle Wacky (weedless wacky hook) 1/0"></label>
+          
+          <label>ring<input data-part="ring" placeholder="VMC Crossover Ring 6mm"></label>
+          
+          <label>tool<input data-part="tool" placeholder="VMC Crossover Pliers"></label>
+          
+          <label>bait<input data-part="bait" placeholder="5in Senko 5 in"></label>
+          
+          <label>line<input data-part="line" placeholder="fluorocarbon"></label>
+          
+        </div>
+      </div>
+      
+      <div class="build-card" data-rig="ned"
+           data-aliases="Ned rig|ned rig|ned|trd" hidden>
+        <div class="build-head"><strong>Ned rig</strong><span class="fine">bass</span></div>
+        <div class="build-grid">
+          
+          <label>hook<input data-part="hook" placeholder="light-wire mushroom jighead 1–2"></label>
+          
+          <label>weight<input data-part="weight" placeholder="Mushroom / Ned head 1/20 oz–1/15 oz"></label>
+          
+          <label>bait<input data-part="bait" placeholder="Finesse TRD 2.75 in"></label>
+          
+          <label>line<input data-part="line" placeholder="fluorocarbon"></label>
+          
+        </div>
+      </div>
+      
+      <div class="build-card" data-rig="carolina"
+           data-aliases="Carolina rig|carolina rig|c-rig|carolina" hidden>
+        <div class="build-head"><strong>Carolina rig</strong><span class="fine">bass</span></div>
+        <div class="build-grid">
+          
+          <label>hook<input data-part="hook" placeholder="Offset worm hook (EWG) 3/0–4/0"></label>
+          
+          <label>weight<input data-part="weight" placeholder="Egg / barrel sinker 1/2 oz–3/4 oz"></label>
+          
+          <label>bait<input data-part="bait" placeholder="soft plastic worm 6 in"></label>
+          
+          <label>line<input data-part="line" placeholder="fluorocarbon or braid / fluorocarbon 2-4 ft"></label>
+          
+        </div>
+      </div>
+      
+      <div class="build-card" data-rig="urchin"
+           data-aliases="Urchin/dice rig (treble + screw weights)|urchin|urchin rig|dice|dice rig|abstract|the abstract|coike|omoeba|amoeba" hidden>
+        <div class="build-head"><strong>Urchin/dice rig (treble + screw weights)</strong><span class="fine">bass</span></div>
+        <div class="build-grid">
+          
+          <label>hook<input data-part="hook" placeholder="1/0–3/0"></label>
+          
+          <label>weight<input data-part="weight" placeholder="VMC Half Moon Wacky Weight (HMWW) 3/16 oz"></label>
+          
+          <label>bait<input data-part="bait" placeholder="The Abstract (6th Sense) 24mm"></label>
+          
+          <label>line<input data-part="line" placeholder="braid"></label>
+          
+        </div>
+      </div>
+      
+      <div class="build-card" data-rig="chicken"
+           data-aliases="Chicken rig (backward weighted Kut Tail)|chicken|chicken rig|bwwk|kut tail chicken|backward wacky weighted kut tail" hidden>
+        <div class="build-head"><strong>Chicken rig (backward weighted Kut Tail)</strong><span class="fine">bass</span></div>
+        <div class="build-grid">
+          
+          <label>hook<input data-part="hook" placeholder="Owner Cover Shot 1/0"></label>
+          
+          <label>weight<input data-part="weight" placeholder="drywall screw (big head)"></label>
+          
+          <label>bait<input data-part="bait" placeholder="Yamamoto Kut Tail worm 7.75 in–6.5 in"></label>
+          
+          <label>line<input data-part="line" placeholder="15-20 lb braid / 16-20 lb fluorocarbon (Sugoi)"></label>
+          
+        </div>
+      </div>
+      
+      <p class="fine" id="builds-empty" hidden>No reference builds matched your box yet — add a
+      rig in step 3 and come back.</p>
+    </div>
+    <div class="wiz-nav"><button type="button" class="back">← Back</button><span></span></div>
+    <p class="fine"><strong>Read-only snapshot:</strong> the save button is locked. Profile creation and personal reports need the live app — where your birth data stays in your browser and never touches a disk.</p>
+  <div class="cta">
+      <button type="submit" disabled>profile creation runs on the live app</button>
+      <a class="btn ghost" id="download" download="baromoon-profile.json" hidden>Download profile.json</a>
+      <a class="btn ghost" id="first-report" href="report-tonight.html" hidden>See your first report →</a>
+      <button type="button" id="clear" class="ghost" hidden>Forget profile</button>
+    </div>
+  </fieldset>
+</form>
+<p class="fine" id="status"></p>
+</div>
+
+</main>
+<footer>
+  <div class="footer-inner">
+    <div class="mark">
+      <span class="triskele" aria-hidden="true"></span>
+      <span class="wordmark">baromoon</span>
+    </div>
+    <p class="fine">Named for the two signals that survive calibration: barometric phase and moon.</p>
+    <p class="fine">Same sky, same weather, same lake — the same report
+    every time. No AI writes these facts: every tackle-library entry is cited, and a person
+    verifies each one.</p>
+    <p class="fine">Tackle links are added after the picks are set and never influence rankings.
+    Manufacturer pages carry no commission; affiliate links, when present, are always disclosed.
+    Profile data (birth place and time) lives only in your browser — <a href="interview.html">read how</a>.</p>
+    <nav class="foot-legal" aria-label="Site information">
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="disclosure.html">Affiliate disclosure</a>
+    </nav>
+    <p class="foot-install"><button type="button" id="install-app" class="install-btn" hidden>Install baromoon</button>
+      <span class="fine" id="install-hint" hidden></span></p>
+  </div>
+</footer>
+<script src="static/app.js?v=1790132989"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () =>
+    navigator.serviceWorker.register("/sw.js").catch(() => {}));
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en" data-theme="first-light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>fishing plan — the moon-ledger for anglers</title>
+<meta name="description" content="baromoon reads your lake — barometer, water temp, wind, light, and cover — and hands you the window, the bank, and the rig. Cited, deterministic, free.">
+<meta name="theme-color" content="#f7f5ef">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="baromoon">
+<meta property="og:title" content="baromoon — the moon-ledger for anglers">
+<meta property="og:description" content="When to go and what to throw. baromoon reads your lake's weather, water, and sky into a cited session plan.">
+<link rel="icon" type="image/svg+xml" href="static/favicon.svg?v=1790132989">
+<link rel="manifest" href="static/manifest.webmanifest?v=1790132989">
+<link rel="apple-touch-icon" href="static/apple-touch-icon-v2.png?v=1790132989">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="baromoon">
+<script>(function(){try{var r=document.documentElement,q=new URLSearchParams(location.search).get("theme"),s=null;try{s=localStorage.getItem("bm-theme-v2");}catch(e){}var t=q||s;if(t==="dark")t="crisp-dark";else if(t==="light")t="first-light";if(t==="system")t=null;if(!t&&window.matchMedia)t=matchMedia("(prefers-color-scheme: dark)").matches?"crisp-dark":"first-light";if(t)r.dataset.theme=t;var c={"first-light":"#f7f5ef","crisp-dark":"#0a0f12","loam":"#10140d","almanac":"#f3eddc"},m=document.querySelector('meta[name="theme-color"]'),tc=t||r.dataset.theme;if(m&&c[tc])m.setAttribute("content",c[tc]);}catch(e){}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/style.css?v=1790132989">
+
+</head>
+<body>
+<header>
+  <nav>
+    
+    <a class="brand" href="index.html"><span class="triskele" aria-hidden="true"></span> baromoon</a>
+    <div class="nav-links" id="nav-links">
+      <a href="report-tonight.html" class="">Report</a>
+      <a href="outlook.html" class="">Outlook</a>
+      <a href="lakes.html" class="">Waters</a>
+      <a href="kb-bass.html" class="">Tackle Library</a>
+      <a href="interview.html" class="">Interview</a>
+      
+      
+      
+      
+    </div>
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-controls="nav-links"
+            aria-expanded="false" aria-label="Menu">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16"/>
+      </svg>
+    </button>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark theme" title="Switch light / dark">
+      <svg class="i-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3 17 7M7 17l-1.7 1.7"/></svg>
+      <svg class="i-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M20.2 14.5A8.2 8.2 0 0 1 9.5 3.8a8.3 8.3 0 1 0 10.7 10.7Z"/></svg>
+    </button>
+    <details id="profile-menu" class="menu">
+      <summary><span class="who">Anonymous</span><svg class="chev" width="9" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></summary>
+      <div class="menu-body"></div>
+    </details>
+  </nav>
+</header>
+<main><p class="fine snap">Static snapshot — built Tuesday Sep 22, 8:19 PM. The live pipe re-renders these in real time.</p>
+
+<section class="hero">
+  <div class="hero-copy">
+    <span class="eyebrow">the moon-ledger · any water</span>
+    <h1>When to go. What to <em>throw.</em></h1>
+    <p class="lede">baromoon reads your lake — barometer, water temperature, wind,
+    light, and cover — and hands you the <strong>window</strong>, the
+    <strong>bank</strong>, and the <strong>rig</strong>. Every pick shows its reasons
+    and its sources. Same inputs, same report, every time. The moon gets a vote;
+    the lake decides.</p>
+    <p class="cta">
+      <a class="btn primary" href="#ledger">See the plan</a>
+      <a class="btn ghost" href="interview.html">Make it yours · 3 steps</a>
+    </p>
+    <p class="fine hero-proof">Free, no account — 18 waters, and every
+    pick shows its work.</p>
+  </div>
+  
+  <aside class="readout">
+    <div class="r-label">Tonight · Hidden Valley Lake</div>
+    <div class="r-score">6.5<span>/10</span></div>
+    <dl class="r-meta">
+      
+      <div><dt>Moon</dt><dd><span class="lune"><svg class="moon-svg" width="17" height="17" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1" opacity=".32"/><path d="M10,2 A8,8 0 0,1 10,18 A5.770,8 0 0,1 10,2 Z" fill="currentColor"/></svg></span> Waxing gibbous · 86%</dd></div>
+      
+      
+      <div><dt>Prime window</dt><dd>6:06 PM</dd></div>
+      
+      
+      <div><dt>First rod</dt><dd>Drop shot</dd></div>
+      
+    </dl>
+    <a class="r-link" href="report-tonight.html">Full report →</a>
+  </aside>
+  
+</section>
+
+<section class="ledger" id="ledger">
+  <div class="section-head">
+    <h2>The ledger</h2>
+    <span class="smallcaps" id="ledger-scope">Hidden Valley Lake · next three days</span>
+  </div>
+  <p class="fine ledger-note" id="ledger-note">Your nearest water, best first — open a line
+  for the full session: hour-by-hour windows, the bank, the rig, and the reasons behind each
+  pick. With a profile, this becomes your waters and your sky.</p>
+  <p class="fine" id="near-me-wrap" hidden><a href="#" id="near-me">Waters near me</a>
+  — your browser picks the closest water; the location never leaves this page.<span id="near-me-note"></span></p>
+  <ul class="tier-rows" id="ledger-rows">
+    
+    <li><a class="trow S" href="report-tonight.html">
+      <span class="tier">S</span>
+      <span class="when"><span class="day">Thu Sep 24</span><span class="clock">9:00 AM–11 AM</span> <span class="lune"><svg class="moon-svg" width="14" height="14" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1" opacity=".32"/><path d="M10,2 A8,8 0 0,1 10,18 A7.341,8 0 0,1 10,2 Z" fill="currentColor"/></svg></span></span>
+      <span class="where">Hidden Valley Lake</span>
+      <span class="rig">Squarebill crankbait</span>
+      <span class="score">7.9<i>/10</i></span>
+    </a></li>
+    
+    <li><a class="trow S" href="report-tonight.html">
+      <span class="tier">S</span>
+      <span class="when"><span class="day">Thu Sep 24</span><span class="clock">12:00 PM–2 PM</span> <span class="lune"><svg class="moon-svg" width="14" height="14" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1" opacity=".32"/><path d="M10,2 A8,8 0 0,1 10,18 A7.341,8 0 0,1 10,2 Z" fill="currentColor"/></svg></span></span>
+      <span class="where">Hidden Valley Lake</span>
+      <span class="rig">Squarebill crankbait</span>
+      <span class="score">7.9<i>/10</i></span>
+    </a></li>
+    
+    <li><a class="trow A" href="report-tonight.html">
+      <span class="tier">A</span>
+      <span class="when"><span class="day">Thu Sep 24</span><span class="clock">3:00 PM–5 PM</span> <span class="lune"><svg class="moon-svg" width="14" height="14" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1" opacity=".32"/><path d="M10,2 A8,8 0 0,1 10,18 A7.341,8 0 0,1 10,2 Z" fill="currentColor"/></svg></span></span>
+      <span class="where">Hidden Valley Lake</span>
+      <span class="rig">Squarebill crankbait</span>
+      <span class="score">7.3<i>/10</i></span>
+    </a></li>
+    
+    <li><a class="trow B" href="report-tonight.html">
+      <span class="tier">B</span>
+      <span class="when"><span class="day">Thu Sep 24</span><span class="clock">5:00 AM–7 AM</span> <span class="lune"><svg class="moon-svg" width="14" height="14" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1" opacity=".32"/><path d="M10,2 A8,8 0 0,1 10,18 A7.341,8 0 0,1 10,2 Z" fill="currentColor"/></svg></span></span>
+      <span class="where">Hidden Valley Lake</span>
+      <span class="rig">Walking topwater (Spook/110)</span>
+      <span class="score">6.7<i>/10</i></span>
+    </a></li>
+    
+    <li><a class="trow B" href="report-tonight.html">
+      <span class="tier">B</span>
+      <span class="when"><span class="day">Thu Sep 24</span><span class="clock">5:30 PM–7 PM</span> <span class="lune"><svg class="moon-svg" width="14" height="14" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1" opacity=".32"/><path d="M10,2 A8,8 0 0,1 10,18 A7.341,8 0 0,1 10,2 Z" fill="currentColor"/></svg></span></span>
+      <span class="where">Hidden Valley Lake</span>
+      <span class="rig">Walking topwater (Spook/110)</span>
+      <span class="score">6.7<i>/10</i></span>
+    </a></li>
+    
+    <li><a class="trow C" href="report-tonight.html">
+      <span class="tier">C</span>
+      <span class="when"><span class="day">Thu Sep 24</span><span class="clock">8:00 PM–10 PM</span> <span class="lune"><svg class="moon-svg" width="14" height="14" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1" opacity=".32"/><path d="M10,2 A8,8 0 0,1 10,18 A7.341,8 0 0,1 10,2 Z" fill="currentColor"/></svg></span></span>
+      <span class="where">Hidden Valley Lake</span>
+      <span class="rig">Walking topwater (Spook/110)</span>
+      <span class="score">6.4<i>/10</i></span>
+    </a></li>
+    
+  </ul>
+  
+  <p class="fine" style="margin-top:1.1rem">S — drop everything · A — plan around it ·
+  B — worth being out · C — the fish have other plans.</p>
+</section>
+
+<div class="divider"><span class="triskele triskele-lg" aria-hidden="true"></span></div>
+
+<section class="band cols">
+  <div>
+    <h2 class="rule-double">How it works</h2>
+    <p class="fine">Solunar tables stop at the moon. baromoon runs the whole lake —
+    weather, history, water, cover, sky, and tackle — and shows the arithmetic.</p>
+    <ol class="plain">
+      <li><strong>Weather + history</strong> — forecast for the window, a 75-day
+      archive behind it: heat streaks, water-temp estimate, and turnover
+      inference (when a lake mixes, deep fish and slow presentations win).</li>
+      <li><strong>Sky math</strong> — Swiss-Ephemeris sunrise/sunset, moon,
+      solunar majors/minors, planetary hours; optionally transits to your
+      natal chart.</li>
+      <li><strong>Tackle library</strong> — every lure and rig shows its
+      conditions and its source: manufacturer catalogs
+      or state-agency guides. <a href="kb-bass.html">Read the citations →</a></li>
+      <li><strong>Scoring</strong> — fixed arithmetic over all of it, ranked
+      into the ledger. Re-run it and you get the same numbers.</li>
+    </ol>
+  </div>
+  <div>
+    <h2 class="rule-double">Waters we cover</h2>
+    <ul class="plain lakes" id="waters-list">
+      
+      <li data-lat="38.8084" data-lng="-122.5665"><a href="lake-hidden-valley-lake-ca.html">Hidden Valley Lake</a>
+          <span class="fine">Middletown, Lake County, CA ·
+            <a href="https://www.openstreetmap.org/?mlat=38.8084&mlon=-122.5665#map=13/38.8084/-122.5665" target="_blank" rel="noopener">map</a></span></li>
+      
+      <li data-lat="38.5958203" data-lng="-122.2382224"><a href="lake-lake-berryessa.html">Lake Berryessa</a>
+          <span class="fine">Napa County, California, United States ·
+            <a href="https://www.openstreetmap.org/?mlat=38.5958203&mlon=-122.2382224#map=13/38.5958203/-122.2382224" target="_blank" rel="noopener">map</a></span></li>
+      
+      <li data-lat="38.7379866" data-lng="-123.0627632"><a href="lake-lake-sonoma.html">Lake Sonoma</a>
+          <span class="fine">Sonoma County, California, United States ·
+            <a href="https://www.openstreetmap.org/?mlat=38.7379866&mlon=-123.0627632#map=13/38.7379866/-123.0627632" target="_blank" rel="noopener">map</a></span></li>
+      
+      <li data-lat="38.454972" data-lng="-122.6675119"><a href="lake-lake-ralphine.html">Lake Ralphine</a>
+          <span class="fine">Santa Rosa, Sonoma County, California, United States ·
+            <a href="https://www.openstreetmap.org/?mlat=38.454972&mlon=-122.6675119#map=13/38.454972/-122.6675119" target="_blank" rel="noopener">map</a></span></li>
+      
+      <li data-lat="38.4918576" data-lng="-122.3769835"><a href="lake-lake-hennessey.html">Lake Hennessey</a>
+          <span class="fine">Napa County, California, United States ·
+            <a href="https://www.openstreetmap.org/?mlat=38.4918576&mlon=-122.3769835#map=13/38.4918576/-122.3769835" target="_blank" rel="noopener">map</a></span></li>
+      
+      <li data-lat="39.0319478" data-lng="-122.7994776"><a href="lake-clear-lake.html">Clear Lake</a>
+          <span class="fine">Lakeport, Lake County, California, United States ·
+            <a href="https://www.openstreetmap.org/?mlat=39.0319478&mlon=-122.7994776#map=13/39.0319478/-122.7994776" target="_blank" rel="noopener">map</a></span></li>
+      
+      <li data-lat="39.1236383" data-lng="-122.5431278"><a href="lake-indian-valley-reservoir.html">Indian Valley Reservoir</a>
+          <span class="fine">Lake County, California, United States ·
+            <a href="https://www.openstreetmap.org/?mlat=39.1236383&mlon=-122.5431278#map=13/39.1236383/-122.5431278" target="_blank" rel="noopener">map</a></span></li>
+      
+      <li data-lat="39.4152229" data-lng="-122.938334"><a href="lake-lake-pillsbury.html">Lake Pillsbury</a>
+          <span class="fine">Lake County, California, United States ·
+            <a href="https://www.openstreetmap.org/?mlat=39.4152229&mlon=-122.938334#map=13/39.4152229/-122.938334" target="_blank" rel="noopener">map</a></span></li>
+      
+      <li data-lat="38.4527583" data-lng="-122.6504248"><a href="lake-spring-lake.html">Spring Lake</a>
+          <span class="fine">Sonoma County, CA, USA ·
+            <a href="https://www.openstreetmap.org/?mlat=38.4527583&mlon=-122.6504248#map=13/38.4527583/-122.6504248" target="_blank" rel="noopener">map</a></span></li>
+      
+      <li data-lat="39.1758308" data-lng="-123.0156672"><a href="lake-blue-lake.html">Blue Lake (Upper Blue Lakes)</a>
+          <span class="fine">Midlakes, Lake County, California, United States ·
+            <a href="https://www.openstreetmap.org/?mlat=39.1758308&mlon=-123.0156672#map=13/39.1758308/-123.0156672" target="_blank" rel="noopener">map</a></span></li>
+      
+      <li data-lat="38.9425" data-lng="-122.9054"><a href="lake-highland-springs-reservoir.html">Highland Springs Reservoir</a>
+          <span class="fine">Lake County, CA, USA ·
+            <a href="https://www.openstreetmap.org/?mlat=38.9425&mlon=-122.9054#map=13/38.9425/-122.9054" target="_blank" rel="noopener">map</a></span></li>
+      
+      <li data-lat="34.58898" data-lng="-112.41691"><a href="lake-watson-lake-az.html">Watson Lake</a>
+          <span class="fine">Prescott, Yavapai County, AZ, USA ·
+            <a href="https://www.openstreetmap.org/?mlat=34.58898&mlon=-112.41691#map=13/34.58898/-112.41691" target="_blank" rel="noopener">map</a></span></li>
+      
+      <li data-lat="34.60463" data-lng="-112.44031"><a href="lake-willow-lake-az.html">Willow Lake</a>
+          <span class="fine">Prescott, Yavapai County, AZ, USA ·
+            <a href="https://www.openstreetmap.org/?mlat=34.60463&mlon=-112.44031#map=13/34.60463/-112.44031" target="_blank" rel="noopener">map</a></span></li>
+      
+      <li data-lat="34.49879" data-lng="-112.44916"><a href="lake-goldwater-lake-az.html">Goldwater Lake</a>
+          <span class="fine">Prescott, Yavapai County, AZ, USA ·
+            <a href="https://www.openstreetmap.org/?mlat=34.49879&mlon=-112.44916#map=13/34.49879/-112.44916" target="_blank" rel="noopener">map</a></span></li>
+      
+      <li data-lat="34.5186" data-lng="-112.38532"><a href="lake-lynx-lake-az.html">Lynx Lake</a>
+          <span class="fine">Prescott National Forest, Yavapai County, AZ, USA ·
+            <a href="https://www.openstreetmap.org/?mlat=34.5186&mlon=-112.38532#map=13/34.5186/-112.38532" target="_blank" rel="noopener">map</a></span></li>
+      
+      <li data-lat="34.61704" data-lng="-112.55024"><a href="lake-granite-basin-lake-az.html">Granite Basin Lake</a>
+          <span class="fine">Prescott National Forest, Yavapai County, AZ, USA ·
+            <a href="https://www.openstreetmap.org/?mlat=34.61704&mlon=-112.55024#map=13/34.61704/-112.55024" target="_blank" rel="noopener">map</a></span></li>
+      
+      <li data-lat="34.57491" data-lng="-112.35232"><a href="lake-fain-lake-az.html">Fain Lake</a>
+          <span class="fine">Prescott Valley, Yavapai County, AZ, USA ·
+            <a href="https://www.openstreetmap.org/?mlat=34.57491&mlon=-112.35232#map=13/34.57491/-112.35232" target="_blank" rel="noopener">map</a></span></li>
+      
+      <li data-lat="34.60265" data-lng="-112.31181"><a href="lake-yavapai-lakes-az.html">Yavapai Lakes</a>
+          <span class="fine">Prescott Valley, Yavapai County, AZ, USA ·
+            <a href="https://www.openstreetmap.org/?mlat=34.60265&mlon=-112.31181#map=13/34.60265/-112.31181" target="_blank" rel="noopener">map</a></span></li>
+      
+    </ul>
+    <p class="fine" style="margin-top:1.1rem"><a href="lakes.html">All waters on the map →</a>
+    · any water body can be characterized from public data (OSM + Wikidata) and added
+    to the map.</p>
+  </div>
+</section>
+<script type="application/json" id="bm-waters">[{"id": "hidden-valley-lake-ca", "name": "Hidden Valley Lake", "lat": 38.8084, "lng": -122.5665}, {"id": "lake-berryessa", "name": "Lake Berryessa", "lat": 38.5958203, "lng": -122.2382224}, {"id": "lake-sonoma", "name": "Lake Sonoma", "lat": 38.7379866, "lng": -123.0627632}, {"id": "lake-ralphine", "name": "Lake Ralphine", "lat": 38.454972, "lng": -122.6675119}, {"id": "lake-hennessey", "name": "Lake Hennessey", "lat": 38.4918576, "lng": -122.3769835}, {"id": "clear-lake", "name": "Clear Lake", "lat": 39.0319478, "lng": -122.7994776}, {"id": "indian-valley-reservoir", "name": "Indian Valley Reservoir", "lat": 39.1236383, "lng": -122.5431278}, {"id": "lake-pillsbury", "name": "Lake Pillsbury", "lat": 39.4152229, "lng": -122.938334}, {"id": "spring-lake", "name": "Spring Lake", "lat": 38.4527583, "lng": -122.6504248}, {"id": "blue-lake", "name": "Blue Lake (Upper Blue Lakes)", "lat": 39.1758308, "lng": -123.0156672}, {"id": "highland-springs-reservoir", "name": "Highland Springs Reservoir", "lat": 38.9425, "lng": -122.9054}, {"id": "watson-lake-az", "name": "Watson Lake", "lat": 34.58898, "lng": -112.41691}, {"id": "willow-lake-az", "name": "Willow Lake", "lat": 34.60463, "lng": -112.44031}, {"id": "goldwater-lake-az", "name": "Goldwater Lake", "lat": 34.49879, "lng": -112.44916}, {"id": "lynx-lake-az", "name": "Lynx Lake", "lat": 34.5186, "lng": -112.38532}, {"id": "granite-basin-lake-az", "name": "Granite Basin Lake", "lat": 34.61704, "lng": -112.55024}, {"id": "fain-lake-az", "name": "Fain Lake", "lat": 34.57491, "lng": -112.35232}, {"id": "yavapai-lakes-az", "name": "Yavapai Lakes", "lat": 34.60265, "lng": -112.31181}]</script>
+
+</main>
+<footer>
+  <div class="footer-inner">
+    <div class="mark">
+      <span class="triskele" aria-hidden="true"></span>
+      <span class="wordmark">baromoon</span>
+    </div>
+    <p class="fine">Named for the two signals that survive calibration: barometric phase and moon.</p>
+    <p class="fine">Same sky, same weather, same lake — the same report
+    every time. No AI writes these facts: every tackle-library entry is cited, and a person
+    verifies each one.</p>
+    <p class="fine">Tackle links are added after the picks are set and never influence rankings.
+    Manufacturer pages carry no commission; affiliate links, when present, are always disclosed.
+    Profile data (birth place and time) lives only in your browser — <a href="interview.html">read how</a>.</p>
+    <nav class="foot-legal" aria-label="Site information">
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="disclosure.html">Affiliate disclosure</a>
+    </nav>
+    <p class="foot-install"><button type="button" id="install-app" class="install-btn" hidden>Install baromoon</button>
+      <span class="fine" id="install-hint" hidden></span></p>
+  </div>
+</footer>
+<script src="static/app.js?v=1790132989"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () =>
+    navigator.serviceWorker.register("/sw.js").catch(() => {}));
+}
+</script>
+</body>
+</html>

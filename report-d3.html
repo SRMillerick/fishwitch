@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en" data-theme="first-light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>report — the moon-ledger for anglers</title>
+<meta name="description" content="baromoon reads your lake — barometer, water temp, wind, light, and cover — and hands you the window, the bank, and the rig. Cited, deterministic, free.">
+<meta name="theme-color" content="#f7f5ef">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="baromoon">
+<meta property="og:title" content="baromoon — the moon-ledger for anglers">
+<meta property="og:description" content="When to go and what to throw. baromoon reads your lake's weather, water, and sky into a cited session plan.">
+<link rel="icon" type="image/svg+xml" href="static/favicon.svg?v=1790132989">
+<link rel="manifest" href="static/manifest.webmanifest?v=1790132989">
+<link rel="apple-touch-icon" href="static/apple-touch-icon-v2.png?v=1790132989">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="baromoon">
+<script>(function(){try{var r=document.documentElement,q=new URLSearchParams(location.search).get("theme"),s=null;try{s=localStorage.getItem("bm-theme-v2");}catch(e){}var t=q||s;if(t==="dark")t="crisp-dark";else if(t==="light")t="first-light";if(t==="system")t=null;if(!t&&window.matchMedia)t=matchMedia("(prefers-color-scheme: dark)").matches?"crisp-dark":"first-light";if(t)r.dataset.theme=t;var c={"first-light":"#f7f5ef","crisp-dark":"#0a0f12","loam":"#10140d","almanac":"#f3eddc"},m=document.querySelector('meta[name="theme-color"]'),tc=t||r.dataset.theme;if(m&&c[tc])m.setAttribute("content",c[tc]);}catch(e){}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/style.css?v=1790132989">
+
+<meta name="description" content="A session report: when to fish, where, and what to tie on — free, cited, personal.">
+<meta property="og:title" content="Session report — baromoon">
+<meta property="og:description" content="When to fish, where, and what to tie on — cited, free.">
+
+</head>
+<body>
+<header>
+  <nav>
+    
+    <a class="brand" href="index.html"><span class="triskele" aria-hidden="true"></span> baromoon</a>
+    <div class="nav-links" id="nav-links">
+      <a href="report-tonight.html" class="on">Report</a>
+      <a href="outlook.html" class="">Outlook</a>
+      <a href="lakes.html" class="">Waters</a>
+      <a href="kb-bass.html" class="">Tackle Library</a>
+      <a href="interview.html" class="">Interview</a>
+      
+      
+      
+      
+    </div>
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-controls="nav-links"
+            aria-expanded="false" aria-label="Menu">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16"/>
+      </svg>
+    </button>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark theme" title="Switch light / dark">
+      <svg class="i-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3 17 7M7 17l-1.7 1.7"/></svg>
+      <svg class="i-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M20.2 14.5A8.2 8.2 0 0 1 9.5 3.8a8.3 8.3 0 1 0 10.7 10.7Z"/></svg>
+    </button>
+    <details id="profile-menu" class="menu">
+      <summary><span class="who">Anonymous</span><svg class="chev" width="9" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></summary>
+      <div class="menu-body"></div>
+    </details>
+  </nav>
+</header>
+<main><p class="fine snap">Static snapshot — built Tuesday Sep 22, 8:19 PM. The live pipe re-renders these in real time.</p>
+
+<div class="narrow">
+<span class="eyebrow">the deep read</span>
+<h1>Session report</h1>
+<form id="report-form" class="grid" onsubmit="return false">
+  <label>Lake
+    <select name="lake">
+      <option value="hidden-valley-lake-ca" selected>Hidden Valley Lake</option><option value="lake-berryessa" >Lake Berryessa</option><option value="lake-sonoma" >Lake Sonoma</option><option value="lake-ralphine" >Lake Ralphine</option><option value="lake-hennessey" >Lake Hennessey</option><option value="clear-lake" >Clear Lake</option><option value="indian-valley-reservoir" >Indian Valley Reservoir</option><option value="lake-pillsbury" >Lake Pillsbury</option><option value="spring-lake" >Spring Lake</option><option value="blue-lake" >Blue Lake (Upper Blue Lakes)</option><option value="highland-springs-reservoir" >Highland Springs Reservoir</option><option value="watson-lake-az" >Watson Lake</option><option value="willow-lake-az" >Willow Lake</option><option value="goldwater-lake-az" >Goldwater Lake</option><option value="lynx-lake-az" >Lynx Lake</option><option value="granite-basin-lake-az" >Granite Basin Lake</option><option value="fain-lake-az" >Fain Lake</option><option value="yavapai-lakes-az" >Yavapai Lakes</option>
+    </select>
+  </label>
+  <label>Date <input type="date" name="date" value=""></label>
+  <label>Time <input type="time" name="time" value="18:00"></label>
+  <label>Hours <input type="number" name="hours" min="0.5" max="8" step="0.5" value="2.5"></label>
+  <label>Voice
+    <select name="voice">
+      <option value="almanac" selected>almanac (moon lore)</option>
+      <option value="fisher" >fisher (no astrology)</option>
+      <option value="astro" >astro (natal transits)</option>
+    </select>
+  </label>
+  <label>Species <input type="text" name="species" placeholder="largemouth bass" value=""></label>
+  <label>Bottom
+    <select name="bottom">
+      <option value="">— (skip cover)</option>
+      
+      <option value="grass" >grass</option>
+      
+      <option value="muck" >muck</option>
+      
+      <option value="sand" >sand</option>
+      
+      <option value="rock" >rock</option>
+      
+      <option value="wood" >wood</option>
+      
+    </select>
+  </label>
+  <label>Clarity
+    <select name="clarity">
+      <option value="">— (unknown)</option>
+      <option value="clear" >clear</option>
+      <option value="stained" >stained</option>
+    </select>
+  </label>
+  <button type="submit">Generate</button>
+</form>
+<p class="fine" id="profile-note">Rendering anonymously — with a profile (browser-only),
+reports add your natal transits and your arsenal. <a href="interview.html">Build one →</a></p>
+
+<div id="report-out" class="report">
+
+  
+    <div class="scorebar">overall <strong>6.7/10</strong> · Hidden Valley Lake · Thu Sep 24, 6:00 PM</div>
+    <p class="no-print fine"><a href="#" id="print-card">🖨 print / pocket card</a> — the locked numbers, windows, and presentations in one page.</p>
+    <div class="timeline"><svg viewBox="0 0 1000 188" role="img" aria-label="Session timeline: light bands, sun altitude, pressure and events" xmlns="http://www.w3.org/2000/svg"><title>Session timeline — light, pressure, events</title><rect x="83.0" y="22.0" width="282.6" height="104.0" fill="var(--gold, #8a5f16)" opacity="0.16"/><line x1="83.0" y1="22.0" x2="83.0" y2="126.0" stroke="var(--line-2, #e5e1d5)" stroke-width="1"/><rect x="365.6" y="22.0" width="81.3" height="104.0" fill="var(--water, #17606f)" opacity="0.16"/><line x1="365.6" y1="22.0" x2="365.6" y2="126.0" stroke="var(--line-2, #e5e1d5)" stroke-width="1"/><rect x="446.9" y="22.0" width="166.0" height="104.0" fill="var(--water, #17606f)" opacity="0.2"/><line x1="446.9" y1="22.0" x2="446.9" y2="126.0" stroke="var(--line-2, #e5e1d5)" stroke-width="1"/><rect x="612.9" y="22.0" width="209.2" height="104.0" fill="var(--ink, #14232a)" opacity="0.12"/><line x1="612.9" y1="22.0" x2="612.9" y2="126.0" stroke="var(--line-2, #e5e1d5)" stroke-width="1"/><rect x="822.1" y="22.0" width="165.9" height="104.0" fill="var(--ink, #14232a)" opacity="0.12"/><line x1="822.1" y1="22.0" x2="822.1" y2="126.0" stroke="var(--line-2, #e5e1d5)" stroke-width="1"/><line x1="46.0" y1="126.0" x2="988.0" y2="126.0" stroke="var(--line, #b8b2a0)" stroke-width="1"/><polyline points="224.3,98.9 406.2,104.8 529.9,108.7 717.5,114.8 905.0,120.8" fill="none" stroke="var(--water, #17606f)" stroke-width="2" opacity=".9"/><polyline points="224.3,122.0 406.2,78.0 529.9,78.0 717.5,28.4 905.0,28.4" fill="none" stroke="var(--gold, #8a5f16)" stroke-width="2"/><text x="4.0" y="30.0" fill="var(--gold, #8a5f16)" font-size="10" font-family="ui-monospace, monospace">1010</text><text x="4.0" y="124.0" fill="var(--gold, #8a5f16)" font-size="10" font-family="ui-monospace, monospace">1009</text><line x1="446.9" y1="22.0" x2="446.9" y2="126.0" stroke="var(--dim, #4e5c5f)" stroke-width="1" stroke-dasharray="3 3" opacity=".8"/><text x="446.9" y="12.0" fill="var(--dim, #4e5c5f)" font-size="10" text-anchor="middle">sunset</text><line x1="612.9" y1="22.0" x2="612.9" y2="126.0" stroke="var(--dim, #4e5c5f)" stroke-width="1" stroke-dasharray="3 3" opacity=".8"/><text x="612.9" y="21.0" fill="var(--dim, #4e5c5f)" font-size="10" text-anchor="middle">last light</text><rect x="83.0" y="22.0" width="282.6" height="104.0" fill="none" stroke="var(--gold, #8a5f16)" stroke-width="2" rx="2"/><text x="83.0" y="164.0" fill="var(--gold, #8a5f16)" font-size="11.5" font-family="ui-monospace, monospace">prime 18:05 · Walking topwater (Spook/110) + Whopper Plop…</text><line x1="46.0" y1="126.0" x2="46.0" y2="130.0" stroke="var(--line, #b8b2a0)" stroke-width="1"/><text x="46.0" y="141.0" fill="var(--dim, #4e5c5f)" font-size="9.5" text-anchor="middle" font-family="ui-monospace, monospace">6 PM</text><line x1="422.8" y1="126.0" x2="422.8" y2="130.0" stroke="var(--line, #b8b2a0)" stroke-width="1"/><text x="422.8" y="141.0" fill="var(--dim, #4e5c5f)" font-size="9.5" text-anchor="middle" font-family="ui-monospace, monospace">7 PM</text><line x1="799.6" y1="126.0" x2="799.6" y2="130.0" stroke="var(--line, #b8b2a0)" stroke-width="1"/><text x="799.6" y="141.0" fill="var(--dim, #4e5c5f)" font-size="9.5" text-anchor="middle" font-family="ui-monospace, monospace">8 PM</text><text x="988.0" y="184.0" fill="var(--dim, #4e5c5f)" font-size="9.5" text-anchor="end" font-family="ui-monospace, monospace">sun altitude · barometer</text></svg></div>
+    <h1>THURSDAY SEP 24 — 6:00 PM SESSION</h1>
+<h3>Hidden Valley Lake, Middletown, Lake County, CA | Full moon (97%) | Moon in <svg class="astro-sym" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5C5 9 5 15 9 19M15 5C19 9 19 15 15 19M5 12H19"/></svg> Pisces</h3>
+<h2>One-paragraph version</h2>
+<p>Launch at <strong>6:00 PM</strong> into a <strong>Mercury hour</strong>; the window that matters is <strong>6:05 PM–6:50 PM</strong> (golden hour), parked on the <strong>walking topwater (spook/110)</strong>. Overall <strong>6.7/10</strong> — solid conditions with one clear prime window; be there for it.</p>
+<h2>The locked numbers</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="">Launch</td>
+<td data-label=""><strong>6:00 PM</strong> / sunset <strong>7:03 PM</strong> / dark ~7:30 PM</td>
+</tr>
+<tr>
+<td data-label="">Moon</td>
+<td data-label="">Full moon, 97% lit, sets <strong>4:50 AM</strong>, rises 6:05 PM</td>
+</tr>
+<tr>
+<td data-label="">Air</td>
+<td data-label="">80°F at launch / window 68–80°F</td>
+</tr>
+<tr>
+<td data-label="">Water</td>
+<td data-label="">~74°F (air-temp lag — small-lake estimate, no gauge within 30 km; warming +0.6°F/wk)</td>
+</tr>
+<tr>
+<td data-label="">Species presence</td>
+<td data-label="">on our lake list · not yet confirmed by a logged catch</td>
+</tr>
+<tr>
+<td data-label="">Sky/wind</td>
+<td data-label="">100% cloud, 8 mph wind, falling fast barometer (1009 hPa)</td>
+</tr>
+<tr>
+<td data-label="">Forecast</td>
+<td data-label="">high agreement — GFS/ECMWF/ICON ±1.6°F, ±1.5 mph, cloud uncertain (±62%)</td>
+</tr>
+<tr>
+<td data-label="">Color</td>
+<td data-label="">In low light or stained water, choose baits that contrast with the background (dark/black, chartreuse, black-and-blue) rather than natural shades.</td>
+</tr>
+<tr>
+<td data-label="">Solunar</td>
+<td data-label="">→ Moonrise (minor) ~6:05 PM; Moon underfoot (major) ~11:32 AM; Moon overhead (major) ~12:00 AM</td>
+</tr>
+<tr>
+<td data-label="">Scores</td>
+<td data-label="">weather 7/10 · solunar 8/10 · astro 4/10 → <strong>overall 6.7/10</strong></td>
+</tr>
+<tr>
+<td data-label="">Data</td>
+<td data-label="">sky + weather · GFS/ECMWF/ICON ±1.6°F, ±1.5 mph, cloud uncertain (±62%) (high agreement) · history → lake-state · water temp estimated (no gauge nearby) · no stocking intel · logbook (none) · depth map: lake notes only</td>
+</tr>
+</tbody>
+</table></div>
+<h2>Weather layer</h2>
+<ul>
+<li>overcast = fish roam shallow &amp; chase (big plus)</li>
+<li>7 mph chop breaks up overhead predators (plus)</li>
+<li>barometer falling fast (-4.9 hPa/6h)</li>
+</ul>
+<h2>Almanac layer (the old-timers' calendar)</h2>
+<ul>
+<li><strong>Moon in <svg class="astro-sym" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5C5 9 5 15 9 19M15 5C19 9 19 15 15 19M5 12H19"/></svg> Pisces</strong> — the Fish rules — the classic 'dream bite' sign <em>(almanac tradition, honored as lore)</em></li>
+<li>Full-moon window (solunar peak) — the almanac rates this a strong-feeding stretch</li>
+<li>void-of-course until Moon enters the next sign at 03:23 — quiet hours, almanacs say fish pick at baits</li>
+<li>Planetary hour at launch: <strong><svg class="astro-sym" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="11" r="3.2"/><path d="M12 14.2V20M9 17H15"/><path d="M8.5 5.5C8.5 3.5 10 2.8 12 4.5C14 2.8 15.5 3.5 15.5 5.5"/></svg> Mercury</strong> — skillful hands — knots, skips and hooksets are dialed <em>(published in almanacs for centuries)</em></li>
+</ul>
+<h2>The session, hour-by-hour</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Time</th>
+<th>Window</th>
+<th>Sky</th>
+<th>Do this</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Time">6:05 PM–6:50 PM</td>
+<td data-label="Window">Mercury · minor ON · moonrise · Moonrise (minor) ends</td>
+<td data-label="Sky">golden hour</td>
+<td data-label="Do this"><strong>Walking topwater (Spook/110)</strong> — long casts over points/grass edges; walk-the-dog with hard 1–2s kills (bone/shad)<br><strong>Whopper Plopper / prop bait</strong> — steady wake over flats &amp; grass tops; pause on the blow-up point (bone)</td>
+</tr>
+<tr>
+<td data-label="Time">6:50 PM–7:03 PM</td>
+<td data-label="Window">Mercury · Moonrise (minor) ends · sunset + Moon hour</td>
+<td data-label="Sky">sunset</td>
+<td data-label="Do this"><strong>Walking topwater (Spook/110)</strong> — long casts over points/grass edges; walk-the-dog with hard 1–2s kills (bone/shad)<br><strong>Whopper Plopper / prop bait</strong> — steady wake over flats &amp; grass tops; pause on the blow-up point (bone)</td>
+</tr>
+<tr>
+<td data-label="Time">7:03 PM–7:30 PM</td>
+<td data-label="Window">Moon · sunset + Moon hour · end of light (civil dusk)</td>
+<td data-label="Sky">dusk</td>
+<td data-label="Do this"><strong>Walking topwater (Spook/110)</strong> — long casts over points/grass edges; walk-the-dog with hard 1–2s kills (bone/shad)<br><strong>Whopper Plopper / prop bait</strong> — steady wake over flats &amp; grass tops; pause on the blow-up point (bone)</td>
+</tr>
+<tr>
+<td data-label="Time">7:30 PM–8:03 PM</td>
+<td data-label="Window">Moon · end of light (civil dusk) · Saturn hour</td>
+<td data-label="Sky">dark</td>
+<td data-label="Do this"><strong>Walking topwater (Spook/110)</strong> — long casts over points/grass edges; walk-the-dog with hard 1–2s kills (black — silhouette against the sky)<br><strong>Whopper Plopper / prop bait</strong> — steady wake over flats &amp; grass tops; pause on the blow-up point (loon/black)</td>
+</tr>
+<tr>
+<td data-label="Time">8:03 PM–8:30 PM</td>
+<td data-label="Window">Saturn</td>
+<td data-label="Sky">dark</td>
+<td data-label="Do this"><strong>Walking topwater (Spook/110)</strong> — long casts over points/grass edges; walk-the-dog with hard 1–2s kills (black — silhouette against the sky)<br><strong>Whopper Plopper / prop bait</strong> — steady wake over flats &amp; grass tops; pause on the blow-up point (loon/black)</td>
+</tr>
+</tbody>
+</table></div>
+<h2>Best presentations for these conditions</h2>
+<ul>
+<li>Walking topwater (Spook/110) — the big-fish-after-dark signature</li>
+<li>Whopper Plopper / prop bait — calls fish from distance in low light</li>
+</ul>
+<h2>Trend watch — what's winning (market signal, not science)</h2>
+<p><em>Dated tournament/creator signals for rigs that already fit these conditions — shown after ranking and never scored into it.</em>
+- <strong>Mid-depth crankbait</strong> — fits these conditions (scores 7.5) · <a href="https://www.youtube.com/watch?v=dbLPDxH7Wkg">YouTube — Brian Latimer</a> (2026-09-19)
+    - <em>“RED CRANKBAITS - THE REAL REASON IT WORKS”</em>
+- <strong>Drop shot</strong> — fits these conditions (scores 7.2) · <a href="https://majorleaguefishing.com/pro-circuit/gill-does-it-again-wins-pro-circuit-championship-on-kissimmee-chain/">MLF — Gill does it again, wins Tackle Warehouse Pro Circuit Championship on </a> (Sun, 20 Sep 2026)
+    - <em>“Gill's primary bait on the first two days was the venerable 7-inch Big Bite Baits Nekorama in matte margarita on a drop-shot.”</em>
+- <strong>Urchin/dice rig (treble + screw weights)</strong> — fits these conditions (scores 7.2) · <a href="https://majorleaguefishing.com/pro-circuit/gill-does-it-again-wins-pro-circuit-championship-on-kissimmee-chain/">MLF — Gill does it again, wins Tackle Warehouse Pro Circuit Championship on </a> (Sun, 20 Sep 2026)
+    - <em>“I went out with 38 rods on my deck, because I didn't have a blockbuster deal on that area, and I'll be danged, every fish in that area wanted to bite the urchin. It was lights-out ”</em>
+- <strong>Carolina rig</strong> — fits these conditions (scores 7.0) · <a href="https://www.youtube.com/watch?v=SlGUxju-kVQ">YouTube — Tom Redington</a> (2026-09-18)
+    - <em>“Carolina Rig Masterclass From the Guy Who Perfected It”</em></p>
+<h2>Line &amp; knots for these rigs</h2>
+<ul>
+<li><strong>Monofilament (nylon)</strong> — buoyant and stretches under load, which damps the surge on a hooked fish
+<em>Knots quoted from the cited guides — facts, not folklore.</em></li>
+<li><strong>San Diego jam knot</strong> (line-to-terminal) — The San Diego jam knot is a common fishing knot used to tie a line to the hook, swivel, clip, or artificial fly. This knot is also known as the San Diego knot, reverse clinch knot or Heiliger knot. <em>(Wikipedia — San Diego Jam knot)</em></li>
+<li><strong>Palomar knot</strong> (line-to-terminal) — The Palomar knot is a knot that is used for securing a fishing line to a fishing lure, hook, or swivel. It is strong and easy to tie and with practice can even be tied in the dark. <em>(Wikipedia — Palomar knot)</em>
+<em>Practice: always wet knots before tightening, regardless of line material; fluoro under 10 lb: 10 wraps when tying the snell or uni.</em></li>
+</ul>
+<h2>Decision rules</h2>
+<ul>
+<li><strong>Swirls/short strikes on topwater →</strong> don't speed up; slow down, longer pauses. Still missing → upsize the profile.</li>
+<li><strong>Wind from W at 8 mph →</strong> the E shore is wind-stacked (fetch ~675 m); fish it first — the W shore is the lee.</li>
+<li><strong>Overcast holds →</strong> extend the reaction phase; this cloud is a gift.</li>
+<li><strong>Barometer crashing →</strong> fish will slide deeper sooner; work the first break line, not the back coves.
+<em>(shoreline wind model — © OpenStreetMap contributors, ODbL)</em></li>
+</ul>
+<hr />
+<p><em>fishwitch mvp — weather via Open-Meteo · sky via Swiss Ephemeris · solunar + almanac tradition (fruitful/barren signs are old lore, honored but labeled).</em></p>
+    
+<section class="tackle">
+  <h2>Tackle for this session — sources &amp; offers</h2>
+  <p class="fine">These links never affect the ranking — they're added after the picks are set.</p>
+  <ul class="plain">
+  
+    <li>
+      <span class="badge ok">cited</span>
+      
+      <strong>Walking topwater (Spook/110)</strong>
+      ·
+        <a href="https://6thsensefishing.com/products/catwalk" target="_blank" rel="nofollow noopener">CatWalk</a>
+      
+      
+      
+      
+      <div class="fine">6th Sense catalog (6thsensefishing.com, Shopify products.json) · <a href="https://6thsensefishing.com/products/catwalk" target="_blank" rel="noopener">source</a></div>
+    </li>
+  
+    <li>
+      <span class="badge ok">cited</span>
+      
+      <strong>Whopper Plopper / prop bait</strong>
+      ·
+        <a href="https://www.river2seausa.com/products/whopper-plopper" target="_blank" rel="nofollow noopener">Whopper Plopper 190</a>
+      
+      
+      
+      
+      <div class="fine">River2Sea product page · <a href="https://www.river2seausa.com/products/whopper-plopper" target="_blank" rel="noopener">source</a></div>
+    </li>
+  
+  </ul>
+</section>
+
+
+
+<section class="tackle">
+  <h2>📈 Trend watch — what's winning</h2>
+  <p class="fine">Dated tournament/creator signals for rigs that already fit these conditions —
+  shown after ranking and never scored into it.</p>
+  <ul class="plain">
+  
+    <li><strong>Mid-depth crankbait</strong> — scores 7.5 here ·
+      <a href="https://www.youtube.com/watch?v=dbLPDxH7Wkg" target="_blank" rel="noopener">YouTube — Brian Latimer</a>
+      (2026-09-19)
+      <div class="fine">“RED CRANKBAITS - THE REAL REASON IT WORKS”</div>
+    </li>
+  
+    <li><strong>Drop shot</strong> — scores 7.2 here ·
+      <a href="https://majorleaguefishing.com/pro-circuit/gill-does-it-again-wins-pro-circuit-championship-on-kissimmee-chain/" target="_blank" rel="noopener">MLF — Gill does it again, wins Tackle Warehouse Pro Circuit Championship on </a>
+      (Sun, 20 Sep 2026)
+      <div class="fine">“Gill&#39;s primary bait on the first two days was the venerable 7-inch Big Bite Baits Nekorama in matte margarita on a drop-shot.”</div>
+    </li>
+  
+    <li><strong>Urchin/dice rig (treble + screw weights)</strong> — scores 7.2 here ·
+      <a href="https://majorleaguefishing.com/pro-circuit/gill-does-it-again-wins-pro-circuit-championship-on-kissimmee-chain/" target="_blank" rel="noopener">MLF — Gill does it again, wins Tackle Warehouse Pro Circuit Championship on </a>
+      (Sun, 20 Sep 2026)
+      <div class="fine">“I went out with 38 rods on my deck, because I didn&#39;t have a blockbuster deal on that area, and I&#39;ll be danged, every fish in that area wanted to bite the urchin. It was lights-out - you hit one with i”</div>
+    </li>
+  
+    <li><strong>Carolina rig</strong> — scores 7.0 here ·
+      <a href="https://www.youtube.com/watch?v=SlGUxju-kVQ" target="_blank" rel="noopener">YouTube — Tom Redington</a>
+      (2026-09-18)
+      <div class="fine">“Carolina Rig Masterclass From the Guy Who Perfected It”</div>
+    </li>
+  
+  </ul>
+</section>
+
+
+  
+
+</div>
+</div>
+
+</main>
+<footer>
+  <div class="footer-inner">
+    <div class="mark">
+      <span class="triskele" aria-hidden="true"></span>
+      <span class="wordmark">baromoon</span>
+    </div>
+    <p class="fine">Named for the two signals that survive calibration: barometric phase and moon.</p>
+    <p class="fine">Same sky, same weather, same lake — the same report
+    every time. No AI writes these facts: every tackle-library entry is cited, and a person
+    verifies each one.</p>
+    <p class="fine">Tackle links are added after the picks are set and never influence rankings.
+    Manufacturer pages carry no commission; affiliate links, when present, are always disclosed.
+    Profile data (birth place and time) lives only in your browser — <a href="interview.html">read how</a>.</p>
+    <nav class="foot-legal" aria-label="Site information">
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="disclosure.html">Affiliate disclosure</a>
+    </nav>
+    <p class="foot-install"><button type="button" id="install-app" class="install-btn" hidden>Install baromoon</button>
+      <span class="fine" id="install-hint" hidden></span></p>
+  </div>
+</footer>
+<script src="static/app.js?v=1790132989"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () =>
+    navigator.serviceWorker.register("/sw.js").catch(() => {}));
+}
+</script>
+</body>
+</html>
