@@ -104,6 +104,11 @@ Bands (deterministic, from `overall`): S ≥ 7.5 · A ≥ 7.0 · B ≥ 6.5 · C 
 - **Manuscript double rules** under section heads (`.rule-double`).
 - **Lunar glyphs** (●◐☾◑) in the moon calendar and tier rows — data, not
   decoration, so they're exempt from restraint.
+- **Astrological glyphs** — zodiac signs, planets, and aspects are drawn as
+  single-ink SVG on a 24 px grid (`glyphs.py`), tinted by `currentColor`, never
+  font glyphs (Unicode astro characters render as tofu or colour emoji on many
+  devices). Web reports swap the Unicode for the drawings; the CLI keeps the
+  Unicode for terminals. Data, not decoration — same rule as the moon.
 - Small-caps labels with wide tracking (`letter-spacing: .08em`).
 - Border radius: 4–6px max — carved wood, not pill-shaped SaaS.
 - Forbidden: knotwork borders, claddaghs, "Irish" greens, harp emoji, Papyrus,

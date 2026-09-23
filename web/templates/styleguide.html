@@ -236,6 +236,18 @@ under the chosen theme.</p>
   light themes is a later pass.</p>
 </section>
 
+<section class="sg-section">
+  <h2 class="rule-double">Astrology glyphs</h2>
+  <p class="fine">Drawn, single-ink, theme-coloured — never font glyphs
+  (Unicode signs render as tofu or colour emoji on many devices). These are
+  what the report uses for signs, planets, and aspects.</p>
+  <div class="sg-glyphs">
+    {% for g in glyphs %}
+    <div class="sg-glyph">{{ g.svg | safe }}<span class="fine">{{ g.label }}</span></div>
+    {% endfor %}
+  </div>
+</section>
+
 <script>
 (function () {
   var root = document.documentElement;

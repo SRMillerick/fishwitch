@@ -25,6 +25,7 @@ from skycalc import Sky, phase_name, illum_pct, fmt_sign, planet_lon, SIGNS, SYM
 from chart import NatalChart, transit_aspects, voc_moon, moon_note, phase_resonance, HOUR_MEANINGS
 import tactics as tx
 import logbook as lb
+import glyphs
 
 REPORTS_DIR = Path(__file__).resolve().parent / "reports"
 
@@ -166,12 +167,14 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
                 end = ac
                 acc_note += " · session clamped to close"
 
-    natal = aspects = voc = mn = resonance = None
+    natal = aspects = resonance = None
+    # chart-free sky lore: the almanac voice (and its scoring) never needs a
+    # natal chart, so compute these for every profile — anonymous included.
+    voc = voc_moon(sky.jd(start), sky)
+    mn = moon_note(sky.jd(start))
     if profile.get("birth"):
         natal = NatalChart(profile["birth"])
         aspects = transit_aspects(natal, sky.jd(start), hours + 2)
-        voc = voc_moon(sky.jd(start), sky)
-        mn = moon_note(sky.jd(start))
         resonance = phase_resonance(natal, sky.jd(start))
 
     arsenal = profile.get("arsenal") or []
@@ -439,7 +442,7 @@ def _perf_local(m: dict, a: dict) -> datetime:
     return m["_sky"].loc(a["perfect_jd"])
 
 
-def _lead_paragraph(m: dict, voice: str, emoji: bool, has_box: bool, owned: set) -> str:
+def _lead_paragraph(m: dict, voice: str, emoji: bool, symbols: bool, has_box: bool, owned: set) -> str:
     """The report's opening read: launch hour, the one window that matters,
     the top pick, the sky event, and the overall call."""
     lead = f"Launch at **{_fmt_ampm(m['start'])}**"
@@ -460,7 +463,7 @@ def _lead_paragraph(m: dict, voice: str, emoji: bool, has_box: bool, owned: set)
             mids.append(f"parked on the **{top[0]['label'].lower()}**{gap_note}")
     if m["perfecting"]:
         a = m["perfecting"][0]
-        amark = f"{a['sym']} " if emoji else ""
+        amark = glyphs.prefix(a["aspect"], symbols)
         mids.append("the activity spike lands mid-session" if voice == "fisher"
                     else f"{a['transit']} {amark}{a['aspect']} natal {a['natal']} perfects on the water")
     sc = m["scores"]["overall"]
@@ -477,7 +480,11 @@ def _lead_paragraph(m: dict, voice: str, emoji: bool, has_box: bool, owned: set)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
+def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True,
+                symbols: bool | None = None) -> str:
+    if symbols is None:
+        symbols = emoji          # CLI default: emoji mode carries the glyphs
+
     def e(prefix: str) -> str:
         return prefix if emoji else ""
     voice = m["voice"]
@@ -500,21 +507,23 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
         if m["prime"]:
             head += f" | prime window {_fmt_ampm(m['prime']['start'])}"
     elif voice == "almanac" and m["moon_note"]:
-        head = f"{m['moon']['phase']} ({m['moon']['illum']:.0f}%) | Moon in {m['moon_note']['sign']}"
+        head = (f"{m['moon']['phase']} ({m['moon']['illum']:.0f}%) | Moon in "
+                f"{glyphs.prefix(m['moon_note']['sign'], symbols)}{m['moon_note']['sign']}")
     else:
         head = (m["moon"]["phase"] + f" ({m['moon']['illum']:.0f}%)")
         if m["moon_note"]:
-            head += f" | Moon in {m['moon_note']['sign']}"
+            head += (f" | Moon in {glyphs.prefix(m['moon_note']['sign'], symbols)}"
+                     f"{m['moon_note']['sign']}")
         if m["perfecting"]:
             a = m["perfecting"][0]
-            amark = f"{a['sym']} " if emoji else ""
+            amark = glyphs.prefix(a["aspect"], symbols)
             head += f" | {a['transit']} {amark}{a['aspect']} natal {a['natal']}"
     L.append(f"# {e('🎣 ')}{wk} {date} — {_fmt_ampm(m['start'])} SESSION")
     L.append(f"### {m['lake']['name']}" +
              (f", {m['lake']['region']}" if m["lake"].get("region") else "") + " | " + head)
     L.append("")
     L.append(f"## {e('🎯 ')}One-paragraph version")
-    L.append(_lead_paragraph(m, voice, emoji, has_box, owned))
+    L.append(_lead_paragraph(m, voice, emoji, symbols, has_box, owned))
     L.append("")
 
     sun = m["sun"]
@@ -665,26 +674,29 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
         L.append(f"## {e('🌙 ')}Almanac layer (the old-timers' calendar)")
         mn = m["moon_note"]
         if mn:
-            L.append(f"- **Moon in {mn['sign']}** — {mn['quip']} *(almanac tradition, honored as lore)*")
+            L.append(f"- **Moon in {glyphs.prefix(mn['sign'], symbols)}{mn['sign']}** — {mn['quip']} "
+                     "*(almanac tradition, honored as lore)*")
         L.append(f"- {m['moon']['phase_quality'].capitalize()} — the almanac rates this a strong-feeding stretch")
         if m["voc"]:
             L.append(f"- {e('⚠️ ') if m['voc']['void'] else ''}{_t_event(m['voc']['note'].split(' — ')[0], voice)}"
                      + (" — quiet hours, almanacs say fish pick at baits" if m["voc"]["void"] else ""))
         h0 = m["blocks"][0]["hour"] if m["blocks"] else None
         if h0:
-            L.append(f"- Planetary hour at launch: **{h0['ruler']}** — {HOUR_MEANINGS[h0['ruler']]} *(published in almanacs for centuries)*")
+            L.append(f"- Planetary hour at launch: **{glyphs.prefix(h0['ruler'], symbols)}{h0['ruler']}** "
+                     f"— {HOUR_MEANINGS[h0['ruler']]} *(published in almanacs for centuries)*")
     elif m["natal"]:
         L.append(f"## {e('🌙 ')}Astrology layer (vs. your chart)")
         mn = m["moon_note"]
-        L.append(f"- **Moon {mn['fmt'] if emoji else mn.get('fmt_plain', mn['fmt'])} — in natal house {m['natal'].house_of(mn['lon'])}** · {mn['lore']}: {mn['quip']}")
+        L.append(f"- **Moon {mn['fmt'] if symbols else mn.get('fmt_plain', mn['fmt'])} — in natal house {m['natal'].house_of(mn['lon'])}** · {mn['lore']}: {mn['quip']}")
         if m["resonance"]:
             L.append(f"- **{m['resonance']}**")
         L.append(f"- Chart: {m['natal'].sect} chart · natal lunar phase {m['natal'].natal_phase}")
-        for d in m["natal"].dignity_notes(emoji)[:4]:
+        for d in m["natal"].dignity_notes(symbols)[:4]:
             L.append(f"- {d}")
         hour0 = m["blocks"][0]["hour"] if m["blocks"] else None
         if hour0:
-            L.append(f"- Planetary day/hour at launch: **{hour0['ruler']}** — {HOUR_MEANINGS[hour0['ruler']]}")
+            L.append(f"- Planetary day/hour at launch: **{glyphs.prefix(hour0['ruler'], symbols)}"
+                     f"{hour0['ruler']}** — {HOUR_MEANINGS[hour0['ruler']]}")
         if m["voc"]:
             L.append(f"- Moon: {e('⚠️ ') if m['voc']['void'] else e('✅ ')}{m['voc']['note']}")
         if m["aspects"]:
@@ -696,8 +708,10 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True) -> str:
                     perf = f"**{_fmt_ampm(_perf_local(m, a))}**"
                 else:
                     perf = "applying" if a["applying"] else "separating"
-                asym = f"{a['sym']} {a['aspect']}" if emoji else a["aspect"]
-                L.append(f"| {a['transit']} | {asym} | {a['natal']} | "
+                asym = (f"{glyphs.prefix(a['aspect'], symbols)}{a['aspect']}"
+                        if symbols else a["aspect"])
+                L.append(f"| {glyphs.prefix(a['transit'], symbols)}{a['transit']} | {asym} | "
+                         f"{glyphs.prefix(a['natal'], symbols)}{a['natal']} | "
                          f"{a['orb']:.2f}° | {perf} |")
     L.append("")
 

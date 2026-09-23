@@ -42,6 +42,7 @@ import markdown as _md  # noqa: E402  (pip install markdown)
 import offers  # noqa: E402
 import public_api  # noqa: E402
 import telemetry  # noqa: E402
+import glyphs  # noqa: E402
 import tactics as tx  # noqa: E402
 import viz  # noqa: E402
 from layers.history import History  # noqa: E402
@@ -384,8 +385,9 @@ def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
     m = gen(profile, lake, at, hours=hours, species=species,
             voice=voice or profile.get("astro_display") or "almanac",
             wx=wx, hist=hist, bottom=bottom, clarity=clarity)
-    body = _md.markdown(to_markdown(m, emoji=False, show_gap=False), extensions=["tables"])
-    body = _responsive_tables(body)
+    body = _md.markdown(to_markdown(m, emoji=False, show_gap=False, symbols=True),
+                        extensions=["tables"])
+    body = glyphs.symbolize(_responsive_tables(body))
     prime = m.get("prime")
     owned_ids = m.get("owned_ids") or set()
     has_box = bool(m.get("has_baseline"))
@@ -1014,7 +1016,7 @@ def styleguide_page():
     set (loam / first-light / crisp-dark / almanac). Not shipped publicly."""
     if not LOCAL:
         abort(404)
-    return render_template("styleguide.html", local=LOCAL)
+    return render_template("styleguide.html", local=LOCAL, glyphs=glyphs.catalog())
 
 
 @app.route("/logo")

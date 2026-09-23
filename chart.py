@@ -110,10 +110,11 @@ class NatalChart:
                 out.append(f"natal {p} {DIGNITY[(p, sign)]} in {sign}{mark} — a chart strength")
         for p in ("Sun", "Moon", "Venus"):
             sign = SIGNS[int(self.points[p] // 30)]
+            mark = f" ({SYM[SIGNS.index(sign)]})" if symbols else ""
             if DETRIMENT_OF.get(sign) == p:
-                out.append(f"natal {p} in detriment in {sign} — works against the grain; patience")
+                out.append(f"natal {p} in detriment in {sign}{mark} — works against the grain; patience")
             elif FALL_OF.get(sign) == p:
-                out.append(f"natal {p} in fall in {sign} — humility bait works")
+                out.append(f"natal {p} in fall in {sign}{mark} — humility bait works")
         return out
 
     def house_of(self, lon: float) -> int:
