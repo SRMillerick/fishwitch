@@ -264,7 +264,9 @@ if (ledgerRows) {
 // ── landing: nearest-water preview for anonymous visitors ────────────────
 // The registry ride-along (#bm-waters) is enough to pick the closest water
 // in-browser. Coordinates never leave this page: we only navigate to
-// /?lake=<id> once we know which public water won.
+// /?lake=<id> once we know which public water won. Anonymous visitors get an
+// automatic location request on load (the browser's native prompt); the quiet
+// link stays as the fallback when the prompt is blocked or dismissed.
 const watersEl = document.getElementById("bm-waters");
 const nearWrap = document.getElementById("near-me-wrap");
 const nearLink = document.getElementById("near-me");
@@ -300,9 +302,10 @@ if (ledgerRows && watersEl) {
       () => resolve(null), { maximumAge: 86400000, timeout: 8000 });
   });
   const apply = (fix) => {
+    if (nearLink) nearLink.textContent = "Waters near me";
     if (!fix) {
-      if (nearLink) nearLink.textContent = "Waters near me";
       if (nearNote) nearNote.textContent = " — location unavailable; showing the demo water.";
+      if (nearWrap) nearWrap.hidden = false;
       return;
     }
     sortWaters(fix[0], fix[1]);
@@ -318,16 +321,31 @@ if (ledgerRows && watersEl) {
     if (nearNote) nearNote.textContent = "";
     ask();
   });
-  if (!getActive()) {
+  if (getActive()) {
+    if (nearWrap) nearWrap.hidden = true;      // the profile ledger takes over
+  } else {
+    let asked = false;
+    try { asked = sessionStorage.getItem("bm-geo-asked") === "1"; } catch {}
+    const promptOnce = () => {                 // once per tab, so a dismissal isn't nagged
+      if (asked) { if (nearWrap) nearWrap.hidden = false; return; }
+      asked = true;
+      try { sessionStorage.setItem("bm-geo-asked", "1"); } catch {}
+      ask();
+    };
     let perm = null;
     try { perm = navigator.permissions && navigator.permissions.query({ name: "geolocation" }); } catch {}
     if (perm) {
       perm.then((p) => {
-        if (p.state === "granted") ask();          // silent when already allowed
-        else if (!chosen && nearWrap) nearWrap.hidden = false;
-      }).catch(() => { if (!chosen && nearWrap) nearWrap.hidden = false; });
-    } else if (!chosen && nearWrap) {
-      nearWrap.hidden = false;                      // no Permissions API: offer it inline
+        if (p.state === "granted") ask();      // silent when already allowed
+        else if (p.state === "denied" && !chosen) {
+          if (nearNote) nearNote.textContent = " — location blocked for this site; showing the demo water.";
+          if (nearWrap) nearWrap.hidden = false;
+        } else if (p.state === "prompt" && !chosen) {
+          promptOnce();                        // native prompt on the demo landing
+        }
+      }).catch(() => { if (!chosen) promptOnce(); });
+    } else if (!chosen) {
+      promptOnce();                            // no Permissions API: still try on load
     }
   }
 }
