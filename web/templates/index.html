@@ -1,18 +1,21 @@
 {% extends "base.html" %}
-{% block title %}the moon-ledger{% endblock %}
+{% block title %}fishing plan{% endblock %}
 {% block content %}
 <section class="hero">
   <div class="hero-copy">
     <span class="eyebrow">the moon-ledger · any water</span>
-    <h1>When do the fish <em>feed?</em></h1>
-    <p class="lede">baromoon reads moon, barometer, and water — the signals that survive
-    calibration, plus everything your lake's sky is doing — and hands you the
-    <strong>when</strong>, the <strong>where</strong>, and the <strong>rig</strong>.
-    Same inputs, same report. No mysticism required, though the moon gets a vote.</p>
+    <h1>When to go. What to <em>throw.</em></h1>
+    <p class="lede">baromoon reads your lake — barometer, water temperature, wind,
+    light, and cover — and hands you the <strong>window</strong>, the
+    <strong>bank</strong>, and the <strong>rig</strong>. Every pick shows its reasons
+    and its sources. Same inputs, same report, every time. The moon gets a vote;
+    the lake decides.</p>
     <p class="cta">
-      <a class="btn primary" href="#ledger">Open the ledger</a>
+      <a class="btn primary" href="#ledger">See the plan</a>
       <a class="btn ghost" href="/interview">Make it yours · 3 steps</a>
     </p>
+    <p class="fine hero-proof">Free, no account — {{ lakes | length }} waters, and every
+    pick shows its work.</p>
   </div>
   {% if teaser %}
   <aside class="readout">
@@ -39,8 +42,9 @@
     <h2>The ledger</h2>
     <span class="smallcaps" id="ledger-scope">{{ home.name if home else 'Nearby water' }} · next three days</span>
   </div>
-  <p class="fine ledger-note" id="ledger-note">The best upcoming windows, tiered — open a
-  line for the full report. With a profile, this becomes your waters and your sky.</p>
+  <p class="fine ledger-note" id="ledger-note">Your nearest water, best first — open a line
+  for the full session: hour-by-hour windows, the bank, the rig, and the reasons behind each
+  pick. With a profile, this becomes your waters and your sky.</p>
   <p class="fine" id="near-me-wrap" hidden><a href="#" id="near-me">Waters near me</a>
   — your browser picks the closest water; the location never leaves this page.<span id="near-me-note"></span></p>
   <ul class="tier-rows" id="ledger-rows">
@@ -64,6 +68,8 @@
 <section class="band cols">
   <div>
     <h2 class="rule-double">How it works</h2>
+    <p class="fine">Solunar tables stop at the moon. baromoon runs the whole lake —
+    weather, history, water, cover, sky, and tackle — and shows the arithmetic.</p>
     <ol class="plain">
       <li><strong>Weather + history</strong> — forecast for the window, a 75-day
       archive behind it: heat streaks, water-temp estimate, and turnover

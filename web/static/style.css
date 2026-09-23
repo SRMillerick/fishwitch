@@ -319,6 +319,7 @@ fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
 .hero h1 em { font-style: italic; color: var(--gold); }
 .lede { max-width: 33rem; color: var(--dim); font-size: 1.12rem; line-height: 1.62; }
 .cta { display: flex; flex-wrap: wrap; gap: .7rem; margin: 1.7rem 0 0; }
+.hero-proof { margin-top: 1rem; max-width: 33rem; color: var(--faint); }
 
 /* tonight readout */
 .readout {
