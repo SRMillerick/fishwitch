@@ -89,6 +89,7 @@ nav {
   padding: .55rem var(--gutter);
   display: flex; flex-wrap: wrap; align-items: center;
   gap: .3rem 1.5rem;
+  position: relative;
 }
 .brand {
   display: inline-flex; align-items: center; gap: .55rem;
@@ -97,17 +98,28 @@ nav {
 }
 .brand:hover { color: var(--ink); }
 .brand .triskele { color: var(--gold); width: .72em; }
-nav > a:not(.brand) {
+.nav-links {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .3rem 1.5rem;
+}
+.nav-links a {
   position: relative; color: var(--dim); padding: .5rem 0;
   font-size: .7rem; font-weight: 500; letter-spacing: .15em; text-transform: uppercase;
 }
-nav > a:not(.brand)::after {
+.nav-links a::after {
   content: ""; position: absolute; left: 0; right: 100%; bottom: .2rem;
   height: 1px; background: var(--gold); transition: right .25s ease;
 }
-nav > a:not(.brand):hover, nav > a:not(.brand).on { color: var(--ink); }
-nav > a:not(.brand):hover::after, nav > a:not(.brand).on::after { right: 0; }
-nav > a:not(.brand).on::after { background: var(--gold-dim); }
+.nav-links a:hover, .nav-links a.on { color: var(--ink); }
+.nav-links a:hover::after, .nav-links a.on::after { right: 0; }
+.nav-links a.on::after { background: var(--gold-dim); }
+.nav-toggle {
+  display: none; align-items: center; justify-content: center;
+  background: none; border: 1px solid var(--line); border-radius: 2px;
+  color: var(--dim); padding: .42rem .5rem; cursor: pointer;
+  transition: color .2s, border-color .2s;
+}
+.nav-toggle:hover { color: var(--gold); border-color: var(--gold-dim); }
+.nav-toggle svg { display: block; }
 
 /* profile vault menu */
 .menu { margin-left: .35rem; position: relative; }
@@ -143,6 +155,23 @@ html[data-theme="crisp-dark"] .theme-toggle .i-moon { display: none; }
 /* Narrow screens: the summary can wrap to the left edge, so a right-anchored
    dropdown opened off-screen. Anchor it to the header instead, full width. */
 @media (max-width: 46rem) {
+  nav { gap: .3rem .5rem; padding: .5rem var(--gutter); }
+  .brand { font-size: 1.45rem; margin-right: .1rem; }
+  .menu summary { letter-spacing: .1em; padding: .42rem .55rem; }
+  .nav-toggle { display: inline-flex; margin-left: auto; }
+  .theme-toggle { margin-left: .25rem; }
+  .nav-links { display: none; }
+  nav.open .nav-links {
+    display: flex; flex-direction: column; align-items: stretch;
+    position: absolute; left: 0; right: 0; top: 100%;
+    background: var(--panel); border-bottom: 1px solid var(--line);
+    padding: .35rem var(--gutter) .8rem; gap: 0;
+    max-height: calc(100vh - 4rem); overflow-y: auto;
+    box-shadow: var(--shadow); z-index: 60;
+  }
+  nav.open .nav-links a { padding: .68rem 0; border-bottom: 1px solid var(--line-2); }
+  nav.open .nav-links a:last-child { border-bottom: 0; }
+  nav.open .nav-links a::after { display: none; }
   .menu { position: static; }
   .menu-body {
     left: 0; right: 0; top: 100%; min-width: 0; width: auto;

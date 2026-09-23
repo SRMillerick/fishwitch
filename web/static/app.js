@@ -232,6 +232,24 @@ if (menu) {
   });
 }
 
+// ── compact mobile nav ──────────────────────────────────────────────────────
+const navToggle = document.getElementById("nav-toggle");
+if (navToggle) {
+  const navEl = navToggle.closest("nav");
+  const setNav = (open) => {
+    navEl.classList.toggle("open", open);
+    navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    if (open && menu && menu.open) menu.open = false;
+  };
+  navToggle.addEventListener("click", () => setNav(!navEl.classList.contains("open")));
+  document.addEventListener("click", (ev) => {   // close on outside click
+    if (navEl.classList.contains("open") && !navEl.contains(ev.target)) setNav(false);
+  });
+  document.addEventListener("keydown", (ev) => {
+    if (ev.key === "Escape" && navEl.classList.contains("open")) setNav(false);
+  });
+}
+
 // ── landing: personalize the tier ledger when a profile is active ──────────
 const ledgerRows = document.getElementById("ledger-rows");
 if (ledgerRows) {

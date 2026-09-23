@@ -29,15 +29,24 @@
   <nav>
     {% set here = request.path if request else '/' %}
     <a class="brand" href="/"><span class="triskele" aria-hidden="true"></span> baromoon</a>
-    <a href="/report" class="{% if here == '/report' %}on{% endif %}">Report</a>
-    <a href="/outlook" class="{% if here == '/outlook' %}on{% endif %}">Outlook</a>
-    <a href="/lakes" class="{% if here == '/lakes' %}on{% endif %}">Waters</a>
-    <a href="/kb" class="{% if here == '/kb' %}on{% endif %}">Tackle Library</a>
-    <a href="/interview" class="{% if here == '/interview' %}on{% endif %}">Interview</a>
-    {% if local %}<a href="/log" class="{% if here == '/log' %}on{% endif %}">Log</a>{% endif %}
-    {% if local %}<a href="/review" class="{% if here == '/review' %}on{% endif %}">Calibration</a>{% endif %}
-    {% if local %}<a href="/styleguide" class="{% if here == '/styleguide' %}on{% endif %}">Styleguide</a>{% endif %}
-    {% if local %}<a href="/logo" class="{% if here == '/logo' %}on{% endif %}">Logo</a>{% endif %}
+    <div class="nav-links" id="nav-links">
+      <a href="/report" class="{% if here == '/report' %}on{% endif %}">Report</a>
+      <a href="/outlook" class="{% if here == '/outlook' %}on{% endif %}">Outlook</a>
+      <a href="/lakes" class="{% if here == '/lakes' %}on{% endif %}">Waters</a>
+      <a href="/kb" class="{% if here == '/kb' %}on{% endif %}">Tackle Library</a>
+      <a href="/interview" class="{% if here == '/interview' %}on{% endif %}">Interview</a>
+      {% if local %}<a href="/log" class="{% if here == '/log' %}on{% endif %}">Log</a>{% endif %}
+      {% if local %}<a href="/review" class="{% if here == '/review' %}on{% endif %}">Calibration</a>{% endif %}
+      {% if local %}<a href="/styleguide" class="{% if here == '/styleguide' %}on{% endif %}">Styleguide</a>{% endif %}
+      {% if local %}<a href="/logo" class="{% if here == '/logo' %}on{% endif %}">Logo</a>{% endif %}
+    </div>
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-controls="nav-links"
+            aria-expanded="false" aria-label="Menu">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16"/>
+      </svg>
+    </button>
     <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark theme" title="Switch light / dark">
       <svg class="i-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3 17 7M7 17l-1.7 1.7"/></svg>
       <svg class="i-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M20.2 14.5A8.2 8.2 0 0 1 9.5 3.8a8.3 8.3 0 1 0 10.7 10.7Z"/></svg>
