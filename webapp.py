@@ -179,6 +179,12 @@ def _region(v: dict) -> str:
     return f"{c} County, CA" if c else ""
 
 
+def _state(v: dict) -> str:
+    """Two-letter state from the region string ('…, CA' / '…, AZ, USA')."""
+    m = re.search(r",\s*([A-Z]{2})(?:\s*,|$)", _region(v))
+    return m.group(1) if m else ""
+
+
 def lakes_summary() -> list[dict]:
     out = []
     for k, v in registry().items():
@@ -734,7 +740,7 @@ def lake_page(lake_id):
     lake = registry().get(lake_id)
     if not lake:
         abort(404)
-    lake = dict(lake, id=lake_id, region=_region(lake))
+    lake = dict(lake, id=lake_id, region=_region(lake), state=_state(lake))
     try:
         windows = _cached(f"lake:{lake_id}:ledger:v1",
                           lambda: _ledger(lake, 3, None, None, span=0, limit=4))

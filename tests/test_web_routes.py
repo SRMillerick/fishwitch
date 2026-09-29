@@ -1,5 +1,6 @@
 """Web routes that don't touch the network — canonical KB entity pages."""
 import os
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -171,6 +172,38 @@ class LakeMapTileTest(unittest.TestCase):
         self.assertIn("https://tile.openstreetmap.org/{z}/{x}/{y}.png", html)
         self.assertIn("referrerPolicy: 'origin'", html)
         self.assertNotIn("cartocdn.com", html)
+
+
+class LakeFactsHeaderTest(unittest.TestCase):
+    """The facts row names the water's location, not its data source: the
+    Location link shows coordinates (OSM is the destination, and the map
+    carries the attribution), and the County carries the water's own state
+    (AZ waters used to say ', CA')."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.c = webapp.app.test_client()
+
+    def _lake(self, lake_id):
+        with mock.patch.object(webapp, "_ledger", return_value=[]):
+            r = self.c.get(f"/lake/{lake_id}")
+        self.assertEqual(r.status_code, 200)
+        return r.get_data(as_text=True)
+
+    def test_location_shows_coordinates_not_the_source(self):
+        html = self._lake("hidden-valley-lake-ca")
+        m = re.search(
+            r'href="https://www\.openstreetmap\.org/\?mlat=[^"]+"[^>]*>([^<]+)</a>',
+            html)
+        self.assertIsNotNone(m, "no OSM coordinate link on the lake page")
+        self.assertRegex(m.group(1), r"38\.8084,\s*-122\.5665")
+
+    def test_county_uses_the_waters_state(self):
+        az = self._lake("watson-lake-az")
+        self.assertIn("Yavapai, AZ", az)
+        self.assertNotIn("Yavapai, CA", az)
+        ca = self._lake("hidden-valley-lake-ca")
+        self.assertIn("Lake, CA", ca)
 
 
 class OutClickResolutionTest(unittest.TestCase):

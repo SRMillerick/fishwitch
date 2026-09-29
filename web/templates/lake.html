@@ -16,12 +16,14 @@
 <h1>{{ lake.name }}</h1>
 
 <dl class="stats">
-  {% if lake.county %}<div><dt>County</dt><dd>{{ lake.county }}, CA</dd></div>{% endif %}
+  {% if lake.county %}<div><dt>County</dt><dd>{{ lake.county }}{% if lake.state %}, {{ lake.state }}{% endif %}</dd></div>{% endif %}
   {% if lake.area_acres %}<div><dt>Surface</dt><dd>{{ lake.area_acres }} acres</dd></div>{% endif %}
   {% if lake.est_max_depth_ft %}<div><dt>Max depth</dt><dd>~{{ lake.est_max_depth_ft }} ft</dd></div>{% endif %}
   {% if lake.mixing %}<div><dt>Mixing</dt><dd>{{ lake.mixing }}</dd></div>{% endif %}
   {% if lake.depth_class %}<div><dt>Character</dt><dd>{{ lake.depth_class }}</dd></div>{% endif %}
-  <div><dt>Location</dt><dd><a href="https://www.openstreetmap.org/?mlat={{ lake.lat }}&mlon={{ lake.lng }}#map=12/{{ lake.lat }}/{{ lake.lng }}" target="_blank" rel="noopener">OpenStreetMap</a></dd></div>
+  {% if lake.lat is not none and lake.lng is not none %}
+  <div><dt>Location</dt><dd><a href="https://www.openstreetmap.org/?mlat={{ lake.lat }}&mlon={{ lake.lng }}#map=12/{{ lake.lat }}/{{ lake.lng }}" target="_blank" rel="noopener" title="Open in OpenStreetMap">{{ '%.4f'|format(lake.lat) }}, {{ '%.4f'|format(lake.lng) }}</a></dd></div>
+  {% endif %}
 </dl>
 
 {% if lake.species %}
