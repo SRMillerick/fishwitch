@@ -167,8 +167,11 @@ def build_shopping(rigs: list[dict]) -> list[dict]:
             if rlabel and rlabel not in row["for_labels"]:
                 row["for_labels"].append(rlabel)
             for o in offers:
-                sig = (o.get("retailer"), o.get("url"))
-                if o.get("url") and sig not in {(x.get("retailer"), x.get("url"))
+                # One destination once per row: a spec ref that also exists as a
+                # rig component resolves the same ASIN twice (different
+                # ascsubtag), which would print two identical retailer links.
+                sig = (o.get("retailer"), o.get("asin") or o.get("url"))
+                if o.get("url") and sig not in {(x.get("retailer"), x.get("asin") or x.get("url"))
                                                  for x in row["offers"]}:
                     row["offers"].append(o)
             for a in alts or []:

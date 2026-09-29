@@ -84,6 +84,22 @@ class AmazonTemplateTest(unittest.TestCase):
         self.assertIsNone(offers._offer_url("dropshot", {"retailer": "amazon"}, AMAZON_REG))
 
 
+class ShoppingListDedupeTest(unittest.TestCase):
+    """A spec ref that is also a rig component resolves the same ASIN through
+    both paths; the shopping row must show it once, not twice."""
+
+    def test_same_destination_from_entry_and_component_is_one_offer(self):
+        with mock.patch.dict(os.environ, {"FISHWITCH_AMZ_TAG": "baromoon-20"}):
+            rows = offers.build_shopping([
+                {"id": "dropshot", "label": "Drop shot",
+                 "spec": {"weight": {"ref": "dropshot-weight", "type": "drop-shot weight",
+                                       "sizes": ["1/8 oz"]}}}])
+        weight = next(r for r in rows if r["id"] == "dropshot-weight")
+        self.assertEqual(len(weight["offers"]), 1)
+        self.assertTrue(weight["offers"][0]["url"].startswith("https://www.amazon.com/dp/"))
+        self.assertIn("tag=baromoon-20", weight["offers"][0]["url"])
+
+
 class RegistryShapeTest(unittest.TestCase):
     def test_real_registry_resolves_without_network(self):
         for entry in ("dropshot", "wacky", "carolina"):
