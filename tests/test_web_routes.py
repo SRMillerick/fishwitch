@@ -142,5 +142,33 @@ class PrescottWatersTest(unittest.TestCase):
             self.assertIn("note", v, k)
 
 
+class LakeMapTileTest(unittest.TestCase):
+    """Water pages must use keyless OSM tiles: CARTO's basemaps now require an
+    API key (they watermark without one), and the site's global no-referrer
+    policy is overridden per tile with an origin-only Referer."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.c = webapp.app.test_client()
+
+    def _html(self, path):
+        r = self.c.get(path)
+        self.assertEqual(r.status_code, 200)
+        return r.get_data(as_text=True)
+
+    def test_waters_map_uses_keyless_osm_tiles(self):
+        html = self._html("/lakes")
+        self.assertIn("https://tile.openstreetmap.org/{z}/{x}/{y}.png", html)
+        self.assertIn("referrerPolicy: 'origin'", html)
+        self.assertNotIn("cartocdn.com", html)
+
+    def test_lake_map_uses_keyless_osm_tiles(self):
+        with mock.patch.object(webapp, "_ledger", return_value=[]):
+            html = self._html("/lake/hidden-valley-lake-ca")
+        self.assertIn("https://tile.openstreetmap.org/{z}/{x}/{y}.png", html)
+        self.assertIn("referrerPolicy: 'origin'", html)
+        self.assertNotIn("cartocdn.com", html)
+
+
 if __name__ == "__main__":
     unittest.main()

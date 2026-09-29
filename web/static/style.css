@@ -588,10 +588,14 @@ tbody tr:last-child td { border-bottom: 0; }
 .stats dt { color: var(--faint); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; }
 .stats dd { margin: 0; font-family: var(--font-mono); font-size: .9rem; color: var(--ink); }
 
-/* waters map (Leaflet, dark tiles) */
+/* waters map (Leaflet, keyless OSM tiles; dark mode filters them) */
 .map { height: min(60vh, 460px); border: 1px solid var(--line); border-radius: 3px;
   margin: 1.2rem 0 1.6rem; background: var(--panel); z-index: 0; }
 .leaflet-container { background: var(--bg); font: inherit; }
+/* OSM's raster style is light-only; invert it in the dark theme so lake pages
+   keep one map layer and no API key. The marker/popup are not filtered. */
+html[data-theme="crisp-dark"] .leaflet-tile {
+  filter: invert(1) hue-rotate(180deg) brightness(.95) contrast(.92); }
 .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--panel); color: var(--ink);
   border: 1px solid var(--line); box-shadow: none; }
 .leaflet-popup-content a { color: var(--gold); }

@@ -73,13 +73,15 @@ C — the fish have other plans.</p>
 (function () {
   const lat = {{ lake.lat or 39 }}, lng = {{ lake.lng or -122.6 }};
   const map = L.map('map').setView([lat, lng], {{ 11 if lake.lat else 7 }});
-  const tileUrl = (t) => 'https://{s}.basemaps.cartocdn.com/' +
-    ((t === 'crisp-dark' || t === 'loam') ? 'dark_all' : 'light_all') + '/{z}/{x}/{y}{r}.png';
-  const tiles = L.tileLayer(tileUrl(document.documentElement.dataset.theme), {
+  // Keyless OSM raster tiles. CARTO's basemaps now require an API key and
+  // watermark without one; the site sends Referrer-Policy: no-referrer, so the
+  // tile requests opt back in to an origin-only Referer (OSM's tile policy
+  // requires a valid Referer). Dark mode filters the tiles in CSS.
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+    referrerPolicy: 'origin',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
-  window.addEventListener('bm:theme', (e) => tiles.setUrl(tileUrl(e.detail.theme)));
   L.marker([lat, lng]).addTo(map).bindPopup('<strong>{{ lake.name | e }}</strong><br>{{ lake.region | e }}');
 })();
 </script>
