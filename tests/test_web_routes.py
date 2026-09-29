@@ -1,5 +1,8 @@
 """Web routes that don't touch the network — canonical KB entity pages."""
+import os
+import tempfile
 import unittest
+from pathlib import Path
 from unittest import mock
 
 import webapp
@@ -168,6 +171,38 @@ class LakeMapTileTest(unittest.TestCase):
         self.assertIn("https://tile.openstreetmap.org/{z}/{x}/{y}.png", html)
         self.assertIn("referrerPolicy: 'origin'", html)
         self.assertNotIn("cartocdn.com", html)
+
+
+class OutClickResolutionTest(unittest.TestCase):
+    """The shopping list stamps every outbound link with comp=<row id>. Rows
+    whose offer lives on a product entry (e.g. egg-sinker) carry no component
+    bundle under that id, so /out must fall back to the entry's own offers;
+    rig rows still resolve from their component bundle."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.c = webapp.app.test_client()
+
+    def _get(self, url):
+        log = Path(tempfile.gettempdir()) / "fishwitch-out-test.jsonl"
+        with mock.patch.dict(os.environ, {"FISHWITCH_AMZ_TAG": "baromoon-20"}), \
+                mock.patch.object(webapp, "LOG", new=log):
+            return self.c.get(url)
+
+    def test_product_entry_with_comp_resolves(self):
+        r = self._get("/out/egg-sinker/amazon?comp=egg-sinker&src=shopping")
+        self.assertEqual(r.status_code, 302)
+        self.assertIn("amazon.com/dp/", r.headers["Location"])
+        self.assertIn("tag=baromoon-20", r.headers["Location"])
+
+    def test_rig_component_still_resolves_from_bundle(self):
+        r = self._get("/out/wacky/amazon?comp=soft-plastic&src=tackle")
+        self.assertEqual(r.status_code, 302)
+        self.assertIn("amazon.com/dp/", r.headers["Location"])
+
+    def test_unknown_comp_still_404s(self):
+        r = self._get("/out/wacky/amazon?comp=not-a-part&src=tackle")
+        self.assertEqual(r.status_code, 404)
 
 
 if __name__ == "__main__":

@@ -1227,6 +1227,11 @@ def out_click(entry, retailer):
                 if c["id"] == comp:
                     pool = c.get("offers", [])
                     break
+            if not pool:
+                # The shopping list stamps every link with the row id as `comp`,
+                # including product-entry offers (entry == component id, e.g.
+                # egg-sinker) — those carry no component bundle of their own.
+                pool = offers.resolve(entry)
         else:
             pool = offers.resolve(entry)
         for o in pool:
