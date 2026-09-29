@@ -950,6 +950,11 @@ def main():
             sys.exit(f"no page views logged yet ({src})")
         print(f"  source: {src}")
         print(f"  {s['total']} page views in the trailing {s['days']} days")
+        if s.get("channels"):
+            print("  channels: " + ", ".join(f"{c}={n}" for c, n in s["channels"]))
+        if s.get("bots"):
+            print(f"  bot-flagged views: {s['bots']} (raw total keeps them; "
+                  "views logged before the flag existed are unflagged)")
         print("  by page:")
         for path, n in s["by_path"]:
             print(f"    {n:5d}  {path}")
@@ -960,6 +965,10 @@ def main():
         if s["by_ref"]:
             print("  external referrers:")
             for ref, n in s["by_ref"]:
+                print(f"    {n:5d}  {ref}")
+        if s.get("spam_refs"):
+            print("  spam referrers (quarantined, not counted as human):")
+            for ref, n in s["spam_refs"]:
                 print(f"    {n:5d}  {ref}")
         print("  by day: " + ", ".join(f"{d}:{n}" for d, n in s["by_day"]))
 

@@ -74,14 +74,15 @@ app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 31536000  # static assets are URL-vers
 @app.after_request
 def _count_page(resp):
     """Aggregate page counts (telemetry.py): path + lake key + external
-    referrer host only — no IP, no user agent, no cookies, no query string.
-    Best-effort; a telemetry failure must never fail a page."""
+    referrer host + a derived bot flag only — no IP, no user-agent string, no
+    cookies, no query string. Best-effort; a telemetry failure must never fail
+    a page."""
     try:
         if (request.method == "GET" and resp.status_code == 200
                 and request.args.get("warm") != "1"
                 and telemetry.should_count(request.path)):
             telemetry.record(request.path, lake=request.args.get("lake"),
-                             ref=request.referrer)
+                             ref=request.referrer, ua=request.user_agent.string)
     except Exception:
         pass
     # installed PWAs keep asking for the un-versioned manifest URL; let them
@@ -93,7 +94,17 @@ def _count_page(resp):
 
 @app.context_processor
 def inject_asset_v():
-    return dict(asset_v=ASSET_V, local=LOCAL)
+    # `nav_lake` is the water the visitor is already working — nav and the step
+    # rail carry it so the workflow never silently resets to the landing page.
+    # Only an explicit ?lake= sets it; no param means no rail (landing/KB/etc).
+    nav_lake = None
+    try:
+        requested = (request.args.get("lake") or "").strip()
+        if requested:
+            nav_lake = resolve_lake(requested)
+    except Exception:
+        nav_lake = None
+    return dict(asset_v=ASSET_V, local=LOCAL, nav_lake=nav_lake)
 
 
 # ── shared, cached data layers (one weather call serves many renders) ───────
@@ -529,7 +540,8 @@ def outlook_page():
         except Exception as ex:
             err = str(ex)
     return render_template("outlook.html", lakes=lakes_summary(), lake=lake,
-                           days=days, rows=rows, moon=moon, err=err, local=LOCAL)
+                           days=days, rows=rows, moon=moon, err=err,
+                           species=species, local=LOCAL)
 
 
 @app.route("/ledger.ics")

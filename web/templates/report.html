@@ -7,9 +7,11 @@
 {% endblock %}
 {% block content %}
 <div class="narrow">
-<span class="eyebrow">the deep read</span>
+<span class="eyebrow">the deep read · step 2</span>
 <h1>Session report</h1>
-<form id="report-form" class="grid" method="get" action="/report">
+<details class="adjust no-print" {% if not out %}open{% endif %}>
+  <summary>{% if out %}Adjust water, time, or voice{% else %}Pick your water and conditions{% endif %}</summary>
+  <form id="report-form" class="grid" method="get" action="/report">
   <label>Lake
     <select name="lake">
       {% for l in lakes %}<option value="{{ l.id }}" {% if q.lake == l.id %}selected{% endif %}>{{ l.name }}</option>{% endfor %}
@@ -42,7 +44,8 @@
     </select>
   </label>
   <button type="submit">Generate</button>
-</form>
+  </form>
+</details>
 <p class="fine" id="profile-note">Rendering anonymously — with a profile (browser-only),
 reports add your natal transits and your arsenal. <a href="/interview">Build one →</a></p>
 
@@ -51,10 +54,19 @@ reports add your natal transits and your arsenal. <a href="/interview">Build one
   {% if out.error %}<p class="error">{{ out.error }}</p>
   {% else %}
     <div class="scorebar">overall <strong>{{ out.overall }}/10</strong> · {{ out.lake }} · {{ out.at.strftime('%a %b %-d, %-I:%M %p') }}</div>
-    <p class="no-print fine">{% if local %}<a href="/log?lake={{ q.lake | urlencode }}&at={{ q.at | urlencode }}&species={{ q.species | urlencode }}&lure={{ (out.picks[0] if out.picks else '') | urlencode }}" id="log-session">log this session</a> · {% endif %}<a href="#" id="print-card">🖨 print / pocket card</a> — the locked numbers, windows, and presentations in one page.</p>
+    <p class="no-print fine">{% if local %}<a href="/log?lake={{ q.lake | urlencode }}&at={{ out.at.strftime('%Y-%m-%d %H:%M') | urlencode }}&species={{ q.species | urlencode }}&lure={{ (out.picks[0] if out.picks else '') | urlencode }}" id="log-session">log this session</a> · {% endif %}<a href="#" id="print-card">🖨 print / pocket card</a> — the locked numbers, windows, and presentations in one page.</p>
     {% if out.timeline %}<div class="timeline">{{ out.timeline | safe }}</div>{% endif %}
     {{ out.html | safe }}
     {% include "_tackle.html" %}
+    <section class="next-steps no-print">
+      <h2 class="rule-double">Keep going</h2>
+      <p class="fine">The plan is set — now widen it, take it with you, or close the loop after.</p>
+      <p class="cta">
+        <a class="btn primary" href="/outlook?lake={{ q.lake | urlencode }}{% if q.species %}&species={{ q.species | urlencode }}{% endif %}">Look ahead: 7-day outlook →</a>
+        <a class="btn ghost" href="/log?lake={{ q.lake | urlencode }}&at={{ out.at.strftime('%Y-%m-%d %H:%M') | urlencode }}&species={{ q.species | urlencode }}&lure={{ (out.picks[0] if out.picks else '') | urlencode }}">Log this session</a>
+        <a class="btn ghost" href="/ledger.ics?lake={{ q.lake | urlencode }}&days=10">Add windows to calendar (.ics)</a>
+      </p>
+    </section>
   {% endif %}
 {% endif %}
 </div>

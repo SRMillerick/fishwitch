@@ -54,6 +54,41 @@ class TelemetryTest(unittest.TestCase):
         self.assertEqual(s["total"], 1)
         self.assertEqual(s["by_path"][0], ("/", 1))
 
+    def test_channels_classify_and_quarantine_spam(self):
+        telemetry.record("/", log=self.log)                                    # direct
+        telemetry.record("/", ref="https://www.google.com/search?q=o", log=self.log)
+        telemetry.record("/report", ref="https://baromoon.com/outlook", log=self.log)
+        telemetry.record("/", ref="https://t.co/abc", log=self.log)
+        telemetry.record("/", ref="https://backlinkspace.com/", log=self.log)
+        telemetry.record("/", ref="https://example.com/page", log=self.log)
+        s = telemetry.summarize(days=1, log=self.log, top=10)
+        self.assertEqual(dict(s["channels"]),
+                         {"search": 1, "social": 1, "external": 1,
+                          "internal": 1, "direct": 1, "spam": 1})
+        self.assertEqual(s["spam_refs"], [("backlinkspace.com", 1)])
+        self.assertEqual(dict(s["by_ref"]),
+                         {"www.google.com": 1, "t.co": 1, "example.com": 1})
+
+    def test_bot_flag_derived_from_ua_never_stores_the_ua(self):
+        telemetry.record("/", ua="Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)", log=self.log)
+        telemetry.record("/", ua="Mozilla/5.0 (Macintosh) Safari/605", log=self.log)
+        raw = self.log.read_text()
+        self.assertNotIn("Googlebot", raw)
+        self.assertNotIn("Mozilla", raw)
+        rows = telemetry.read(self.log)
+        self.assertTrue(rows[0]["bot"])
+        self.assertNotIn("bot", rows[1])
+        s = telemetry.summarize(days=1, log=self.log)
+        self.assertEqual(s["bots"], 1)
+        self.assertEqual(s["bot_rows"], 1)
+
+    def test_classify_ref(self):
+        cases = {"": "direct", "www.google.com": "search",
+                 "news.ycombinator.com": "social", "www.baromoon.com": "internal",
+                 "digitizeseo.com": "spam", "fishingforum.example": "external"}
+        for host, channel in cases.items():
+            self.assertEqual(telemetry.classify_ref(host), channel, host)
+
 
 if __name__ == "__main__":
     unittest.main()

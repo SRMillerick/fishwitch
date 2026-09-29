@@ -2,9 +2,28 @@
 {% block title %}aggregate stats{% endblock %}
 {% block content %}
 <h1>Aggregate stats</h1>
-<p class="smallcaps">counts, not people — no IP, no user agent, no cookies</p>
+<p class="smallcaps">counts, not people — no IP, no user-agent string, no cookies</p>
 <p>{{ s.total }} page views in the trailing {{ days }} days. Raw counts (bots
-included); report views are also broken out by lake.</p>
+included); bot-flagged requests and link-spam referrers are broken out below,
+and report views are also broken out by lake.</p>
+
+{% if s.channels %}
+<h2 class="rule-double">Traffic channels</h2>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>channel</th><th>views</th></tr></thead>
+  <tbody>
+  {% for channel, n in s.channels %}
+  <tr><td data-label="channel"><code>{{ channel }}</code></td><td data-label="views">{{ n }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="fine">search + social + external are inbound; internal is on-site
+navigation; direct has no referrer. {% if s.bots %}{{ s.bots }} views carried a
+crawler user agent (flagged, not stored). {% endif %}Referrer classification is
+retroactive; the bot flag only exists on views logged after 2026-09-28.</p>
+{% endif %}
 
 {% if s.by_path %}
 <h2 class="rule-double">Pages</h2>
@@ -46,6 +65,21 @@ included); report views are also broken out by lake.</p>
   </tbody>
 </table>
 </div>
+{% endif %}
+
+{% if s.spam_refs %}
+<h2 class="rule-double">Quarantined referrers</h2>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>host</th><th>views</th></tr></thead>
+  <tbody>
+  {% for ref, n in s.spam_refs %}
+  <tr><td data-label="host"><code>{{ ref }}</code></td><td data-label="views">{{ n }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="fine">Link-spam referrers, excluded from the external list above.</p>
 {% endif %}
 
 {% if s.by_day %}

@@ -91,6 +91,17 @@ class LandingLedgerTest(unittest.TestCase):
         self.assertIn('id="waters-list"', html)
         self.assertIn("hidden-valley-lake-ca", html)
 
+    def test_step_rail_and_nav_carry_the_lake(self):
+        html, _ = self._get("/?lake=hidden-valley-lake-ca")
+        self.assertIn('class="stepbar', html)          # water → plan → ahead → log
+        self.assertIn('href="/report?lake=hidden-valley-lake-ca"', html)
+        self.assertIn('href="/outlook?lake=hidden-valley-lake-ca"', html)
+
+    def test_landing_without_lake_has_no_step_rail(self):
+        html, _ = self._get("/")
+        self.assertNotIn('class="stepbar', html)
+        self.assertIn('data-lake-link="/report"', html)  # JS can still fill it
+
     def test_nearest_lakes_radius_order(self):
         import math
 

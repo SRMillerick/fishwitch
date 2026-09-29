@@ -178,6 +178,55 @@ html[data-theme="crisp-dark"] .theme-toggle .i-moon { display: none; }
     max-height: 70vh; overflow-y: auto; border-radius: 0 0 3px 3px;
   }
 }
+
+/* ── session step rail: water → plan → look ahead → log ─────────────────── */
+.stepbar { background: var(--bg-2); border-bottom: 1px solid var(--line-2); }
+.step-inner {
+  max-width: var(--wrap); margin: 0 auto;
+  padding: .4rem var(--gutter);
+  display: flex; align-items: center; gap: 1rem; position: relative;
+}
+.step-water {
+  display: inline-flex; align-items: center; gap: .5rem;
+  color: var(--ink); font-family: var(--font-display);
+  font-size: 1.05rem; font-weight: 600; white-space: nowrap;
+}
+.step-water .triskele { color: var(--gold); width: .8em; }
+.steps {
+  display: flex; align-items: center; gap: .25rem 1.4rem;
+  list-style: none; margin: 0 0 0 auto; padding: 0;
+  font-size: .68rem; letter-spacing: .12em; text-transform: uppercase;
+}
+.steps a {
+  color: var(--faint); padding: .35rem 0;
+  display: inline-flex; align-items: center; gap: .45rem;
+}
+.steps a:hover { color: var(--ink); }
+.steps i {
+  font-style: normal; font-family: var(--font-mono); font-size: .62rem;
+  border: 1px solid var(--line); border-radius: 50%;
+  width: 1.25rem; height: 1.25rem; display: inline-flex;
+  align-items: center; justify-content: center; color: var(--faint);
+}
+.steps li.on a { color: var(--gold); }
+.steps li.on i {
+  border-color: var(--gold-dim); color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 10%, transparent);
+}
+.step-clear {
+  background: none; border: 0; color: var(--faint); cursor: pointer;
+  font-size: 1rem; line-height: 1; padding: .2rem .35rem;
+}
+.step-clear:hover { color: var(--error); }
+html[data-static] .step-clear { display: none; }  /* snapshot has no workflow state */
+@media (max-width: 46rem) {
+  .step-inner { flex-wrap: wrap; gap: .15rem .6rem; padding: .5rem var(--gutter); }
+  .step-water { font-size: .95rem; max-width: calc(100% - 2rem); overflow: hidden; text-overflow: ellipsis; }
+  .steps { margin-left: 0; width: 100%; justify-content: space-between; gap: .2rem; }
+  .steps i { width: 1.1rem; height: 1.1rem; }
+  .steps a { gap: .3rem; }
+  .step-clear { position: absolute; right: var(--gutter); top: .45rem; }
+}
 .mrow {
   display: flex; justify-content: space-between; align-items: center; gap: .6rem;
   padding: .5rem .6rem; border-radius: 2px; cursor: pointer;
@@ -208,6 +257,7 @@ main {
 }
 .eyebrow { display: block; margin-bottom: 1.3rem; }
 .fine { color: var(--dim); font-size: .85rem; }
+.nowrap { white-space: nowrap; }
 .dim { color: var(--dim); }
 .error { color: var(--error); }
 .rule-double {
@@ -334,6 +384,22 @@ fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
   color: var(--dim); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase;
 }
 .build-grid input { font-size: .88rem; padding: .45rem .55rem; }
+
+/* ── inline adjustment form: collapsed once a result exists ─────────────── */
+details.adjust {
+  border: 1px solid var(--line); border-radius: 3px;
+  background: var(--panel); padding: .1rem .9rem;
+  margin: 0 0 1.4rem;
+}
+details.adjust > summary {
+  cursor: pointer; padding: .72rem 0;
+  color: var(--dim); font-size: .7rem; font-weight: 500;
+  letter-spacing: .15em; text-transform: uppercase;
+}
+details.adjust > summary:hover { color: var(--gold); }
+details.adjust[open] > summary { color: var(--ink); margin-bottom: .4rem; }
+details.adjust .grid { padding-bottom: 1rem; }
+.next-steps { margin-top: 2.4rem; }
 
 /* ── hero ───────────────────────────────────────────────────────────────── */
 .hero {
@@ -649,7 +715,7 @@ html[data-theme="almanac"] select {
     --hover: transparent;
   }
   header, footer, nav, form, #profile-menu, .no-print, .nav-progress,
-  .foot-legal, .menu-body, .menu { display: none !important; }
+  .stepbar, .foot-legal, .menu-body, .menu { display: none !important; }
   body { background: #fff !important; color: var(--ink) !important; }
   .narrow { max-width: none; margin: 0; padding: 0; }
   .report { font-size: 12px; }

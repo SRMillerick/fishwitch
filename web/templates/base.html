@@ -28,14 +28,15 @@
 <header>
   <nav>
     {% set here = request.path if request else '/' %}
+    {% set lq = ('?lake=' ~ nav_lake.id) if nav_lake else '' %}
     <a class="brand" href="/"><span class="triskele" aria-hidden="true"></span> baromoon</a>
     <div class="nav-links" id="nav-links">
-      <a href="/report" class="{% if here == '/report' %}on{% endif %}">Report</a>
-      <a href="/outlook" class="{% if here == '/outlook' %}on{% endif %}">Outlook</a>
+      <a href="/report{{ lq }}" data-lake-link="/report" class="{% if here == '/report' %}on{% endif %}">Report</a>
+      <a href="/outlook{{ lq }}" data-lake-link="/outlook" class="{% if here == '/outlook' %}on{% endif %}">Outlook</a>
       <a href="/lakes" class="{% if here == '/lakes' %}on{% endif %}">Waters</a>
       <a href="/kb" class="{% if here == '/kb' %}on{% endif %}">Tackle Library</a>
       <a href="/interview" class="{% if here == '/interview' %}on{% endif %}">Interview</a>
-      {% if local %}<a href="/log" class="{% if here == '/log' %}on{% endif %}">Log</a>{% endif %}
+      {% if local %}<a href="/log{{ lq }}" data-lake-link="/log" class="{% if here == '/log' %}on{% endif %}">Log</a>{% endif %}
       {% if local %}<a href="/review" class="{% if here == '/review' %}on{% endif %}">Calibration</a>{% endif %}
       {% if local %}<a href="/styleguide" class="{% if here == '/styleguide' %}on{% endif %}">Styleguide</a>{% endif %}
       {% if local %}<a href="/logo" class="{% if here == '/logo' %}on{% endif %}">Logo</a>{% endif %}
@@ -57,6 +58,25 @@
     </details>
   </nav>
 </header>
+{% if nav_lake %}
+<div class="stepbar no-print">
+  <nav class="step-inner" aria-label="Session steps">
+    <a class="step-water" href="/lake/{{ nav_lake.id }}" title="Water: {{ nav_lake.name }}">
+      <span class="triskele" aria-hidden="true"></span> {{ nav_lake.name }}</a>
+    <ol class="steps">
+      <li class="{% if here == '/' or here == '/lakes' or here.startswith('/lake/') %}on{% endif %}">
+        <a href="/lake/{{ nav_lake.id }}"><i>1</i>Water</a></li>
+      <li class="{% if here == '/report' %}on{% endif %}">
+        <a href="/report?lake={{ nav_lake.id }}" data-lake-link="/report"><i>2</i>Plan</a></li>
+      <li class="{% if here == '/outlook' %}on{% endif %}">
+        <a href="/outlook?lake={{ nav_lake.id }}" data-lake-link="/outlook"><i>3</i>Look ahead</a></li>
+      <li class="{% if here == '/log' %}on{% endif %}">
+        <a href="/log?lake={{ nav_lake.id }}" data-lake-link="/log"><i>4</i>Log it</a></li>
+    </ol>
+    <button type="button" class="step-clear" id="step-clear" title="Clear the chosen water">×</button>
+  </nav>
+</div>
+{% endif %}
 <main>
 {% block content %}{% endblock %}
 </main>

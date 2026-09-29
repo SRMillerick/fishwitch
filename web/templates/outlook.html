@@ -1,31 +1,36 @@
 {% extends "base.html" %}
 {% block title %}outlook{% endblock %}
 {% block content %}
+<span class="eyebrow">the horizon · step 3</span>
 <h1>Outlook</h1>
-<form class="grid" method="get" action="/outlook">
-  <label>Lake
-    <select name="lake">
-      {% for l in lakes %}<option value="{{ l.id }}" {% if lake and lake.name == l.name %}selected{% endif %}>{{ l.name }}</option>{% endfor %}
-    </select>
-  </label>
-  <label>Days <input type="number" name="days" min="1" max="16" value="{{ days }}"></label>
-  <label>Species <input type="text" name="species" placeholder="largemouth bass"></label>
-  <button type="submit">Scan</button>
-</form>
+<details class="adjust no-print" {% if not rows %}open{% endif %}>
+  <summary>{% if rows %}Change water, range, or species{% else %}Pick a water and scan range{% endif %}</summary>
+  <form class="grid" method="get" action="/outlook">
+    <label>Lake
+      <select name="lake">
+        {% for l in lakes %}<option value="{{ l.id }}" {% if lake and lake.name == l.name %}selected{% endif %}>{{ l.name }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Days <input type="number" name="days" min="1" max="16" value="{{ days }}"></label>
+    <label>Species <input type="text" name="species" placeholder="largemouth bass" value="{{ species or '' }}"></label>
+    <button type="submit">Scan</button>
+  </form>
+</details>
 {% if err %}<p class="error">{{ err }}</p>{% endif %}
 {% if rows %}
 <h2>Top windows of the horizon</h2>
 <div class="table-scroll">
 <table>
-  <thead><tr><th>when</th><th>score</th><th>confidence</th><th>prime</th><th>approach</th></tr></thead>
+  <thead><tr><th>when</th><th>score</th><th>confidence</th><th>prime</th><th>approach</th><th></th></tr></thead>
   <tbody>
   {% for r in rows %}
   <tr>
     <td data-label="when">{{ r.start.strftime('%a %b %-d · %-I:%M %p') }}–{{ r.end.strftime('%-I %p') }}</td>
-    <td data-label="score"><strong>{{ r.overall }}/10</strong></td>
-    <td data-label="confidence">{{ r.conf }}</td>
-    <td data-label="prime">{{ r.prime.strftime('%-I:%M %p') if r.prime else '—' }}</td>
+    <td data-label="score" class="nowrap"><strong>{{ r.overall }}/10</strong></td>
+    <td data-label="confidence" class="nowrap">{{ r.conf }}</td>
+    <td data-label="prime" class="nowrap">{{ r.prime.strftime('%-I:%M %p') if r.prime else '—' }}</td>
     <td data-label="approach">{{ ' + '.join(r.picks) }}</td>
+    <td data-label="plan" class="nowrap"><a href="/report?lake={{ lake.id }}&at={{ r.start.strftime('%Y-%m-%d %H:%M') }}&hours={{ ((r.end - r.start).total_seconds() / 3600) | round(1) | string | replace('.0', '') }}{% if species %}&species={{ species | urlencode }}{% endif %}">Plan →</a></td>
   </tr>
   {% endfor %}
   </tbody>
@@ -34,15 +39,16 @@
 <p class="fine">Confidence: ≤3 days high · 4–7 medium · 8+ low (weather forecast
 range). Sky timing holds at all ranges. Windows scored anonymously; a profile
 re-ranks them against your natal chart and arsenal on the report page.</p>
-<p class="fine">Subscribe to the A/S windows:
-<a href="/ledger.ics?lake={{ lake.id if lake.id else lake.name }}&days={{ days }}">calendar (.ics)</a> ·
-<a href="/outlook.rss?lake={{ lake.id if lake.id else lake.name }}&days={{ days }}">RSS</a>
-— no account, no email.</p>
-<details class="fine">
+<p class="cta no-print">
+  {% if lake %}<a class="btn primary" href="/report?lake={{ lake.id }}{% if species %}&species={{ species | urlencode }}{% endif %}">Tonight's full plan →</a>{% endif %}
+  <a class="btn ghost" href="/ledger.ics?lake={{ lake.id if lake else '' }}&days={{ days }}{% if species %}&species={{ species | urlencode }}{% endif %}">Subscribe (.ics)</a>
+  <a class="btn ghost" href="/outlook.rss?lake={{ lake.id if lake else '' }}&days={{ days }}{% if species %}&species={{ species | urlencode }}{% endif %}">RSS</a>
+</p>
+<details class="fine no-print">
   <summary>Embed this ledger on another site</summary>
   <p>Paste this anywhere; it re-renders from the same scan and links back here — no account, no
   third-party script:</p>
-  <pre><code>&lt;iframe src="https://baromoon.com/embed/ledger?lake={{ lake.id if lake.id else lake.name }}&amp;days={{ days }}" style="width:100%;max-width:430px;height:250px;border:1px solid #d9d5c9;border-radius:6px" title="baromoon — best fishing windows"&gt;&lt;/iframe&gt;</code></pre>
+  <pre><code>&lt;iframe src="https://baromoon.com/embed/ledger?lake={{ lake.id if lake else '' }}&amp;days={{ days }}" style="width:100%;max-width:430px;height:250px;border:1px solid #d9d5c9;border-radius:6px" title="baromoon — best fishing windows"&gt;&lt;/iframe&gt;</code></pre>
 </details>
 <h2>Moon over the horizon</h2>
 <p class="moonrow">

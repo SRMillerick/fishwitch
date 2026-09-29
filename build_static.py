@@ -73,6 +73,10 @@ def _rewrite_out(m):
 
 
 def save(path: str, body: str):
+    # the snapshot is a static showcase: mark the document so the browser layer
+    # disables workflow state (lake memory / redirects) that assumes a server
+    body = body.replace('<html lang="en" data-theme="first-light">',
+                        '<html lang="en" data-theme="first-light" data-static="1">', 1)
     body = body.replace('href="/static/', 'href="static/')
     body = body.replace('src="/static/', 'src="static/')
     body = body.replace('href="/report?lake=hidden-valley-lake-ca&amp;at=', 'href="report-')
@@ -80,6 +84,10 @@ def save(path: str, body: str):
     body = body.replace('href="/report"', 'href="report-tonight.html"')  # nav + hero btn
     body = re.sub(r'href="/outlook\?[^"]*"', 'href="outlook.html"', body)
     body = body.replace('href="/outlook"', 'href="outlook.html"')
+    # server-only endpoints stay reachable by pointing at the live app
+    body = re.sub(r'href="/(ledger\.ics|outlook\.rss|log)\?([^"]*)"',
+                  r'href="https://baromoon.com/\1?\2"', body)
+    body = body.replace('href="/log"', 'href="https://baromoon.com/log"')
     # /ledger.ics + /outlook.rss are dynamic-only (no server on gh-pages); drop
     # the subscribe line so the static snapshot has no broken links.
     body = re.sub(r'<p class="fine">Subscribe to the A/S windows:.*?</p>\s*',

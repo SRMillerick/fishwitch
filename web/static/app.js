@@ -8,6 +8,43 @@ const VAULT_KEY = "fishwitch_profiles";   // { name: profile }
 const ACTIVE_KEY = "fishwitch_active";    // name | absent
 const LEGACY_KEY = "fishwitch_profile";   // pre-vault single-profile key
 
+// ── chosen-water memory ─────────────────────────────────────────────────────
+// The workflow is stateful: the visitor picks a water once, and every nav /
+// step-rail link carries it. URL wins, then localStorage. Clearing the rail
+// chip forgets it and returns to the landing (step 1).
+(function () {
+  if (document.documentElement.dataset.static) return;  // gh-pages snapshot: no server
+  const KEY = "bm-lake-v1";
+  const qs = new URLSearchParams(location.search);
+  const fromUrl = qs.get("lake");
+  let stored = null;
+  try { stored = localStorage.getItem(KEY); } catch (e) {}
+  const clear = document.getElementById("step-clear");
+  if (clear) clear.addEventListener("click", () => {
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    location.href = "/";
+  });
+  if (fromUrl) {
+    try { localStorage.setItem(KEY, fromUrl); } catch (e) {}
+    return;
+  }
+  if (!stored) return;
+  // The landing is the demo for first-timers; a returning visitor with a
+  // remembered water gets their own ledger immediately (no dead-end landing).
+  if (document.getElementById("bm-waters")) {
+    location.replace("/?lake=" + encodeURIComponent(stored));
+    return;
+  }
+  // No ?lake= in this URL: rewrite the workflow links to the remembered water
+  // (server rendered bare ones when the request had no lake).
+  document.querySelectorAll("a[data-lake-link]").forEach((a) => {
+    const base = a.getAttribute("data-lake-link");
+    if (base) a.href = base + "?lake=" + encodeURIComponent(stored);
+  });
+  const sel = document.querySelector('select[name="lake"]');
+  if (sel && Array.prototype.some.call(sel.options, (o) => o.value === stored)) sel.value = stored;
+})();
+
 // ── vault core ──────────────────────────────────────────────────────────────
 function migrateLegacy() {
   const raw = localStorage.getItem(LEGACY_KEY);
@@ -281,10 +318,11 @@ if (ledgerRows) {
 
 // ── landing: nearest-water preview for anonymous visitors ────────────────
 // The registry ride-along (#bm-waters) is enough to pick the closest water
-// in-browser. Coordinates never leave this page: we only navigate to
-// /?lake=<id> once we know which public water won. Anonymous visitors get an
-// automatic location request on load (the browser's native prompt); the quiet
-// link stays as the fallback when the prompt is blocked or dismissed.
+// in-browser. Coordinates never leave this page: we only navigate to the
+// report for that public water once we know which one won (step 1 → step 2).
+// Anonymous visitors get an automatic location request on load (the browser's
+// native prompt); the quiet link stays as the fallback when the prompt is
+// blocked or dismissed.
 const watersEl = document.getElementById("bm-waters");
 const nearWrap = document.getElementById("near-me-wrap");
 const nearLink = document.getElementById("near-me");
@@ -328,7 +366,7 @@ if (ledgerRows && watersEl) {
     }
     sortWaters(fix[0], fix[1]);
     const w = nearest(fix[0], fix[1]);
-    if (w && !chosen) location.replace("/?lake=" + encodeURIComponent(w.id) + "#ledger");
+    if (w && !chosen) location.replace("/report?lake=" + encodeURIComponent(w.id));
   };
   const ask = () => {
     if (nearLink) nearLink.textContent = "locating…";
@@ -390,6 +428,33 @@ if (form) {
       bottom: f.get("bottom"), clarity: f.get("clarity"),
       profile: getActive() || undefined,
     };
+    // The water is now the workflow's water: remember it and put it in the URL
+    // so nav, the step rail, and a refresh all keep the same lake.
+    try { localStorage.setItem("bm-lake-v1", f.get("lake") || ""); } catch (e) {}
+    const keep = new URLSearchParams();
+    for (const k of ["lake", "hours", "voice", "species", "bottom", "clarity"])
+      if (f.get(k)) keep.set(k, f.get(k));
+    keep.set("at", date + " " + time);
+    history.replaceState(null, "", "/report?" + keep.toString());
+    document.querySelectorAll("a[data-lake-link]").forEach((a) => {
+      const base = a.getAttribute("data-lake-link");
+      if (base && f.get("lake")) a.href = base + "?lake=" + encodeURIComponent(f.get("lake"));
+    });
+    // The step rail's water chip and step 1 point at the lake path, not a
+    // query param — re-point them too when the water changed in-page.
+    const bar = document.querySelector(".stepbar");
+    if (bar && f.get("lake")) {
+      const id = f.get("lake");
+      const opt = form.querySelector('select[name="lake"] option:checked');
+      const chip = bar.querySelector(".step-water");
+      if (chip) {
+        chip.href = "/lake/" + encodeURIComponent(id);
+        const label = [...chip.childNodes].find(n => n.nodeType === 3 && n.textContent.trim());
+        if (label) label.textContent = " " + (opt ? opt.textContent : id);
+      }
+      const water = bar.querySelector(".steps li:first-child a");
+      if (water) water.href = "/lake/" + encodeURIComponent(id);
+    }
     const out = document.getElementById("report-out");
     out.innerHTML = '<p class="fine">casting…</p>';
     try {
@@ -410,7 +475,8 @@ if (form) {
         : "Rendering anonymously — pick or create a profile for transits + tackle.";
       out.innerHTML =
         '<div class="scorebar">overall <strong>' + j.overall + "/10</strong> · " + esc(j.lake) + "</div>"
-        + j.html + renderTackle(j.rods) + renderTrends(j.trends) + renderShopping(j.shopping) + renderGap(j.gap);
+        + j.html + renderTackle(j.rods) + renderTrends(j.trends) + renderShopping(j.shopping) + renderGap(j.gap)
+        + renderNext(f, j, date + " " + time);
       const logLink = document.getElementById("log-session");
       if (logLink) {
         logLink.href = "/log?" + new URLSearchParams({
@@ -476,6 +542,25 @@ function renderShopping(list) {
     h += "</li>";
   }
   return h + "</ul></section>";
+}
+
+// After an in-page render, show the same step-2 → step-3 handoff the server
+// renders on a direct /report load.
+function renderNext(f, j, at) {
+  const lake = f.get("lake") || "";
+  if (!lake) return "";
+  const species = f.get("species") ? "&species=" + encodeURIComponent(f.get("species")) : "";
+  const logQs = new URLSearchParams({
+    lake: lake, at: at || "", species: f.get("species") || "",
+    lure: (j.picks && j.picks[0]) || "",
+  });
+  return '<section class="next-steps no-print"><h2 class="rule-double">Keep going</h2>' +
+    '<p class="fine">The plan is set — now widen it, take it with you, or close the loop after.</p>' +
+    '<p class="cta">' +
+    '<a class="btn primary" href="/outlook?lake=' + encodeURIComponent(lake) + species + '">Look ahead: 7-day outlook →</a>' +
+    '<a class="btn ghost" href="/log?' + logQs.toString() + '">Log this session</a>' +
+    '<a class="btn ghost" href="/ledger.ics?lake=' + encodeURIComponent(lake) + '&days=10' + species + '">Add windows to calendar (.ics)</a>' +
+    '</p></section>';
 }
 
 function renderTackle(rods) {
