@@ -66,8 +66,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": "B0010G9522",
-              "note": "ASIN pending PA-API access"
+              "asin": "B0010G9522"
             },
             {
               "retailer": "tacklewarehouse",
@@ -82,8 +81,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
-              "note": "ASIN pending PA-API access"
+              "asin": "B08Z7QHSWB"
             },
             {
               "retailer": "tacklewarehouse",
@@ -99,7 +97,7 @@
             {
               "retailer": "amazon",
               "asin": null,
-              "note": "ASIN pending PA-API access"
+              "note": "ASIN not wired yet"
             },
             {
               "retailer": "tacklewarehouse",
@@ -114,8 +112,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
-              "note": "ASIN pending PA-API access"
+              "asin": "B07N4DNQC6"
             },
             {
               "retailer": "tacklewarehouse",
@@ -135,8 +132,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": "B0010G9522",
-              "note": "ASIN pending PA-API access"
+              "asin": "B0010G9522"
             },
             {
               "retailer": "tacklewarehouse",
@@ -151,8 +147,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
-              "note": "ASIN pending PA-API access"
+              "asin": "B09DG5PG17"
             },
             {
               "retailer": "tacklewarehouse",
@@ -167,8 +162,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
-              "note": "ASIN pending PA-API access"
+              "asin": "B00UFMB9JY"
             },
             {
               "retailer": "tacklewarehouse",
@@ -183,8 +177,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
-              "note": "ASIN pending PA-API access"
+              "asin": "B07N4DNQC6"
             },
             {
               "retailer": "tacklewarehouse",
@@ -200,7 +193,7 @@
             {
               "retailer": "amazon",
               "asin": null,
-              "note": "ASIN pending PA-API access"
+              "note": "ASIN not wired yet"
             },
             {
               "retailer": "tacklewarehouse",
@@ -220,8 +213,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": "B00FPQQ256",
-              "note": "ASIN pending PA-API access"
+              "asin": "B00FPQQ256"
             },
             {
               "retailer": "tacklewarehouse",
@@ -236,8 +228,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
-              "note": "ASIN pending PA-API access"
+              "asin": "B0BBP79XYG"
             },
             {
               "retailer": "tacklewarehouse",
@@ -252,8 +243,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
-              "note": "ASIN pending PA-API access"
+              "asin": "B005Z84LXY"
             },
             {
               "retailer": "tacklewarehouse",
@@ -273,8 +263,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": "B0CLTBV26W",
-              "note": "ASIN pending PA-API access"
+              "asin": "B0CLTBV26W"
             },
             {
               "retailer": "tacklewarehouse",
@@ -289,8 +278,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": "B08TJ1LN3T",
-              "note": "ASIN pending PA-API access"
+              "asin": "B08TJ1LN3T"
             },
             {
               "retailer": "tacklewarehouse",
@@ -305,8 +293,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
-              "note": "ASIN pending PA-API access"
+              "asin": "B00144C25C"
             },
             {
               "retailer": "tacklewarehouse",
@@ -326,8 +313,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": "B0CLTBV26W",
-              "note": "ASIN pending PA-API access"
+              "asin": "B0CLTBV26W"
             },
             {
               "retailer": "tacklewarehouse",
@@ -342,8 +328,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
-              "note": "ASIN pending PA-API access"
+              "asin": "B07BCQYHHC"
             },
             {
               "retailer": "tacklewarehouse",
@@ -358,8 +343,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": "B08TJ1LN3T",
-              "note": "ASIN pending PA-API access"
+              "asin": "B08TJ1LN3T"
             },
             {
               "retailer": "tacklewarehouse",
@@ -374,8 +358,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
-              "note": "ASIN pending PA-API access"
+              "asin": "B00144C25C"
             },
             {
               "retailer": "tacklewarehouse",
@@ -395,8 +378,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
-              "note": "ASIN pending PA-API access"
+              "asin": "B018JYGOV2"
             },
             {
               "retailer": "tacklewarehouse",
@@ -411,8 +393,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
-              "note": "ASIN pending PA-API access"
+              "asin": "B01HC2MNEE"
             },
             {
               "retailer": "tacklewarehouse",
@@ -432,8 +413,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
-              "note": "ASIN pending PA-API access"
+              "asin": "B08GY5332Y"
             },
             {
               "retailer": "tacklewarehouse",
@@ -448,8 +428,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
-              "note": "ASIN pending PA-API access"
+              "asin": "B0F43WYTL2"
             },
             {
               "retailer": "tacklewarehouse",
@@ -464,8 +443,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
-              "note": "ASIN pending PA-API access"
+              "asin": "B0H4HNZ58L"
             },
             {
               "retailer": "tacklewarehouse",
@@ -485,8 +463,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
-              "note": "ASIN pending PA-API access"
+              "asin": "B0000AUYQN"
             },
             {
               "retailer": "tacklewarehouse",
@@ -501,8 +478,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
-              "note": "ASIN pending PA-API access"
+              "asin": "B0F43WYTL2"
             },
             {
               "retailer": "tacklewarehouse",
@@ -517,8 +493,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
-              "note": "ASIN pending PA-API access"
+              "asin": "B076BJP2S2"
             },
             {
               "retailer": "tacklewarehouse",
@@ -538,8 +513,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
-              "note": "ASIN pending PA-API access"
+              "asin": "B076BJP2S2"
             },
             {
               "retailer": "tacklewarehouse",
@@ -554,8 +528,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
-              "note": "ASIN pending PA-API access"
+              "asin": "B07NZHZRZ7"
             },
             {
               "retailer": "tacklewarehouse",
@@ -571,7 +544,7 @@
             {
               "retailer": "amazon",
               "asin": null,
-              "note": "ASIN pending PA-API access"
+              "note": "ASIN not wired yet"
             },
             {
               "retailer": "tacklewarehouse",
@@ -617,6 +590,218 @@
           "asin": "B0010G9522"
         }
       ]
+    },
+    "bead": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B07N4DNQC6"
+        }
+      ]
+    },
+    "bullet-weight": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B08Z7QHSWB"
+        }
+      ]
+    },
+    "dropshot-weight": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B0BBP79XYG"
+        }
+      ]
+    },
+    "egg-sinker": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B09DG5PG17"
+        }
+      ]
+    },
+    "slip-sinker": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B0F43WYTL2"
+        }
+      ]
+    },
+    "nail-weight": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B07BCQYHHC"
+        }
+      ]
+    },
+    "swivel": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B00UFMB9JY"
+        }
+      ]
+    },
+    "bobber": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B076BJP2S2"
+        }
+      ]
+    },
+    "ned-head": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B018JYGOV2"
+        }
+      ]
+    },
+    "jig-head": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B07NZHZRZ7"
+        }
+      ]
+    },
+    "circle-hook": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B08GY5332Y"
+        }
+      ]
+    },
+    "treble-hook": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B0015NFP6K"
+        }
+      ]
+    },
+    "bait-hook": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B0000AUYQN"
+        }
+      ]
+    },
+    "owner-cover-shot": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B07BVHQQFH"
+        }
+      ]
+    },
+    "vmc-half-moon-weight": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B01N68EMJ0"
+        }
+      ]
+    },
+    "abstract": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "6thsense",
+          "url": "https://6thsensefishing.com/products/abstract"
+        },
+        {
+          "retailer": "amazon",
+          "asin": "B0HC7C86H5"
+        }
+      ]
+    },
+    "urchin": {
+      "kind": "rig",
+      "components": [
+        {
+          "id": "treble-hook",
+          "label": "Treble hook (1/0-3/0)",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": "B0015NFP6K"
+            }
+          ]
+        },
+        {
+          "id": "vmc-half-moon-weight",
+          "label": "Half-moon wacky weight (3/16 oz)",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": "B01N68EMJ0"
+            }
+          ]
+        },
+        {
+          "id": "abstract",
+          "label": "The Abstract (urchin/dice bait)",
+          "offers": [
+            {
+              "retailer": "6thsense",
+              "url": "https://6thsensefishing.com/products/abstract"
+            },
+            {
+              "retailer": "amazon",
+              "asin": "B0HC7C86H5"
+            }
+          ]
+        }
+      ]
+    },
+    "chicken": {
+      "kind": "rig",
+      "components": [
+        {
+          "id": "owner-cover-shot",
+          "label": "Owner Cover Shot hook (1/0)",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": "B07BVHQQFH"
+            }
+          ]
+        },
+        {
+          "id": "kut-tail",
+          "label": "Yamamoto Kut Tail worm",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": "B09T4MNKFK"
+            }
+          ]
+        }
+      ]
     }
   },
   "categories": {
@@ -632,7 +817,7 @@
             {
               "retailer": "amazon",
               "asin": null,
-              "note": "ASIN pending PA-API access"
+              "note": "ASIN not wired yet"
             },
             {
               "retailer": "tackledirect",
@@ -654,7 +839,7 @@
             {
               "retailer": "amazon",
               "asin": null,
-              "note": "ASIN pending PA-API access"
+              "note": "ASIN not wired yet"
             },
             {
               "retailer": "tackledirect",
@@ -676,7 +861,7 @@
             {
               "retailer": "amazon",
               "asin": null,
-              "note": "ASIN pending PA-API access"
+              "note": "ASIN not wired yet"
             },
             {
               "retailer": "tackledirect",
@@ -704,7 +889,7 @@
             {
               "retailer": "amazon",
               "asin": null,
-              "note": "ASIN pending PA-API access"
+              "note": "ASIN not wired yet"
             },
             {
               "retailer": "tackledirect",
@@ -726,7 +911,7 @@
             {
               "retailer": "amazon",
               "asin": null,
-              "note": "ASIN pending PA-API access"
+              "note": "ASIN not wired yet"
             },
             {
               "retailer": "tackledirect",
@@ -748,7 +933,7 @@
             {
               "retailer": "amazon",
               "asin": null,
-              "note": "ASIN pending PA-API access"
+              "note": "ASIN not wired yet"
             },
             {
               "retailer": "tackledirect",
@@ -770,7 +955,7 @@
             {
               "retailer": "amazon",
               "asin": null,
-              "note": "ASIN pending PA-API access"
+              "note": "ASIN not wired yet"
             },
             {
               "retailer": "tackledirect",
@@ -798,7 +983,7 @@
             {
               "retailer": "amazon",
               "asin": null,
-              "note": "ASIN pending PA-API access"
+              "note": "ASIN not wired yet"
             },
             {
               "retailer": "tackledirect",
@@ -820,7 +1005,7 @@
             {
               "retailer": "amazon",
               "asin": null,
-              "note": "ASIN pending PA-API access"
+              "note": "ASIN not wired yet"
             },
             {
               "retailer": "tackledirect",
@@ -842,7 +1027,7 @@
             {
               "retailer": "amazon",
               "asin": null,
-              "note": "ASIN pending PA-API access"
+              "note": "ASIN not wired yet"
             },
             {
               "retailer": "tackledirect",
@@ -870,7 +1055,7 @@
             {
               "retailer": "amazon",
               "asin": null,
-              "note": "ASIN pending PA-API access"
+              "note": "ASIN not wired yet"
             },
             {
               "retailer": "tackledirect",
@@ -892,7 +1077,7 @@
             {
               "retailer": "amazon",
               "asin": null,
-              "note": "ASIN pending PA-API access"
+              "note": "ASIN not wired yet"
             },
             {
               "retailer": "tackledirect",

@@ -869,7 +869,8 @@
             "3/8 oz",
             "1/2 oz"
           ],
-          "note": "pegged or free-sliding; weight to cover/depth (sizes editorial)"
+          "note": "pegged or free-sliding; weight to cover/depth (sizes editorial)",
+          "ref": "bullet-weight"
         },
         "bait": {
           "form": "soft plastic worm/creature",
@@ -1009,7 +1010,8 @@
           "type": "drop-shot weight",
           "sizes": [
             "1/8 oz"
-          ]
+          ],
+          "ref": "dropshot-weight"
         },
         "bait": {
           "form": "6in Deception worm / Roboworm MMIII",
@@ -1674,7 +1676,8 @@
             "1/0",
             "3/0"
           ],
-          "note": "Sean 3/0 treble; Jack 1/0 treble"
+          "note": "Sean 3/0 treble; Jack 1/0 treble",
+          "ref": "treble-hook"
         },
         "weight": {
           "ref": "vmc-half-moon-weight",
