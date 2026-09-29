@@ -353,11 +353,13 @@ def load_position() -> dict:
 
 def position_state(mixing: str | None, water_f, month, lake_state: str | None = "",
                    phase: str | None = None) -> str:
-    """'stratified' | '' — derived, null-safe.
+    """'stratified' | 'overwinter' | '' — derived, null-safe.
 
-    Fires only for a stratifying mixing type, at/above the agency-stated
-    summer threshold, in the warm months, and not while another derived state
-    or a spawn phase already owns the position signal (kb/position.json)."""
+    Fires only inside an agency-stated temperature window/month set, not while
+    another derived state or a spawn phase already owns the position signal
+    (kb/position.json). A trigger gives `water_f_min`, `water_f_max`, or both;
+    a missing `mixing_any` means the state is temperature-driven, not
+    stratification-driven (winter)."""
     d = load_position()
     try:
         if not water_f or not month:
@@ -366,13 +368,18 @@ def position_state(mixing: str | None, water_f, month, lake_state: str | None = 
         m = (mixing or "").lower()
         ls = lake_state or ""
         for name, tr in (d.get("triggers") or {}).items():
-            if t < float(tr.get("water_f_min", 999)):
+            tmin = tr.get("water_f_min")
+            if tmin is not None and t < float(tmin):
+                continue
+            tmax = tr.get("water_f_max")
+            if tmax is not None and t > float(tmax):
                 continue
             if int(month) not in (tr.get("months") or []):
                 continue
             if any(x in m for x in (tr.get("mixing_exclude") or [])):
                 continue
-            if not any(x in m for x in (tr.get("mixing_any") or [])):
+            any_mix = tr.get("mixing_any") or []
+            if any_mix and not any(x in m for x in any_mix):
                 continue
             if any(x in ls for x in (tr.get("exclude_states") or [])):
                 continue
@@ -759,6 +766,8 @@ def decision_rules(ctx: dict, picks: list[str]) -> list[str]:
         rules.append("**Post-turnover dusk →** compress the shallow experiment to the last 30 minutes of light; earn it deep first.")
     if "stratified" in ls:
         rules.append("**Stratified summer →** the column is layered and there is no oxygen below the stratification level; work suspended presentations above it instead of dragging the basin floor.")
+    if "overwinter" in ls:
+        rules.append("**Winter-deep →** bass have returned to deep water as the lake cooled through the low-to-mid 50s and feeding is greatly reduced below 50°F; present slow on the bottom over deep structure.")
     if "hot-streak" in ls:
         rules.append("**Multi-day heat →** deep is home; shallow visits are short commutes at first/last light only.")
     if "Walking topwater (Spook/110)" in picks:

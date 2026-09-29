@@ -37,6 +37,20 @@ class PositionStateTest(unittest.TestCase):
         self.assertEqual(tx.position_state(MIX_STRAT, 78, 7, "hot-streak"), "")
         self.assertEqual(tx.position_state(MIX_STRAT, 78, 7, "", "post-spawn"), "")
 
+    def test_overwinter_fires_in_cold_water_for_any_mixing(self):
+        # winter is temperature-driven, not stratification-driven: no mixing
+        # type on the registry entry is fine, and polymictic lakes qualify
+        self.assertEqual(tx.position_state(None, 48, 1), "overwinter")
+        self.assertEqual(tx.position_state(MIX_POLY, 50, 12), "overwinter")
+        self.assertEqual(tx.position_state(MIX_STRAT, 55, 2), "overwinter")
+        self.assertEqual(tx.position_state(MIX_STRAT, 56, 1), "")   # above the window
+        self.assertEqual(tx.position_state(MIX_STRAT, 48, 7), "")   # wrong month
+        self.assertEqual(tx.position_state(MIX_STRAT, 48, 1, "", "pre-spawn"), "")
+
+    def test_warm_and_cold_windows_do_not_collide(self):
+        self.assertEqual(tx.position_state(MIX_STRAT, 78, 7), "stratified")
+        self.assertEqual(tx.position_state(MIX_STRAT, 78, 1), "")   # too warm for winter
+
 
 class PositionFitTest(unittest.TestCase):
     def test_suspend_leads_the_fall_class(self):
@@ -50,6 +64,14 @@ class PositionFitTest(unittest.TestCase):
     def test_no_state_is_a_noop(self):
         for eid in ("dropshot", "wacky", "neko"):
             self.assertEqual(tx.position_fit(eid, ""), (0.0, ""))
+
+    def test_bottom_leads_the_cold_water_fit(self):
+        bottom, _ = tx.position_fit("neko", "overwinter")
+        suspend, _ = tx.position_fit("dropshot", "overwinter")
+        fall, _ = tx.position_fit("wacky", "overwinter")
+        self.assertGreater(bottom, suspend)
+        self.assertGreater(suspend, 0)
+        self.assertEqual(fall, 0.0)
 
 
 class PositionScoringTest(unittest.TestCase):
@@ -67,6 +89,14 @@ class PositionScoringTest(unittest.TestCase):
     def test_no_position_context_is_unchanged(self):
         for eid in ("dropshot", "wacky", "neko"):
             self.assertEqual(self._score(eid), self._score(eid, position=""), eid)
+
+    def test_cold_water_class_deltas_are_capped(self):
+        jig = self._score("jig", position="overwinter") - self._score("jig")
+        dropshot = self._score("dropshot", position="overwinter") - self._score("dropshot")
+        wacky = self._score("wacky", position="overwinter") - self._score("wacky")
+        self.assertAlmostEqual(jig, tx.FIT_CAP, places=6)         # fit 2 → +0.5
+        self.assertAlmostEqual(dropshot, tx.FIT_SCALE, places=6)  # fit 1 → +0.25
+        self.assertEqual(wacky, 0.0)
 
     def test_position_stays_within_the_total_tiebreak_cap(self):
         for eid in ("dropshot", "wacky", "neko", "trig", "carolina"):

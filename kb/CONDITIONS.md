@@ -28,7 +28,7 @@ deterministically, without letting any one signal drive a tie.
 | Dimension | Home (data) | Input that activates it | Score role |
 |---|---|---|---|
 | **Cover** | `kb/substrate.json` (`entries[id][bottom]`) | `--bottom grass\|muck\|sand\|rock\|wood` (CLI + web form) | tie-break fit, this pass |
-| **Mood** | `kb/presentation.json` (classes) + `kb/position.json` (derived state) | `lake_state` (post-turnover; derived `stratified`) | post-turnover: suspend +0.5, fall +0.25 (condition layer); stratified: suspend +2, fall +1 (capped tie-break) |
+| **Mood** | `kb/presentation.json` (classes) + `kb/position.json` (derived state) | `lake_state` (post-turnover; derived `stratified` / `overwinter`) | post-turnover: suspend +0.5, fall +0.25 (condition layer); stratified: suspend +2, fall +1 (capped tie-break); overwinter: bottom +2, suspend +1 |
 | **Clarity** | `kb/principles.json` (color rules) | light + cloud + lake_state | color selection only — **no rig score** (a rig fit here would double-count light/cloud) |
 | **Season** | `kb/season.json` | report month (N. hemisphere) | shipped: T2-sourced summer/fall fits; spring/winter null |
 | **Spawn** | `kb/spawn.json` | water temp + warming months | shipped: T2 bands, T5 fits; supersedes season while active |
@@ -128,7 +128,7 @@ report diff shows the phase row, the cited decision rule, and the spawn fits
 moving the finesse cluster — `reports/spawn-pass-{before,after}.md`. Spring
 rig fits remain T5 until spring sessions exist in the ledger.
 
-## Fish position — shipped (derived, 2026-09-19)
+## Fish position — shipped (derived, summer 2026-09-19; winter 2026-09-29)
 
 No registry lake has a live thermocline or dissolved-oxygen sensor (USGS layer
 is fixed + 30 km-guarded; CDEC is river-only). The position input is therefore
@@ -139,6 +139,7 @@ lake state, and spawn phase (`kb/position.json`).
 | Trigger | Derivation | T2 basis |
 |---|---|---|
 | `stratified` | stratifying mixing type (`warm-monomictic` / `weakly stratified` / `dimictic`; never `polymictic`) + water ≥ 75°F + Jun–Sep + no post-turnover / hot-streak / spawn phase | Iowa DNR — "Many Iowa lakes stratify at depths from 6 to 20 feet. There is no oxygen or fish below the stratification level"; "Most bass avoid water that exceeds 80 degrees and seek 77 to 80 degrees places" |
+| `overwinter` | water ≤ 55°F + Nov–Mar + no spawn phase (temperature-driven: any mixing type, and entries with no `mixing` field, qualify) | Iowa DNR — "As fall progresses and water temperature cools to the low to mid-50's, bass will return to deep waters"; "Bass feeding is greatly reduced below 50 degrees as they become tired" · Take Me Fishing (Dec 2022) — "Use soft plastic baits or lures (such as Texas-rigged or Carolina-rigged worms) that move slowly along the bottom instead" |
 
 Class fits while `stratified` is active (T5 translation, ×0.25, per-dimension
 cap ±0.5, shared total cap ±1.0): **suspend +2**, **fall +1**, bottom 0. The
@@ -148,15 +149,32 @@ lure above the bottom to bass that are suspended just above the bottom").
 Bottom-drag rigs are not penalized: shallow bank fishing is above the
 stratification level too, and the agency text does not claim otherwise.
 
+While `overwinter` is active: **bottom +2**, **suspend +1**, everything else 0
+— slow and deep. The direction is T2-anchored (Iowa DNR: bass "return to
+deep waters" and feed less below 50°F; Take Me Fishing: winter soft
+plastics "move slowly along the bottom," cold-water finesse stays "in
+contact with the bottom" with "slow, little hops," and some winter bass
+suspend); the magnitudes are the T5 translation on the capped tie-break
+layer. The bottom class carries the jig/spoon/soft-plastic drag, suspend
+carries a bait held above the bottom in that deep column.
+
 Acceptance (2026-09-19): the 12-session replay holds **5 exact / 3 style /
 2 miss**; a Lake Berryessa stable-summer before/after is in
 `reports/position-pass-{before,after}.md` (drop shot 7.2 → 7.8, wacky 7.2 →
 7.5, plus the Fish position row and the stratified decision rule).
 
-**Still open:** winter/spring stable conditions remain unsourced — the
-derivation reaches only the agency-stated summer stratification window. A real
-per-lake thermocline/DO feed (or a sourced registry `position` field per
-water) would let the cold half ship without inventing it.
+Acceptance (2026-09-29, cold half): unit tests cover the trigger/null-safety
+and the caps; a synthetic January context (46°F water) is in
+`reports/position-cold-pass-{before,after}.md` — Ned 7.2 → 7.8, drop shot 7.2
+→ 7.5, Texas/Carolina 6.2 → 6.8, plus the winter-deep decision rule. Spring
+staging is **not** a position state: it is already owned by the spawn phase
+(`kb/spawn.json`, pre-spawn 48–60°F, "staging at ~55F" cited from the same
+Iowa DNR page), and the position layer yields whenever a spawn phase is
+active.
+
+**Still open:** the cold half is now agency-window-derived, but it is still a
+temperature proxy, not a per-lake measurement — a real thermocline/DO feed
+(or a sourced registry `position` field per water) remains the gold standard.
 
 ## Deferred dimensions (evidence recorded, not scored)
 
@@ -165,11 +183,12 @@ water) would let the cold half ship without inventing it.
   when largemouth get lethargic." Ned is not in the tie cluster and its
   existing 40–70°F band already covers the cold window — scoring this too
   would double-count temperature.
-- **Mood — class fixtures shipped; cold half open.** Every class in
-  `kb/presentation.json` carries a T1/T2 `class_sources` citation, and the
-  derived summer position state is shipped (see **Fish position** above). The
-  **entry→class mapping remains editorial**. Stable winter/spring position is
-  still unsourced; do not force it.
+- **Mood — class fixtures shipped; winter shipped, spring is the spawn layer's.** Every class in
+  `kb/presentation.json` carries a T1/T2 `class_sources` citation, and the derived summer
+  `stratified` state shipped 2026-09-19 (see **Fish position** above); the derived winter
+  `overwinter` state shipped 2026-09-29 from the Iowa DNR cold-water statements. The
+  **entry→class mapping remains editorial**. Spring staging stays with the spawn phase
+  (pre-spawn 48–60°F) and is not duplicated in the position layer.
 - **Clarity.** The existing color principles already carry the clarity rules
   (contrast vs. color, clear water rewards color). Wiring a clarity *input*
   (lake registry or angler) is a later data-layer task; until then, no rig

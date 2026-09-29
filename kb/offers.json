@@ -36,6 +36,10 @@
     "basspro": {
       "label": "Bass Pro Shops",
       "kind": "affiliate"
+    },
+    "hagsbaits": {
+      "label": "Hag's Baits",
+      "kind": "manufacturer"
     }
   },
   "entries": {
@@ -94,6 +98,10 @@
           "id": "soft-plastic",
           "label": "Soft-plastic worm or creature bait",
           "offers": [
+            {
+              "retailer": "amazon",
+              "asin": "B003CTPA56"
+            },
             {
               "retailer": "amazon",
               "asin": null,
@@ -800,6 +808,51 @@
               "asin": "B09T4MNKFK"
             }
           ]
+        }
+      ]
+    },
+    "straight-shank-hook": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B0000AXRUE"
+        }
+      ]
+    },
+    "dropshot-hook": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B003FREILW"
+        }
+      ]
+    },
+    "wacky-hook": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B00144581M"
+        }
+      ]
+    },
+    "vmc-nkw-neko-weights": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B01MTSOEOG"
+        }
+      ]
+    },
+    "prickly-pear": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "hagsbaits",
+          "url": "https://www.hagsbaits.com/product-page/hag-s-prickly-pear"
         }
       ]
     }

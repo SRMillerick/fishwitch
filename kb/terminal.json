@@ -127,7 +127,8 @@
         "confidence": "sourced",
         "verified_by": "sean",
         "verified_at": "2026-09-17T03:04:47+00:00"
-      }
+      },
+      "purpose": "bait-hook"
     },
     {
       "id": "treble-hook",
@@ -224,7 +225,8 @@
         "confidence": "sourced",
         "verified_by": "sean",
         "verified_at": "2026-09-17T03:04:47+00:00"
-      }
+      },
+      "purpose": "slip-weight"
     },
     {
       "id": "slip-sinker",
@@ -257,7 +259,8 @@
         "confidence": "sourced",
         "verified_by": "sean",
         "verified_at": "2026-09-17T03:04:47+00:00"
-      }
+      },
+      "purpose": "slip-weight"
     },
     {
       "id": "dropshot-weight",
@@ -879,6 +882,31 @@
         "note": "text sha cabb9973df2743d3; fetched 2026-09-19T04:08:18+00:00; maker specs quoted (T1)"
       },
       "purpose": "neko-weight"
+    },
+    {
+      "id": "straight-shank-hook",
+      "label": "Straight-shank worm hook",
+      "kind": "terminal",
+      "category": "hook",
+      "citations": [
+        {
+          "claim": "standard straight-shank worm hook, sizes 2 to 5/0",
+          "tier": "T1",
+          "source": "Gamakatsu \u2014 Worm, Straight Shank, O\u2019Shaughnessy Bend",
+          "url": "https://gamakatsu.com/product/worm-hooks/",
+          "quote": "Gamakatsu\u2019s standard straight shank worm hook is offered in two colors and sizes from 2 to 5/0.",
+          "fetched_at": "2026-09-29T15:10:00+00:00",
+          "sha256": "7562bf4fdc0f56cc"
+        }
+      ],
+      "editorial": false,
+      "note": null,
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-29T15:10:00+00:00"
+      },
+      "purpose": "worm-hook"
     }
   ]
 }

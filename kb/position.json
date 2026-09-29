@@ -1,28 +1,64 @@
 {
   "label": "Fish position (derived)",
-  "_note": "A derived fish-position state. No registry lake has a live thermocline or dissolved-oxygen sensor, so the state is inferred from what the engine already knows: the lake's mixing type (config/lakes.json) plus modeled surface water temperature, month, existing lake state, and spawn phase. While `stratified` is active, presentation classes get a small T5 tie-break translation (kb/CONDITIONS.md): suspended presentations stay in the oxygenated layer above the stratification level; slow-fall presentations stay in that layer. Null-safe: unknown mixing type or water temp means no state, no fit.",
+  "_note": "A derived fish-position state. No registry lake has a live thermocline or dissolved-oxygen sensor, so the state is inferred from what the engine already knows: the lake's mixing type (config/lakes.json) plus modeled surface water temperature, month, existing lake state, and spawn phase. While `stratified` is active, presentation classes get a small T5 tie-break translation (kb/CONDITIONS.md): suspended presentations stay in the oxygenated layer above the stratification level. While `overwinter` is active, the deep-water cold-feed translation leads with bottom-oriented presentations. A trigger with no `mixing_any` is temperature-driven, not stratification-driven, and fires for any water (winter). Spring staging is owned by the spawn phase (kb/spawn.json), so it is not duplicated here. Null-safe: unknown mixing type or water temp means no state, no fit.",
   "provenance": {
     "confidence": "sourced",
-    "author": "position-pass/1.0",
+    "author": "position-pass/1.1",
     "seeded_at": "2026-09-19",
+    "updated_at": "2026-09-29",
     "verified_by": null,
-    "note": "trigger facts are T2 verbatim; class-fit magnitudes are T5 editorial translations on the capped tie-break layer"
+    "note": "trigger facts are T2 verbatim; class-fit directions are T2-anchored where quotes exist, magnitudes are T5 editorial translations on the capped tie-break layer"
   },
   "states": [
-    "stratified"
+    "stratified",
+    "overwinter"
   ],
   "triggers": {
     "stratified": {
       "water_f_min": 75.0,
-      "months": [6, 7, 8, 9],
-      "mixing_any": ["warm-monomictic", "weakly stratified", "dimictic"],
-      "mixing_exclude": ["polymictic"],
-      "exclude_states": ["post-turnover", "hot-streak"],
-      "exclude_phases": ["pre-spawn", "spawn", "post-spawn"]
+      "months": [
+        6,
+        7,
+        8,
+        9
+      ],
+      "mixing_any": [
+        "warm-monomictic",
+        "weakly stratified",
+        "dimictic"
+      ],
+      "mixing_exclude": [
+        "polymictic"
+      ],
+      "exclude_states": [
+        "post-turnover",
+        "hot-streak"
+      ],
+      "exclude_phases": [
+        "pre-spawn",
+        "spawn",
+        "post-spawn"
+      ]
+    },
+    "overwinter": {
+      "water_f_max": 55.0,
+      "months": [
+        11,
+        12,
+        1,
+        2,
+        3
+      ],
+      "exclude_phases": [
+        "pre-spawn",
+        "spawn",
+        "post-spawn"
+      ]
     }
   },
   "state_notes": {
-    "stratified": "bass hold above the stratification level — \u201cThere is no oxygen or fish below the stratification level\u201d (Iowa DNR)"
+    "stratified": "bass hold above the stratification level \u2014 \u201cThere is no oxygen or fish below the stratification level\u201d (Iowa DNR)",
+    "overwinter": "bass have returned to deep water as the lake cooled through the low-to-mid 50s, and feeding is greatly reduced below 50\u00b0F (Iowa DNR)"
   },
   "class_fits": {
     "stratified": {
@@ -34,6 +70,16 @@
         "fit": 1,
         "note": "slow fall stays in the oxygenated layer"
       }
+    },
+    "overwinter": {
+      "bottom": {
+        "fit": 2,
+        "note": "deep, slow drag on the bottom \u2014 winter bass move slowly along the bottom (Take Me Fishing) and the cold-water feed is reduced"
+      },
+      "suspend": {
+        "fit": 1,
+        "note": "a bait held above the bottom in the deep water column \u2014 some winter bass suspend"
+      }
     }
   },
   "citations": [
@@ -44,8 +90,8 @@
       "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
       "quote": "Along with temperature, dissolved oxygen is a major factor determining where to find bass during summer. Many Iowa lakes stratify at depths from 6 to 20 feet. There is no oxygen or fish below the stratification level.",
       "found": true,
-      "fetched_at": "2026-09-19T19:44:08+00:00",
-      "sha256": "61488fe86866d536"
+      "fetched_at": "2026-09-29T14:54:32+00:00",
+      "sha256": "c5f0be57b97249cb"
     },
     {
       "claim": "summer bass seek 77\u201380\u00b0F and avoid water over 80\u00b0F",
@@ -54,8 +100,8 @@
       "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
       "quote": "Most bass avoid water that exceeds 80 degrees and seek 77 to 80 degrees places.",
       "found": true,
-      "fetched_at": "2026-09-19T19:44:08+00:00",
-      "sha256": "61488fe86866d536"
+      "fetched_at": "2026-09-29T14:54:32+00:00",
+      "sha256": "c5f0be57b97249cb"
     },
     {
       "claim": "drop shot presents a bait to suspended bass above the bottom",
@@ -64,8 +110,58 @@
       "url": "https://www.takemefishing.org/how-to-fish/how-tie-fishing-knots/bass-fishing-rigs/",
       "quote": "Drop shot rigs are also popular bass fishing rigs as they allow you to present a soft plastic lure above the bottom to bass that are suspended just above the bottom.",
       "found": true,
-      "fetched_at": "2026-09-19T19:44:08+00:00",
-      "sha256": "cac6386f34202fdc"
+      "fetched_at": "2026-09-29T14:54:32+00:00",
+      "sha256": "cfcdc3cdf408916c"
+    },
+    {
+      "claim": "as the water cools through the low-to-mid 50s, bass return to deep water",
+      "tier": "T2",
+      "source": "Iowa DNR \u2014 Largemouth bass",
+      "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+      "quote": "As fall progresses and water temperature cools to the low to mid-50's, bass will return to deep waters.",
+      "found": true,
+      "fetched_at": "2026-09-29T14:54:32+00:00",
+      "sha256": "c5f0be57b97249cb"
+    },
+    {
+      "claim": "feeding is greatly reduced below 50\u00b0F (cold-water fish are slow)",
+      "tier": "T2",
+      "source": "Iowa DNR \u2014 Largemouth bass",
+      "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/largemouth-bass",
+      "quote": "Bass feeding is greatly reduced below 50 degrees as they become tired.",
+      "found": true,
+      "fetched_at": "2026-09-29T14:54:32+00:00",
+      "sha256": "c5f0be57b97249cb"
+    },
+    {
+      "claim": "winter bass feed slowly and along the bottom (Texas/Carolina soft plastics)",
+      "tier": "T2",
+      "source": "Take Me Fishing \u2014 Want 4 Tips on How to Catch Bass in the Winter? (Dec 2022)",
+      "url": "https://www.takemefishing.org/blog/december-2022/want-4-tips-on-how-to-catch-bass-in-the-winter/",
+      "quote": "Use soft plastic baits or lures (such as Texas-rigged or Carolina-rigged worms) that move slowly along the bottom instead.",
+      "found": true,
+      "fetched_at": "2026-09-29T15:05:00+00:00",
+      "sha256": "ec8de33c69e62add"
+    },
+    {
+      "claim": "cold-water finesse keeps contact with the bottom and moves in slow hops",
+      "tier": "T2",
+      "source": "Take Me Fishing \u2014 Cold Water Bass Fishing (Dec 2016)",
+      "url": "https://www.takemefishing.org/blog/december-2016/cold-water-bass-fishing/",
+      "quote": "Finesse. Switch to lighter line and try a small jig at the front of a 6-inch rubber worm. Try to keep in contact with the bottom and give it slow, little hops.",
+      "found": true,
+      "fetched_at": "2026-09-29T15:05:00+00:00",
+      "sha256": "a7d7f467c86672d8"
+    },
+    {
+      "claim": "some winter bass suspend and take small presentations in front of them",
+      "tier": "T2",
+      "source": "Take Me Fishing \u2014 Want 4 Tips on How to Catch Bass in the Winter? (Dec 2022)",
+      "url": "https://www.takemefishing.org/blog/december-2022/want-4-tips-on-how-to-catch-bass-in-the-winter/",
+      "quote": "Bass may be suspended during this time of year and prefer to \u201csnack\u201d on smaller, more convenient prey items that are presented right in front of them.",
+      "found": true,
+      "fetched_at": "2026-09-29T15:05:00+00:00",
+      "sha256": "ec8de33c69e62add"
     }
   ]
 }
