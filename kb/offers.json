@@ -48,8 +48,7 @@
         },
         {
           "retailer": "amazon",
-          "asin": null,
-          "note": "ASIN pending PA-API access"
+          "asin": "B00EZOX7MK"
         },
         {
           "retailer": "tacklewarehouse",
@@ -580,6 +579,33 @@
               "note": "tracked link pending program approval"
             }
           ]
+        }
+      ]
+    },
+    "owner-mosquito-circle": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B00FPQQ256"
+        }
+      ]
+    },
+    "jungle-wacky": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B0CLTBV26W"
+        }
+      ]
+    },
+    "vmc-crossover-ring": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B08TJ1LN3T"
         }
       ]
     }

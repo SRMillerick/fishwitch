@@ -2,7 +2,9 @@
 
 Schema v2 (`kb/offers.json`):
   retailers: registry — `label`, `kind` (manufacturer|affiliate), and URL
-             construction (`dp_template` + `tag_env` for Amazon-style links).
+             construction: `deeplink_template` (+ `subtag_param`) for network
+             deep links, `dp_template` + `tag_env` for Amazon-style catalog
+             links, or nothing for stored `url`s.
   entries:   entry_id -> {kind: product|rig,
                           offers:     [ {retailer, url|asin, note} ],
                           components: [ {id, label, note, offers:[...]} ] }
@@ -18,6 +20,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parent
 OFFERS = ROOT / "kb" / "offers.json"
@@ -42,15 +45,35 @@ def retailers() -> dict:
 
 
 def _offer_url(entry_id: str, o: dict, reg: dict) -> str | None:
-    """Build the final URL: dp_template + env tag for catalog retailers, else the
-    stored URL (network tracked links, manufacturer pages)."""
+    """Build the final URL, in preference order:
+
+    1. `deeplink_template` — network tracked deep links (Rakuten/LinkShare,
+       Affiliatly, ...). `{url}` is the merchant product URL, URL-encoded into
+       the redirect; `subtag_param` (e.g. `u1`) carries the entry id for
+       per-entry reporting.
+    2. `dp_template` + `tag_env` — Amazon-style catalog links built from an
+       ASIN, with the tag read from the environment and an `ascsubtag`.
+    3. the stored `url` — manufacturer pages and pre-built tracked links.
+    """
     r = reg.get(o.get("retailer"), {})
+    dl = r.get("deeplink_template")
+    if dl:
+        dest = o.get("url")
+        if not dest:
+            return None
+        url = dl.format(url=quote(dest, safe=""))
+        param = r.get("subtag_param")
+        if param:
+            url += ("&" if "?" in url else "?") + f"{param}={quote(entry_id, safe='')}"
+        return url
     tmpl = r.get("dp_template")
     if tmpl:
         if not o.get("asin"):
             return None
-        url = tmpl.format(asin=o["asin"])
         tag = os.environ.get(r.get("tag_env") or "", "")
+        if r.get("tag_env") and not tag:
+            return None      # never emit an untagged catalog link
+        url = tmpl.format(asin=o["asin"])
         if tag:
             url += ("&" if "?" in url else "?") + f"tag={tag}"
             if r.get("subtag"):

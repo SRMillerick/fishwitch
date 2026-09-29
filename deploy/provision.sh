@@ -30,6 +30,10 @@ After=network-online.target
 
 [Service]
 WorkingDirectory=$APPDIR
+# Amazon Associates tag (Associate ID baromoon-20, approved 2026-09-28).
+# Public by nature — it appears in every outbound amazon.com link — but it is
+# still an environment value so code never hardcodes it.
+Environment=FISHWITCH_AMZ_TAG=baromoon-20
 # --timeout 120: the History layer can retry the Open-Meteo archive 3×45s on
 # a cold cache; gunicorn's 30s default would kill the worker mid-fetch (502).
 ExecStart=$APPDIR/venv/bin/gunicorn --workers 2 --threads 4 --bind 127.0.0.1:7700 --timeout 120 --graceful-timeout 30 --access-logfile - webapp:app
