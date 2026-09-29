@@ -66,7 +66,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
+              "asin": "B0010G9522",
               "note": "ASIN pending PA-API access"
             },
             {
@@ -135,7 +135,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
+              "asin": "B0010G9522",
               "note": "ASIN pending PA-API access"
             },
             {
@@ -220,7 +220,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
+              "asin": "B00FPQQ256",
               "note": "ASIN pending PA-API access"
             },
             {
@@ -273,7 +273,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
+              "asin": "B0CLTBV26W",
               "note": "ASIN pending PA-API access"
             },
             {
@@ -289,7 +289,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
+              "asin": "B08TJ1LN3T",
               "note": "ASIN pending PA-API access"
             },
             {
@@ -326,7 +326,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
+              "asin": "B0CLTBV26W",
               "note": "ASIN pending PA-API access"
             },
             {
@@ -358,7 +358,7 @@
           "offers": [
             {
               "retailer": "amazon",
-              "asin": null,
+              "asin": "B08TJ1LN3T",
               "note": "ASIN pending PA-API access"
             },
             {
@@ -606,6 +606,15 @@
         {
           "retailer": "amazon",
           "asin": "B08TJ1LN3T"
+        }
+      ]
+    },
+    "offset-hook": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B0010G9522"
         }
       ]
     }
