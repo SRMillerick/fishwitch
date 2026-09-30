@@ -1,15 +1,6 @@
 {% extends "base.html" %}
-{% block title %}{{ lake.name }} fishing report{% endblock %}
 {% block head %}
-<meta name="description" content="{{ lake.name }} ({{ lake.region }}) — conditions, upcoming windows, and what to tie on. Fishing report from baromoon.">
-<meta property="og:title" content="{{ lake.name }} fishing report — baromoon">
-<meta property="og:description" content="Conditions, upcoming windows, and what to tie on at {{ lake.name }}. Cited, free.">
-<meta property="og:url" content="https://baromoon.com/lake/{{ lake.id }}">
-<link rel="canonical" href="https://baromoon.com/lake/{{ lake.id }}">
 <link rel="stylesheet" href="/static/leaflet/leaflet.css">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Place","name":{{ lake.name | tojson }},"url":"https://baromoon.com/lake/{{ lake.id }}"{% if lake.lat %}, "geo":{"@type":"GeoCoordinates","latitude":{{ lake.lat }},"longitude":{{ lake.lng }}}{% endif %}}
-</script>
 {% endblock %}
 {% block content %}
 <p class="smallcaps">water · {{ lake.region }}</p>

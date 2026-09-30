@@ -3,13 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{% block title %}baromoon{% endblock %} — the moon-ledger for anglers</title>
-<meta name="description" content="baromoon reads your lake — barometer, water temp, wind, light, and cover — and hands you the window, the bank, and the rig. Cited, deterministic, free.">
+<title>{{ seo.title }}</title>
+<meta name="description" content="{{ seo.description }}">
+<link rel="canonical" href="{{ seo.canonical }}">
+{% if seo.robots %}<meta name="robots" content="{{ seo.robots }}">{% endif %}
+{% if seo.google_verification %}<meta name="google-site-verification" content="{{ seo.google_verification }}">{% endif %}
+{% if seo.bing_verification %}<meta name="msvalidate.01" content="{{ seo.bing_verification }}">{% endif %}
 <meta name="theme-color" content="#f7f5ef">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="baromoon">
-<meta property="og:title" content="baromoon — the moon-ledger for anglers">
-<meta property="og:description" content="When to go and what to throw. baromoon reads your lake's weather, water, and sky into a cited session plan.">
+<meta property="og:title" content="{{ seo.og_title }}">
+<meta property="og:description" content="{{ seo.og_description }}">
+<meta property="og:url" content="{{ seo.canonical }}">
+<meta property="og:image" content="{{ seo.og_image }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ seo.og_title }}">
+<meta name="twitter:description" content="{{ seo.og_description }}">
+<meta name="twitter:image" content="{{ seo.og_image }}">
+{% for block in seo.jsonld %}<script type="application/ld+json">{{ block | tojson }}</script>
+{% endfor %}
 <link rel="icon" type="image/svg+xml" href="/static/favicon.svg?v={{ asset_v }}">
 <link rel="manifest" href="/static/manifest.webmanifest?v={{ asset_v }}">
 <link rel="apple-touch-icon" href="/static/apple-touch-icon-v2.png?v={{ asset_v }}">

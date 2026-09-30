@@ -69,6 +69,14 @@ class TelemetryTest(unittest.TestCase):
         self.assertEqual(dict(s["by_ref"]),
                          {"www.google.com": 1, "t.co": 1, "example.com": 1})
 
+    def test_ai_referrers_have_their_own_channel(self):
+        for host in ("chatgpt.com", "chat.openai.com", "perplexity.ai",
+                     "gemini.google.com", "copilot.microsoft.com", "claude.ai"):
+            telemetry.record("/", ref=f"https://{host}/", log=self.log)
+        s = telemetry.summarize(days=1, log=self.log, top=10)
+        self.assertEqual(dict(s["channels"]).get("ai"), 6)
+        self.assertEqual(len(s["by_ref"]), 6)
+
     def test_bot_flag_derived_from_ua_never_stores_the_ua(self):
         telemetry.record("/", ua="Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)", log=self.log)
         telemetry.record("/", ua="Mozilla/5.0 (Macintosh) Safari/605", log=self.log)

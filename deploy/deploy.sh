@@ -10,4 +10,6 @@ echo "→ mirroring public repo…"
 ./publish-mirror
 echo "→ pulling on $HOST and restarting…"
 ssh "$HOST" 'cd /srv/fishwitch && git pull -q && systemctl restart baromoon && systemctl is-active baromoon'
+echo "→ pinging IndexNow…"
+"$DIR/deploy/indexnow.sh" || echo "⚠ IndexNow ping failed (the site is still live)"
 echo "✅ live"

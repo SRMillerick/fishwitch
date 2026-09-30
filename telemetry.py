@@ -9,7 +9,7 @@ strings. The bot flag is what lets `fishwitch stats` separate crawlers from
 people without ever keeping the thing that identified them. Read with
 `fishwitch stats`; the local web app can render the same summary at /stats.
 
-Referrers are classified into channels (search / social / internal / spam /
+Referrers are classified into channels (search / ai / social / internal / spam /
 external / direct) and obvious link-spam hosts are quarantined, so the numbers
 that reach an affiliate application are defensible rather than inflated.
 
@@ -48,6 +48,11 @@ INTERNAL_HOSTS = ("baromoon.com",)
 SEARCH_HOSTS = ("google.com", "bing.com", "duckduckgo.com", "search.yahoo.com",
                 "yahoo.com", "ecosia.org", "qwant.com", "startpage.com",
                 "brave.com", "search.brave.com", "yandex.com", "baidu.com")
+# AI assistants that cite/link sources — tracked as their own channel so the
+# GEO (generative-engine) funnel is readable, not lumped into "external".
+AI_HOSTS = ("chatgpt.com", "chat.openai.com", "openai.com", "perplexity.ai",
+            "gemini.google.com", "bard.google.com", "copilot.microsoft.com",
+            "claude.ai", "you.com", "poe.com", "phind.com")
 SOCIAL_HOSTS = ("t.co", "twitter.com", "x.com", "facebook.com", "reddit.com",
                 "instagram.com", "pinterest.com", "linkedin.com", "youtube.com",
                 "youtu.be", "news.ycombinator.com", "threads.net", "bsky.app",
@@ -60,7 +65,7 @@ SPAM_HOSTS = ("digitizeseo.com", "bulkbacklinkreport.site", "bulkdachecker.store
               "blogbacklinkchecker.shop", "ailinkgenerator.website")
 SPAM_MARKERS = ("backlink", "seo", "checker", "rank-", "-rank")
 
-CHANNEL_ORDER = ("search", "social", "external", "internal", "direct", "spam")
+CHANNEL_ORDER = ("search", "ai", "social", "external", "internal", "direct", "spam")
 
 
 def should_count(path: str) -> bool:
@@ -93,13 +98,15 @@ def _host_matches(host: str, parent: str) -> bool:
 def classify_ref(ref: str | None) -> str:
     """Channel of a stored referrer host. `""` (no referrer) is `direct`.
 
-    Channels: search, social, internal, spam, external, direct.
+    Channels: search, ai, social, internal, spam, external, direct.
     """
     host = (ref or "").strip().lower()
     if not host:
         return "direct"
     if any(_host_matches(host, h) for h in INTERNAL_HOSTS):
         return "internal"
+    if any(_host_matches(host, h) for h in AI_HOSTS):
+        return "ai"
     if any(_host_matches(host, h) for h in SEARCH_HOSTS):
         return "search"
     if any(_host_matches(host, h) for h in SOCIAL_HOSTS):
@@ -180,7 +187,7 @@ def summarize(days: int = 30, log: Path | None = None, top: int = 15,
     # link-spam are broken out into channels / spam_refs instead.
     by_ref = Counter(r.get("ref") for r in window
                      if r.get("ref") and classify_ref(r["ref"]) in
-                     ("external", "search", "social"))
+                     ("external", "search", "ai", "social"))
     spam_refs = Counter(r.get("ref") for r in window
                         if r.get("ref") and classify_ref(r["ref"]) == "spam")
     bots = sum(1 for r in window if r.get("bot"))

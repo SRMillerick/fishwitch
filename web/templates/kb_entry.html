@@ -1,9 +1,4 @@
 {% extends "base.html" %}
-{% block title %}{{ c.label }} — tackle library{% endblock %}
-{% block head %}
-<meta name="description" content="{{ c.label }} — {{ c.technique[:140] }}{% if c.note %} · {{ c.note[:80] }}{% endif %}">
-<link rel="canonical" href="https://baromoon.com/kb/{{ c.id }}">
-{% endblock %}
 {% block content %}
 <div class="narrow">
 <span class="eyebrow">{{ c.kind }} · tackle library</span>

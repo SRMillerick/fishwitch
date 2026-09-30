@@ -56,6 +56,62 @@ class KBEntityPageTest(unittest.TestCase):
         self.assertIn("/kb/carolina", xml)
 
 
+class SeoHeadTest(unittest.TestCase):
+    """Head hygiene: unique titles/descriptions, self-canonicals, robots policy,
+    structured data, sitemap lastmod, llms.txt, and the IndexNow key file."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.c = webapp.app.test_client()
+
+    def _body(self, path):
+        return self.c.get(path).get_data(as_text=True)
+
+    def test_pages_have_unique_titles_and_descriptions(self):
+        pages = ["/", "/report", "/outlook", "/lakes", "/kb", "/interview",
+                 "/about", "/contact", "/privacy", "/disclosure",
+                 "/lake/hidden-valley-lake-ca", "/kb/dropshot", "/kb/abstract"]
+        titles, descs = set(), set()
+        for p in pages:
+            h = self._body(p)
+            t = re.search(r"<title>(.*?)</title>", h, re.S).group(1)
+            d = re.search(r'<meta name="description" content="([^"]*)"', h).group(1)
+            c = re.search(r'<link rel="canonical" href="([^"]*)"', h).group(1)
+            self.assertTrue(d, p)
+            self.assertNotIn(t, titles, p)
+            self.assertNotIn(d, descs, p)
+            self.assertTrue(c.startswith("https://baromoon.com/"), p)
+            titles.add(t)
+            descs.add(d)
+
+    def test_query_report_variants_are_noindex_follow(self):
+        h = self._body("/report?lake=hidden-valley-lake-ca&at=2026-09-30T07:00")
+        self.assertIn('name="robots" content="noindex,follow"', h)
+        self.assertIn('<link rel="canonical" href="https://baromoon.com/report">', h)
+
+    def test_structured_data_entities(self):
+        self.assertIn('"@type": "Organization"', self._body("/"))
+        self.assertIn('"@type": "WebSite"', self._body("/"))
+        lake = self._body("/lake/hidden-valley-lake-ca")
+        for t in ('"@type": "Place"', '"@type": "BreadcrumbList"'):
+            self.assertIn(t, lake)
+        self.assertIn('"@type": "Article"', self._body("/kb/dropshot"))
+
+    def test_sitemap_lastmod_on_lakes(self):
+        xml = self._body("/sitemap.xml")
+        self.assertIn("<lastmod>", xml)
+        self.assertIn("/lake/hidden-valley-lake-ca</loc>", xml)
+
+    def test_llms_txt_and_indexnow_key(self):
+        r = self.c.get("/llms.txt")
+        self.assertEqual(r.status_code, 200)
+        self.assertIn("deterministic", r.get_data(as_text=True))
+        if webapp.INDEXNOW_KEY:
+            r = self.c.get(f"/{webapp.INDEXNOW_KEY}.txt")
+            self.assertEqual(r.status_code, 200)
+            self.assertEqual(r.get_data(as_text=True).strip(), webapp.INDEXNOW_KEY)
+
+
 class LandingLedgerTest(unittest.TestCase):
     """The landing page accepts a lake and embeds the registry for the
     browser-side nearest-water pick. No network: the heavy report/ledger

@@ -34,6 +34,10 @@ WorkingDirectory=$APPDIR
 # Public by nature — it appears in every outbound amazon.com link — but it is
 # still an environment value so code never hardcodes it.
 Environment=FISHWITCH_AMZ_TAG=baromoon-20
+# Optional SEO verification tokens (render only when set; IndexNow key is
+# served from deploy/indexnow.key):
+#Environment=FISHWITCH_GSC_VERIFICATION=<google-site-verification value>
+#Environment=FISHWITCH_BING_VERIFICATION=<msvalidate.01 value>
 # --timeout 120: the History layer can retry the Open-Meteo archive 3×45s on
 # a cold cache; gunicorn's 30s default would kill the worker mid-fetch (502).
 ExecStart=$APPDIR/venv/bin/gunicorn --workers 2 --threads 4 --bind 127.0.0.1:7700 --timeout 120 --graceful-timeout 30 --access-logfile - webapp:app

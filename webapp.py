@@ -92,6 +92,157 @@ def _count_page(resp):
     return resp
 
 
+# ── SEO: one source of truth for titles, descriptions, canonicals, JSON-LD ──
+WEB_BASE = "https://baromoon.com"
+_ORG_ID = f"{WEB_BASE}/#organization"
+_SITE_ID = f"{WEB_BASE}/#website"
+_OG_IMAGE = f"{WEB_BASE}/static/icon-512-v2.png"
+_DEFAULT_DESC = ("baromoon reads your lake — barometer, water temp, wind, light, and cover — "
+                 "and hands you the window, the bank, and the rig. Cited, deterministic, free.")
+
+_STATIC_SEO = {
+    "/": ("Fishing plan: when to go and what to throw | baromoon",
+          "Free, cited fishing plans for 18 lakes: live weather, water, and sky scored into "
+          "time-blocked windows with the rigs that fit. No account, no app."),
+    "/report": ("Fishing report — windows, rigs, and the why | baromoon",
+                "Pick a water and see its best windows, the rigs that score for them, and a "
+                "cited why — computed deterministically from weather, water, and sky."),
+    "/outlook": ("10-day fishing outlook by lake | baromoon",
+                 "A 10–16-day look at your water's strongest windows, day by day, ranked by "
+                 "conditions with every pick cited. Free, no account."),
+    "/lakes": ("Fishing waters we cover — California & Arizona | baromoon",
+               "18 CA and AZ waters with live windows, species, depth, access, and shorelines — "
+               "every registry fact sourced and dated."),
+    "/kb": ("Tackle library — cited rigs, lures, and baits | baromoon",
+            "Rigs, lures, knots, line, and baits with quoted manufacturer and agency sources, "
+            "condition fits, concrete builds, and disclosed offers."),
+    "/interview": ("Build your tackle profile | baromoon",
+                   "Tell baromoon what you own and how you fish; the report then marks your "
+                   "picks and your gaps. It stays in your browser."),
+    "/about": ("About baromoon — the deterministic fishing-report engine",
+               "How weather, water, and sky become a cited session plan — and why the same "
+               "inputs always give the same report."),
+    "/contact": ("Contact baromoon", "Questions, corrections, or a water we should cover — "
+                 "reach the baromoon team."),
+    "/privacy": ("Privacy — baromoon",
+                 "What baromoon stores (aggregate page counts) and what it never does: no "
+                 "accounts, no cookies, profiles stay in the browser."),
+    "/disclosure": ("Affiliate disclosure — baromoon",
+                    "How baromoon makes money: disclosed affiliate links, resolved after "
+                    "ranking, never scored into it."),
+    "/log": ("Field log a session | baromoon",
+             "Log catches or effort in the browser; nothing is stored server-side. Export when "
+             "you want to add the session to the local ledger."),
+}
+
+# local-only panels, kept out of the index even when FISHWITCH_LOCAL=1
+_NOINDEX_PATHS = ("/review", "/stats", "/styleguide", "/logo", "/embed/ledger")
+
+
+def _iso_date(v) -> str:
+    s = str(v or "")
+    return s[:10] if len(s) >= 10 else ""
+
+
+def _seo_meta(req) -> dict:
+    """Per-page SEO metadata. Facts come from the registry/KB; nothing is
+    invented here, and ranking never sees any of it."""
+    path = (req.path or "/").rstrip("/") or "/"
+    params = req.args
+    canonical = WEB_BASE + ("/" if path == "/" else path)
+    title = "baromoon — when to go, what to throw"
+    desc = _DEFAULT_DESC
+    robots = "noindex,follow" if path in _NOINDEX_PATHS else ""
+    crumbs, extra = [], []
+
+    lake = resolve_lake(path[6:]) if path.startswith("/lake/") else None
+    ent = bait = None
+    if path.startswith("/kb/") and path not in ("/kb",):
+        ent = tx.find_entry(path[4:])
+        if ent is None:
+            bait = tx.bait_entry(path[4:])
+            ent = bait
+
+    if lake:
+        species = ", ".join((lake.get("species") or [])[:3])
+        where = (lake.get("region")
+                 or ", ".join(x for x in (lake.get("county"), lake.get("state")) if x))
+        title = f"{lake.get('name')} fishing report — windows & what to throw | baromoon"
+        desc = (f"{lake.get('name')}"
+                + (f" ({where})" if where else "")
+                + (f": live windows and top rigs for {species}" if species
+                   else ": live windows and top rigs")
+                + ", plus species, depth, and access. Free, cited, no account.")
+        crumbs = [("Home", "/"), ("Waters", "/lakes"), (lake.get("name"), path)]
+        place = {"@type": "Place", "name": lake.get("name"), "url": canonical}
+        if lake.get("lat") is not None and lake.get("lng") is not None:
+            place["geo"] = {"@type": "GeoCoordinates",
+                            "latitude": lake.get("lat"), "longitude": lake.get("lng")}
+        addr = {}
+        if lake.get("county"):
+            addr["addressLocality"] = lake.get("county")
+        if lake.get("state"):
+            addr["addressRegion"] = lake.get("state")
+        if addr:
+            place["address"] = {"@type": "PostalAddress", **addr}
+        extra.append(place)
+    elif ent:
+        label = ent.get("label") or path.rsplit("/", 1)[-1]
+        blurb = ((ent.get("note") if bait else ent.get("technique")) or "").strip()
+        title = (f"{label} — bait guide | baromoon" if bait
+                 else f"{label} — rigging, conditions, and cited sources | baromoon")
+        desc = (f"{label} — {blurb[:150]}" if blurb
+                else f"{label}: cited source, condition fit, and concrete builds.")
+        crumbs = [("Home", "/"), ("Tackle library", "/kb"), (label, path)]
+        dates = [c.get("fetched_at") for c in (ent.get("citations") or []) if c.get("fetched_at")]
+        prov = ent.get("provenance") or {}
+        dates += [prov.get("verified_at"), prov.get("fetched_at")]
+        dates = sorted(d for d in (_iso_date(x) for x in dates) if d)
+        article = {"@type": "Article", "headline": label, "description": desc,
+                   "url": canonical, "mainEntityOfPage": canonical,
+                   "author": {"@id": _ORG_ID}, "publisher": {"@id": _ORG_ID}}
+        if dates:
+            article["datePublished"] = dates[0]
+            article["dateModified"] = dates[-1]
+        extra.append(article)
+    elif path in _STATIC_SEO:
+        title, desc = _STATIC_SEO[path]
+        if path == "/lakes":
+            crumbs = [("Home", "/"), ("Waters", "/lakes")]
+        elif path == "/kb":
+            crumbs = [("Home", "/"), ("Tackle library", "/kb")]
+
+    # Query-parameter variants of the tool pages are infinite and ephemeral:
+    # noindex,follow them. The crawlable value lives on the lake pages.
+    if path in ("/report", "/outlook") and (params.get("lake") or params.get("at")):
+        robots = "noindex,follow"
+        lk = resolve_lake(params.get("lake"))
+        if lk:
+            kind = "report" if path == "/report" else "outlook"
+            title = f"{lk.get('name')} — session {kind} | baromoon"
+            desc = f"Computed {kind} for {lk.get('name')}: windows, rigs, and the cited why."
+
+    jsonld = [
+        {"@context": "https://schema.org", "@type": "Organization", "@id": _ORG_ID,
+         "name": "baromoon", "url": WEB_BASE + "/", "description": _DEFAULT_DESC,
+         "sameAs": ["https://github.com/SRMillerick/fishwitch"]},
+        {"@context": "https://schema.org", "@type": "WebSite", "@id": _SITE_ID,
+         "name": "baromoon", "url": WEB_BASE + "/", "inLanguage": "en",
+         "publisher": {"@id": _ORG_ID}},
+    ]
+    if crumbs:
+        jsonld.append({"@context": "https://schema.org", "@type": "BreadcrumbList",
+                       "itemListElement": [
+                           {"@type": "ListItem", "position": i + 1, "name": name,
+                            "item": WEB_BASE + ("/" if u == "/" else u)}
+                           for i, (name, u) in enumerate(crumbs)]})
+    jsonld += [dict(x, **{"@context": "https://schema.org"}) for x in extra]
+    return dict(title=title, description=desc, canonical=canonical, robots=robots,
+                og_image=_OG_IMAGE, og_title=title, og_description=desc, jsonld=jsonld,
+                google_verification=os.environ.get("FISHWITCH_GSC_VERIFICATION", ""),
+                bing_verification=os.environ.get("FISHWITCH_BING_VERIFICATION", ""))
+
+
 @app.context_processor
 def inject_asset_v():
     # `nav_lake` is the water the visitor is already working — nav and the step
@@ -104,7 +255,7 @@ def inject_asset_v():
             nav_lake = resolve_lake(requested)
     except Exception:
         nav_lake = None
-    return dict(asset_v=ASSET_V, local=LOCAL, nav_lake=nav_lake)
+    return dict(asset_v=ASSET_V, local=LOCAL, nav_lake=nav_lake, seo=_seo_meta(request))
 
 
 # ── shared, cached data layers (one weather call serves many renders) ───────
@@ -1188,6 +1339,21 @@ def api_geocode():
                          lng=c.get("lng"), tz=c.get("tz")) for c in cands])
 
 
+def _read_indexnow_key() -> str:
+    """IndexNow key (public by design — it is served at /<key>.txt). Prefer the
+    env value so a rotation never needs a code change."""
+    env = os.environ.get("FISHWITCH_INDEXNOW_KEY", "").strip()
+    if env:
+        return env
+    try:
+        return (ROOT / "deploy" / "indexnow.key").read_text().strip()
+    except OSError:
+        return ""
+
+
+INDEXNOW_KEY = _read_indexnow_key()
+
+
 @app.route("/robots.txt")
 def robots():
     return ("User-agent: *\nDisallow: /api/\nAllow: /\n"
@@ -1195,18 +1361,59 @@ def robots():
             {"Content-Type": "text/plain"})
 
 
+if INDEXNOW_KEY:
+    @app.route(f"/{INDEXNOW_KEY}.txt")
+    def indexnow_key_file():
+        return INDEXNOW_KEY, 200, {"Content-Type": "text/plain; charset=utf-8"}
+
+
+@app.route("/llms.txt")
+def llms_txt():
+    """A short, honest map of the site for LLM tools (llmstxt.org proposal)."""
+    lakes = [f"- https://baromoon.com/lake/{l['id']} — {l['name']} ({l.get('region') or ''})"
+             for l in lakes_summary()]
+    body = "\n".join([
+        "# baromoon",
+        "> baromoon is a free, deterministic fishing-report engine: weather + water + sky + a",
+        "> cited tackle knowledge base become scored, time-blocked reports — when to go, what to",
+        "> throw, and why. Same inputs, same report; no LLM in the report path.",
+        "",
+        "## Key pages",
+        "- https://baromoon.com/ — the plan and the free report tool",
+        "- https://baromoon.com/lakes — every water we cover (CA + AZ)",
+        "- https://baromoon.com/kb — cited rigs, lures, knots, line, and baits",
+        "- https://baromoon.com/report — session plan for a chosen water",
+        "- https://baromoon.com/outlook — 10–16-day windows",
+        "- https://baromoon.com/api/v1/report?lake=hidden-valley-lake-ca — anonymous JSON API (CORS)",
+        "",
+        "## Waters",
+        *lakes,
+        "",
+        "## Notes for assistants",
+        "- Every factual claim is cited (T1 manufacturer / T2 agency quotes with URL and hash).",
+        "- Affiliate offers resolve after ranking, are always disclosed, and never affect picks.",
+        "- Live windows depend on the current forecast; prefer the lake pages over cached copies.",
+        "- Free to cite with attribution to baromoon.com.",
+        "",
+    ])
+    return Response(body, mimetype="text/plain")
+
+
 @app.route("/sitemap.xml")
 def sitemap():
     base = "https://baromoon.com"
     urls = ["/", "/report", "/outlook", "/lakes", "/kb", "/interview",
-            "/about", "/contact", "/privacy", "/disclosure"]
+            "/about", "/contact", "/privacy", "/disclosure", "/log"]
     urls += [f"/lake/{l['id']}" for l in lakes_summary()]
     urls += [f"/kb/{c['id']}" for sp in ("bass", "trout", "catfish", "panfish")
              for c in tx.catalog(sp)]
     urls += [f"/kb/{b['id']}" for b in tx.load_baits().get("baits", [])]
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     body = ['<?xml version="1.0" encoding="UTF-8"?>',
             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-    body += [f"<url><loc>{base}{u}</loc></url>" for u in urls]
+    body += [f"<url><loc>{base}{u}</loc>"
+             + (f"<lastmod>{today}</lastmod>" if u.startswith("/lake/") else "")
+             + "</url>" for u in urls]
     body.append("</urlset>")
     return Response("\n".join(body), mimetype="application/xml")
 
