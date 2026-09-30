@@ -51,7 +51,7 @@ class KBEntityPageTest(unittest.TestCase):
         self.assertIn("fetch", r.get_data(as_text=True))
 
     def test_sitemap_includes_entities(self):
-        xml = self.c.get("/sitemap.xml").get_data(as_text=True)
+        xml = self.c.get("/sitemap-pages.xml").get_data(as_text=True)
         self.assertIn("/kb/dropshot", xml)
         self.assertIn("/kb/carolina", xml)
 
@@ -98,7 +98,7 @@ class SeoHeadTest(unittest.TestCase):
         self.assertIn('"@type": "Article"', self._body("/kb/dropshot"))
 
     def test_sitemap_lastmod_on_lakes(self):
-        xml = self._body("/sitemap.xml")
+        xml = self._body("/sitemap-lakes.xml")
         self.assertIn("<lastmod>", xml)
         self.assertIn("/lake/hidden-valley-lake-ca</loc>", xml)
 
@@ -116,7 +116,7 @@ class SeoHeadTest(unittest.TestCase):
         self.assertIn("static/og-card.png", self._body("/"))
 
     def test_sitemap_and_llms_include_new_pages(self):
-        sitemap, llms = self._body("/sitemap.xml"), self._body("/llms.txt")
+        sitemap, llms = self._body("/sitemap-pages.xml"), self._body("/llms.txt")
         for page in ("/method", "/developers"):
             self.assertIn(page, sitemap)
             self.assertIn("baromoon.com" + page, llms)

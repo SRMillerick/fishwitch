@@ -103,6 +103,8 @@ def save(path: str, body: str):
                              else f'href="https://baromoon.com/kb/{m.group(1)}"'), body)
     body = body.replace('href="/kb"', 'href="kb-bass.html"')
     body = body.replace('href="/interview"', 'href="interview.html"')
+    body = body.replace('href="/lakes/ca"', 'href="lakes-ca.html"')
+    body = body.replace('href="/lakes/az"', 'href="lakes-az.html"')
     body = body.replace('href="/lakes"', 'href="lakes.html"')
     body = re.sub(r'href="/lake/([\w-]+)"', r'href="lake-\1.html"', body)
     body = body.replace('href="/about"', 'href="about.html"')
@@ -131,6 +133,8 @@ save("index.html", c.get("/").get_data(as_text=True))
 for pg in ("about", "privacy", "disclosure", "contact", "method", "developers"):
     save(f"{pg}.html", c.get(f"/{pg}").get_data(as_text=True))
 save("lakes.html", c.get("/lakes").get_data(as_text=True))
+for _st in ("ca", "az"):
+    save(f"lakes-{_st}.html", c.get(f"/lakes/{_st}").get_data(as_text=True))
 for _lk in _reg:
     save(f"lake-{_lk}.html", c.get(f"/lake/{_lk}").get_data(as_text=True))
 for sp in ("bass", "trout", "catfish", "panfish"):

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="narrow">
+<span class="eyebrow">waters · {{ full }}</span>
+<h1>{{ full }} fishing waters</h1>
+<p class="answer"><strong>{{ waters | length }} covered waters.</strong> Each one below has a
+registry card with sourced species, depth, and shoreline — and a live window scan. The
+{{ full }} inventory behind it holds {{ summary.inventory }} named lakes and reservoirs;
+{{ summary.stocked }} carry stocking records. Don't see your water?
+<a href="/report">Run a report</a> — any coordinate works.</p>
+<ul class="plain lakes">
+  {% for w in waters %}
+  <li><a href="/lake/{{ w.id }}">{{ w.name }}</a>
+      <span class="fine">{{ w.region }}</span>
+      {% if w.species %}<span class="fine">— {{ w.species[:4] | join(', ') }}{% if w.species | length > 4 %}, …{% endif %}</span>{% endif %}</li>
+  {% endfor %}
+</ul>
+<p class="fine">Browse <a href="/lakes">the map</a> ·
+<a href="/lakes/{{ 'az' if state == 'CA' else 'ca' }}">{{ 'Arizona' if state == 'CA' else 'California' }} hub →</a></p>
+</div>
+{% endblock %}

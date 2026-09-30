@@ -7,9 +7,15 @@
   <summary>{% if out %}Adjust water, time, or voice{% else %}Pick your water and conditions{% endif %}</summary>
   <form id="report-form" class="grid" method="get" action="/report">
   <label>Lake
+    {% if q.lat %}
+    <input type="text" value="{{ out.lake if out and out.lake else 'dropped pin' }}" disabled>
+    <input type="hidden" name="lat" value="{{ q.lat }}">
+    <input type="hidden" name="lng" value="{{ q.lng }}">
+    {% else %}
     <select name="lake">
       {% for l in lakes %}<option value="{{ l.id }}" {% if q.lake == l.id %}selected{% endif %}>{{ l.name }}</option>{% endfor %}
     </select>
+    {% endif %}
   </label>
   <label>Date <input type="date" name="date" value="{{ q.date or '' }}"></label>
   <label>Time <input type="time" name="time" value="{{ q.time or '18:00' }}"></label>
@@ -54,12 +60,20 @@ reports add your natal transits and your arsenal. <a href="/interview">Build one
     {% include "_tackle.html" %}
     <section class="next-steps no-print">
       <h2 class="rule-double">Keep going</h2>
+      {% if q.lat %}
+      <p class="fine">This water isn't in the registry yet — the report above is an on-demand
+      auto-card built from public data. Widen it with the horizon scan:</p>
+      <p class="cta">
+        <a class="btn primary" href="/outlook?lat={{ q.lat }}&lng={{ q.lng }}{% if q.species %}&species={{ q.species | urlencode }}{% endif %}">Look ahead: 7-day outlook →</a>
+      </p>
+      {% else %}
       <p class="fine">The plan is set — now widen it, take it with you, or close the loop after.</p>
       <p class="cta">
         <a class="btn primary" href="/outlook?lake={{ q.lake | urlencode }}{% if q.species %}&species={{ q.species | urlencode }}{% endif %}">Look ahead: 7-day outlook →</a>
         <a class="btn ghost" href="/log?lake={{ q.lake | urlencode }}&at={{ out.at.strftime('%Y-%m-%d %H:%M') | urlencode }}&species={{ q.species | urlencode }}&lure={{ (out.picks[0] if out.picks else '') | urlencode }}">Log this session</a>
         <a class="btn ghost" href="/ledger.ics?lake={{ q.lake | urlencode }}&days=10">Add windows to calendar (.ics)</a>
       </p>
+      {% endif %}
     </section>
   {% endif %}
 {% endif %}

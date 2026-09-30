@@ -39,6 +39,7 @@ sys.path.insert(0, str(ROOT))          # script-style imports (import logbook)
 sys.path.insert(0, str(ROOT.parent))   # package imports (from fishwitch import geo)
 
 import markdown as _md  # noqa: E402  (pip install markdown)
+import catalog  # noqa: E402
 import offers  # noqa: E402
 import public_api  # noqa: E402
 import telemetry  # noqa: E402
@@ -111,8 +112,8 @@ _STATIC_SEO = {
                  "A 10–16-day look at your water's strongest windows, day by day, ranked by "
                  "conditions with every pick cited. Free, no account."),
     "/lakes": ("Fishing waters we cover — California & Arizona | baromoon",
-               "18 CA and AZ waters with live windows, species, depth, access, and shorelines — "
-               "every registry fact sourced and dated."),
+               "Every water baromoon can read: live windows, species, depth, access, and "
+               "shorelines — each registry fact sourced and dated."),
     "/kb": ("Tackle library — cited rigs, lures, and baits | baromoon",
             "Rigs, lures, knots, line, and baits with quoted manufacturer and agency sources, "
             "condition fits, concrete builds, and disclosed offers."),
@@ -212,6 +213,16 @@ def _seo_meta(req) -> dict:
             article["datePublished"] = dates[0]
             article["dateModified"] = dates[-1]
         extra.append(article)
+    elif re.fullmatch(r"/lakes/[a-z]{2}", path):
+        st = path.rsplit("/", 1)[-1].upper()
+        full = {"CA": "California", "AZ": "Arizona"}.get(st)
+        n = sum(1 for v in registry().values() if _state(v) == st)
+        if full and n:
+            title = f"{full} fishing lakes — {n} waters with windows and rigs | baromoon"
+            desc = (f"{n} {full} waters baromoon can read: live windows, species, depth, and "
+                    "shorelines — plus an on-demand report for any water not listed yet. "
+                    "Free, cited, no account.")
+            crumbs = [("Home", "/"), ("Waters", "/lakes"), (full, path)]
     elif path in _STATIC_SEO:
         title, desc = _STATIC_SEO[path]
         if path == "/lakes":
@@ -225,13 +236,18 @@ def _seo_meta(req) -> dict:
 
     # Query-parameter variants of the tool pages are infinite and ephemeral:
     # noindex,follow them. The crawlable value lives on the lake pages.
-    if path in ("/report", "/outlook") and (params.get("lake") or params.get("at")):
+    if path in ("/report", "/outlook") and (params.get("lake") or params.get("at")
+                                                or params.get("lat")):
         robots = "noindex,follow"
         lk = resolve_lake(params.get("lake"))
         if lk:
             kind = "report" if path == "/report" else "outlook"
             title = f"{lk.get('name')} — session {kind} | baromoon"
             desc = f"Computed {kind} for {lk.get('name')}: windows, rigs, and the cited why."
+        elif params.get("lat"):
+            title = "Your water — session plan | baromoon"
+            desc = ("An on-demand session plan for a dropped pin: windows, rigs, and the "
+                    "cited why.")
 
     jsonld = [
         {"@context": "https://schema.org", "@type": "Organization", "@id": _ORG_ID,
@@ -361,9 +377,18 @@ def _region(v: dict) -> str:
 
 
 def _state(v: dict) -> str:
-    """Two-letter state from the region string ('…, CA' / '…, AZ, USA')."""
-    m = re.search(r",\s*([A-Z]{2})(?:\s*,|$)", _region(v))
-    return m.group(1) if m else ""
+    """Two-letter state from the region string ('…, CA' / '…, AZ, USA'), with a
+    full-name fallback for legacy entries whose display omits the code."""
+    region = _region(v)
+    m = re.search(r",\s*([A-Z]{2})(?:\s*,|$)", region)
+    if m:
+        return m.group(1)
+    low = region.lower()
+    if "california" in low:
+        return "CA"
+    if "arizona" in low:
+        return "AZ"
+    return ""
 
 
 def lakes_summary() -> list[dict]:
@@ -632,8 +657,50 @@ def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
                 picks=[c["label"] for c, _, _ in (prime["picks"] if prime else [])][:2])
 
 
+def _auto_lake(lat: float, lng: float) -> dict:
+    """In-memory card for a dropped pin (the catalog/on-demand tier). Never
+    persisted, never a page: public data only — the catalog name when the pin
+    lands on an inventory water, the DEM for elevation, morphology for the
+    rest. Rendered reports cache like any other anonymous report."""
+    from layers.morphology import characterize, elevation
+    hit = catalog.match_by_point(lat, lng)
+    label = (hit or {}).get("name") or "Your water"
+    card = dict(
+        name=label, display=label, lat=lat, lng=lng, osm_type="",
+        id=f"auto:{lat:.4f},{lng:.4f}",
+        region=(f"{hit['county']} County, CA" if hit and hit.get("county") else ""),
+        county=(hit.get("county") if hit else None),
+        species=list((hit or {}).get("species") or []), auto_card=True)
+    if hit and hit.get("area_acres"):
+        card["area_acres"] = hit["area_acres"]
+        card["area_m2"] = round(hit["area_acres"] * 4046.86)
+        card["area_source"] = "catalog estimate"
+    try:
+        card["alt_m"] = elevation(lat, lng)
+    except Exception:
+        card["alt_m"] = None
+    return characterize(card)
+
+
+def _pin_lake(raw_lat, raw_lng) -> dict | None:
+    """Resolve a dropped pin to an in-memory auto-card, cached by point.
+    Out-of-range or unparseable values resolve to None (no external calls)."""
+    try:
+        lat, lng = round(float(raw_lat), 4), round(float(raw_lng), 4)
+    except (TypeError, ValueError):
+        return None
+    if not (-90 <= lat <= 90 and -180 <= lng <= 180):
+        return None
+    return _cached(f"auto:{lat},{lng}", lambda: _auto_lake(lat, lng))
+
+
 def _report_response(payload: dict, anonymous: bool) -> dict:
-    lake = resolve_lake(payload.get("lake"))
+    if payload.get("lake"):
+        lake = resolve_lake(payload.get("lake"))
+    elif payload.get("lat") and payload.get("lng"):
+        lake = _pin_lake(payload.get("lat"), payload.get("lng"))
+    else:
+        lake = resolve_lake(None)   # the demo water, as before
     if lake is None:
         return dict(error="unknown lake")
     at = _clamp_at(payload.get("at"))
@@ -655,7 +722,8 @@ def _report_response(payload: dict, anonymous: bool) -> dict:
 
     if anonymous:  # cacheable — no personal data involved
         key = "anon:" + json.dumps([str(payload.get("lake")), at.isoformat(),
-                                    hours, voice, species, bottom, clarity], default=str)
+                                    hours, voice, species, bottom, clarity,
+                                    payload.get("lat"), payload.get("lng")], default=str)
         return _cached(key, run)
     return run()
 
@@ -703,9 +771,11 @@ def report_page():
              voice=request.args.get("voice") or "",
              species=request.args.get("species") or "",
              bottom=request.args.get("bottom") or "",
-             clarity=request.args.get("clarity") or "")
+             clarity=request.args.get("clarity") or "",
+             lat=request.args.get("lat") or "",
+             lng=request.args.get("lng") or "")
     out = None
-    if q["lake"] or q["at"] or q["species"]:
+    if q["lake"] or q["at"] or q["species"] or q["lat"]:
         out = _report_response(q, anonymous=True)
     return render_template("report.html", lakes=lakes_summary(), q=q, out=out,
                            local=LOCAL)
@@ -714,7 +784,12 @@ def report_page():
 @app.route("/outlook")
 def outlook_page():
     reg = registry()
-    lake = resolve_lake(request.args.get("lake"))
+    if request.args.get("lake"):
+        lake = resolve_lake(request.args.get("lake"))
+    elif request.args.get("lat") and request.args.get("lng"):
+        lake = _pin_lake(request.args.get("lat"), request.args.get("lng"))
+    else:
+        lake = resolve_lake(None)
     days = max(1, min(16, int(request.args.get("days") or 7)))
     species = (request.args.get("species") or "").strip() or None
     rows, moon = [], []
@@ -1004,6 +1079,22 @@ def lakes_page():
                    lat=l["lat"], lng=l["lng"]) for l in lakes]
     return render_template("lakes.html", lakes=lakes,
                            waters_json=json.dumps(waters), local=LOCAL)
+
+
+@app.route("/lakes/<state>")
+def lakes_state_page(state):
+    """State hub: every Featured water in one state, grouped by region. Static
+    registry facts only — no weather compute on a browse page."""
+    st = state.upper()
+    waters = [dict(id=k, name=v.get("name", k), region=_region(v),
+                   species=v.get("species", []))
+              for k, v in registry().items() if _state(v) == st]
+    if st not in ("CA", "AZ") or not waters:
+        abort(404)
+    waters.sort(key=lambda w: (w.get("region") or "", w["name"]))
+    return render_template("state.html", state=st,
+                           full={"CA": "California", "AZ": "Arizona"}[st],
+                           waters=waters, summary=catalog.summary(st), local=LOCAL)
 
 
 @app.route("/kb")
@@ -1319,7 +1410,12 @@ def api_v1_report():
     """Public anonymous JSON report — the stable shape in public_api.py."""
     if not _rate_ok(f"v1report:{request.remote_addr}", 60):
         return jsonify(error="rate limit — 60 API reports/hour per visitor"), 429
-    lake = resolve_lake(request.args.get("lake"))
+    if request.args.get("lake"):
+        lake = resolve_lake(request.args.get("lake"))
+    elif request.args.get("lat") and request.args.get("lng"):
+        lake = _pin_lake(request.args.get("lat"), request.args.get("lng"))
+    else:
+        lake = resolve_lake(None)
     if lake is None:
         return jsonify(error="unknown lake", hint="see /lakes"), 404
     try:
@@ -1353,7 +1449,12 @@ def api_v1_windows():
     """Public anonymous horizon scan (same cache as /outlook)."""
     if not _rate_ok(f"v1windows:{request.remote_addr}", 120):
         return jsonify(error="rate limit — 120 API scans/hour per visitor"), 429
-    lake = resolve_lake(request.args.get("lake"))
+    if request.args.get("lake"):
+        lake = resolve_lake(request.args.get("lake"))
+    elif request.args.get("lat") and request.args.get("lng"):
+        lake = _pin_lake(request.args.get("lat"), request.args.get("lng"))
+    else:
+        lake = resolve_lake(None)
     if lake is None:
         return jsonify(error="unknown lake", hint="see /lakes"), 404
     try:
@@ -1471,6 +1572,8 @@ def llms_txt():
         "## Key pages",
         "- https://baromoon.com/ — the plan and the free report tool",
         "- https://baromoon.com/lakes — every water we cover (CA + AZ)",
+        "- https://baromoon.com/lakes/ca — California hub (all covered CA waters)",
+        "- https://baromoon.com/lakes/az — Arizona hub (all covered AZ waters)",
         "- https://baromoon.com/kb — cited rigs, lures, knots, line, and baits",
         "- https://baromoon.com/method — how the deterministic engine works",
         "- https://baromoon.com/developers — anonymous JSON API, embed, and feeds",
@@ -1485,6 +1588,7 @@ def llms_txt():
         "- Every factual claim is cited (T1 manufacturer / T2 agency quotes with URL and hash).",
         "- Affiliate offers resolve after ranking, are always disclosed, and never affect picks.",
         "- Live windows depend on the current forecast; prefer the lake pages over cached copies.",
+        "- Any coordinate can be characterized on demand: /report?lat=<>&lng=<> (catalog name when one exists).",
         "- Free to cite with attribution to baromoon.com.",
         "",
     ])
@@ -1493,21 +1597,47 @@ def llms_txt():
 
 @app.route("/sitemap.xml")
 def sitemap():
+    """Sitemap index. The chunks keep Featured lakes separable from the static
+    pages; catalog waters never appear at all until catalog.threshold() passes,
+    so the full inventory can never be submitted by accident."""
     base = "https://baromoon.com"
-    urls = ["/", "/report", "/outlook", "/lakes", "/kb", "/interview",
-            "/about", "/method", "/developers", "/contact", "/privacy", "/disclosure", "/log"]
-    urls += [f"/lake/{l['id']}" for l in lakes_summary()]
-    urls += [f"/kb/{c['id']}" for sp in ("bass", "trout", "catfish", "panfish")
-             for c in tx.catalog(sp)]
-    urls += [f"/kb/{b['id']}" for b in tx.load_baits().get("baits", [])]
-    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    body = ['<?xml version="1.0" encoding="UTF-8"?>',
+            '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+            f"<sitemap><loc>{base}/sitemap-pages.xml</loc></sitemap>",
+            f"<sitemap><loc>{base}/sitemap-lakes.xml</loc></sitemap>",
+            "</sitemapindex>"]
+    return Response("\n".join(body), mimetype="application/xml")
+
+
+def _xml_urlset(urls: list[tuple[str, str]]) -> Response:
+    base = "https://baromoon.com"
     body = ['<?xml version="1.0" encoding="UTF-8"?>',
             '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-    body += [f"<url><loc>{base}{u}</loc>"
-             + (f"<lastmod>{today}</lastmod>" if u.startswith("/lake/") else "")
-             + "</url>" for u in urls]
+    for u, lastmod in urls:
+        body.append(f"<url><loc>{base}{u}</loc>"
+                    + (f"<lastmod>{lastmod}</lastmod>" if lastmod else "")
+                    + "</url>")
     body.append("</urlset>")
     return Response("\n".join(body), mimetype="application/xml")
+
+
+@app.route("/sitemap-pages.xml")
+def sitemap_pages():
+    urls = [("/", ""), ("/report", ""), ("/outlook", ""), ("/lakes", ""), ("/kb", ""),
+            ("/interview", ""), ("/about", ""), ("/method", ""), ("/developers", ""),
+            ("/contact", ""), ("/privacy", ""), ("/disclosure", ""), ("/log", "")]
+    for st in sorted({_state(v) for v in registry().values() if _state(v)}):
+        urls.append((f"/lakes/{st.lower()}", ""))
+    urls += [(f"/kb/{c['id']}", "") for sp in ("bass", "trout", "catfish", "panfish")
+             for c in tx.catalog(sp)]
+    urls += [(f"/kb/{b['id']}", "") for b in tx.load_baits().get("baits", [])]
+    return _xml_urlset(urls)
+
+
+@app.route("/sitemap-lakes.xml")
+def sitemap_lakes():
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    return _xml_urlset([(f"/lake/{l['id']}", today) for l in lakes_summary()])
 
 
 @app.route("/out/<entry>/<retailer>")

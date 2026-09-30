@@ -4,8 +4,10 @@
 {% endblock %}
 {% block content %}
 <h1>Waters</h1>
-<p class="fine">The map — every water baromoon can read. Markers open a report;
-tiles are © OpenStreetMap contributors.</p>
+<p class="fine">The map — every water baromoon can read. Markers open a report; click anywhere
+on the map to drop a pin and run an on-demand report. Browse by state:
+<a href="/lakes/ca">California</a> · <a href="/lakes/az">Arizona</a>. Tiles are © OpenStreetMap
+contributors.</p>
 <div id="map" class="map" role="img" aria-label="Map of the waters baromoon can read"></div>
 <ul class="plain lakes">
   {% for l in lakes %}
@@ -38,6 +40,15 @@ and added to the map.</p>
       '<strong>' + w.name + '</strong><br>' + w.region +
       '<br><a href="/lake/' + encodeURIComponent(w.id) + '">water &rarr;</a>');
   }
+  // Any pin gets an on-demand report (catalog/on-demand tier). Absolute URL so
+  // the gh-pages snapshot's map still reaches the live app.
+  map.on('click', function (e) {
+    const lat = e.latlng.lat.toFixed(4), lng = e.latlng.lng.toFixed(4);
+    L.popup().setLatLng(e.latlng).setContent(
+      '<strong>Dropped pin</strong><br>' + lat + ', ' + lng +
+      '<br><a href="https://baromoon.com/report?lat=' + lat + '&lng=' + lng +
+      '">run a report &rarr;</a>').openOn(map);
+  });
 })();
 </script>
 {% endblock %}
