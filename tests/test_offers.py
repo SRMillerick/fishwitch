@@ -107,5 +107,28 @@ class RegistryShapeTest(unittest.TestCase):
             self.assertIsInstance(rows, list)
 
 
+class SpecLabelFallbackTest(unittest.TestCase):
+    """A spec part that carries only a `ref` (no type/form) still shows the
+    KB label in the shopping row."""
+
+    def test_ref_only_spec_uses_kb_label(self):
+        rows = offers.build_shopping([
+            {"id": "wacky", "label": "Wacky-rigged Senko",
+             "spec": {"tool": {"ref": "vmc-crossover-pliers"}}}])
+        row = next(r for r in rows if r["id"] == "vmc-crossover-pliers")
+        self.assertEqual(row["label"], "VMC Crossover Pliers")
+
+
+class OddmentAlternativeTest(unittest.TestCase):
+    """Oddment parts that aren't sold on Amazon resolve through their live
+    manufacturer pages so their alternatives/dead ends render."""
+
+    def test_manufacturer_only_entries_resolve(self):
+        for entry in ("vmc-nkr-neko-ring", "vmc-crossover-pliers",
+                      "treble-round-bend"):
+            rows = [o for o in offers.resolve(entry) if o.get("url")]
+            self.assertTrue(rows, entry)
+
+
 if __name__ == "__main__":
     unittest.main()

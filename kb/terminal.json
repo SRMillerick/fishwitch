@@ -156,6 +156,46 @@
       "purpose": "treble-hook"
     },
     {
+      "id": "treble-round-bend",
+      "label": "Round-bend treble hook",
+      "kind": "terminal",
+      "category": "hook",
+      "brand": "Gamakatsu",
+      "sizes": [
+        "12",
+        "10",
+        "8",
+        "7",
+        "6",
+        "5",
+        "4",
+        "3",
+        "2",
+        "1",
+        "1/0",
+        "2/0"
+      ],
+      "citations": [
+        {
+          "claim": "round-bend replacement treble",
+          "tier": "T1",
+          "source": "Gamakatsu \u2014 Treble Round Bend",
+          "url": "https://gamakatsu.com/product/treble-hooks-round-bend/",
+          "quote": "The quintessential Round Bend Treble Hook, Gamakatsu Round Bend Trebles have all the attributes that make them the \u201cgo-to\u201d treble for use as replacement hooks on a range of lures.",
+          "fetched_at": "2026-09-30T03:03:18+00:00",
+          "sha256": "750acc6b791f50d2"
+        }
+      ],
+      "editorial": false,
+      "note": null,
+      "provenance": {
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-30T03:03:18+00:00"
+      },
+      "purpose": "treble-hook"
+    },
+    {
       "id": "wacky-hook",
       "label": "Wacky / octopus hook",
       "kind": "terminal",

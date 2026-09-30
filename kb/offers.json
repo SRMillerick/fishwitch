@@ -40,6 +40,14 @@
     "hagsbaits": {
       "label": "Hag's Baits",
       "kind": "manufacturer"
+    },
+    "rapala": {
+      "label": "VMC / Rapala",
+      "kind": "manufacturer"
+    },
+    "gamakatsu": {
+      "label": "Gamakatsu",
+      "kind": "manufacturer"
     }
   },
   "entries": {
@@ -590,6 +598,24 @@
         }
       ]
     },
+    "vmc-nkr-neko-ring": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "rapala",
+          "url": "https://www.rapala.com/us_en/nkr-neko-ring"
+        }
+      ]
+    },
+    "vmc-crossover-pliers": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "rapala",
+          "url": "https://www.rapala.com/us_en/crossover-pliers"
+        }
+      ]
+    },
     "offset-hook": {
       "kind": "product",
       "offers": [
@@ -704,6 +730,19 @@
         {
           "retailer": "amazon",
           "asin": "B0015NFP6K"
+        }
+      ]
+    },
+    "treble-round-bend": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "amazon",
+          "asin": "B072M8SPFB"
+        },
+        {
+          "retailer": "gamakatsu",
+          "url": "https://gamakatsu.com/product/treble-hooks-round-bend/"
         }
       ]
     },

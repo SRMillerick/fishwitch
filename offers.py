@@ -188,6 +188,9 @@ def build_shopping(rigs: list[dict]) -> list[dict]:
                     label = " / ".join(str(x) for x in (p.get("main"), p.get("leader")) if x)
                 else:
                     label = p.get("ref_label") or p.get("type") or p.get("form") or ""
+                    if not label and p.get("ref"):
+                        ent = tx.terminal_entry(p["ref"]) or tx.bait_entry(p["ref"])
+                        label = (ent or {}).get("label") or ""
                 sizes = p.get("sizes") or []
                 if isinstance(sizes, str):
                     sizes = [sizes]
