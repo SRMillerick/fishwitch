@@ -2076,6 +2076,178 @@
         "verified_at": "2026-09-19T17:14:34+00:00",
         "note": "nightcrawler bait entry \u2014 condition bands are editorial; quotes are the facts"
       }
+    },
+    {
+      "id": "fly-bass",
+      "label": "Fly (bass popper / streamer)",
+      "style": "reaction",
+      "depth": "shallow",
+      "kind": "product",
+      "aliases": [
+        "fly",
+        "fly rod",
+        "bass fly",
+        "popper",
+        "bass bug",
+        "deer hair bug",
+        "deer-hair bug",
+        "streamer",
+        "woolly bugger",
+        "clouser",
+        "clouser minnow"
+      ],
+      "conditions": {
+        "light": [
+          "dusk/dawn",
+          "golden",
+          "moderate day"
+        ],
+        "wind": [
+          "glass",
+          "chop",
+          "windy"
+        ],
+        "water_temp_f": [
+          50,
+          85
+        ]
+      },
+      "technique": "pop a floating bug on top through first and last light, letting the rings settle between pops; switch to a streamer on a sinking line once bass hold deeper or the wind chops the surface",
+      "note": "the fly-rod bass method \u2014 surface at dawn/dusk, streamers when they hold deeper",
+      "spec": {
+        "line": {
+          "main": "bass bug fly line 6\u20138 wt (two sizes heavy)",
+          "leader": "8 ft 8\u201312 lb nylon bass leader",
+          "note": "SA Amplitude Textured Bass Bug 6/7/8 wt; Absolute Bass Leaders 8 ft, 8\u201320 lb; Mastery Bass/Panfish tippet 4\u201320 lb"
+        },
+        "bait": {
+          "form": "bass popper / streamer",
+          "note": "floating bug or streamer \u2014 e.g. EP Hollow Popper, Umpqua warmwater patterns"
+        },
+        "source": "Scientific Anglers (line/leader/tippet sizes) + Orvis bass chapter (method) + Missouri MDC (behavior)",
+        "confidence": "sourced"
+      },
+      "citations": [
+        {
+          "claim": "line purpose \u2014 bass bugs & streamers",
+          "tier": "T1",
+          "source": "Scientific Anglers \u2014 Amplitude Textured Bass Bug",
+          "url": "https://scientificanglers.com/product/amplitude-bass-bug/",
+          "quote": "Designed specifically for throwing large, air-resistant dry flies and streamers for bass in rivers, lakes, and ponds",
+          "found": true,
+          "fetched_at": "2026-09-30T19:00:10+00:00",
+          "sha256": "a1d91e0133cee1d3"
+        },
+        {
+          "claim": "two-size-heavy bass taper",
+          "tier": "T1",
+          "source": "Scientific Anglers \u2014 Amplitude Textured Bass Bug",
+          "url": "https://scientificanglers.com/product/amplitude-bass-bug/",
+          "quote": "Overweighted by two line sizes to assist in loading rods and turning over heavy rigs",
+          "found": true,
+          "fetched_at": "2026-09-30T19:00:10+00:00",
+          "sha256": "a1d91e0133cee1d3"
+        },
+        {
+          "claim": "bass line weights",
+          "tier": "T1",
+          "source": "Scientific Anglers \u2014 Amplitude Textured Bass Bug",
+          "url": "https://scientificanglers.com/product/amplitude-bass-bug/",
+          "quote": "Weight Choose an option 6 wt. 7 wt. 8 wt.",
+          "found": true,
+          "fetched_at": "2026-09-30T19:00:10+00:00",
+          "sha256": "a1d91e0133cee1d3"
+        },
+        {
+          "claim": "bass leader sizes (8 ft)",
+          "tier": "T1",
+          "source": "Scientific Anglers \u2014 Absolute Bass Leaders",
+          "url": "https://scientificanglers.com/product/absolute-bass/",
+          "quote": "Weight Choose an option 8 lb. 10 lb. 12 lb. 16 lb. 20 lb.",
+          "found": true,
+          "fetched_at": "2026-09-30T19:00:11+00:00",
+          "sha256": "ba9499bbee4f9205"
+        },
+        {
+          "claim": "bass/panfish tippet sizes",
+          "tier": "T1",
+          "source": "Scientific Anglers \u2014 Mastery Bass/Panfish Tippet",
+          "url": "https://scientificanglers.com/product/mastery-bass-panfish-30m/",
+          "quote": "Mastery Bass and Panfish Freshwater Tippet Sizes: 4lb \u2013 20lb",
+          "found": true,
+          "fetched_at": "2026-09-30T19:00:12+00:00",
+          "sha256": "b86bbc3f580a741f"
+        },
+        {
+          "claim": "peak activity \u2014 low light",
+          "tier": "T2",
+          "source": "Missouri MDC \u2014 Largemouth bass field guide",
+          "url": "https://mdc.mo.gov/discover-nature/field-guide/largemouth-bass",
+          "quote": "This species is most active at dawn and dusk.",
+          "found": true,
+          "fetched_at": "2026-09-30T18:58:35+00:00",
+          "sha256": "5ee0c287b30ee62e"
+        },
+        {
+          "claim": "forage base (fish/crayfish/insects/frogs)",
+          "tier": "T2",
+          "source": "Missouri MDC \u2014 Largemouth bass field guide",
+          "url": "https://mdc.mo.gov/discover-nature/field-guide/largemouth-bass",
+          "quote": "Carnivorous, feeding on fish, crayfish, large insects, and occasionally frogs, mice, snakes, or other small animals that fall into the water.",
+          "found": true,
+          "fetched_at": "2026-09-30T18:58:35+00:00",
+          "sha256": "5ee0c287b30ee62e"
+        },
+        {
+          "claim": "method coverage \u2014 floating & sinking flies",
+          "tier": "T1",
+          "source": "Orvis Learning Center \u2014 Chapter Two: Bass Fly Fishing",
+          "url": "https://howtoflyfish.orvis.com/video-lessons/the-basics-of-fly-fishing/chapter-two-bass-fly-fishing",
+          "quote": "We'll explore bass life cycles, how to select flies for largemouth and smallmouth bass, the right tackle to cast bass flies, and how to retrieve the fly with both floating and sinking flies.",
+          "found": true,
+          "fetched_at": "2026-09-30T18:57:59+00:00",
+          "sha256": "e4615f33eefd0c34"
+        },
+        {
+          "claim": "bass popper pattern (maker catalog)",
+          "tier": "T1",
+          "source": "Enrico Puglisi (EP Flies)",
+          "url": "https://www.epflies.com/",
+          "quote": "EP\u00ae Hollow Popper",
+          "found": true,
+          "fetched_at": "2026-09-30T18:57:42+00:00",
+          "sha256": "26aa2929f55dd324"
+        },
+        {
+          "claim": "warmwater pattern catalog",
+          "tier": "T1",
+          "source": "Umpqua Feather Merchants \u2014 Warmwater flies",
+          "url": "https://www.umpqua.com/flies/warmwater/",
+          "quote": "BABY BASS POPPER",
+          "found": true,
+          "fetched_at": "2026-09-30T18:59:04+00:00",
+          "sha256": "9d55bcc5b894ad4a"
+        },
+        {
+          "claim": "bass popper origin",
+          "tier": "T3",
+          "source": "Wikipedia \u2014 Fly fishing",
+          "url": "https://en.wikipedia.org/wiki/Fly_fishing",
+          "quote": "Fly anglers seeking bass developed the spinner/fly lure and bass popper fly, which are still used today.",
+          "found": true,
+          "fetched_at": "2026-09-30T19:37:10+00:00",
+          "sha256": "a0e8566d39a4f34e"
+        }
+      ],
+      "provenance": {
+        "seed_author": "fishwitch-research/1.0",
+        "source": "Scientific Anglers + Orvis Learning Center + Missouri MDC (multi-source research pass)",
+        "source_url": "https://scientificanglers.com/product/amplitude-bass-bug/",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-30T19:50:31+00:00",
+        "note": "text sha a1d91e0133cee1d3+5ee0c287b30ee62e+e4615f33eefd0c34; fetched 2026-09-30T19:00:10+00:00; bass-fly method entry \u2014 condition bands are editorial; the quotes are the facts"
+      }
     }
   ],
   "provenance": {

@@ -765,7 +765,7 @@ def score_entry(cat: dict, ctx: dict) -> tuple[float, list[str], str | None]:
         if cat["depth"] == "deep":
             score += 0.5
     if ctx["light"] in ("golden", "sunset/sunrise", "dusk/dawn", "night") \
-            and cat["id"] in ("walker", "plopper", "buzz", "frog"):
+            and cat["id"] in ("walker", "plopper", "buzz", "frog", "fly-bass"):
         score += 0.5; why.append("low-light topwater = the big-fish play")
     return score, why, None
 
