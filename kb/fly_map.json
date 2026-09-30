@@ -1,0 +1,74 @@
+{
+  "label": "Conventional → fly counterparts",
+  "_note": "Editorial (T5) bridge from the conventional presentations the engine already scores to the fly archetypes in kb/bass.json. Display-only: the report labels it and it never enters ranking; the fly facts are cited on each fly entry.",
+  "provenance": {
+    "confidence": "verified",
+    "verified_by": "sean",
+    "source": "editorial synthesis — angler conventionals (senko/drop shot/urchin) mapped by cadence, depth, and forage to the Orvis bass-fly categories",
+    "created_at": "2026-09-30T20:30:00+00:00",
+    "verified_at": "2026-09-30T20:36:21+00:00",
+    "note": "T5 editorial synthesis, human-reviewed 2026-09-30 — mappings are ours, the fly facts are cited on each entry"
+  },
+  "mappings": {
+    "wacky": {
+      "fly": "fly-nymph",
+      "fly_label": "Damsel/dragon nymph fly",
+      "note": "the Senko's dying fall = a slow-falling nymph twitched on the pause"
+    },
+    "dropshot": {
+      "fly": "fly-nymph",
+      "fly_label": "Damsel/dragon nymph fly",
+      "note": "both suspend a small profile above the bottom and fish almost motionless — indicator or drop-shot fly rig"
+    },
+    "urchin": {
+      "fly": "fly-crayfish",
+      "fly_label": "Crayfish fly",
+      "note": "both are craw/creature profiles hopped slowly on the bottom"
+    },
+    "trig": {
+      "fly": "fly-crayfish",
+      "fly_label": "Crayfish fly",
+      "note": "a bottom-dragged worm = a weighted craw stripped slow"
+    },
+    "jig": {
+      "fly": "fly-crayfish",
+      "fly_label": "Crayfish fly",
+      "note": "jig + craw trailer = the same craw profile on the bottom"
+    },
+    "spinnerbait": {
+      "fly": "fly-bass",
+      "fly_label": "Bass baitfish streamer",
+      "note": "baitfish profile, steady retrieve"
+    },
+    "chatterbait": {
+      "fly": "fly-bass",
+      "fly_label": "Bass baitfish streamer",
+      "note": "baitfish profile, steady retrieve"
+    },
+    "squarebill": {
+      "fly": "fly-bass",
+      "fly_label": "Bass baitfish streamer",
+      "note": "baitfish profile on the move"
+    },
+    "crank-mid": {
+      "fly": "fly-bass",
+      "fly_label": "Bass baitfish streamer",
+      "note": "baitfish profile on the move"
+    },
+    "walker": {
+      "fly": "fly-bass",
+      "fly_label": "Bass popper",
+      "note": "walking topwater = a popping bug"
+    },
+    "plopper": {
+      "fly": "fly-bass",
+      "fly_label": "Bass popper",
+      "note": "prop topwater = a popping bug"
+    },
+    "frog": {
+      "fly": "fly-bass",
+      "fly_label": "Bass popper",
+      "note": "hollow-body frog = a frog/popper fly"
+    }
+  }
+}

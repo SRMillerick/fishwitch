@@ -762,6 +762,11 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True,
             L.append(f"    - *build: {tx.spec_line(spec)}*")
             if spec.get("source"):
                 L.append(f"      *({spec['source']})*")
+        fc = tx.fly_counterpart(c["id"]) if not c["id"].startswith("fly-") else None
+        if fc:
+            link = f"; /kb/{fc['fly']}" if tx.find_entry(fc["fly"]) else ""
+            L.append(f"    - *fly rod? → **{fc['fly_label']}** — {fc['note']} "
+                     f"(editorial mapping{link})*")
     unmatched = m["match"]["unmatched"]
     if unmatched:
         L.append(f"- *(no match in the KB for: {', '.join(unmatched)} — still bring them)*")

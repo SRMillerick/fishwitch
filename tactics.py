@@ -450,6 +450,33 @@ def position_note(state: str) -> str:
     return (load_position().get("state_notes") or {}).get(state) or ""
 
 
+_FLY_MAP: dict | None = None
+
+
+def load_fly_map() -> dict:
+    """Editorial conventional→fly counterparts (kb/fly_map.json). Display-only:
+    the report labels the mapping and it never enters ranking."""
+    global _FLY_MAP
+    if _FLY_MAP is None:
+        p = KB_DIR / "fly_map.json"
+        _FLY_MAP = json.loads(p.read_text()) if p.exists() else {"mappings": {}, "provenance": {}}
+    return _FLY_MAP
+
+
+def fly_counterpart(entry_id: str) -> dict | None:
+    """The fly-rod counterpart to show for a conventional pick, or None.
+    Reads the T5 map; returns {fly, fly_label, note, confidence}."""
+    m = (load_fly_map().get("mappings") or {}).get(entry_id)
+    if not m or not m.get("fly"):
+        return None
+    fly = find_entry(m["fly"]) or {}
+    prov = load_fly_map().get("provenance") or {}
+    return dict(fly=m["fly"],
+                fly_label=m.get("fly_label") or fly.get("label") or m["fly"],
+                note=m.get("note") or "",
+                confidence=prov.get("confidence") or "unverified-editorial")
+
+
 def load_trends() -> dict:
     """Promoted trend signals (kb/trends.json) — dated, sourced claims about
     what is winning/being pushed. Never scored; the report labels them."""

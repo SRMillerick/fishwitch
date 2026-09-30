@@ -72,6 +72,37 @@ class PromoteTest(unittest.TestCase):
     def test_missing_draft_returns_none(self):
         self.assertIsNone(kb_ingest.promote("bass", "nope", "tester"))
 
+    def test_table_patch_merges_and_creates_files(self):
+        # scalar merge into an existing table
+        d = {"entry_id": "fly-classes", "species_kb": "presentation", "status": "pending",
+             "table_file": "presentation.json",
+             "table_patch": {"entries": {"fly-bass": "topwater"}},
+             "provenance": {"seed_author": "test", "source": "unit test"}, "review": {}}
+        (self.tmp / "presentation.json").write_text(json.dumps({"entries": {}}))
+        p = self.tmp / "pending" / "presentation" / "fly-classes.json"
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(json.dumps(d))
+        kb_ingest.promote("presentation", "fly-classes", "tester")
+        table = json.loads((self.tmp / "presentation.json").read_text())
+        self.assertEqual(table["entries"]["fly-bass"], "topwater")
+        self.assertFalse(p.exists())
+
+    def test_table_patch_creates_a_new_file_without_placeholder_lists(self):
+        d = {"entry_id": "bass-conventional", "species_kb": "fly_map", "status": "pending",
+             "table_file": "fly_map.json",
+             "table_patch": {"label": "Conventional → fly counterparts",
+                              "mappings": {"dropshot": {"fly": "fly-nymph"}}},
+             "file_provenance": {"confidence": "unverified-editorial"},
+             "provenance": {"seed_author": "test", "source": "unit test"}, "review": {}}
+        p = self.tmp / "pending" / "fly_map" / "bass-conventional.json"
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(json.dumps(d))
+        kb_ingest.promote("fly_map", "bass-conventional", "tester")
+        table = json.loads((self.tmp / "fly_map.json").read_text())
+        self.assertNotIn("cats", table)
+        self.assertEqual(table["mappings"]["dropshot"]["fly"], "fly-nymph")
+        self.assertEqual(table["provenance"]["confidence"], "unverified-editorial")
+
 
 if __name__ == "__main__":
     unittest.main()

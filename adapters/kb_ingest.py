@@ -296,7 +296,8 @@ def promote(species: str, entry_id: str, verified_by: str) -> Path | None:
     draft = json.loads(p.read_text())
     key = draft.get("target_key") or "cats"
     kb_file = KB / (draft.get("target_file") or f"{species}.json")
-    if kb_file.exists():
+    existed = kb_file.exists()
+    if existed:
         kb = json.loads(kb_file.read_text())
     else:
         kb = {key: [],
@@ -362,6 +363,28 @@ def promote(species: str, entry_id: str, verified_by: str) -> Path | None:
                         c.setdefault("citations", []).extend(draft["citations"])
                     break
         kb_file.write_text(json.dumps(kb, indent=2) + "\n")
+        p.unlink()
+        return kb_file
+
+    if draft.get("table_patch"):
+        # Generic one-level table merge for cross-species tables that are not
+        # entry collections (kb/presentation.json, kb/fly_map.json): scalars
+        # replace, dicts merge one level deep. A new file starts empty — the
+        # entry-collection placeholder above does not apply here.
+        if not existed:
+            kb = {}
+        for k, v in (draft["table_patch"] or {}).items():
+            if isinstance(v, dict) and isinstance(kb.get(k), dict):
+                for kk, vv in v.items():
+                    if isinstance(vv, dict) and isinstance(kb[k].get(kk), dict):
+                        kb[k][kk] = {**kb[k][kk], **vv}
+                    else:
+                        kb[k][kk] = vv
+            else:
+                kb[k] = v
+        if draft.get("file_provenance"):
+            kb["provenance"] = {**kb.get("provenance", {}), **draft["file_provenance"]}
+        kb_file.write_text(json.dumps(kb, indent=2, ensure_ascii=False) + "\n")
         p.unlink()
         return kb_file
 

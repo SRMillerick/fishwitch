@@ -2248,6 +2248,280 @@
         "verified_at": "2026-09-30T19:50:31+00:00",
         "note": "text sha a1d91e0133cee1d3+5ee0c287b30ee62e+e4615f33eefd0c34; fetched 2026-09-30T19:00:10+00:00; bass-fly method entry \u2014 condition bands are editorial; the quotes are the facts"
       }
+    },
+    {
+      "id": "fly-nymph",
+      "label": "Fly (damsel/dragon nymph)",
+      "style": "finesse",
+      "depth": "mid",
+      "kind": "product",
+      "aliases": [
+        "nymph",
+        "damsel",
+        "damselfly",
+        "dragonfly",
+        "dragonfly nymph",
+        "stillwater nymph",
+        "leech fly",
+        "slow-fall fly"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day",
+          "dusk/dawn",
+          "golden"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          50,
+          85
+        ]
+      },
+      "technique": "fish a damselfly/dragonfly nymph on a floating line with a long leader \u2014 let it fall on the pause and twitch it; hang it under an indicator when bass suspend off the bottom",
+      "note": "the slow-fall fly \u2014 small profile, fished almost motionless",
+      "spec": {
+        "line": {
+          "main": "floating fly line",
+          "leader": "tapered leader to 4\u201320 lb tippet",
+          "note": "SA Mastery Bass/Panfish tippet is tagged for nymphs, 4\u201320 lb"
+        },
+        "bait": {
+          "form": "damselfly / dragonfly nymph",
+          "sizes": [
+            "10"
+          ],
+          "note": "Orvis Hot Head Damsel size 10; stillwater nymphs"
+        },
+        "source": "Orvis damsel pattern + Scientific Anglers tippet \u2014 condition bands editorial",
+        "confidence": "sourced"
+      },
+      "citations": [
+        {
+          "claim": "stillwater nymph pattern",
+          "tier": "T1",
+          "source": "Orvis \u2014 Hot Head Damsel",
+          "url": "https://www.orvis.com/product/hot-head-damsel/5E4G.html",
+          "quote": "No stillwater box would be complete without a good damselfly nymph. Large trout and bass alike love the easy meal they provide, and the Hot Head Damsel is a great imitation that will draw vicious strikes.",
+          "found": true,
+          "fetched_at": "2026-09-30T20:20:42+00:00",
+          "sha256": "e6aa2e79768efd6d"
+        },
+        {
+          "claim": "nymph size",
+          "tier": "T1",
+          "source": "Orvis \u2014 Hot Head Damsel",
+          "url": "https://www.orvis.com/product/hot-head-damsel/5E4G.html",
+          "quote": "Size: 10.",
+          "found": true,
+          "fetched_at": "2026-09-30T20:20:42+00:00",
+          "sha256": "e6aa2e79768efd6d"
+        },
+        {
+          "claim": "bass/panfish tippet sizes (nymph tag)",
+          "tier": "T1",
+          "source": "Scientific Anglers \u2014 Mastery Bass/Panfish Tippet",
+          "url": "https://scientificanglers.com/product/mastery-bass-panfish-30m/",
+          "quote": "Mastery Bass and Panfish Freshwater Tippet Sizes: 4lb \u2013 20lb",
+          "found": true,
+          "fetched_at": "2026-09-30T19:00:12+00:00",
+          "sha256": "b86bbc3f580a741f"
+        },
+        {
+          "claim": "peak activity \u2014 low light",
+          "tier": "T2",
+          "source": "Missouri MDC \u2014 Largemouth bass field guide",
+          "url": "https://mdc.mo.gov/discover-nature/field-guide/largemouth-bass",
+          "quote": "This species is most active at dawn and dusk.",
+          "found": true,
+          "fetched_at": "2026-09-30T18:58:35+00:00",
+          "sha256": "5ee0c287b30ee62e"
+        },
+        {
+          "claim": "forage base",
+          "tier": "T2",
+          "source": "Missouri MDC \u2014 Largemouth bass field guide",
+          "url": "https://mdc.mo.gov/discover-nature/field-guide/largemouth-bass",
+          "quote": "Carnivorous, feeding on fish, crayfish, large insects, and occasionally frogs, mice, snakes, or other small animals that fall into the water.",
+          "found": true,
+          "fetched_at": "2026-09-30T18:58:35+00:00",
+          "sha256": "5ee0c287b30ee62e"
+        },
+        {
+          "claim": "when to fish surface vs deep",
+          "tier": "T1",
+          "source": "Orvis \u2014 Bass & Panfish Flies collection",
+          "url": "https://www.orvis.com/bass-flies",
+          "quote": "Strip a noisy popper across the surface to call attention when they\u2019re looking up. Deeper down, baitfish and crayfish patterns with subtle movement are great for triggering strikes from wary bass.",
+          "found": true,
+          "fetched_at": "2026-09-30T20:20:20+00:00",
+          "sha256": "bfe8830c14c0f098"
+        }
+      ],
+      "provenance": {
+        "seed_author": "fishwitch-research/1.0",
+        "source": "Orvis pattern pages + Scientific Anglers (nymph tippet)",
+        "source_url": "https://www.orvis.com/product/hot-head-damsel/5E4G.html",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-30T20:36:20+00:00",
+        "note": "text sha 4c5a5d00ae7618b4+e6aa2e79768efd6d+bfe8830c14c0f098; fetched 2026-09-30T20:20:42+00:00; bass fly (nymph) entry \u2014 condition bands are editorial; the quotes are the facts"
+      }
+    },
+    {
+      "id": "fly-crayfish",
+      "label": "Fly (crayfish)",
+      "style": "finesse",
+      "depth": "mid",
+      "kind": "product",
+      "aliases": [
+        "crayfish fly",
+        "craw fly",
+        "cray pattern",
+        "crawfish",
+        "crawdad fly"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day",
+          "dusk/dawn",
+          "golden"
+        ],
+        "wind": [
+          "glass",
+          "chop",
+          "windy"
+        ],
+        "water_temp_f": [
+          50,
+          85
+        ]
+      },
+      "technique": "cast the weighted craw up and across, let it hit bottom, and strip it very slowly along the bottom with long pauses",
+      "note": "the urchin/creature of the fly box \u2014 a bottom-hopping craw",
+      "spec": {
+        "line": {
+          "main": "bass bug fly line 6\u20138 wt (two sizes heavy)",
+          "leader": "8 ft 8\u201312 lb nylon bass leader",
+          "note": "SA Amplitude Bass Bug / Absolute Bass Leaders; the dumbbell eyes do the sinking"
+        },
+        "bait": {
+          "form": "crayfish",
+          "sizes": [
+            "4",
+            "1",
+            "1/0"
+          ],
+          "note": "Orvis Gulley Ultra Craw (4, 1/0); Schultzy's Single Fly Cray (1, 4 in)"
+        },
+        "source": "Orvis craw pattern pages + Scientific Anglers line/leader \u2014 condition bands editorial",
+        "confidence": "sourced"
+      },
+      "citations": [
+        {
+          "claim": "craw method + eyes",
+          "tier": "T1",
+          "source": "Orvis \u2014 Gulley Ultra Craw",
+          "url": "https://www.orvis.com/product/gulley-ultra-craw/28AE.html",
+          "quote": "Crawfish are a bass favorite. This great Gulley Ultra Craw fly pattern has two dumbbell eyes to get it down where the crawfish live and ride hook-up to prevent snags.",
+          "found": true,
+          "fetched_at": "2026-09-30T20:20:42+00:00",
+          "sha256": "4c5a5d00ae7618b4"
+        },
+        {
+          "claim": "slow bottom strip",
+          "tier": "T1",
+          "source": "Orvis \u2014 Gulley Ultra Craw",
+          "url": "https://www.orvis.com/product/gulley-ultra-craw/28AE.html",
+          "quote": "Strip it very slowly along the bottom and hang on to your rod.",
+          "found": true,
+          "fetched_at": "2026-09-30T20:20:42+00:00",
+          "sha256": "4c5a5d00ae7618b4"
+        },
+        {
+          "claim": "craw sizes",
+          "tier": "T1",
+          "source": "Orvis \u2014 Gulley Ultra Craw",
+          "url": "https://www.orvis.com/product/gulley-ultra-craw/28AE.html",
+          "quote": "Sizes: 4, 1/0.",
+          "found": true,
+          "fetched_at": "2026-09-30T20:20:42+00:00",
+          "sha256": "4c5a5d00ae7618b4"
+        },
+        {
+          "claim": "smallmouth craw pattern",
+          "tier": "T1",
+          "source": "Orvis \u2014 Schultzy's Single Fly Cray",
+          "url": "https://www.orvis.com/product/schultzys-single-fly-cray/9R7T.html",
+          "quote": "A staple crayfish pattern for the smallmouth bass streams of southeastern Michigan, this molted crayfish fly is tied with rabbit for plenty of motion without movement.",
+          "found": true,
+          "fetched_at": "2026-09-30T20:20:43+00:00",
+          "sha256": "f2ee6fafb75da4c3"
+        },
+        {
+          "claim": "craw size/length",
+          "tier": "T1",
+          "source": "Orvis \u2014 Schultzy's Single Fly Cray",
+          "url": "https://www.orvis.com/product/schultzys-single-fly-cray/9R7T.html",
+          "quote": "Size 1. Length 4\".",
+          "found": true,
+          "fetched_at": "2026-09-30T20:20:43+00:00",
+          "sha256": "f2ee6fafb75da4c3"
+        },
+        {
+          "claim": "when to fish surface vs deep",
+          "tier": "T1",
+          "source": "Orvis \u2014 Bass & Panfish Flies collection",
+          "url": "https://www.orvis.com/bass-flies",
+          "quote": "Strip a noisy popper across the surface to call attention when they\u2019re looking up. Deeper down, baitfish and crayfish patterns with subtle movement are great for triggering strikes from wary bass.",
+          "found": true,
+          "fetched_at": "2026-09-30T20:20:20+00:00",
+          "sha256": "bfe8830c14c0f098"
+        },
+        {
+          "claim": "bass bug line purpose",
+          "tier": "T1",
+          "source": "Scientific Anglers \u2014 Amplitude Textured Bass Bug",
+          "url": "https://scientificanglers.com/product/amplitude-bass-bug/",
+          "quote": "Designed specifically for throwing large, air-resistant dry flies and streamers for bass in rivers, lakes, and ponds",
+          "found": true,
+          "fetched_at": "2026-09-30T19:00:10+00:00",
+          "sha256": "a1d91e0133cee1d3"
+        },
+        {
+          "claim": "bass leader sizes",
+          "tier": "T1",
+          "source": "Scientific Anglers \u2014 Absolute Bass Leaders",
+          "url": "https://scientificanglers.com/product/absolute-bass/",
+          "quote": "Weight Choose an option 8 lb. 10 lb. 12 lb. 16 lb. 20 lb.",
+          "found": true,
+          "fetched_at": "2026-09-30T19:00:11+00:00",
+          "sha256": "ba9499bbee4f9205"
+        },
+        {
+          "claim": "forage base",
+          "tier": "T2",
+          "source": "Missouri MDC \u2014 Largemouth bass field guide",
+          "url": "https://mdc.mo.gov/discover-nature/field-guide/largemouth-bass",
+          "quote": "Carnivorous, feeding on fish, crayfish, large insects, and occasionally frogs, mice, snakes, or other small animals that fall into the water.",
+          "found": true,
+          "fetched_at": "2026-09-30T18:58:35+00:00",
+          "sha256": "5ee0c287b30ee62e"
+        }
+      ],
+      "provenance": {
+        "seed_author": "fishwitch-research/1.0",
+        "source": "Orvis craw patterns + Scientific Anglers (line/leader)",
+        "source_url": "https://www.orvis.com/product/gulley-ultra-craw/28AE.html",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-30T20:36:21+00:00",
+        "note": "text sha 4c5a5d00ae7618b4+e6aa2e79768efd6d+bfe8830c14c0f098; fetched 2026-09-30T20:20:42+00:00; bass fly (crayfish) entry \u2014 condition bands are editorial; the quotes are the facts"
+      }
     }
   ],
   "provenance": {
