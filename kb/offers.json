@@ -48,6 +48,14 @@
     "gamakatsu": {
       "label": "Gamakatsu",
       "kind": "manufacturer"
+    },
+    "orvis": {
+      "label": "Orvis",
+      "kind": "manufacturer"
+    },
+    "epflies": {
+      "label": "EP Flies",
+      "kind": "manufacturer"
     }
   },
   "entries": {
@@ -892,6 +900,190 @@
         {
           "retailer": "hagsbaits",
           "url": "https://www.hagsbaits.com/product-page/hag-s-prickly-pear"
+        }
+      ]
+    },
+    "fly-bass": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "orvis",
+          "url": "https://www.orvis.com/product/boss-bug-popper/3MSP.html",
+          "note": "Boss Bug Popper (sizes 4, 6)"
+        },
+        {
+          "retailer": "orvis",
+          "url": "https://www.orvis.com/product/weedless-sneaky-pete-popper/0358.html",
+          "note": "Weedless Sneaky Pete Popper"
+        },
+        {
+          "retailer": "orvis",
+          "url": "https://www.orvis.com/product/krafts-baitfish/3NNM.html",
+          "note": "Kraft's Baitfish streamer (sizes 1, 2/0)"
+        },
+        {
+          "retailer": "epflies",
+          "url": "https://www.epflies.com/products/ep-hollow-popper",
+          "note": "EP Hollow Popper"
+        }
+      ],
+      "components": [
+        {
+          "id": "popper-body",
+          "label": "Popper bodies (Flymen Double Barrel)",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": "B01LYQSC87"
+            }
+          ]
+        },
+        {
+          "id": "streamer-hook",
+          "label": "Streamer hooks (Umpqua U301, sizes 4\u20132/0)",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": "B005CIKXDY"
+            }
+          ]
+        },
+        {
+          "id": "dumbbell-eyes",
+          "label": "Dumbbell eyes (Hareline brass)",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": "B01726BB9I"
+            }
+          ]
+        },
+        {
+          "id": "rabbit-strip",
+          "label": "Rabbit strips (Hareline micro)",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": "B00U831TGI"
+            }
+          ]
+        },
+        {
+          "id": "marabou",
+          "label": "Marabou (Hareline strung blood quills)",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": "B001U87BMQ"
+            }
+          ]
+        }
+      ]
+    },
+    "fly-nymph": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "orvis",
+          "url": "https://www.orvis.com/product/hot-head-damsel/5E4G.html",
+          "note": "Hot Head Damsel (size 10)"
+        }
+      ],
+      "components": [
+        {
+          "id": "nymph-hook",
+          "label": "Nymph hooks (assorted, sizes 8\u201316)",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": "B07SLC3VSG"
+            }
+          ]
+        },
+        {
+          "id": "bead",
+          "label": "Tungsten slotted beads (hot head)",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": "B09WHX2LB3"
+            }
+          ]
+        },
+        {
+          "id": "marabou",
+          "label": "Marabou (tail / body)",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": "B001U87BMQ"
+            }
+          ]
+        },
+        {
+          "id": "dubbing",
+          "label": "Dubbing / chenille (body)"
+        }
+      ]
+    },
+    "fly-crayfish": {
+      "kind": "product",
+      "offers": [
+        {
+          "retailer": "orvis",
+          "url": "https://www.orvis.com/product/gulley-ultra-craw/28AE.html",
+          "note": "Gulley Ultra Craw (sizes 4, 1/0)"
+        },
+        {
+          "retailer": "orvis",
+          "url": "https://www.orvis.com/product/schultzys-single-fly-cray/9R7T.html",
+          "note": "Schultzy's Single Fly Cray (size 1, 4 in)"
+        }
+      ],
+      "components": [
+        {
+          "id": "cray-hook",
+          "label": "Crayfish / streamer hooks (sizes 1\u20131/0)",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": "B005CIKXDY"
+            }
+          ]
+        },
+        {
+          "id": "dumbbell-eyes",
+          "label": "Dumbbell eyes (Hareline brass)",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": "B01726BB9I"
+            }
+          ]
+        },
+        {
+          "id": "rabbit-strip",
+          "label": "Rabbit strips (Hareline micro)",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": "B00U831TGI"
+            }
+          ]
+        },
+        {
+          "id": "rubber-legs",
+          "label": "Rubber legs (silicone)",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": "B081B41VH9"
+            }
+          ]
+        },
+        {
+          "id": "hackle",
+          "label": "Saddle hackle / schlappen (pulsating hackle)"
         }
       ]
     }

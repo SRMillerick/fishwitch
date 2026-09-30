@@ -22,7 +22,7 @@
         {% endfor %}
       {% endif %}
       {% if r.components %}
-      <div class="fine build"><span class="sc">build it:</span>
+      <div class="fine build"><span class="sc">{% if r.id.startswith('fly-') %}tie it{% else %}build it{% endif %}:</span>
         {% for comp in r.components %}{{ comp.label }}{% set linked = comp.offers | selectattr('url') | list %}{% for o in linked %} <a href="/out/{{ r.id }}/{{ o.retailer }}?comp={{ comp.id }}&src=tackle" target="_blank" rel="sponsored noopener">{{ o.retailer_label or o.retailer }}</a>{% endfor %}{% if not loop.last %} · {% endif %}{% endfor %}
       </div>
       {% endif %}
@@ -72,7 +72,7 @@
   {% for g in gap_rigs %}
     <li><span class="badge">rig</span> <strong>{{ g.label }}</strong> — scores {{ g.score }} here{% if g.why %} · <span class="fine">{{ g.why }}</span>{% endif %}
       {% if g.components %}
-      <div class="fine build"><span class="sc">build it:</span>
+      <div class="fine build"><span class="sc">{% if g.id.startswith('fly-') %}tie it{% else %}build it{% endif %}:</span>
         {% for comp in g.components %}{{ comp.label }}{% set linked = comp.offers | selectattr('url') | list %}{% for o in linked %} <a href="/out/{{ g.id }}/{{ o.retailer }}?comp={{ comp.id }}&src=gap" target="_blank" rel="sponsored noopener">{{ o.retailer_label or o.retailer }}</a>{% endfor %}{% if not loop.last %} · {% endif %}{% endfor %}
       </div>
       {% endif %}

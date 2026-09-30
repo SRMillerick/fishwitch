@@ -44,6 +44,12 @@ class KBEntityPageTest(unittest.TestCase):
         bait = self.c.get("/kb/abstract").get_data(as_text=True)
         self.assertIn('href="/kb/prickly-pear"', bait)
 
+    def test_fly_entity_shows_tie_it_materials(self):
+        html = self.c.get("/kb/fly-nymph").get_data(as_text=True)
+        self.assertIn("tie it:", html)
+        self.assertIn("Nymph hooks", html)
+        self.assertIn("Hot Head Damsel", html)
+
     def test_service_worker_served_at_root_scope(self):
         r = self.c.get("/sw.js")
         self.assertEqual(r.status_code, 200)

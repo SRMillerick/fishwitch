@@ -98,7 +98,7 @@ ranking. Manufacturer pages carry no commission; affiliate links are labelled.</
     <span class="fine">({{ o.disclosure }})</span></li>
   {% endfor %}
   {% if components %}
-  <li><span class="sc">build it:</span>
+  <li><span class="sc">{% if c.id.startswith('fly-') %}tie it{% else %}build it{% endif %}:</span>
     {% for comp in components %}{{ comp.label }}{% set linked = comp.offers | selectattr('url') | list %}{% for o in linked %}
       <a href="/out/{{ c.id }}/{{ o.retailer }}?comp={{ comp.id }}&src=kb" target="_blank" rel="sponsored noopener">{{ o.retailer_label or o.retailer }}</a>{% endfor %}{% if not loop.last %} · {% endif %}{% endfor %}
   </li>

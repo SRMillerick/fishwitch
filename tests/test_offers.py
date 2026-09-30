@@ -119,6 +119,30 @@ class SpecLabelFallbackTest(unittest.TestCase):
         self.assertEqual(row["label"], "VMC Crossover Pliers")
 
 
+class FlyOfferTest(unittest.TestCase):
+    """The fly family is attributable: pattern offers plus tie-materials
+    components. Amazon ASINs must be real 10-char ids (resolved or pending
+    on the tag env, never invented)."""
+
+    def test_fly_entries_have_pattern_offers_and_tie_components(self):
+        for entry in ("fly-bass", "fly-nymph", "fly-crayfish"):
+            pattern = [o for o in offers.resolve(entry) if o.get("url")]
+            self.assertTrue(pattern, f"{entry}: no pattern offers")
+            comps = offers.components(entry)
+            self.assertTrue(comps, f"{entry}: no tie components")
+            for c in comps:
+                self.assertTrue(c.get("label"), f"{entry}/{c.get('id')}: label")
+                for o in c.get("offers", []):
+                    if o.get("retailer") == "amazon" and o.get("asin"):
+                        self.assertRegex(o["asin"], r"^[A-Z0-9]{10}$",
+                                         f"{entry}/{c.get('id')}: bad ASIN")
+
+    def test_fly_retailers_are_manufacturer_kind(self):
+        d = offers._load()
+        for r in ("orvis", "epflies"):
+            self.assertEqual(d["retailers"][r]["kind"], "manufacturer")
+
+
 class OddmentAlternativeTest(unittest.TestCase):
     """Oddment parts that aren't sold on Amazon resolve through their live
     manufacturer pages so their alternatives/dead ends render."""
