@@ -100,6 +100,38 @@ def match_water(plants: list[dict], lake_name: str) -> list[dict]:
     return best if best_overlap else []
 
 
+def fetch_all_plants(timeframe: int = 1) -> list[dict]:
+    """Statewide CDFW export — ONE request instead of one per county. The CSV
+    carries water name, county, lat/lng, species, and plant week. Cached 12h.
+    timeframe: 1=last ~year (±1yr) · 2=current-future · 3=past."""
+    import csv
+    import io
+    CACHE.mkdir(parents=True, exist_ok=True)
+    key = CACHE / f"all_plants_{timeframe}.json"
+    if key.exists() and time.time() - key.stat().st_mtime < 43200:
+        return json.loads(key.read_text())
+    r = requests.get(SEARCH, params={"Params.PlantTimeFrame": str(timeframe),
+                                     "submit": "Export"}, headers=UA, timeout=60)
+    r.raise_for_status()
+    out = []
+    for row in csv.DictReader(io.StringIO(r.text)):
+        try:
+            lat = float(row.get("Lat") or 0) or None
+            lng = float(row.get("Lon") or 0) or None
+        except ValueError:
+            lat = lng = None
+        m = re.match(r"(\d{1,2})/(\d{1,2})/(\d{4})", row.get("WeekOfPlantStart") or "")
+        date = (f"{m.group(3)}-{int(m.group(1)):02d}-{int(m.group(2)):02d}" if m else "")
+        out.append(dict(water=(row.get("WaterName") or "").strip(),
+                        county=(row.get("Counties") or row.get("CountyName") or "").strip(),
+                        water_id=(row.get("StockingWaterID") or "").strip(),
+                        species=(row.get("FishType") or "").strip(),
+                        week=(row.get("WeekOfPlantStart") or "").strip(),
+                        date=date, lat=lat, lng=lng))
+    key.write_text(json.dumps(out))
+    return out
+
+
 def registry_stocking(lake: dict, days: int = 45) -> list[dict]:
     """Manual entries from lakes.json: stocking: [{date, species}]."""
     out = []

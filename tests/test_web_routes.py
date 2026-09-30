@@ -271,7 +271,7 @@ class LakeFactsHeaderTest(unittest.TestCase):
             r'href="https://www\.openstreetmap\.org/\?mlat=[^"]+"[^>]*>([^<]+)</a>',
             html)
         self.assertIsNotNone(m, "no OSM coordinate link on the lake page")
-        self.assertRegex(m.group(1), r"38\.8084,\s*-122\.5665")
+        self.assertRegex(m.group(1), r"38\.8105,\s*-122\.5640")
 
     def test_county_uses_the_waters_state(self):
         az = self._lake("watson-lake-az")

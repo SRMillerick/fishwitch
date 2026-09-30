@@ -2,8 +2,8 @@
   "hidden-valley-lake-ca": {
     "name": "Hidden Valley Lake",
     "region": "Middletown, Lake County, CA",
-    "lat": 38.8084,
-    "lng": -122.5665,
+    "lat": 38.8105316,
+    "lng": -122.564046,
     "alt_m": 335,
     "tz": "America/Los_Angeles",
     "type": "natural lake (private HOA)",
@@ -15,7 +15,8 @@
       "rainbow trout"
     ],
     "county": "Lake",
-    "stocking_pattern": "MAIN LAKE: trout planted annually Feb/March by HVLA (~$8-10.5k, Smith's Trout Farm) \u2014 bass spawn self-sustains, trout added for variety (HVLA board packets). SPILLWAY POND: ~300 trout each spring for the kids' derby. Not CDFW \u2014 no rows in the state planting feed, by design. When a plant happens, log it: stocking: [{date, species: rainbow trout}] \u2014 then the report lights up the stocker-forage window."
+    "stocking_pattern": "MAIN LAKE: trout planted annually Feb/March by HVLA (~$8-10.5k, Smith's Trout Farm) \u2014 bass spawn self-sustains, trout added for variety (HVLA board packets). SPILLWAY POND: ~300 trout each spring for the kids' derby. Not CDFW \u2014 no rows in the state planting feed, by design. When a plant happens, log it: stocking: [{date, species: rainbow trout}] \u2014 then the report lights up the stocker-forage window.",
+    "coords_source": "OSM water-body point (Nominatim 2026-09-30); was the community point ~250 m off"
   },
   "lake-berryessa": {
     "name": "Lake Berryessa",
@@ -222,8 +223,8 @@
   "spring-lake": {
     "name": "Spring Lake",
     "display": "Spring Lake Swimming Lagoon, Santa Rosa, Sonoma County, California, United States",
-    "lat": 38.4527583,
-    "lng": -122.6504248,
+    "lat": 38.455768,
+    "lng": -122.65317,
     "osm_type": "reservoir",
     "area_m2": 291384,
     "alt_m": 48,
@@ -247,7 +248,8 @@
       "channel catfish"
     ],
     "note": "species: CDFW-common list (editorial \u2014 verify locally)",
-    "county": "Sonoma"
+    "county": "Sonoma",
+    "coords_source": "main-lake shoreline centroid (2026-09-30); was the swimming-lagoon point"
   },
   "blue-lake": {
     "name": "Blue Lake (Upper Blue Lakes)",
@@ -550,5 +552,266 @@
     "stocking_pattern": "No trout plants listed in the AZGFD winter schedules checked; special-regs limits imply a managed bass/panfish/trout pond.",
     "tz": "America/Phoenix",
     "county": "Yavapai"
+  },
+  "lower-blue-lake": {
+    "name": "Lower Blue Lake",
+    "display": "Lower Blue Lake, Midlakes, Lake County, California, United States",
+    "lat": 39.161682,
+    "lng": -122.9974731,
+    "osm_type": "lake",
+    "area_m2": 206390,
+    "alt_m": 409.0,
+    "depth_class": "shallow (<20 ft)",
+    "est_max_depth_ft": 18,
+    "mixing": "polymictic \u2014 mixes on any strong front",
+    "turnover": {
+      "trigger_f": 72.0,
+      "surface_bias_f": 3.0,
+      "basis": "morphology estimate \u2014 override in registry"
+    },
+    "id": "lower-blue-lake",
+    "region": "Blue Lakes, Lake County, CA",
+    "county": "Lake",
+    "species": [
+      "largemouth bass",
+      "bluegill",
+      "carp",
+      "perch",
+      "sunfish",
+      "trout"
+    ],
+    "note": "species: Blue Lakes (California) article, which covers the Lower/Upper pair; coords/area OSM; CDFW trout plants (Blue Lakes)",
+    "stocking_pattern": "CDFW planted the Blue Lakes (Upper) 6 weeks in the last year; Lower Blue shares the system. Verify the current CDFW schedule.",
+    "tz": "America/Los_Angeles",
+    "coords_source": "OSM/Nominatim geocode 2026-09-30; shoreline containing-ring check passed",
+    "area_acres": 51,
+    "area_source": "OSM water polygon (fetched 2026-09-30; 73 raw pts)",
+    "depth_source": "morphology estimate from area (override when an agency depth is found)"
+  },
+  "lake-merced-ca": {
+    "name": "Lake Merced",
+    "display": "Lake Merced, San Francisco, California, United States",
+    "lat": 37.7275384,
+    "lng": -122.4977693,
+    "osm_type": "lake",
+    "area_m2": 2598084,
+    "area_source": "Wikidata (article infobox lists 650/614 acres; OSM polygon covers one arm)",
+    "alt_m": 7.0,
+    "wikidata_id": "Q6476880",
+    "depth_class": "mid (20-60 ft)",
+    "est_max_depth_ft": 45,
+    "area_acres": 642,
+    "mixing": "weakly stratified \u2014 fall mixing front-driven",
+    "turnover": {
+      "trigger_f": 68.0,
+      "surface_bias_f": 4.0,
+      "basis": "morphology estimate \u2014 override in registry"
+    },
+    "id": "lake-merced-ca",
+    "region": "San Francisco, CA",
+    "county": "San Francisco",
+    "species": [
+      "trout"
+    ],
+    "note": "species: CDFW planting record (Merced Lake North); coords OSM; area Wikidata; depth estimate from morphology",
+    "stocking_pattern": "CDFW planted Merced Lake North 5 weeks in the last year; San Francisco city park.",
+    "tz": "America/Los_Angeles",
+    "coords_source": "OSM/Nominatim geocode 2026-09-30; shoreline containing-ring check passed",
+    "depth_source": "morphology estimate from area (override when an agency depth is found)"
+  },
+  "lake-temescal-ca": {
+    "name": "Lake Temescal",
+    "display": "Lake Temescal, Oakland, Alameda County, California, United States",
+    "lat": 37.8464554,
+    "lng": -122.2304239,
+    "osm_type": "reservoir",
+    "area_m2": 40469,
+    "alt_m": 130.0,
+    "depth_class": "shallow (<20 ft)",
+    "est_max_depth_ft": 20,
+    "mixing": "polymictic \u2014 mixes on any strong front",
+    "turnover": {
+      "trigger_f": 72.0,
+      "surface_bias_f": 3.0,
+      "basis": "morphology estimate \u2014 override in registry"
+    },
+    "id": "lake-temescal-ca",
+    "depth_source": "Wikipedia infobox (20 ft)",
+    "region": "Oakland, Alameda County, CA",
+    "county": "Alameda",
+    "species": [
+      "largemouth bass",
+      "bluegill",
+      "catfish",
+      "sunfish",
+      "trout"
+    ],
+    "note": "species: East Bay Regional Park District page + Wikipedia; depth Wikipedia; coords/area OSM; CDFW trout plants",
+    "stocking_pattern": "CDFW planted Temescal Lake 2 weeks in the last year; EBRPD manages the park.",
+    "tz": "America/Los_Angeles",
+    "coords_source": "OSM/Nominatim geocode 2026-09-30; shoreline containing-ring check passed",
+    "area_acres": 10,
+    "area_source": "OSM water polygon (fetched 2026-09-30; 166 raw pts)"
+  },
+  "san-pablo-reservoir": {
+    "name": "San Pablo Reservoir",
+    "display": "San Pablo Reservoir, Contra Costa County, California, United States",
+    "lat": 37.9268733,
+    "lng": -122.2442512,
+    "osm_type": "reservoir",
+    "area_m2": 2901599,
+    "alt_m": 305.0,
+    "wikidata_id": "Q7348390",
+    "depth_class": "mid (20-60 ft)",
+    "est_max_depth_ft": 45,
+    "mixing": "weakly stratified \u2014 fall mixing front-driven",
+    "turnover": {
+      "trigger_f": 68.0,
+      "surface_bias_f": 4.0,
+      "basis": "morphology estimate \u2014 override in registry"
+    },
+    "id": "san-pablo-reservoir",
+    "region": "Contra Costa County, CA",
+    "county": "Contra Costa",
+    "species": [
+      "largemouth bass",
+      "bluegill",
+      "catfish",
+      "crappie",
+      "sturgeon",
+      "trout"
+    ],
+    "note": "species: Wikipedia (San Pablo Reservoir) + EBMUD recreation page; coords/area OSM; no CDFW plants (EBMUD runs its own stocking)",
+    "stocking_pattern": "EBMUD-managed fishery; not in the CDFW statewide planting export. Check EBMUD's season.",
+    "tz": "America/Los_Angeles",
+    "coords_source": "OSM/Nominatim geocode 2026-09-30; shoreline containing-ring check passed",
+    "area_acres": 717,
+    "area_source": "OSM water polygon (fetched 2026-09-30; 842 raw pts)",
+    "depth_source": "morphology estimate from area (override when an agency depth is found)"
+  },
+  "mather-lake-ca": {
+    "name": "Mather Lake",
+    "display": "Mather Lake, Sacramento County, California, United States",
+    "lat": 38.5559844,
+    "lng": -121.2553649,
+    "osm_type": "reservoir",
+    "area_m2": 246858,
+    "alt_m": 223.0,
+    "wikidata_id": "Q22450105",
+    "depth_class": "shallow (<20 ft)",
+    "est_max_depth_ft": 18,
+    "mixing": "polymictic \u2014 mixes on any strong front",
+    "turnover": {
+      "trigger_f": 72.0,
+      "surface_bias_f": 3.0,
+      "basis": "morphology estimate \u2014 override in registry"
+    },
+    "id": "mather-lake-ca",
+    "region": "Rancho Cordova, Sacramento County, CA",
+    "county": "Sacramento",
+    "species": [
+      "trout"
+    ],
+    "note": "species: CDFW planting record; coords/area OSM; depth estimate from morphology",
+    "stocking_pattern": "CDFW planted Mather Lake 5 weeks in the last year; Sacramento County park.",
+    "tz": "America/Los_Angeles",
+    "coords_source": "OSM/Nominatim geocode 2026-09-30; shoreline containing-ring check passed",
+    "area_acres": 61,
+    "area_source": "OSM water polygon (fetched 2026-09-30; 102 raw pts)",
+    "depth_source": "morphology estimate from area (override when an agency depth is found)"
+  },
+  "legg-lake-ca": {
+    "name": "Legg Lake",
+    "display": "Legg Lake, Whittier Narrows, Los Angeles County, California, United States",
+    "lat": 34.0331254,
+    "lng": -118.0587015,
+    "osm_type": "lake",
+    "area_m2": 182109,
+    "alt_m": 65.0,
+    "depth_class": "shallow (<20 ft)",
+    "est_max_depth_ft": 18,
+    "mixing": "polymictic \u2014 mixes on any strong front",
+    "turnover": {
+      "trigger_f": 72.0,
+      "surface_bias_f": 3.0,
+      "basis": "morphology estimate \u2014 override in registry"
+    },
+    "id": "legg-lake-ca",
+    "region": "Whittier Narrows, Los Angeles County, CA",
+    "county": "Los Angeles",
+    "species": [
+      "catfish",
+      "trout"
+    ],
+    "note": "species: CDFW planting record (Legg Lakes: catfish + trout); coords/area OSM; depth estimate from morphology",
+    "stocking_pattern": "CDFW planted Legg Lakes 12 weeks in the last year (catfish and trout).",
+    "tz": "America/Los_Angeles",
+    "coords_source": "OSM/Nominatim geocode 2026-09-30; shoreline containing-ring check passed",
+    "area_acres": 45,
+    "area_source": "OSM water polygon (fetched 2026-09-30; 133 raw pts)",
+    "depth_source": "morphology estimate from area (override when an agency depth is found)"
+  },
+  "puddingstone-reservoir": {
+    "name": "Puddingstone Reservoir",
+    "display": "Puddingstone Reservoir, San Dimas, Los Angeles County, California, United States",
+    "lat": 34.0856328,
+    "lng": -117.8044171,
+    "osm_type": "reservoir",
+    "area_m2": 1011715,
+    "alt_m": 289.0,
+    "depth_class": "mid (20-60 ft)",
+    "est_max_depth_ft": 45,
+    "mixing": "weakly stratified \u2014 fall mixing front-driven",
+    "turnover": {
+      "trigger_f": 68.0,
+      "surface_bias_f": 4.0,
+      "basis": "morphology estimate \u2014 override in registry"
+    },
+    "id": "puddingstone-reservoir",
+    "area_acres": 250,
+    "area_source": "Wikipedia infobox (250 acres; OSM polygon 248)",
+    "region": "San Dimas, Los Angeles County, CA",
+    "county": "Los Angeles",
+    "species": [
+      "largemouth bass",
+      "catfish",
+      "sunfish",
+      "trout"
+    ],
+    "note": "species/catch limits: LA County Frank G. Bonelli Regional Park page; area Wikipedia; coords/area OSM; CDFW trout plants",
+    "stocking_pattern": "CDFW planted Puddingstone Lake 9 weeks in the last year; LA County park.",
+    "tz": "America/Los_Angeles",
+    "coords_source": "OSM/Nominatim geocode 2026-09-30; shoreline containing-ring check passed",
+    "depth_source": "morphology estimate from area (override when an agency depth is found)"
+  },
+  "avocado-lake-ca": {
+    "name": "Avocado Lake",
+    "display": "Avocado Lake, Fresno County, California, United States",
+    "lat": 36.7869765,
+    "lng": -119.4130532,
+    "osm_type": "lake",
+    "area_m2": 206390,
+    "alt_m": 145.0,
+    "depth_class": "shallow (<20 ft)",
+    "est_max_depth_ft": 18,
+    "mixing": "polymictic \u2014 mixes on any strong front",
+    "turnover": {
+      "trigger_f": 72.0,
+      "surface_bias_f": 3.0,
+      "basis": "morphology estimate \u2014 override in registry"
+    },
+    "id": "avocado-lake-ca",
+    "region": "Fresno County, CA",
+    "county": "Fresno",
+    "species": [
+      "trout"
+    ],
+    "note": "species: CDFW planting record; coords/area OSM; depth estimate from morphology",
+    "stocking_pattern": "CDFW planted Avocado Lake 17 weeks in the last year; Fresno County park.",
+    "tz": "America/Los_Angeles",
+    "coords_source": "OSM/Nominatim geocode 2026-09-30; shoreline containing-ring check passed",
+    "area_acres": 51,
+    "area_source": "OSM water polygon (fetched 2026-09-30; 182 raw pts)",
+    "depth_source": "morphology estimate from area (override when an agency depth is found)"
   }
 }
