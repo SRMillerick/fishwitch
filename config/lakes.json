@@ -611,9 +611,11 @@
     "region": "San Francisco, CA",
     "county": "San Francisco",
     "species": [
-      "trout"
+      "rainbow trout",
+      "bass",
+      "channel catfish"
     ],
-    "note": "species: CDFW planting record (Merced Lake North); coords OSM; area Wikidata; depth estimate from morphology",
+    "note": "species: OEHHA Lake Merced fish advisory (2017, North Lake) + CDFW trout plants; coords OSM; area Wikidata; depth estimate from morphology",
     "stocking_pattern": "CDFW planted Merced Lake North 5 weeks in the last year; San Francisco city park.",
     "tz": "America/Los_Angeles",
     "coords_source": "OSM/Nominatim geocode 2026-09-30; shoreline containing-ring check passed",
@@ -710,9 +712,10 @@
     "region": "Rancho Cordova, Sacramento County, CA",
     "county": "Sacramento",
     "species": [
+      "bass",
       "trout"
     ],
-    "note": "species: CDFW planting record; coords/area OSM; depth estimate from morphology",
+    "note": "species: Sacramento County Regional Parks (Mather Regional Park) + CDFW plants; coords/area OSM; depth estimate from morphology",
     "stocking_pattern": "CDFW planted Mather Lake 5 weeks in the last year; Sacramento County park.",
     "tz": "America/Los_Angeles",
     "coords_source": "OSM/Nominatim geocode 2026-09-30; shoreline containing-ring check passed",
@@ -740,10 +743,13 @@
     "region": "Whittier Narrows, Los Angeles County, CA",
     "county": "Los Angeles",
     "species": [
-      "catfish",
-      "trout"
+      "trout",
+      "bass",
+      "channel catfish",
+      "sunfish",
+      "carp"
     ],
-    "note": "species: CDFW planting record (Legg Lakes: catfish + trout); coords/area OSM; depth estimate from morphology",
+    "note": "species: OEHHA Legg Lake fish advisory (2018) + CDFW catfish/trout plants; coords/area OSM; depth estimate from morphology",
     "stocking_pattern": "CDFW planted Legg Lakes 12 weeks in the last year (catfish and trout).",
     "tz": "America/Los_Angeles",
     "coords_source": "OSM/Nominatim geocode 2026-09-30; shoreline containing-ring check passed",
@@ -1308,9 +1314,14 @@
     "region": "Madera County, CA",
     "county": "Madera",
     "species": [
-      "trout"
+      "largemouth bass",
+      "bluegill",
+      "crappie",
+      "catfish",
+      "carp",
+      "rainbow trout"
     ],
-    "note": "area: Wikipedia (Hidden Dam reservoir); species: CDFW planting record; depth estimate",
+    "note": "species: OEHHA Hensley Lake fish advisory (2021) + USACE Hensley Lake (archived 2024) + CDFW plants; area Wikipedia (Hidden Dam); depth estimate",
     "stocking_pattern": "CDFW planted Hensley Lake 5 weeks in the last year (trout).",
     "tz": "America/Los_Angeles",
     "coords_source": "USGS GNIS candidate coordinate; OSM shoreline containing-ring check passed"
@@ -1374,7 +1385,7 @@
       "rainbow trout",
       "brown trout"
     ],
-    "note": "species/area/depth/elevation: Wikipedia (Convict Lake); CDFW trout plants",
+    "note": "species/area/depth/elevation: Wikipedia (Convict Lake) + Convict Lake Resort fishing page; CDFW trout plants",
     "stocking_pattern": "CDFW planted Convict Lake 21 weeks in the last year (trout).",
     "tz": "America/Los_Angeles",
     "coords_source": "USGS GNIS candidate coordinate; OSM shoreline containing-ring check passed"
@@ -1432,9 +1443,15 @@
     "region": "Crestline, San Bernardino County, CA",
     "county": "San Bernardino",
     "species": [
-      "trout"
+      "trout",
+      "catfish",
+      "bass",
+      "crappie",
+      "bullhead",
+      "tule perch",
+      "carp"
     ],
-    "note": "depth/elevation: Wikipedia (Lake Gregory); species: CDFW planting record; area OSM",
+    "note": "species: OEHHA Lake Gregory fish advisory (2016) + Lake Gregory Company trout/catfish plants + CDFW; area OSM; depth/elevation Wikipedia",
     "stocking_pattern": "CDFW planted Lake Gregory 9 weeks in the last year (trout).",
     "tz": "America/Los_Angeles",
     "coords_source": "USGS GNIS candidate coordinate; OSM shoreline containing-ring check passed",
@@ -1498,9 +1515,14 @@
     "region": "Lakeside, San Diego County, CA",
     "county": "San Diego",
     "species": [
-      "trout"
+      "rainbow trout",
+      "channel catfish",
+      "blue catfish",
+      "largemouth bass",
+      "redear sunfish",
+      "bluegill"
     ],
-    "note": "area/elevation: Wikipedia (Lake Jennings); species: CDFW planting record; depth estimate",
+    "note": "species: Helix Water District (lakejennings.org) + CDFW plants; area/elevation Wikipedia; depth estimate",
     "stocking_pattern": "CDFW planted Lake Jennings 6 weeks in the last year (trout).",
     "tz": "America/Los_Angeles",
     "coords_source": "USGS GNIS candidate coordinate; OSM shoreline containing-ring check passed"
