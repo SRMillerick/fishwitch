@@ -406,6 +406,31 @@ if (ledgerRows && watersEl) {
   }
 }
 
+// ── "my water isn't listed": one-tap on-demand report ───────────────────────
+// The report itself is computed server-side from public data (OSM + catalog)
+// and never persisted; the fix never leaves the browser. The gh-pages
+// snapshot has no report route, so it points at the live app there.
+(function () {
+  const el = document.getElementById("use-my-location");
+  if (!el) return;
+  const q = new URLSearchParams(location.search);
+  el.addEventListener("click", (ev) => {
+    ev.preventDefault();
+    if (!navigator.geolocation) { el.textContent = "location unavailable"; return; }
+    el.textContent = "locating…";
+    navigator.geolocation.getCurrentPosition((p) => {
+      const keep = new URLSearchParams({
+        lat: p.coords.latitude.toFixed(4),
+        lng: p.coords.longitude.toFixed(4),
+      });
+      for (const k of ["hours", "voice", "species", "bottom", "clarity"])
+        if (q.get(k)) keep.set(k, q.get(k));
+      const origin = document.documentElement.dataset.static ? "https://baromoon.com" : "";
+      location.href = origin + "/report?" + keep.toString();
+    }, () => { el.textContent = "location blocked — drop a pin on the map instead"; });
+  });
+})();
+
 // ── report form: POST the active profile with the query ────────────────────
 const form = document.getElementById("report-form");
 if (form) {

@@ -195,7 +195,9 @@ def build_shopping(rigs: list[dict]) -> list[dict]:
                 if isinstance(sizes, str):
                     sizes = [sizes]
                 if sizes:
-                    label = (label + " " + "–".join(str(x) for x in sizes[:2])).strip()
+                    rng = tx.size_range(sizes)
+                    if rng:
+                        label = (label + " " + rng).strip()
                 key = p.get("ref") or f"{rid}:{part}"
                 comp = comps.get(p.get("ref"))
                 offers = []

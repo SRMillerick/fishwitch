@@ -59,6 +59,22 @@ class ScoreEntryTest(unittest.TestCase):
         self.assertTrue(rej)
 
 
+class SizeRangeTest(unittest.TestCase):
+    def test_single_pair_and_span(self):
+        self.assertEqual(tx.size_range(["8"]), "8")
+        self.assertEqual(tx.size_range(["8", "10"]), "8\u201310")
+        # 3+ sizes render as the first–last span, not a two-size truncation
+        self.assertEqual(tx.size_range(["6", "8", "10", "12", "14"]), "6\u201314")
+        self.assertEqual(tx.size_range("#5"), "#5")
+        self.assertEqual(tx.size_range([]), "")
+        self.assertEqual(tx.size_range(None), "")
+
+    def test_spec_line_uses_the_span(self):
+        line = tx.spec_line(dict(hook=dict(ref_label="Bait hook (small)",
+                                           sizes=["6", "8", "10", "12", "14"])))
+        self.assertEqual(line, "Bait hook (small) 6\u201314")
+
+
 class RecommendTest(unittest.TestCase):
     def test_order_is_stable_and_descending(self):
         cats = [(tx.entry("bass", e), e) for e in ("trig", "dropshot", "neko", "wacky")]

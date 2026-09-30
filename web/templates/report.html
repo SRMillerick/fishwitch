@@ -48,6 +48,10 @@
 </details>
 <p class="fine" id="profile-note">Rendering anonymously — with a profile (browser-only),
 reports add your natal transits and your arsenal. <a href="/interview">Build one →</a></p>
+<p class="fine no-print" id="pin-tip">My water isn't listed?
+  {% if q.lat %}<a href="/report">Pick a registry water</a>{% else %}<a href="/lakes">Drop a pin on the map</a>
+  or <a href="#" id="use-my-location">use my location</a>{% endif %}
+  — on-demand reports are built from public data and never stored.</p>
 
 <div id="report-out" class="report">
 {% if out %}

@@ -170,6 +170,20 @@ class LandingLedgerTest(unittest.TestCase):
         self.assertIn('id="waters-list"', html)
         self.assertIn("hidden-valley-lake-ca", html)
 
+    def test_pin_affordance_on_landing_and_lakes(self):
+        """The on-demand tier must be discoverable, not just URL/map-click."""
+        html, _ = self._get("/")
+        self.assertIn('id="use-my-location"', html)
+        self.assertIn("Drop a pin on the map", html)
+        lakes = self.c.get("/lakes").get_data(as_text=True)
+        self.assertIn('id="pin-locate"', lakes)
+        self.assertIn("My water isn't listed", lakes)
+
+    def test_report_page_offers_the_pin_affordance(self):
+        html = self.c.get("/report").get_data(as_text=True)
+        self.assertIn('id="use-my-location"', html)
+        self.assertIn("My water isn't listed?", html)
+
     def test_step_rail_and_nav_carry_the_lake(self):
         html, _ = self._get("/?lake=hidden-valley-lake-ca")
         self.assertIn('class="stepbar', html)          # water → plan → ahead → log

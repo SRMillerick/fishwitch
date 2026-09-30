@@ -57,7 +57,7 @@ class KBSchemaTest(unittest.TestCase):
         import tactics as tx
         terminal = {e["id"] for e in tx.load_terminal().get("terminal", [])}
         baits = {e["id"] for e in tx.load_baits().get("baits", [])}
-        for name in ("bass",):
+        for name in ("bass", "trout", "catfish", "panfish"):
             for eid, e in entries_of(KB / f"{name}.json"):
                 spec = e.get("spec") or {}
                 for part, field in spec.items():
@@ -66,6 +66,12 @@ class KBSchemaTest(unittest.TestCase):
                     ref = field.get("ref")
                     if ref:
                         self.assertIn(ref, terminal | baits, f"{name}/{eid}.{part}: dangling ref {ref}")
+                    sizes = field.get("sizes")
+                    if sizes is not None:
+                        self.assertIsInstance(sizes, list, f"{name}/{eid}.{part}: sizes not a list")
+                        for s in sizes:
+                            self.assertIsInstance(s, str, f"{name}/{eid}.{part}: non-string size")
+                            self.assertTrue(s.strip(), f"{name}/{eid}.{part}: empty size")
 
     def test_season_table_is_narrow_and_sourced(self):
         d = json.loads((KB / "season.json").read_text())

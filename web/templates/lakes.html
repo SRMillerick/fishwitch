@@ -8,6 +8,9 @@
 on the map to drop a pin and run an on-demand report. Browse by state:
 <a href="/lakes/ca">California</a> · <a href="/lakes/az">Arizona</a>. Tiles are © OpenStreetMap
 contributors.</p>
+<p class="fine" id="pin-tip"><a href="#" id="pin-locate">📍 My water isn't listed — use my
+location</a> — or click anywhere on the map. On-demand reports are built from public data and
+never saved.</p>
 <div id="map" class="map" role="img" aria-label="Map of the waters baromoon can read"></div>
 <ul class="plain lakes">
   {% for l in lakes %}
@@ -42,12 +45,27 @@ and added to the map.</p>
   }
   // Any pin gets an on-demand report (catalog/on-demand tier). Absolute URL so
   // the gh-pages snapshot's map still reaches the live app.
-  map.on('click', function (e) {
-    const lat = e.latlng.lat.toFixed(4), lng = e.latlng.lng.toFixed(4);
-    L.popup().setLatLng(e.latlng).setContent(
-      '<strong>Dropped pin</strong><br>' + lat + ', ' + lng +
-      '<br><a href="https://baromoon.com/report?lat=' + lat + '&lng=' + lng +
+  function dropPin(lat, lng, label) {
+    const la = (+lat).toFixed(4), ln = (+lng).toFixed(4);
+    L.popup().setLatLng([+lat, +lng]).setContent(
+      '<strong>' + (label || 'Dropped pin') + '</strong><br>' + la + ', ' + ln +
+      '<br><a href="https://baromoon.com/report?lat=' + la + '&lng=' + ln +
       '">run a report &rarr;</a>').openOn(map);
+  }
+  map.on('click', function (e) { dropPin(e.latlng.lat, e.latlng.lng, 'Dropped pin'); });
+  // Visible affordance for the same flow: "my water isn't listed".
+  const loc = document.getElementById('pin-locate');
+  if (loc) loc.addEventListener('click', function (ev) {
+    ev.preventDefault();
+    if (!navigator.geolocation) { loc.textContent = 'location unavailable — click the map instead'; return; }
+    loc.textContent = 'locating…';
+    navigator.geolocation.getCurrentPosition(function (p) {
+      map.setView([p.coords.latitude, p.coords.longitude], 12);
+      dropPin(p.coords.latitude, p.coords.longitude, 'Your location');
+      loc.textContent = '📍 My water isn\'t listed — use my location';
+    }, function () {
+      loc.textContent = 'location blocked — click the map instead';
+    });
   });
 })();
 </script>

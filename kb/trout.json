@@ -62,7 +62,75 @@
             "found": true
           }
         ]
-      }
+      },
+      "spec": {
+        "weight": {
+          "type": "inline spinner / spoon",
+          "sizes": [
+            "1/16 oz",
+            "1/64 oz"
+          ],
+          "note": "Iowa DNR: small spinners, plugs or jigs 1/16\u20131/64 oz; ODFW starter kit lists 1/16 oz spinners"
+        },
+        "line": {
+          "main": "monofilament 4\u20136 lb",
+          "note": "ODFW ultralight starter line"
+        },
+        "source": "Iowa DNR \u2014 Trout (lure size) + ODFW \u2014 How to fish for trout (starter sizes)",
+        "confidence": "sourced"
+      },
+      "citations": [
+        {
+          "claim": "spinner weight band",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Trout",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+          "quote": "Use small spinners, plugs or jigs (one-sixteenth to one-sixty/fourth ounce in weight) fished upstream with a flexible speed retrieve.",
+          "found": true,
+          "fetched_at": "2026-09-30T16:44:04+00:00",
+          "sha256": "3daa0d54ba37d59e"
+        },
+        {
+          "claim": "spinner size",
+          "tier": "T2",
+          "source": "ODFW \u2014 How to fish for trout",
+          "url": "https://myodfw.com/articles/how-fish-trout",
+          "quote": "A handful of 1/16 oz. spinners",
+          "found": true,
+          "fetched_at": "2026-09-30T16:45:54+00:00",
+          "sha256": "266273cabb8eb62a"
+        },
+        {
+          "claim": "spinner forage match",
+          "tier": "T2",
+          "source": "ODFW \u2014 How to fish for trout",
+          "url": "https://myodfw.com/articles/how-fish-trout",
+          "quote": "Spinners mimic small minnows, leeches and other favorite trout food.",
+          "found": true,
+          "fetched_at": "2026-09-30T16:45:54+00:00",
+          "sha256": "266273cabb8eb62a"
+        },
+        {
+          "claim": "starter line class",
+          "tier": "T2",
+          "source": "ODFW \u2014 How to fish for trout",
+          "url": "https://myodfw.com/articles/how-fish-trout",
+          "quote": "A lightweight 6-foot spincasting or spinning rod with matching reel and 4-6 pound monofilament line",
+          "found": true,
+          "fetched_at": "2026-09-30T16:45:54+00:00",
+          "sha256": "266273cabb8eb62a"
+        },
+        {
+          "claim": "trout line class",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Trout",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+          "quote": "It handles light monofilament line of 6-pound test or less well and allows for maximum excitement when fighting a trout.",
+          "found": true,
+          "fetched_at": "2026-09-30T16:44:04+00:00",
+          "sha256": "3daa0d54ba37d59e"
+        }
+      ]
     },
     {
       "id": "bait-trout",
@@ -123,7 +191,93 @@
             "found": true
           }
         ]
-      }
+      },
+      "spec": {
+        "hook": {
+          "ref": "bait-hook",
+          "sizes": [
+            "8",
+            "10",
+            "12"
+          ],
+          "note": "ODFW starter kit: size 8 bait hooks; Iowa DNR: No. 6\u201314 and match bait size"
+        },
+        "weight": {
+          "type": "sliding sinker / split shot",
+          "sizes": [
+            "#5"
+          ],
+          "note": "ODFW: a small lead weight above the hook \u2014 bobber 1\u00bd\u20133 ft up, or off the bottom with the weight ~1\u00bd ft above the hook; classic sliding-sinker variant uses an egg sinker"
+        },
+        "line": {
+          "main": "monofilament 4\u20136 lb",
+          "note": "ODFW ultralight starter line"
+        },
+        "source": "ODFW \u2014 How to fish for trout (prepared bait rig + sizes) + Iowa DNR \u2014 Trout (prepared bait form)",
+        "confidence": "sourced"
+      },
+      "citations": [
+        {
+          "claim": "prepared bait",
+          "tier": "T2",
+          "source": "ODFW \u2014 How to fish for trout",
+          "url": "https://myodfw.com/articles/how-fish-trout",
+          "quote": "Jar of PowerBait or PowerEggs",
+          "found": true,
+          "fetched_at": "2026-09-30T16:45:54+00:00",
+          "sha256": "266273cabb8eb62a"
+        },
+        {
+          "claim": "starter hook size",
+          "tier": "T2",
+          "source": "ODFW \u2014 How to fish for trout",
+          "url": "https://myodfw.com/articles/how-fish-trout",
+          "quote": "Package of size 8 bait hooks",
+          "found": true,
+          "fetched_at": "2026-09-30T16:45:54+00:00",
+          "sha256": "266273cabb8eb62a"
+        },
+        {
+          "claim": "split-shot size",
+          "tier": "T2",
+          "source": "ODFW \u2014 How to fish for trout",
+          "url": "https://myodfw.com/articles/how-fish-trout",
+          "quote": "A package of #5 lead split shot",
+          "found": true,
+          "fetched_at": "2026-09-30T16:45:54+00:00",
+          "sha256": "266273cabb8eb62a"
+        },
+        {
+          "claim": "suspended bait rig",
+          "tier": "T2",
+          "source": "ODFW \u2014 How to fish for trout",
+          "url": "https://myodfw.com/articles/how-fish-trout",
+          "quote": "Suspending bait under a bobber. Start with a piece of worm or a little PowerBait or similar product on a bait hook. Attach a small, lead weight just above the hook to help the bait sink, and add a bobber 1 \u00bd to 3 feet above the hook.",
+          "found": true,
+          "fetched_at": "2026-09-30T16:45:54+00:00",
+          "sha256": "266273cabb8eb62a"
+        },
+        {
+          "claim": "bottom bait rig",
+          "tier": "T2",
+          "source": "ODFW \u2014 How to fish for trout",
+          "url": "https://myodfw.com/articles/how-fish-trout",
+          "quote": "Instead the lead weight is attached about 1 \u00bd feet above the baited hook and cast out. The lead weight will sink, but the bait will float up and hover 1 \u00bd feet above the bottom of the lake.",
+          "found": true,
+          "fetched_at": "2026-09-30T16:45:54+00:00",
+          "sha256": "266273cabb8eb62a"
+        },
+        {
+          "claim": "prepared bait form",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Trout",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+          "quote": "Prepared trout bait ranges from commercial products to homemade creations. Most varieties come in small chunks or balls.",
+          "found": true,
+          "fetched_at": "2026-09-30T16:44:04+00:00",
+          "sha256": "3daa0d54ba37d59e"
+        }
+      ]
     },
     {
       "id": "fly-trout",
@@ -183,6 +337,434 @@
             "found": true
           }
         ]
+      },
+      "spec": {
+        "line": {
+          "main": "5-weight fly line",
+          "leader": "tapered monofilament leader 4x, 7.5 ft",
+          "note": "ODFW starter outfit: 9-ft 5-weight rod, 4x leader, 4x\u20135x tippet; Iowa DNR: 7\u00bd\u20138 ft medium\u2013slow rod and a 3 lb tippet"
+        },
+        "source": "ODFW \u2014 How to fish for trout (fly starter outfit) + Iowa DNR \u2014 Trout (rod/tippet)",
+        "confidence": "sourced"
+      },
+      "citations": [
+        {
+          "claim": "fly rod weight",
+          "tier": "T2",
+          "source": "ODFW \u2014 How to fish for trout",
+          "url": "https://myodfw.com/articles/how-fish-trout",
+          "quote": "Graphite 5-weight fly rod, 9 feet long",
+          "found": true,
+          "fetched_at": "2026-09-30T16:45:54+00:00",
+          "sha256": "266273cabb8eb62a"
+        },
+        {
+          "claim": "leader spec",
+          "tier": "T2",
+          "source": "ODFW \u2014 How to fish for trout",
+          "url": "https://myodfw.com/articles/how-fish-trout",
+          "quote": "Tapered monofilament leaders, 4x 7.5 feet long",
+          "found": true,
+          "fetched_at": "2026-09-30T16:45:54+00:00",
+          "sha256": "266273cabb8eb62a"
+        },
+        {
+          "claim": "tippet sizes",
+          "tier": "T2",
+          "source": "ODFW \u2014 How to fish for trout",
+          "url": "https://myodfw.com/articles/how-fish-trout",
+          "quote": "Spools of 4x and 5x tippet",
+          "found": true,
+          "fetched_at": "2026-09-30T16:45:54+00:00",
+          "sha256": "266273cabb8eb62a"
+        },
+        {
+          "claim": "fly rod spec",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Trout",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+          "quote": "A 7 1/2 to 8 foot fly rod with medium to slow action is perfect for Iowa trout fishing.",
+          "found": true,
+          "fetched_at": "2026-09-30T16:44:04+00:00",
+          "sha256": "3daa0d54ba37d59e"
+        },
+        {
+          "claim": "leader tippet spec",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Trout",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+          "quote": "Attach a leader, preferably tapered, with a 3-pound test tippet to the heavy line; small barbed eyelets are available to do so.",
+          "found": true,
+          "fetched_at": "2026-09-30T16:44:04+00:00",
+          "sha256": "3daa0d54ba37d59e"
+        }
+      ]
+    },
+    {
+      "id": "worm-trout",
+      "label": "Worm / nightcrawler (drifted)",
+      "style": "bait",
+      "depth": "mid",
+      "kind": "bait",
+      "aliases": [
+        "worm",
+        "worms",
+        "nightcrawler",
+        "nightcrawlers",
+        "crawler",
+        "earthworm"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day",
+          "dusk/dawn",
+          "golden"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          40,
+          68
+        ]
+      },
+      "technique": "thread the worm on a small bait hook and drift or still-fish it \u2014 suspended under a bobber 1.5\u20133 ft up, or off the bottom when the fish are deep",
+      "note": "the year-round natural-bait default",
+      "spec": {
+        "hook": {
+          "ref": "bait-hook",
+          "sizes": [
+            "6",
+            "8",
+            "10",
+            "12",
+            "14"
+          ],
+          "note": "Iowa DNR: hooks No. 6\u201314 and match bait size; ODFW starter kit lists size 8"
+        },
+        "weight": {
+          "ref": "split-shot",
+          "sizes": [
+            "#5"
+          ],
+          "note": "ODFW: a small lead weight just above the hook, bobber 1\u00bd\u20133 ft above the hook"
+        },
+        "line": {
+          "main": "monofilament 4\u20136 lb",
+          "note": "ODFW ultralight starter line; Iowa DNR caps trout mono at 6 lb"
+        },
+        "source": "ODFW \u2014 How to fish for trout (rig + sizes) + Iowa DNR \u2014 Trout (hook range, threading)",
+        "confidence": "sourced"
+      },
+      "citations": [
+        {
+          "claim": "natural bait list",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Trout",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+          "quote": "Natural trout baits include worms, minnows, crayfish, grasshoppers, crickets, waxworms and other insect larvae.",
+          "found": true,
+          "fetched_at": "2026-09-30T16:44:04+00:00",
+          "sha256": "3daa0d54ba37d59e"
+        },
+        {
+          "claim": "how to bait a worm",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Trout",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+          "quote": "Thread the worm on the hook in at least two places and cover the whole hook.",
+          "found": true,
+          "fetched_at": "2026-09-30T16:44:04+00:00",
+          "sha256": "3daa0d54ba37d59e"
+        },
+        {
+          "claim": "hook size range",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Trout",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+          "quote": "Hooks for these baits range from No. 6 to 14; match bait size with hook size.",
+          "found": true,
+          "fetched_at": "2026-09-30T16:44:04+00:00",
+          "sha256": "3daa0d54ba37d59e"
+        },
+        {
+          "claim": "suspended bait rig",
+          "tier": "T2",
+          "source": "ODFW \u2014 How to fish for trout",
+          "url": "https://myodfw.com/articles/how-fish-trout",
+          "quote": "Suspending bait under a bobber. Start with a piece of worm or a little PowerBait or similar product on a bait hook. Attach a small, lead weight just above the hook to help the bait sink, and add a bobber 1 \u00bd to 3 feet above the hook.",
+          "found": true,
+          "fetched_at": "2026-09-30T16:45:54+00:00",
+          "sha256": "266273cabb8eb62a"
+        },
+        {
+          "claim": "starter line class",
+          "tier": "T2",
+          "source": "ODFW \u2014 How to fish for trout",
+          "url": "https://myodfw.com/articles/how-fish-trout",
+          "quote": "A lightweight 6-foot spincasting or spinning rod with matching reel and 4-6 pound monofilament line",
+          "found": true,
+          "fetched_at": "2026-09-30T16:45:54+00:00",
+          "sha256": "266273cabb8eb62a"
+        },
+        {
+          "claim": "trout line class",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Trout",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+          "quote": "It handles light monofilament line of 6-pound test or less well and allows for maximum excitement when fighting a trout.",
+          "found": true,
+          "fetched_at": "2026-09-30T16:44:04+00:00",
+          "sha256": "3daa0d54ba37d59e"
+        }
+      ],
+      "provenance": {
+        "seed_author": "agency-ingest/1.0",
+        "source": "ODFW + Iowa DNR trout guides",
+        "source_url": "https://myodfw.com/articles/how-fish-trout",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-30T17:33:37+00:00",
+        "note": "text sha 3daa0d54ba37d59e+266273cabb8eb62a; fetched 2026-09-30T16:45:54+00:00; worm-trout bait entry \u2014 condition bands are editorial; the quotes are the facts"
+      }
+    },
+    {
+      "id": "minnow-trout",
+      "label": "Minnow (live or cut)",
+      "style": "bait",
+      "depth": "mid",
+      "kind": "bait",
+      "aliases": [
+        "minnow",
+        "minnows",
+        "live minnow",
+        "cut bait",
+        "baitfish"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day",
+          "dusk/dawn",
+          "golden"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          40,
+          68
+        ]
+      },
+      "technique": "hook the minnow lightly through the back or lip and drift it into deep pools; minnow pieces also work as cut bait",
+      "note": "the big-brown-trout bait",
+      "spec": {
+        "hook": {
+          "ref": "bait-hook",
+          "sizes": [
+            "6",
+            "8",
+            "10"
+          ],
+          "note": "size the hook to the minnow; Iowa DNR natural-bait band is No. 6\u201314"
+        },
+        "weight": {
+          "ref": "split-shot",
+          "sizes": [
+            "#5"
+          ],
+          "note": "ODFW: fish bait off the bottom with the weight ~1\u00bd ft above the hook"
+        },
+        "line": {
+          "main": "monofilament 4\u20136 lb",
+          "note": "ODFW ultralight starter line"
+        },
+        "source": "Iowa DNR \u2014 Trout (minnow method) + ODFW \u2014 How to fish for trout (sizes)",
+        "confidence": "sourced"
+      },
+      "citations": [
+        {
+          "claim": "natural bait list",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Trout",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+          "quote": "Natural trout baits include worms, minnows, crayfish, grasshoppers, crickets, waxworms and other insect larvae.",
+          "found": true,
+          "fetched_at": "2026-09-30T16:44:04+00:00",
+          "sha256": "3daa0d54ba37d59e"
+        },
+        {
+          "claim": "large-brown minnow method",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Trout",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+          "quote": "Minnows are sometimes used to catch large brown trout. Hook the minnow lightly through the back or lip and drift it into the deep pools with hiding habitat structure.",
+          "found": true,
+          "fetched_at": "2026-09-30T16:44:04+00:00",
+          "sha256": "3daa0d54ba37d59e"
+        },
+        {
+          "claim": "hook size range",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Trout",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+          "quote": "Hooks for these baits range from No. 6 to 14; match bait size with hook size.",
+          "found": true,
+          "fetched_at": "2026-09-30T16:44:04+00:00",
+          "sha256": "3daa0d54ba37d59e"
+        },
+        {
+          "claim": "bottom bait rig",
+          "tier": "T2",
+          "source": "ODFW \u2014 How to fish for trout",
+          "url": "https://myodfw.com/articles/how-fish-trout",
+          "quote": "Instead the lead weight is attached about 1 \u00bd feet above the baited hook and cast out. The lead weight will sink, but the bait will float up and hover 1 \u00bd feet above the bottom of the lake.",
+          "found": true,
+          "fetched_at": "2026-09-30T16:45:54+00:00",
+          "sha256": "266273cabb8eb62a"
+        },
+        {
+          "claim": "starter line class",
+          "tier": "T2",
+          "source": "ODFW \u2014 How to fish for trout",
+          "url": "https://myodfw.com/articles/how-fish-trout",
+          "quote": "A lightweight 6-foot spincasting or spinning rod with matching reel and 4-6 pound monofilament line",
+          "found": true,
+          "fetched_at": "2026-09-30T16:45:54+00:00",
+          "sha256": "266273cabb8eb62a"
+        }
+      ],
+      "provenance": {
+        "seed_author": "agency-ingest/1.0",
+        "source": "ODFW + Iowa DNR trout guides",
+        "source_url": "https://myodfw.com/articles/how-fish-trout",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-30T17:33:38+00:00",
+        "note": "text sha 3daa0d54ba37d59e+266273cabb8eb62a; fetched 2026-09-30T16:45:54+00:00; minnow-trout bait entry \u2014 condition bands are editorial; the quotes are the facts"
+      }
+    },
+    {
+      "id": "egg-trout",
+      "label": "Salmon eggs / egg bait",
+      "style": "bait",
+      "depth": "mid",
+      "kind": "bait",
+      "aliases": [
+        "salmon eggs",
+        "salmon egg",
+        "egg bait",
+        "roe",
+        "power eggs",
+        "eggs"
+      ],
+      "conditions": {
+        "light": [
+          "moderate day",
+          "bright day",
+          "dusk/dawn",
+          "golden"
+        ],
+        "wind": [
+          "glass",
+          "chop"
+        ],
+        "water_temp_f": [
+          40,
+          68
+        ]
+      },
+      "technique": "drift a small cluster of eggs on a bait hook, or float them off the bottom under a bobber \u2014 use egg hooks for salmon eggs",
+      "note": "the cured-bait standby",
+      "spec": {
+        "hook": {
+          "ref": "bait-hook",
+          "sizes": [
+            "6",
+            "8",
+            "10",
+            "12",
+            "14"
+          ],
+          "note": "Iowa DNR: use egg hooks for salmon eggs; natural-bait band No. 6\u201314"
+        },
+        "weight": {
+          "ref": "split-shot",
+          "sizes": [
+            "#5"
+          ],
+          "note": "ODFW: weight above the hook to sink the bait (or drift it weightless in current)"
+        },
+        "line": {
+          "main": "monofilament 4\u20136 lb",
+          "note": "ODFW ultralight starter line"
+        },
+        "source": "Iowa DNR \u2014 Trout (salmon eggs) + ODFW \u2014 How to fish for trout (sizes)",
+        "confidence": "sourced"
+      },
+      "citations": [
+        {
+          "claim": "natural bait list",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Trout",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+          "quote": "Natural trout baits include worms, minnows, crayfish, grasshoppers, crickets, waxworms and other insect larvae.",
+          "found": true,
+          "fetched_at": "2026-09-30T16:44:04+00:00",
+          "sha256": "3daa0d54ba37d59e"
+        },
+        {
+          "claim": "salmon egg method",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Trout",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+          "quote": "Small, soft-shell crayfish and fish eggs, usually from salmon, work well when drifted in a similar way. Use egg hooks for salmon eggs.",
+          "found": true,
+          "fetched_at": "2026-09-30T16:44:04+00:00",
+          "sha256": "3daa0d54ba37d59e"
+        },
+        {
+          "claim": "hook size range",
+          "tier": "T2",
+          "source": "Iowa DNR \u2014 Trout",
+          "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+          "quote": "Hooks for these baits range from No. 6 to 14; match bait size with hook size.",
+          "found": true,
+          "fetched_at": "2026-09-30T16:44:04+00:00",
+          "sha256": "3daa0d54ba37d59e"
+        },
+        {
+          "claim": "prepared bait",
+          "tier": "T2",
+          "source": "ODFW \u2014 How to fish for trout",
+          "url": "https://myodfw.com/articles/how-fish-trout",
+          "quote": "Jar of PowerBait or PowerEggs",
+          "found": true,
+          "fetched_at": "2026-09-30T16:45:54+00:00",
+          "sha256": "266273cabb8eb62a"
+        },
+        {
+          "claim": "starter line class",
+          "tier": "T2",
+          "source": "ODFW \u2014 How to fish for trout",
+          "url": "https://myodfw.com/articles/how-fish-trout",
+          "quote": "A lightweight 6-foot spincasting or spinning rod with matching reel and 4-6 pound monofilament line",
+          "found": true,
+          "fetched_at": "2026-09-30T16:45:54+00:00",
+          "sha256": "266273cabb8eb62a"
+        }
+      ],
+      "provenance": {
+        "seed_author": "agency-ingest/1.0",
+        "source": "ODFW + Iowa DNR trout guides",
+        "source_url": "https://myodfw.com/articles/how-fish-trout",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-09-30T17:33:38+00:00",
+        "note": "text sha 3daa0d54ba37d59e+266273cabb8eb62a; fetched 2026-09-30T16:45:54+00:00; egg-trout bait entry \u2014 condition bands are editorial; the quotes are the facts"
       }
     }
   ],

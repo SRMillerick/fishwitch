@@ -220,6 +220,24 @@
             ]
           }
         ]
+      },
+      {
+        "type": "agency",
+        "agency": "ODFW",
+        "url": "https://myodfw.com/articles/how-fish-trout",
+        "status": "live",
+        "quotes": [
+          {
+            "all_of": [
+              "Jar of PowerBait or PowerEggs"
+            ]
+          },
+          {
+            "all_of": [
+              "Fishing bait off the bottom"
+            ]
+          }
+        ]
       }
     ],
     "fly-trout": [
@@ -237,6 +255,74 @@
           {
             "all_of": [
               "fly-fishing since natural insect hatches"
+            ]
+          }
+        ]
+      }
+    ],
+    "worm-trout": [
+      {
+        "type": "agency",
+        "agency": "Iowa DNR",
+        "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+        "status": "live",
+        "quotes": [
+          {
+            "all_of": [
+              "Thread the worm on the hook"
+            ]
+          },
+          {
+            "all_of": [
+              "range from No. 6 to 14"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "agency",
+        "agency": "ODFW",
+        "url": "https://myodfw.com/articles/how-fish-trout",
+        "status": "live",
+        "quotes": [
+          {
+            "all_of": [
+              "piece of worm"
+            ]
+          },
+          {
+            "all_of": [
+              "4-6 pound monofilament line"
+            ]
+          }
+        ]
+      }
+    ],
+    "minnow-trout": [
+      {
+        "type": "agency",
+        "agency": "Iowa DNR",
+        "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+        "status": "live",
+        "quotes": [
+          {
+            "all_of": [
+              "Hook the minnow lightly through the back or lip"
+            ]
+          }
+        ]
+      }
+    ],
+    "egg-trout": [
+      {
+        "type": "agency",
+        "agency": "Iowa DNR",
+        "url": "https://www.iowadnr.gov/things-do/fishing/iowa-fish-species/trout",
+        "status": "live",
+        "quotes": [
+          {
+            "all_of": [
+              "Use egg hooks for salmon eggs"
             ]
           }
         ]

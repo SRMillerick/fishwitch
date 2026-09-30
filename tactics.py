@@ -64,6 +64,34 @@ def normalize_species(name: str) -> str:
     return "bass"
 
 
+# lake registry species lists use common names; these hints decide which
+# catalog to score when the caller names no species. A mixed fishery defaults
+# bass-first because that catalog is the deepest and the calibration ledger's
+# home; the order is preference, not capability (every catalog scores).
+_SPECIES_HINTS = {
+    "bass": ("bass",),
+    "trout": ("trout",),
+    "catfish": ("catfish", "bullhead"),
+    "panfish": ("bluegill", "crappie", "perch", "sunfish", "panfish"),
+}
+
+
+def species_for_lake(lake: dict | None, requested: str | None = None) -> str:
+    """Species to score when none was explicitly requested.
+
+    An explicit species (CLI/profile/API) always wins. Otherwise the lake's
+    own registry species list decides — a trout-only water gets trout tactics
+    instead of the bass default. Lakes with no species list (auto-cards,
+    legacy rows) keep bass, exactly as before."""
+    if requested:
+        return normalize_species(requested)
+    names = [str(s).lower() for s in ((lake or {}).get("species") or [])]
+    for sp in ("bass", "trout", "catfish", "panfish"):
+        if any(h in n for n in names for h in _SPECIES_HINTS[sp]):
+            return sp
+    return "bass"
+
+
 # ── cross-species knowledge: knots & line (kb/knots.json, kb/line.json) ─────
 _KNOTS: dict | None = None
 _LINE: dict | None = None
@@ -154,13 +182,27 @@ def rig_spec(entry_id: str) -> dict | None:
     return out or None
 
 
+def size_range(sizes) -> str:
+    """Display form for a spec size list: 1 size as-is, 2 as a pair, 3+ as the
+    first–last range (the notes carry the full ladder). Empty list → nothing."""
+    if isinstance(sizes, str):
+        sizes = [sizes]
+    s = [str(x) for x in (sizes or []) if str(x).strip()]
+    if not s:
+        return ""
+    if len(s) == 1:
+        return s[0]
+    if len(s) == 2:
+        return f"{s[0]}\u2013{s[1]}"
+    return f"{s[0]}\u2013{s[-1]}"
+
+
 def _spec_bit(p: dict, size: bool = False) -> str:
     label = str(p.get("ref_label") or p.get("type") or p.get("form") or "").strip()
     if size and p.get("sizes"):
-        s = p["sizes"] if isinstance(p["sizes"], list) else [p["sizes"]]
-        s = [str(x) for x in s if x]
-        if s:
-            label = (label + " " + "\u2013".join(s[:2])).strip()
+        rng = size_range(p["sizes"])
+        if rng:
+            label = (label + " " + rng).strip()
     return label
 
 

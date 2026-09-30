@@ -62,7 +62,8 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
              species: str | None = None, voice: str | None = None,
              wx: Weather | None = None, hist=None, bottom: str | None = None,
              clarity: str | None = None) -> dict:
-    species = tx.normalize_species(species or profile.get("species", "bass"))
+    # explicit request > profile species > the lake's own fishery list > bass
+    species = tx.species_for_lake(lake, species or profile.get("species"))
     voice = voice or profile.get("astro_display") or "astro"
     clarity_eff = tx.normalize_clarity(clarity or lake.get("clarity")) or None
     if voice not in ("fisher", "almanac", "astro"):
@@ -132,17 +133,20 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         forecast = None
     # bass spawn phase: T2 water-temp triggers during the warming half of the
     # year; T5 rig fits ride the capped tie-break layer (kb/spawn.json). The
-    # 7-day water trend vetoes a phase in actively cooling water.
+    # 7-day water trend vetoes a phase in actively cooling water. kb/spawn.json
+    # is bass-sourced — never attach it to another species' report.
     water_trend = None
     try:
         water_trend = wx.water_trend_f_per_week(start)
     except Exception:
         water_trend = None
-    bass_phase = tx.spawn_phase(water_f, start.month, water_trend)
-    # derived fish position (kb/position.json): mixing type + summer water temp,
-    # appended to lake_state so display and scoring see the same string. Null-safe.
-    position = tx.position_state(lake.get("mixing"), water_f, start.month,
-                                 lake_state, bass_phase)
+    bass_phase = (tx.spawn_phase(water_f, start.month, water_trend)
+                  if species == "bass" else "")
+    # derived fish position (kb/position.json): bass-sourced like the spawn
+    # layer; appended to lake_state so display and scoring see the same string.
+    position = (tx.position_state(lake.get("mixing"), water_f, start.month,
+                                  lake_state, bass_phase)
+                if species == "bass" else "")
     if position:
         lake_state_parts.append(position)
         lake_state = "+".join(lake_state_parts)
