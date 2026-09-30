@@ -713,6 +713,12 @@ def main():
     cl.add_argument("--remote", action="store_true",
                     help="read the production log over ssh (default: local)")
 
+    af = sub.add_parser("affiliate", help="weekly Amazon check (clicks + 3-sale deadline)")
+    af.add_argument("--days", type=int, default=7)
+    af.add_argument("--top", type=int, default=6)
+    af.add_argument("--local", action="store_true",
+                    help="read the dev-box log (default: production over ssh)")
+
     st = sub.add_parser("stats", help="aggregate page-view counts (no PII)")
     st.add_argument("--days", type=int, default=30)
     st.add_argument("--top", type=int, default=15)
@@ -967,6 +973,40 @@ def main():
             print("  by section:", ", ".join(f"{k}={v}" for k, v in by_src.most_common()))
         if bots:
             print(f"  bot-flagged clicks: {len(bots)} (excluded above; the flag exists from 2026-09-30)")
+
+    elif args.cmd == "affiliate":
+        import affiliate
+        if args.local:
+            log = ROOT / "logs" / "out.jsonl"
+            src = "local — logs/out.jsonl"
+            rows = _jsonl(log.read_text().splitlines()) if log.exists() else []
+        else:
+            host = _baromoon_host()
+            src = f"production — {host}:{REMOTE_DIR}/logs/out.jsonl"
+            rows = _jsonl(_remote_lines(f"{REMOTE_DIR}/logs/out.jsonl"))
+        s = affiliate.summarize(rows, days=args.days, top=args.top)
+        print("  baromoon affiliate — Amazon Associates")
+        print(f"  source: {src}")
+        print("  " + "─" * 58)
+        line = f"  last {s['days']} days: {s['total']} human clicks"
+        if s["bots"]:
+            line += f" (+{s['bots']} crawler follows flagged)"
+        print(line)
+        share = f"  [{s['share'] * 100:.0f}%]" if s["total"] else ""
+        print(f"    Amazon (the only commissioned program): {s['amazon']}{share}")
+        if s["by_entry"]:
+            print("    top entries: " + ", ".join(f"{k}={v}" for k, v in s["by_entry"]))
+        if s["by_src"]:
+            print("    by section: " + ", ".join(f"{k}={v}" for k, v in s["by_src"]))
+        if s["other"]:
+            print("    no commission: " + ", ".join(f"{k}={v}" for k, v in s["other"]))
+        print("  " + "─" * 58)
+        left = s["days_left"]
+        clock = f"{left} days left" if left > 0 else "EXPIRED"
+        print(f"  {s['target']} qualifying sales in 180 days — deadline ~{s['deadline']} ({clock})")
+        print(f"  weekly check: {affiliate.DASHBOARD} → Reports / Commission Income Statement")
+        print("    clicks · ordered items · shipped items · conversion · earnings")
+        print("  note: our count includes our own test clicks; Amazon filters invalid clicks.")
 
     elif args.cmd == "weather":
         from usagelog import FREE_LIMITS, parse, summarize
