@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="narrow">
+<span class="eyebrow">the tying bench</span>
+<h1>Tie your own bass flies</h1>
+<p class="smallcaps">gear · materials · cited patterns</p>
+
+<p class="answer"><strong>The short version:</strong> baromoon's bass reports name the
+conventional rig that fits the window and the fly counterpart beside it. This page is the bench:
+the tying gear, and the exact materials behind each recommended fly. Links are disclosed and
+resolve after ranking — money never touches a pick.</p>
+
+<h2 class="rule-double">The gear</h2>
+<ul class="plain">
+  {% for e in entries %}
+  <li><strong>{{ e.label }}</strong>
+    {% if e.note %}<div class="fine">{{ e.note }}</div>{% endif %}
+    {% set linked = e.offers | selectattr('url') | list %}
+    {% if linked %}<div class="fine">
+      {% for o in linked %}<a href="/out/{{ e.id }}/{{ o.retailer }}?src=tying" target="_blank" rel="sponsored noopener">{{ o.retailer_label or o.retailer }}</a>
+      <span class="fine">({{ o.disclosure }})</span>{% if not loop.last %} · {% endif %}{% endfor %}
+    </div>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+
+<h2 class="rule-double">Materials by fly</h2>
+<p class="fine">What goes into each recommended pattern — the fly facts are cited on its own
+page, and the tie instructions stay with the maker (we don't reproduce recipes).</p>
+{% for f in flies %}
+<h3 class="rule-double">{{ f.label }} <a class="fine" href="/kb/{{ f.id }}">fly page →</a></h3>
+<ul class="plain">
+  {% for comp in f.components %}
+  <li>{{ comp.label }}
+    {% set linked = comp.offers | selectattr('url') | list %}
+    {% if linked %}<span class="fine">—
+      {% for o in linked %}<a href="/out/{{ f.id }}/{{ o.retailer }}?comp={{ comp.id }}&src=tying" target="_blank" rel="sponsored noopener">{{ o.retailer_label or o.retailer }}</a>{% if not loop.last %} · {% endif %}{% endfor %}
+    </span>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endfor %}
+
+<p class="fine">Pattern facts come from the maker pages cited on each <a href="/kb">KB entry</a>;
+the materials list is what the maker's own description states. Recipe video? See the pattern's
+maker page — baromoon links out rather than copying someone's steps.</p>
+<p class="fine"><a href="/kb">← Back to the tackle library</a></p>
+</div>
+{% endblock %}

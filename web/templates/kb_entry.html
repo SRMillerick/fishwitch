@@ -103,6 +103,7 @@ ranking. Manufacturer pages carry no commission; affiliate links are labelled.</
       <a href="/out/{{ c.id }}/{{ o.retailer }}?comp={{ comp.id }}&src=kb" target="_blank" rel="sponsored noopener">{{ o.retailer_label or o.retailer }}</a>{% endfor %}{% if not loop.last %} · {% endif %}{% endfor %}
   </li>
   {% endif %}
+  {% if c.id.startswith('fly-') %}<li class="fine"><a href="/tying">Kits, vises &amp; materials →</a></li>{% endif %}
 </ul>
 {% endif %}
 

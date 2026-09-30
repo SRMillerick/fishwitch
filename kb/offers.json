@@ -1376,6 +1376,75 @@
           ]
         }
       ]
+    },
+    "fly-tying": {
+      "label": "Fly tying",
+      "note": "Vises, kits, tools, and materials \u2014 the gear behind baromoon's bass-fly picks. Resolved after ranking, like every offer.",
+      "entries": [
+        {
+          "id": "tying-starter-kit",
+          "label": "Fly-tying starter kit (vise, tools, materials)",
+          "kind": "product",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": "B002QFWBDQ",
+              "note": "Colorado Anglers Z797 (rotary vise + tools + book)"
+            },
+            {
+              "retailer": "orvis",
+              "url": "https://www.orvis.com/fly-fishing/fly-tying/kits",
+              "note": "Orvis tying kits"
+            }
+          ]
+        },
+        {
+          "id": "tying-vise",
+          "label": "True-rotary tying vise",
+          "kind": "product",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": "B0BXBM8PG9",
+              "note": "Kingfisher Clarkfork true rotary"
+            },
+            {
+              "retailer": "orvis",
+              "url": "https://www.orvis.com/fly-fishing/fly-tying/vises",
+              "note": "Orvis vises"
+            }
+          ]
+        },
+        {
+          "id": "tying-tools",
+          "label": "Tying tools (bobbin, scissors, whip finisher)",
+          "kind": "product",
+          "offers": [
+            {
+              "retailer": "orvis",
+              "url": "https://www.orvis.com/fly-fishing/fly-tying/tools",
+              "note": "Orvis tools"
+            }
+          ]
+        },
+        {
+          "id": "tying-materials",
+          "label": "Material assortment (feathers, fur, thread, flash)",
+          "kind": "product",
+          "offers": [
+            {
+              "retailer": "amazon",
+              "asin": "B00DJ8XRBO",
+              "note": "Premium fly-tying materials kit"
+            },
+            {
+              "retailer": "orvis",
+              "url": "https://www.orvis.com/fly-fishing/fly-tying/materials",
+              "note": "Orvis materials"
+            }
+          ]
+        }
+      ]
     }
   }
 }

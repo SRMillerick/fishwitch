@@ -123,7 +123,7 @@ class SeoHeadTest(unittest.TestCase):
 
     def test_sitemap_and_llms_include_new_pages(self):
         sitemap, llms = self._body("/sitemap-pages.xml"), self._body("/llms.txt")
-        for page in ("/method", "/developers"):
+        for page in ("/method", "/developers", "/tying"):
             self.assertIn(page, sitemap)
             self.assertIn("baromoon.com" + page, llms)
 
@@ -331,6 +331,19 @@ class OutClickResolutionTest(unittest.TestCase):
     def test_unknown_comp_still_404s(self):
         r = self._get("/out/wacky/amazon?comp=not-a-part&src=tackle")
         self.assertEqual(r.status_code, 404)
+
+    def test_category_entry_link_resolves(self):
+        """Gear blocks (fly-tying category) are tracked like everything else."""
+        r = self._get("/out/tying-vise/orvis?src=tying")
+        self.assertEqual(r.status_code, 302)
+        self.assertIn("orvis.com", r.headers["Location"])
+
+    def test_tying_page_renders_gear_and_materials(self):
+        html = self._get("/tying").get_data(as_text=True)
+        for needle in ("Tie your own bass flies", "tying-vise",
+                       "/out/tying-vise/orvis", "Materials by fly",
+                       "Nymph hooks", "comp=marabou"):
+            self.assertIn(needle, html)
 
     def test_crawler_click_is_flagged(self):
         import json

@@ -142,6 +142,19 @@ class FlyOfferTest(unittest.TestCase):
         for r in ("orvis", "epflies"):
             self.assertEqual(d["retailers"][r]["kind"], "manufacturer")
 
+    def test_fly_tying_category_resolves_anywhere(self):
+        """/out/ and the snapshot resolve category gear through resolve_any."""
+        ids = {e["id"] for e in offers.category_entries("fly-tying")}
+        self.assertEqual(ids, {"tying-starter-kit", "tying-vise",
+                               "tying-tools", "tying-materials"})
+        rows = offers.resolve_any("tying-vise")
+        self.assertTrue(any((o.get("url") or "").startswith("https://www.orvis.com/")
+                            for o in rows))
+        for e in offers.category_entries("fly-tying"):
+            for o in e.get("offers", []):
+                if o.get("retailer") == "amazon" and o.get("asin"):
+                    self.assertRegex(o["asin"], r"^[A-Z0-9]{10}$")
+
 
 class OddmentAlternativeTest(unittest.TestCase):
     """Oddment parts that aren't sold on Amazon resolve through their live

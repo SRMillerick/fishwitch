@@ -246,6 +246,20 @@ def resolve_category(cat_id: str, entry_id: str) -> list[dict]:
     return []
 
 
+def resolve_any(entry_id: str) -> list[dict]:
+    """Resolved offers for an entry anywhere in the registry: product/rig
+    entries first, then high-AOV category entries. `/out/` and the static
+    snapshot use this so gear blocks are tracked like everything else."""
+    rows = resolve(entry_id)
+    if rows:
+        return rows
+    for cat_id in categories():
+        rows = resolve_category(cat_id, entry_id)
+        if rows:
+            return rows
+    return []
+
+
 def add(entry_id: str, retailer: str, url: str | None = None,
         kind: str | None = None, asin: str | None = None):
     """Register/update a product offer. Data-only — no code change to go live."""

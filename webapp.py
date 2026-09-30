@@ -122,6 +122,9 @@ _STATIC_SEO = {
     "/kb": ("Tackle library — cited rigs, lures, and baits | baromoon",
             "Rigs, lures, knots, line, and baits with quoted manufacturer and agency sources, "
             "condition fits, concrete builds, and disclosed offers."),
+    "/tying": ("Fly tying for bass — vises, kits, and the materials behind our picks | baromoon",
+               "The tying gear and exact materials behind baromoon's bass-fly picks: starter "
+               "kits, vises, tools, and material assortments — disclosed, tracked links."),
     "/interview": ("Build your tackle profile | baromoon",
                    "Tell baromoon what you own and how you fish; the report then marks your "
                    "picks and your gaps. It stays in your browser."),
@@ -237,6 +240,8 @@ def _seo_meta(req) -> dict:
             crumbs = [("Home", "/"), ("Waters", "/lakes")]
         elif path == "/kb":
             crumbs = [("Home", "/"), ("Tackle library", "/kb")]
+        elif path == "/tying":
+            crumbs = [("Home", "/"), ("Tackle library", "/kb"), ("Tying", "/tying")]
         elif path == "/method":
             crumbs = [("Home", "/"), ("How it works", "/method")]
         elif path == "/developers":
@@ -1161,6 +1166,26 @@ def kb_entry_page(entry_id):
         components=offers.components(entry_id), local=LOCAL)
 
 
+@app.route("/tying")
+def tying_page():
+    """Fly-tying gear + the materials behind the bass-fly picks. Every link
+    routes through /out/ (tracked, disclosed) or stays on-site."""
+    entries = []
+    for e in offers.category_entries("fly-tying"):
+        entries.append(dict(id=e["id"], label=e.get("label", e["id"]),
+                            note=e.get("note"),
+                            offers=offers.resolve_category("fly-tying", e["id"])))
+    flies = []
+    for fid in ("fly-bass", "fly-nymph", "fly-crayfish"):
+        c = tx.entry("bass", fid)
+        if c:
+            flies.append(dict(id=fid, label=c["label"],
+                              components=offers.components(fid)))
+    return render_template("tying.html",
+                           cat=offers.categories().get("fly-tying") or {},
+                           entries=entries, flies=flies, local=LOCAL)
+
+
 @app.route("/interview")
 def interview_page():
     sugg: set[str] = set()
@@ -1593,6 +1618,7 @@ def llms_txt():
         "- https://baromoon.com/lakes/ca — California hub (all covered CA waters)",
         "- https://baromoon.com/lakes/az — Arizona hub (all covered AZ waters)",
         "- https://baromoon.com/kb — cited rigs, lures, knots, line, and baits",
+        "- https://baromoon.com/tying — tying gear and materials for the bass-fly picks",
         "- https://baromoon.com/method — how the deterministic engine works",
         "- https://baromoon.com/developers — anonymous JSON API, embed, and feeds",
         "- https://baromoon.com/report — session plan for a chosen water",
@@ -1642,6 +1668,7 @@ def _xml_urlset(urls: list[tuple[str, str]]) -> Response:
 @app.route("/sitemap-pages.xml")
 def sitemap_pages():
     urls = [("/", ""), ("/report", ""), ("/outlook", ""), ("/lakes", ""), ("/kb", ""),
+            ("/tying", ""),
             ("/interview", ""), ("/about", ""), ("/method", ""), ("/developers", ""),
             ("/contact", ""), ("/privacy", ""), ("/disclosure", ""), ("/log", "")]
     for st in sorted({_state(v) for v in registry().values() if _state(v)}):
@@ -1684,9 +1711,9 @@ def out_click(entry, retailer):
                 # The shopping list stamps every link with the row id as `comp`,
                 # including product-entry offers (entry == component id, e.g.
                 # egg-sinker) — those carry no component bundle of their own.
-                pool = offers.resolve(entry)
+                pool = offers.resolve_any(entry)
         else:
-            pool = offers.resolve(entry)
+            pool = offers.resolve_any(entry)
         for o in pool:
             if o.get("retailer") == retailer and o.get("url"):
                 target, kind = o["url"], o.get("kind", "offer")
