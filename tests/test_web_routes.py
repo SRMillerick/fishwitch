@@ -312,6 +312,18 @@ class OutClickResolutionTest(unittest.TestCase):
         r = self._get("/out/wacky/amazon?comp=not-a-part&src=tackle")
         self.assertEqual(r.status_code, 404)
 
+    def test_crawler_click_is_flagged(self):
+        import json
+        log = Path(tempfile.mkdtemp(prefix="fw_out_")) / "out.jsonl"
+        with mock.patch.dict(os.environ, {"FISHWITCH_AMZ_TAG": "baromoon-20"}), \
+                mock.patch.object(webapp, "LOG", new=log):
+            r = self.c.get("/out/egg-sinker/amazon?comp=egg-sinker&src=shopping",
+                           headers={"User-Agent":
+                                    "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"})
+        self.assertEqual(r.status_code, 302)
+        row = json.loads(log.read_text().splitlines()[0])
+        self.assertTrue(row.get("bot"))
+
 
 if __name__ == "__main__":
     unittest.main()

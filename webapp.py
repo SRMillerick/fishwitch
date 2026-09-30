@@ -1685,6 +1685,8 @@ def out_click(entry, retailer):
         with LOG.open("a") as f:
             row = dict(ts=datetime.now(timezone.utc).isoformat(timespec="seconds"),
                        entry=entry, retailer=retailer, kind=kind, src=src)
+            if telemetry.is_bot(request.user_agent.string):
+                row["bot"] = True
             if comp:
                 row["comp"] = comp
             f.write(json.dumps(row) + "\n")

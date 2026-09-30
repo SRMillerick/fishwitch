@@ -707,7 +707,8 @@ def main():
     tr.add_argument("--show", help="entity id — trends for one entity")
 
     cl = sub.add_parser("clicks", help="aggregate outbound-link click counts (no PII)")
-    cl.add_argument("--src", help="filter by page section (tackle|gap)")
+    cl.add_argument("--src", help="filter by page section (tackle|gap|shopping|kb)")
+    cl.add_argument("--days", type=int, help="only count clicks from the trailing N days")
     cl.add_argument("--top", type=int, default=20)
     cl.add_argument("--remote", action="store_true",
                     help="read the production log over ssh (default: local)")
@@ -938,14 +939,34 @@ def main():
             rows = _jsonl(log.read_text().splitlines())
         if args.src:
             rows = [r for r in rows if r.get("src") == args.src]
+        if args.days:
+            from datetime import datetime as _dt, timedelta as _td, timezone as _tz
+            cutoff = _dt.now(_tz.utc) - _td(days=max(1, args.days))
+
+            def _recent(r):
+                try:
+                    ts = _dt.fromisoformat(str(r.get("ts", "")).replace("Z", "+00:00"))
+                    if ts.tzinfo is None:
+                        ts = ts.replace(tzinfo=_tz.utc)
+                    return ts >= cutoff
+                except Exception:
+                    return False
+            rows = [r for r in rows if _recent(r)]
+        scope = "".join([f" (src={args.src})" if args.src else "",
+                        f" (last {args.days}d)" if args.days else ""])
+        bots = [r for r in rows if r.get("bot")]
+        human = [r for r in rows if not r.get("bot")]
         print(f"  source: {src}")
-        print(f"  {len(rows)} outbound clicks" + (f" (src={args.src})" if args.src else ""))
+        print(f"  {len(human)} outbound clicks{scope}"
+              + (f" (+{len(bots)} bot-flagged)" if bots else ""))
         for (entry, retailer), n in Counter(
-                (r.get("entry"), r.get("retailer")) for r in rows).most_common(args.top):
+                (r.get("entry"), r.get("retailer")) for r in human).most_common(args.top):
             print(f"  {n:5d}  {entry:18s} {retailer}")
-        by_src = Counter(r.get("src") or "?" for r in rows)
+        by_src = Counter(r.get("src") or "?" for r in human)
         if by_src:
             print("  by section:", ", ".join(f"{k}={v}" for k, v in by_src.most_common()))
+        if bots:
+            print(f"  bot-flagged clicks: {len(bots)} (excluded above; the flag exists from 2026-09-30)")
 
     elif args.cmd == "weather":
         from usagelog import FREE_LIMITS, parse, summarize
