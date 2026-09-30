@@ -947,7 +947,8 @@ if (printCard) printCard.addEventListener("click", (ev) => {
     if (tbody) tbody.innerHTML = q.slice().reverse().map(e => "<tr><td>" + esc(e.ts || "")
       + "</td><td>" + esc(e.angler || "") + "</td><td>" + esc(e.lake || "") + "</td><td>"
       + (e.result === "skunk" ? "skunk"
-         : esc(e.lure || "?") + (e.length ? " (" + esc(e.length) + ")" : "")) + "</td></tr>").join("");
+         : esc(e.lure || "?") + (e.length ? " (" + esc(e.length) + ")" : "")
+         + (e.bank ? " · " + esc(e.bank) : "")) + "</td></tr>").join("");
     if (ex) ex.hidden = !q.length;
     if (clr) clr.hidden = !q.length;
     form.querySelectorAll('input[name="length"], input[name="lure"], input[name="notes"]')
@@ -971,6 +972,7 @@ if (printCard) printCard.addEventListener("click", (ev) => {
       lure: skunk ? "" : (f.get("lure") || "").trim(),
       length: skunk ? "" : length,
       notes: (f.get("notes") || "").trim(),
+      bank: (f.get("bank") || "").trim(),
       result: skunk ? "skunk" : "catch",
       ts: date + "T" + time,
     };

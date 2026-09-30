@@ -765,6 +765,13 @@ def to_markdown(m: dict, emoji: bool = True, show_gap: bool = True,
     unmatched = m["match"]["unmatched"]
     if unmatched:
         L.append(f"- *(no match in the KB for: {', '.join(unmatched)} — still bring them)*")
+        # Fly gear has one sourced method (trout); on other species the honest
+        # answer is an explicit note, not an invented entry (kb/SOURCES.md).
+        if m["species"] != "trout" and any(
+                re.search(r"\b(fly|bugger|woolly|nymph|midge|streamer)\b", u, re.I)
+                for u in unmatched):
+            L.append("- *(Fly tackle isn't modeled for this species yet — the sourced fly "
+                     "method lives in the trout catalog: /kb/fly-trout.)*")
     L.append("")
 
     if m.get("box_check"):

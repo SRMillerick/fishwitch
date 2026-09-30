@@ -312,7 +312,13 @@ def collect(angler: str | None = None, since: datetime | None = None,
                                prime=prime, picks=picks, pres=pres, pres_why=pres_why,
                                tim=tim, tim_d=tim_d, zon=zon, zon_why=zon_why,
                                state=m.get("lake_state") or "",
-                               basis=m.get("state_basis") or ""))
+                               basis=m.get("state_basis") or "",
+                               # the replay window actually scored — downstream
+                               # calibration joins (e.g. historical agreement,
+                               # wind-bank follow-through)
+                               start=start, end=start + timedelta(hours=eff_hours),
+                               effective_hours=eff_hours,
+                               shoreline=m.get("shoreline")))
     finally:
         lb.load = orig_load
 

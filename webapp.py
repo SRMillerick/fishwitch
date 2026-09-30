@@ -150,6 +150,9 @@ _STATIC_SEO = {
 
 # local-only panels, kept out of the index even when FISHWITCH_LOCAL=1
 _NOINDEX_PATHS = ("/review", "/stats", "/styleguide", "/logo", "/embed/ledger")
+# the wind-bank analysis compares the logged bank to the replay's stacked/lee
+# shore; sectors match layers.shoreline.SECTOR_NAMES
+_BANK_SECTORS = ("N", "NE", "E", "SE", "S", "SW", "W", "NW")
 
 
 def _iso_date(v) -> str:
@@ -654,6 +657,7 @@ def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
                 shopping=offers.build_shopping(
                     [{"id": r["id"], "label": r["label"], "spec": r.get("spec")} for r in rods]),
                 trends=m.get("trends") or [],
+                shoreline=m.get("shoreline"),
                 prime_t=prime["start"] if prime else None,
                 prime_lab=(prime["light"] if prime else ""),
                 moon=m.get("moon") or {},
@@ -1253,6 +1257,11 @@ def _clean_log_entry(f, lake_names: dict) -> dict | None:
     lure = str(g("lure")).strip()[:60]
     length = str(g("length")).strip()[:20]
     notes = str(g("notes")).strip()[:500]
+    # which bank/shore was actually fished — the ground truth for the
+    # wind-stacked-bank calibration. Kept on skunks too (effort is data).
+    bank = str(g("bank")).strip().upper()[:4]
+    if bank not in _BANK_SECTORS:
+        bank = ""
     ts = str(g("ts")).strip()[:20]
     if ts:
         try:
@@ -1273,7 +1282,7 @@ def _clean_log_entry(f, lake_names: dict) -> dict | None:
                 species=None if skunk else (species or "bass"),
                 lure=None if skunk else lure,
                 length="" if skunk else length,
-                notes=notes, result="skunk" if skunk else "catch", ts=ts)
+                notes=notes, bank=bank, result="skunk" if skunk else "catch", ts=ts)
 
 
 @app.route("/log", methods=["GET", "POST"])
@@ -1324,7 +1333,11 @@ def log_page():
                            time=time or now.strftime("%H:%M"),
                            lake=request.args.get("lake") or "hidden-valley-lake-ca",
                            species=request.args.get("species") or "largemouth bass",
-                           lure=request.args.get("lure") or "", lures=lures)
+                           lure=request.args.get("lure") or "", lures=lures,
+                           bank=(request.args.get("bank") or "").upper()
+                                if (request.args.get("bank") or "").upper() in _BANK_SECTORS else "",
+                           advice=(request.args.get("advice") or "").upper()
+                                  if (request.args.get("advice") or "").upper() in _BANK_SECTORS else "")
 
 
 @app.route("/log/import", methods=["POST"])

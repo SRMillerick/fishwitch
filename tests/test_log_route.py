@@ -56,11 +56,29 @@ class LogRouteTest(unittest.TestCase):
         self.assertIn('data-mode="field"', r.get_data(as_text=True))
         self.assertEqual(self.c.post("/log", data=dict(angler="x")).status_code, 404)
 
+    def test_post_catch_keeps_bank_and_rejects_junk(self):
+        self.c.post("/log", data=dict(
+            angler="Sean", lake="hidden-valley-lake-ca", date="2026-09-19", time="18:30",
+            species="largemouth bass", lure="drop shot", bank="nw"))
+        self.assertEqual(logbook.load()[0]["bank"], "NW")   # upper-cased sector
+        self.c.post("/log", data=dict(
+            angler="Sean", lake="hidden-valley-lake-ca", date="2026-09-20", time="18:30",
+            species="largemouth bass", lure="drop shot", bank="north shore"))
+        self.assertEqual(logbook.load()[1]["bank"], "")     # not a sector → empty
+
+    def test_bank_survives_skunks(self):
+        self.c.post("/log", data=dict(
+            angler="Jack", lake="hidden-valley-lake-ca", date="2026-09-19", time="07:00",
+            species="bass", bank="S", skunk="on"))
+        e = logbook.load()[0]
+        self.assertEqual(e["result"], "skunk")
+        self.assertEqual(e["bank"], "S")                    # effort is data
+
     def test_import_field_log(self):
         payload = [
             dict(angler="Sean", lake="Hidden Valley Lake", result="catch",
                  ts="2026-09-19T06:00", species="largemouth bass", lure="drop shot",
-                 length="3.5lb", notes=""),
+                 length="3.5lb", notes="", bank="NW"),
             dict(angler="Jack", lake="Hidden Valley Lake", result="skunk",
                  ts="2026-09-19T07:00", species="bass", lure="", length="", notes=""),
         ]
@@ -70,6 +88,7 @@ class LogRouteTest(unittest.TestCase):
         rows = logbook.load()
         self.assertEqual(len(rows), 2)
         self.assertEqual(rows[0]["length"], "3.5lb")
+        self.assertEqual(rows[0]["bank"], "NW")
         self.assertEqual(rows[1]["result"], "skunk")
         self.assertEqual(rows[0]["ts"], "2026-09-19T06:00")
 
@@ -84,6 +103,13 @@ class LogRouteTest(unittest.TestCase):
         self.assertIn('value="2026-09-19"', html)
         self.assertIn('value="18:00"', html)
         self.assertIn('value="Drop shot"', html)
+
+    def test_report_advice_prefills_the_bank_hint(self):
+        r = self.c.get("/log?lake=hidden-valley-lake-ca&at=2026-09-19%2018:00&advice=NW&bank=W")
+        html = r.get_data(as_text=True)
+        self.assertIn("The report called the <strong>NW</strong> shore", html)
+        self.assertIn('value="W" selected', html)
+        self.assertIn("report advice", html)
 
 
 if __name__ == "__main__":

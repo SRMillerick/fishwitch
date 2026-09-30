@@ -562,6 +562,8 @@ def cmd_log(args):
                  lure=(None if args.skunk else (args.lure or "")),
                  length=args.length or "",
                  notes=args.notes or "",
+                 bank=(args.bank or "").upper()
+                      if (args.bank or "").upper() in ("N", "NE", "E", "SE", "S", "SW", "W", "NW") else "",
                  result=("skunk" if args.skunk else "catch"))
     if args.time:
         entry["ts"] = args.time
@@ -646,6 +648,7 @@ def main():
     lg.add_argument("--length", help="length/weight if measured")
     lg.add_argument("--time", help="'YYYY-MM-DD HH:MM' (default now)")
     lg.add_argument("--lat"); lg.add_argument("--lng"); lg.add_argument("--notes")
+    lg.add_argument("--bank", help="bank you fished for the wind-bank calibration: N NE E SE S SW W NW")
 
     dl = sub.add_parser("days", help="pressure-phase + lunar-forcing day lens (exploratory)")
     dl.add_argument("--days", default="10")

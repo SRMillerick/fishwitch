@@ -34,7 +34,15 @@ it into the ledger.</p>
     </label>
     <label>Species <input name="species" value="{{ species }}"></label>
     <label>Weight <input name="length" placeholder="4.5 or 4.5lb"></label>
+    <label>Bank fished
+      <select name="bank">
+        <option value="">— not recorded</option>
+        {% for b in ['N','NE','E','SE','S','SW','W','NW'] %}<option value="{{ b }}" {% if bank == b %}selected{% endif %}>{{ b }}{% if advice == b %} · report advice{% endif %}</option>{% endfor %}
+      </select>
+    </label>
   </div>
+  {% if advice %}<p class="fine">The report called the <strong>{{ advice }}</strong> shore
+  wind-stacked — record which bank you actually fished; both answers calibrate (skunks count).</p>{% endif %}
   <label>Lure / bait
     <input name="lure" list="lure-list" value="{{ lure }}" placeholder="drop shot, Roboworm MMIII…">
     <datalist id="lure-list">{% for l in lures %}<option value="{{ l }}"></option>{% endfor %}</datalist>
@@ -74,6 +82,7 @@ validated and appended to the same ledger.</p>
   {% for r in rows %}
   <li><strong>{{ r.ts }}</strong> · {{ r.angler }} · {{ r.lake }} —
     {% if r.result == 'skunk' %}skunk{% else %}{{ r.lure or '?' }}{% if r.length %} ({{ r.length }}){% endif %}{% endif %}
+    {% if r.bank %}<span class="fine">· {{ r.bank }} bank</span>{% endif %}
     {% if r.notes %}<div class="fine">{{ r.notes }}</div>{% endif %}</li>
   {% endfor %}
 </ul>

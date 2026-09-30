@@ -58,7 +58,7 @@ reports add your natal transits and your arsenal. <a href="/interview">Build one
   {% if out.error %}<p class="error">{{ out.error }}</p>
   {% else %}
     <div class="scorebar">overall <strong>{{ out.overall }}/10</strong> · {{ out.lake }} · {{ out.at.strftime('%a %b %-d, %-I:%M %p') }}</div>
-    <p class="no-print fine">{% if local %}<a href="/log?lake={{ q.lake | urlencode }}&at={{ out.at.strftime('%Y-%m-%d %H:%M') | urlencode }}&species={{ q.species | urlencode }}&lure={{ (out.picks[0] if out.picks else '') | urlencode }}" id="log-session">log this session</a> · {% endif %}<a href="#" id="print-card">🖨 print / pocket card</a> — the locked numbers, windows, and presentations in one page.</p>
+    <p class="no-print fine">{% if local %}<a href="/log?lake={{ q.lake | urlencode }}&at={{ out.at.strftime('%Y-%m-%d %H:%M') | urlencode }}&species={{ q.species | urlencode }}&lure={{ (out.picks[0] if out.picks else '') | urlencode }}{% if out.shoreline %}&advice={{ out.shoreline.stacked | urlencode }}{% endif %}" id="log-session">log this session</a> · {% endif %}<a href="#" id="print-card">🖨 print / pocket card</a> — the locked numbers, windows, and presentations in one page.</p>
     {% if out.timeline %}<div class="timeline">{{ out.timeline | safe }}</div>{% endif %}
     {{ out.html | safe }}
     {% include "_tackle.html" %}
@@ -74,7 +74,7 @@ reports add your natal transits and your arsenal. <a href="/interview">Build one
       <p class="fine">The plan is set — now widen it, take it with you, or close the loop after.</p>
       <p class="cta">
         <a class="btn primary" href="/outlook?lake={{ q.lake | urlencode }}{% if q.species %}&species={{ q.species | urlencode }}{% endif %}">Look ahead: 7-day outlook →</a>
-        <a class="btn ghost" href="/log?lake={{ q.lake | urlencode }}&at={{ out.at.strftime('%Y-%m-%d %H:%M') | urlencode }}&species={{ q.species | urlencode }}&lure={{ (out.picks[0] if out.picks else '') | urlencode }}">Log this session</a>
+        <a class="btn ghost" href="/log?lake={{ q.lake | urlencode }}&at={{ out.at.strftime('%Y-%m-%d %H:%M') | urlencode }}&species={{ q.species | urlencode }}&lure={{ (out.picks[0] if out.picks else '') | urlencode }}{% if out.shoreline %}&advice={{ out.shoreline.stacked | urlencode }}{% endif %}">Log this session</a>
         <a class="btn ghost" href="/ledger.ics?lake={{ q.lake | urlencode }}&days=10">Add windows to calendar (.ics)</a>
       </p>
       {% endif %}
