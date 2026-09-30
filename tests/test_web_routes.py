@@ -69,7 +69,7 @@ class SeoHeadTest(unittest.TestCase):
 
     def test_pages_have_unique_titles_and_descriptions(self):
         pages = ["/", "/report", "/outlook", "/lakes", "/kb", "/interview",
-                 "/about", "/contact", "/privacy", "/disclosure",
+                 "/about", "/method", "/developers", "/contact", "/privacy", "/disclosure",
                  "/lake/hidden-valley-lake-ca", "/kb/dropshot", "/kb/abstract"]
         titles, descs = set(), set()
         for p in pages:
@@ -101,6 +101,25 @@ class SeoHeadTest(unittest.TestCase):
         xml = self._body("/sitemap.xml")
         self.assertIn("<lastmod>", xml)
         self.assertIn("/lake/hidden-valley-lake-ca</loc>", xml)
+
+    def test_lake_page_is_answer_first_with_faq_schema(self):
+        h = self._body("/lake/hidden-valley-lake-ca")
+        self.assertIn("Short answer:", h)
+        self.assertIn("Quick answers", h)
+        self.assertIn('"@type": "FAQPage"', h)
+        self.assertIn("What fish are in Hidden Valley Lake?", h)
+
+    def test_social_card_is_served_and_declared(self):
+        r = self.c.get("/static/og-card.png")
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.mimetype, "image/png")
+        self.assertIn("static/og-card.png", self._body("/"))
+
+    def test_sitemap_and_llms_include_new_pages(self):
+        sitemap, llms = self._body("/sitemap.xml"), self._body("/llms.txt")
+        for page in ("/method", "/developers"):
+            self.assertIn(page, sitemap)
+            self.assertIn("baromoon.com" + page, llms)
 
     def test_llms_txt_and_indexnow_key(self):
         r = self.c.get("/llms.txt")

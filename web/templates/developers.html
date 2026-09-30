@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="narrow">
+<h1>Developers</h1>
+<p class="smallcaps">anonymous JSON · CORS · free with attribution</p>
+
+<p class="answer"><strong>The short version:</strong> the same deterministic ranking the site
+serves is available as anonymous JSON. No key, no account, CORS open, attribution to
+baromoon.com required.</p>
+
+<h2 class="rule-double">API v1</h2>
+<ul class="plain">
+  <li><code>GET /api/v1/report</code> — a scored session report for one water.<br>
+    Params: <code>lake</code> (registry id, see <a href="/lakes">/lakes</a>),
+    <code>at</code> (<code>YYYY-MM-DD HH:MM</code>), <code>hours</code> (0.5–8, default 2.5),
+    <code>species</code>, <code>voice</code> (fisher/almanac/astro), <code>bottom</code>
+    (grass/muck/sand/rock/wood), <code>clarity</code> (clear/stained). Rate limit 60/hour per
+    IP; cached 5 minutes.</li>
+  <li><code>GET /api/v1/windows</code> — a 1–16-day horizon scan (default 7 days). Rate limit
+    120/hour per IP; cached 15 minutes.</li>
+</ul>
+<p class="fine">Every response carries an envelope: <code>api</code>, <code>generated_at</code>,
+<code>source</code>, <code>license</code>, <code>disclaimer</code>. Every pick keeps its cited
+source, and the disclaimer is part of the contract. Live example:
+<a href="/api/v1/windows?lake=hidden-valley-lake-ca&amp;days=3">/api/v1/windows?lake=hidden-valley-lake-ca&amp;days=3</a>.</p>
+
+<h2 class="rule-double">Embed the ledger</h2>
+<p>The same windows can be embedded on any page with an iframe:</p>
+<pre><code>&lt;iframe src="https://baromoon.com/embed/ledger?lake=hidden-valley-lake-ca&amp;days=7"
+        width="420" height="360" loading="lazy"
+        title="baromoon windows"&gt;&lt;/iframe&gt;</code></pre>
+<p class="fine">Optional params: <code>days</code> (1–16), <code>species</code>. The widget
+carries its own attribution, and the embed page is marked <code>noindex</code> on our side so it
+never competes with your page.</p>
+
+<h2 class="rule-double">Feeds</h2>
+<ul class="plain">
+  <li><a href="/ledger.ics?lake=hidden-valley-lake-ca&amp;days=10">/ledger.ics</a> —
+  subscribable calendar of the A/S windows (<code>lake</code>, <code>days</code>).</li>
+  <li><a href="/outlook.rss?lake=hidden-valley-lake-ca&amp;days=10">/outlook.rss</a> — RSS of
+  the same windows.</li>
+</ul>
+
+<h2 class="rule-double">Attribution &amp; limits</h2>
+<p>Free to use with attribution to <a href="/">baromoon.com</a>. Conditions are estimates (a
+forecast, an inferred lake state, and an air-temp water model unless a gauge is live) — a plan,
+not a promise. Be gentle with the rate limits; they exist so the VPS stays fast for everyone,
+and the API is not a bulk-download endpoint.</p>
+</div>
+{% endblock %}

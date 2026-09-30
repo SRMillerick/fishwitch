@@ -96,7 +96,7 @@ def _count_page(resp):
 WEB_BASE = "https://baromoon.com"
 _ORG_ID = f"{WEB_BASE}/#organization"
 _SITE_ID = f"{WEB_BASE}/#website"
-_OG_IMAGE = f"{WEB_BASE}/static/icon-512-v2.png"
+_OG_IMAGE = f"{WEB_BASE}/static/og-card.png"
 _DEFAULT_DESC = ("baromoon reads your lake — barometer, water temp, wind, light, and cover — "
                  "and hands you the window, the bank, and the rig. Cited, deterministic, free.")
 
@@ -133,6 +133,13 @@ _STATIC_SEO = {
     "/log": ("Field log a session | baromoon",
              "Log catches or effort in the browser; nothing is stored server-side. Export when "
              "you want to add the session to the local ledger."),
+    "/method": ("How baromoon works — the deterministic fishing engine",
+                "How weather, water, sky, and a cited tackle library become scored windows: "
+                "the data sources, the tie-break caps, the calibration ledger, and the money "
+                "rules."),
+    "/developers": ("API & embed — baromoon for developers",
+                    "Anonymous JSON API (v1), an embeddable ledger, and ICS/RSS feeds — free "
+                    "with attribution, CORS-enabled, no key required."),
 }
 
 # local-only panels, kept out of the index even when FISHWITCH_LOCAL=1
@@ -211,6 +218,10 @@ def _seo_meta(req) -> dict:
             crumbs = [("Home", "/"), ("Waters", "/lakes")]
         elif path == "/kb":
             crumbs = [("Home", "/"), ("Tackle library", "/kb")]
+        elif path == "/method":
+            crumbs = [("Home", "/"), ("How it works", "/method")]
+        elif path == "/developers":
+            crumbs = [("Home", "/"), ("Developers", "/developers")]
 
     # Query-parameter variants of the tool pages are infinite and ephemeral:
     # noindex,follow them. The crawlable value lives on the lake pages.
@@ -864,9 +875,61 @@ def _ledger(home: dict, days: int, species: str | None, profile: dict | None,
     return rows[:limit]
 
 
+def _lake_answers(lake: dict, windows: list[dict]):
+    """Answer-first copy for a lake page + FAQPage data. Built only from
+    registry facts and the computed windows; the schema carries the same text
+    the page shows, never more."""
+    name = lake.get("name") or lake.get("id")
+    w = windows[0] if windows else None
+    faq: list[tuple[str, str]] = []
+    if w:
+        clock = f"{w['start'].strftime('%-I:%M %p')}\u2013{w['end'].strftime('%-I %p')}"
+        prime = f", prime {w['prime'].strftime('%-I:%M %p')}" if w.get("prime") else ""
+        short = (f"baromoon's read for {name}: the strongest window in the next three days "
+                 f"is {w['day']} {clock}{prime} ({w['tier']} tier, {w['conf']} confidence) "
+                 f"\u2014 top pick: {w['rig']}.")
+        faq.append((f"When should I fish {name}?",
+                    f"The next-three-day read (recomputed daily) puts the strongest window on "
+                    f"{w['day']}, {clock}{prime}, graded tier {w['tier']} with {w['conf']} "
+                    "confidence."))
+        faq.append((f"What should I throw at {name}?",
+                    f"The top-scoring pick for that window is the {w['rig']}. Picks are ranked "
+                    "conditions-first; ownership and links never change the order."))
+    else:
+        short = (f"baromoon has no scorable window for {name} in the next three days \u2014 "
+                 "seasonal quiet or a forecast gap.")
+    species = lake.get("species") or []
+    if species:
+        faq.append((f"What fish are in {name}?",
+                    "The registry lists " + ", ".join(species) + "."))
+    size = []
+    if lake.get("area_acres"):
+        size.append(f"about {lake['area_acres']} acres of surface")
+    if lake.get("est_max_depth_ft"):
+        size.append(f"a maximum depth of roughly {lake['est_max_depth_ft']} ft")
+    if size:
+        faq.append((f"How big is {name}?", "It is " + " and ".join(size) + "."))
+    jsonld = None
+    if faq:
+        jsonld = {"@type": "FAQPage", "mainEntity": [
+            {"@type": "Question", "name": q,
+             "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]}
+    return short, faq, jsonld
+
+
 @app.route("/about")
 def about_page():
     return render_template("about.html", local=LOCAL)
+
+
+@app.route("/method")
+def method_page():
+    return render_template("method.html", local=LOCAL)
+
+
+@app.route("/developers")
+def developers_page():
+    return render_template("developers.html", local=LOCAL)
 
 
 @app.route("/privacy")
@@ -903,7 +966,9 @@ def lake_page(lake_id):
         nid = v.get("id") or by_name.get(v.get("name"))
         if nid:
             nearby.append(dict(id=nid, name=v.get("name", nid), region=_region(v)))
-    return render_template("lake.html", lake=lake, windows=windows, nearby=nearby, local=LOCAL)
+    short, faq, faq_jsonld = _lake_answers(lake, windows)
+    return render_template("lake.html", lake=lake, windows=windows, nearby=nearby,
+                           short=short, faq=faq, faq_jsonld=faq_jsonld, local=LOCAL)
 
 
 @app.route("/lakes")
@@ -1382,6 +1447,8 @@ def llms_txt():
         "- https://baromoon.com/ — the plan and the free report tool",
         "- https://baromoon.com/lakes — every water we cover (CA + AZ)",
         "- https://baromoon.com/kb — cited rigs, lures, knots, line, and baits",
+        "- https://baromoon.com/method — how the deterministic engine works",
+        "- https://baromoon.com/developers — anonymous JSON API, embed, and feeds",
         "- https://baromoon.com/report — session plan for a chosen water",
         "- https://baromoon.com/outlook — 10–16-day windows",
         "- https://baromoon.com/api/v1/report?lake=hidden-valley-lake-ca — anonymous JSON API (CORS)",
@@ -1403,7 +1470,7 @@ def llms_txt():
 def sitemap():
     base = "https://baromoon.com"
     urls = ["/", "/report", "/outlook", "/lakes", "/kb", "/interview",
-            "/about", "/contact", "/privacy", "/disclosure", "/log"]
+            "/about", "/method", "/developers", "/contact", "/privacy", "/disclosure", "/log"]
     urls += [f"/lake/{l['id']}" for l in lakes_summary()]
     urls += [f"/kb/{c['id']}" for sp in ("bass", "trout", "catfish", "panfish")
              for c in tx.catalog(sp)]

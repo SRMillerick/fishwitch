@@ -73,6 +73,21 @@ code {
   background: var(--panel); border: 1px solid var(--line-2); border-radius: 3px;
   padding: .08em .38em; font-family: var(--font-mono); font-size: .84em; color: var(--dim);
 }
+pre {
+  background: var(--panel); border: 1px solid var(--line-2); border-radius: 3px;
+  padding: .8rem 1rem; overflow-x: auto; font-size: .82rem; color: var(--dim);
+}
+pre code { background: none; border: 0; padding: 0; }
+/* answer-first lede (lake short answer, KB technique, page summaries) */
+.answer {
+  font-size: 1.06rem; line-height: 1.55;
+  border-left: 2px solid var(--gold); padding: .15rem 0 .15rem .95rem;
+  margin: 1.1rem 0 1.4rem; color: var(--ink);
+}
+/* visible Q&A paired with FAQPage JSON-LD (same text — never schema-only) */
+.faq { margin: .4rem 0 1.6rem; }
+.faq dt { font-weight: 600; margin-top: 1rem; }
+.faq dd { margin: .18rem 0 0; color: var(--dim); }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 6px; }
 

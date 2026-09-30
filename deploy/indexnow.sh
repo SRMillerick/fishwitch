@@ -10,11 +10,19 @@ if [ -z "$KEY" ]; then
   exit 0
 fi
 python3 - "$KEY" <<'PY'
-import json, re, sys, urllib.request
+import json, re, sys, time, urllib.request
 key = sys.argv[1]
 host = "baromoon.com"
-urls = re.findall(r"<loc>([^<]+)</loc>",
-                  urllib.request.urlopen(f"https://{host}/sitemap.xml", timeout=30).read().decode())
+for attempt in range(3):
+    try:
+        xml = urllib.request.urlopen(f"https://{host}/sitemap.xml", timeout=30).read().decode()
+        break
+    except Exception as e:
+        if attempt == 2:
+            raise
+        print(f"indexnow: sitemap not up yet ({e}); retrying")
+        time.sleep(5)
+urls = re.findall(r"<loc>([^<]+)</loc>", xml)
 payload = {"host": host, "key": key, "keyLocation": f"https://{host}/{key}.txt", "urlList": urls}
 req = urllib.request.Request("https://api.indexnow.org/indexnow",
                              data=json.dumps(payload).encode(),

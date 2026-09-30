@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="narrow">
+<h1>How baromoon works</h1>
+<p class="smallcaps">deterministic piping · cited facts · no AI in the report path</p>
+
+<p class="answer"><strong>The short version:</strong> baromoon reads the weather forecast, a
+75-day weather archive, the sun and moon's positions, and a cited tackle library — then scores
+every candidate window and tells you when to be on the water and what to throw. Same inputs,
+same report, every time.</p>
+
+<h2 class="rule-double">What goes in</h2>
+<ul class="plain">
+  <li><strong>Weather</strong> — Open-Meteo forecast (16-day cap) and archive (75 days):
+  temperature, wind, cloud, precipitation, barometric pressure and its trend.</li>
+  <li><strong>Water</strong> — a first-order water-temperature estimate from the air-temp
+  history (lag ≈ 4 days), plus a warming/cooling trend. A USGS gauge is used when one is live
+  within 30 km of the water; no registry lake currently has one, so the estimate is labelled as
+  such.</li>
+  <li><strong>Sky</strong> — Swiss Ephemeris: sunrise, sunset, civil dusk, moonrise and
+  moonset, moon phase, solunar majors (moon overhead/underfoot) and minors (rise/set),
+  planetary hours, and — for a profile — natal transits.</li>
+  <li><strong>Tackle library</strong> — every lure, rig, bait, knot, and line entry carries
+  cited provenance, quoted from manufacturer catalogs (T1) or state-agency guides (T2).</li>
+</ul>
+
+<h2 class="rule-double">What comes out</h2>
+<p>Each candidate window gets a score and a rank; the report shows the prime moment, the top
+picks with a cited why, and what you're missing that scores better for these conditions. A
+capped tie-break layer adjusts for declared cover, season, spawn phase, and a derived
+fish-position state — one raw fit is 0.25 points, each dimension caps at ±0.5, and the whole
+layer caps at ±1.0. Signal magnitudes come from cited sources where one exists and are labelled
+T5 (editorial) when it doesn't.</p>
+
+<h2 class="rule-double">What doesn't score</h2>
+<p>Multi-model forecast agreement (GFS/ECMWF/ICON spread), creator and tournament trend
+signals, and the tackle offers are display-only. They are shown after the ranking is set and
+never feed back into it.</p>
+
+<h2 class="rule-double">The calibration ledger</h2>
+<p>Every logged trip — catches and skunks alike — is replayed blind: the model sees the logbook
+only as of each session, and the weather comes from the archive. As of late September 2026 the
+ledger held <strong>13 sessions: 6 exact, 3 style, 2 miss</strong> on presentation; weighted by
+catch, 37% exact / 60% style / 3% miss, with score separation +0.4. When the data disagrees with
+the model, the model changes; the scoring rules live in the <a href="/kb">tackle library</a>'s
+condition contract.</p>
+
+<h2 class="rule-double">Money</h2>
+<p>Tackle links are added after the picks are set, always disclosed, and never influence the
+order. Manufacturer pages carry no commission; affiliate links do, and are marked. See the
+<a href="/disclosure">affiliate disclosure</a>. baromoon is free to use — no account, no
+paywall.</p>
+
+<h2 class="rule-double">What it isn't</h2>
+<p>Conditions are estimates — a forecast, an inferred lake state, and an air-temp water model —
+so a report is a plan, not a promise. Access rules, licenses, and regulations are yours to
+manage; baromoon doesn't enforce them. And no AI writes the facts at runtime: the numbers are
+computed from the sources, every time.</p>
+
+<p class="fine">Looking for the machine-readable side? The <a href="/developers">API and
+embed</a> expose the same deterministic rankings.</p>
+</div>
+{% endblock %}

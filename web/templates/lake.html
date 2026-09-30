@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block head %}
 <link rel="stylesheet" href="/static/leaflet/leaflet.css">
+{% if faq_jsonld %}<script type="application/ld+json">{{ faq_jsonld | tojson }}</script>{% endif %}
 {% endblock %}
 {% block content %}
 <p class="smallcaps">water · {{ lake.region }}</p>
@@ -20,6 +21,8 @@
 {% if lake.species %}
 <p class="fine"><strong>Species:</strong> {{ lake.species | join(' · ') }}</p>
 {% endif %}
+
+{% if short %}<p class="answer"><strong>Short answer:</strong> {{ short }}</p>{% endif %}
 
 <div id="map" class="map" role="img" aria-label="Map of {{ lake.name }}"></div>
 
@@ -49,6 +52,18 @@ C — the fish have other plans.</p>
   <a class="btn primary" href="/report?lake={{ lake.id }}">Full report →</a>
   <a class="btn ghost" href="/outlook?lake={{ lake.id }}">10-day outlook</a>
 </p>
+
+{% if faq %}
+<div class="section-head">
+  <h2>Quick answers</h2>
+  <span class="smallcaps">registry facts + today's read</span>
+</div>
+<dl class="faq">
+  {% for q, a in faq %}
+  <dt>{{ q }}</dt><dd>{{ a }}</dd>
+  {% endfor %}
+</dl>
+{% endif %}
 
 {% if nearby %}
 <div class="section-head">

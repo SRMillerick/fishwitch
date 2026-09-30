@@ -88,6 +88,10 @@ def save(path: str, body: str):
     body = re.sub(r'href="/(ledger\.ics|outlook\.rss|log)\?([^"]*)"',
                   r'href="https://baromoon.com/\1?\2"', body)
     body = body.replace('href="/log"', 'href="https://baromoon.com/log"')
+    # API endpoints only exist on the live app (and robots-disallow crawlers)
+    body = re.sub(r'href="(/api/[^"]*)"', r'href="https://baromoon.com\1"', body)
+    body = body.replace('href="/method"', 'href="method.html"')
+    body = body.replace('href="/developers"', 'href="developers.html"')
     # /ledger.ics + /outlook.rss are dynamic-only (no server on gh-pages); drop
     # the subscribe line so the static snapshot has no broken links.
     body = re.sub(r'<p class="fine">Subscribe to the A/S windows:.*?</p>\s*',
@@ -124,7 +128,7 @@ print(f"building snapshot → site/  ({STAMP})")
 
 # landing + kb + outlook
 save("index.html", c.get("/").get_data(as_text=True))
-for pg in ("about", "privacy", "disclosure", "contact"):
+for pg in ("about", "privacy", "disclosure", "contact", "method", "developers"):
     save(f"{pg}.html", c.get(f"/{pg}").get_data(as_text=True))
 save("lakes.html", c.get("/lakes").get_data(as_text=True))
 for _lk in _reg:
