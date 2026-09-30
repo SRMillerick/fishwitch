@@ -990,6 +990,8 @@ def main():
         if s.get("bots"):
             print(f"  bot-flagged views: {s['bots']} (raw total keeps them; "
                   "views logged before the flag existed are unflagged)")
+        if s.get("by_src"):
+            print("  by source: " + ", ".join(f"{k}={n}" for k, n in s["by_src"]))
         print("  by page:")
         for path, n in s["by_path"]:
             print(f"    {n:5d}  {path}")

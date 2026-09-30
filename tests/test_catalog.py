@@ -139,3 +139,21 @@ class PinReportSeoTest(unittest.TestCase):
         self.assertIn('<link rel="canonical" href="https://baromoon.com/report">', h)
         self.assertIn('name="lat"', h)
         self.assertIn("This water isn't in the registry", h)
+
+    def test_pin_view_is_tagged_on_demand(self):
+        from datetime import datetime
+        fake = dict(lake="Diamond Valley Lake", overall=6.2, moon_svg="", moon={},
+                    prime_t=None, picks=["Drop shot"], at=datetime(2026, 9, 30, 18, 0),
+                    timeline="", html="", gap=[], rods=[], shopping=[], trends=[], has_box=False)
+        with mock.patch.object(webapp, "_report_response", return_value=fake), \
+                mock.patch.object(webapp.telemetry, "record") as rec, \
+                mock.patch.object(webapp.telemetry, "should_count", return_value=True):
+            self.c.get("/report?lat=33.6802&lng=-117.0291")
+        self.assertTrue(rec.called)
+        self.assertEqual(rec.call_args.kwargs.get("src"), "ondemand")
+        # a registry-lake report is not tagged on-demand
+        with mock.patch.object(webapp, "_report_response", return_value=fake), \
+                mock.patch.object(webapp.telemetry, "record") as rec2, \
+                mock.patch.object(webapp.telemetry, "should_count", return_value=True):
+            self.c.get("/report?lake=hidden-valley-lake-ca")
+        self.assertIsNone(rec2.call_args.kwargs.get("src"))

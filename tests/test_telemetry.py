@@ -39,6 +39,15 @@ class TelemetryTest(unittest.TestCase):
             self.assertFalse(telemetry.should_count(path), path)
         for path in ("/", "/report", "/outlook", "/lakes", "/lake/x", "/kb"):
             self.assertTrue(telemetry.should_count(path), path)
+    def test_source_tag_is_bounded_and_counted(self):
+        telemetry.record("/report", src="ondemand", log=self.log)
+        telemetry.record("/report", lake="hidden-valley-lake-ca", log=self.log)
+        rows = telemetry.read(self.log)
+        self.assertEqual(rows[0]["src"], "ondemand")
+        self.assertNotIn("src", rows[1])   # untagged views stay lean
+        s = telemetry.summarize(days=1, log=self.log)
+        self.assertEqual(s["by_src"], [("ondemand", 1)])
+
     def test_parse_drops_malformed_and_offshape(self):
         rows = telemetry.parse(['{"path": "/"}', "not json",
                                 '{"lake": "x"}', '{"path": "/kb"}'])

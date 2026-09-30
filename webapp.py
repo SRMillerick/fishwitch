@@ -82,8 +82,13 @@ def _count_page(resp):
         if (request.method == "GET" and resp.status_code == 200
                 and request.args.get("warm") != "1"
                 and telemetry.should_count(request.path)):
+            # dropped-pin reports have no registry lake; tag them so on-demand
+            # catalog usage is separable from registry traffic
+            src = ("ondemand" if request.path in ("/report", "/outlook")
+                   and not request.args.get("lake")
+                   and request.args.get("lat") and request.args.get("lng") else None)
             telemetry.record(request.path, lake=request.args.get("lake"),
-                             ref=request.referrer, ua=request.user_agent.string)
+                             ref=request.referrer, ua=request.user_agent.string, src=src)
     except Exception:
         pass
     # installed PWAs keep asking for the un-versioned manifest URL; let them

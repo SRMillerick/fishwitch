@@ -119,11 +119,16 @@ def classify_ref(ref: str | None) -> str:
 
 
 def record(path: str, lake: str | None = None, ref: str | None = None,
-           ua: str | None = None, log: Path | None = None) -> None:
-    """Append one aggregate view line. Never raises (telemetry is best-effort)."""
+           ua: str | None = None, src: str | None = None,
+           log: Path | None = None) -> None:
+    """Append one aggregate view line. Never raises (telemetry is best-effort).
+    `src` is a coarse, fixed page-source tag (e.g. `ondemand` for a dropped-pin
+    report) — a short token, never free text."""
     try:
         line = {"ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                 "path": path[:96], "lake": normalize_lake(lake), "ref": _ref_host(ref)}
+        if src:
+            line["src"] = str(src)[:24]
         if is_bot(ua):
             line["bot"] = True
         with (log or PAGES).open("a") as f:
@@ -181,6 +186,7 @@ def summarize(days: int = 30, log: Path | None = None, top: int = 15,
             continue
     by_path = Counter(r.get("path") or "?" for r in window)
     by_lake = Counter(r.get("lake") for r in window if r.get("lake"))
+    by_src = Counter(r.get("src") for r in window if r.get("src"))
     by_day = Counter(str(r.get("ts", ""))[:10] for r in window)
     channels = Counter(classify_ref(r.get("ref")) for r in window)
     # by_ref is the honest external list: internal navigation and known
@@ -196,6 +202,7 @@ def summarize(days: int = 30, log: Path | None = None, top: int = 15,
                 channels=[(c, channels[c]) for c in CHANNEL_ORDER if channels.get(c)],
                 by_path=by_path.most_common(top),
                 by_lake=by_lake.most_common(top),
+                by_src=by_src.most_common(top),
                 by_ref=by_ref.most_common(top),
                 spam_refs=spam_refs.most_common(top),
                 by_day=sorted(by_day.items()))

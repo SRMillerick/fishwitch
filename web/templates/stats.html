@@ -23,6 +23,9 @@ navigation; direct has no referrer. {% if s.bots %}{{ s.bots }} views carried a
 crawler user agent (flagged, not stored). {% endif %}Referrer classification is
 retroactive; the bot flag only exists on views logged after 2026-09-28.</p>
 {% endif %}
+{% if s.by_src %}
+<p class="fine">By source: {% for src, n in s.by_src %}<code>{{ src }}</code>={{ n }}{% if not loop.last %}, {% endif %}{% endfor %}.</p>
+{% endif %}
 
 {% if s.by_path %}
 <h2 class="rule-double">Pages</h2>
