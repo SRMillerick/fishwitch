@@ -1,9 +1,13 @@
 """Multi-model forecast agreement — honest uncertainty, never scoring."""
+import os
 import unittest
 from datetime import datetime, timedelta
 from unittest import mock
 
 import weather as wx
+
+# Tests must never write the real usage log.
+os.environ.setdefault("FISHWITCH_NO_USAGE", "1")
 
 
 class FakeResp:
@@ -106,6 +110,43 @@ class WaterModelTest(unittest.TestCase):
         self.assertEqual(w._water_series(), [])
         self.assertIsNone(w.est_water_f(datetime(2026, 4, 3)))
         self.assertIsNone(w.water_trend_f_per_week(datetime(2026, 4, 3)))
+
+
+class WeatherBatchTest(unittest.TestCase):
+    """One Open-Meteo call for N coordinates is the free-tier budget lever."""
+
+    def _payload(self, temp_c):
+        base = datetime(2026, 9, 30)
+        times = [(base + timedelta(hours=h)).strftime("%Y-%m-%dT%H:%M") for h in range(48)]
+        hourly = {"time": times}
+        for var in wx.HOURLY:
+            hourly[var] = [temp_c if var == "temperature_2m" else 1.0] * len(times)
+        daily = {"time": ["2026-09-30", "2026-10-01"]}
+        for var in wx.DAILY:
+            daily[var] = [temp_c] * 2
+        return {"timezone": "America/Los_Angeles", "utc_offset_seconds": -25200,
+                "hourly": hourly, "daily": daily}
+
+    def test_many_batches_into_one_request_and_parses_in_order(self):
+        calls = []
+
+        def get(url, params=None, headers=None, timeout=None):
+            calls.append(params)
+            return FakeResp([self._payload(10.0), self._payload(20.0)])
+
+        with mock.patch.object(wx.requests, "get", get):
+            out = wx.Weather.many([(38.0, -122.0), (39.0, -121.0)])
+        self.assertEqual(len(calls), 1)
+        self.assertIn(",", calls[0]["latitude"])
+        self.assertEqual(len(out), 2)
+        self.assertNotEqual(out[0].hourly[0]["temp_f"], out[1].hourly[0]["temp_f"])
+
+    def test_many_single_point_dict_payload(self):
+        with mock.patch.object(wx.requests, "get",
+                               lambda *a, **k: FakeResp(self._payload(15.0))):
+            out = wx.Weather.many([(38.0, -122.0)])
+        self.assertEqual(len(out), 1)
+        self.assertEqual(out[0].tz, "America/Los_Angeles")
 
 
 if __name__ == "__main__":

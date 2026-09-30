@@ -10,6 +10,8 @@ import time
 from datetime import datetime, timedelta
 import requests
 
+import usagelog
+
 FORECAST = "https://api.open-meteo.com/v1/forecast"
 HOURLY = ["temperature_2m", "apparent_temperature", "relative_humidity_2m",
           "precipitation_probability", "precipitation", "weather_code", "cloud_cover",
@@ -23,16 +25,36 @@ KPH_PER_MPH = 1.609344
 def _c2f(c): return c * 9 / 5 + 32
 
 
+def _get(params: dict, timeout: int = 15, endpoint: str = "forecast"):
+    """One forecast request, logged for the free-tier budget. `locations` is
+    the coordinate count, so a batched call counts as what it really consumes."""
+    loc = str(params.get("latitude") or "").count(",") + 1
+    try:
+        r = requests.get(FORECAST, params=params,
+                         headers={"User-Agent": "fishwitch-mvp/1.0"}, timeout=timeout)
+        usagelog.record("open-meteo", endpoint, locations=loc,
+                        days=params.get("forecast_days"),
+                        status=getattr(r, "status_code", None))
+        return r
+    except Exception:
+        usagelog.record("open-meteo", endpoint, locations=loc,
+                        days=params.get("forecast_days"), status="error")
+        raise
+
+
 class Weather:
     def __init__(self, lat: float, lng: float, forecast_days: int = 3,
                  past_days: int = 30):
-        r = requests.get(FORECAST, params=dict(
+        r = _get(dict(
             latitude=lat, longitude=lng, timezone="auto",
             past_days=past_days, forecast_days=forecast_days,
             hourly=",".join(HOURLY), daily=",".join(DAILY),
-        ), headers={"User-Agent": "fishwitch-mvp/1.0"}, timeout=15)
+        ))
         r.raise_for_status()
-        j = r.json()
+        self._load(r.json())
+
+    def _load(self, j: dict) -> None:
+        """Parse one Open-Meteo location payload into hourly/daily series."""
         self.tz = j["timezone"]
         self.utc_offset = int(j["utc_offset_seconds"])
         h = j["hourly"]
@@ -70,6 +92,30 @@ class Weather:
             ))
 
     # ── lookups ────────────────────────────────────────────────────────────
+    @classmethod
+    def many(cls, points: list[tuple[float, float]], forecast_days: int = 3,
+             past_days: int = 30) -> list["Weather"]:
+        """One Open-Meteo call for N coordinates (comma-separated), returned in
+        input order. This is the budget lever: four nearby lakes = one call."""
+        if not points:
+            return []
+        r = _get(dict(
+            latitude=",".join(str(p[0]) for p in points),
+            longitude=",".join(str(p[1]) for p in points),
+            timezone="auto", past_days=past_days, forecast_days=forecast_days,
+            hourly=",".join(HOURLY), daily=",".join(DAILY),
+        ), endpoint="forecast-batch")
+        r.raise_for_status()
+        payload = r.json()
+        if isinstance(payload, dict):
+            payload = [payload]
+        out = []
+        for j in payload[:len(points)]:
+            w = cls.__new__(cls)
+            w._load(j)
+            out.append(w)
+        return out
+
     def at(self, dt: datetime) -> dict:
         """Snapshot at nearest hour to naive-local dt."""
         best = min(self.hourly, key=lambda x: abs((x["dt"] - dt).total_seconds()))
@@ -228,10 +274,10 @@ def model_agreement(lat: float, lng: float, start: datetime, end: datetime) -> d
     result = None
     try:
         days = max(1, min(16, (end.date() - datetime.now().date()).days + 2))
-        r = requests.get(FORECAST, params=dict(
+        r = _get(dict(
             latitude=lat, longitude=lng, timezone="auto", forecast_days=days,
             hourly=",".join(AGREE_VARS), models=",".join(AGREE_MODELS)),
-            headers=_UA, timeout=20)
+            timeout=20, endpoint="model-agreement")
         r.raise_for_status()
         h = r.json()["hourly"]
         times = [datetime.fromisoformat(t) for t in h["time"]]

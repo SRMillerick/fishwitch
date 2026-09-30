@@ -660,6 +660,8 @@ def main():
 
     lp = sub.add_parser("lakes", help="list registry / auto-characterize a new lake")
     lp.add_argument("--auto", metavar="NAME", help="build a lake card from public data and cache it")
+    lp.add_argument("--dry-run", action="store_true",
+                    help="with --auto: print the card without writing the registry")
     ap_ = sub.add_parser("arsenal", help="list lure/rig categories")
     ap_.add_argument("--species", default="bass")
 
@@ -716,6 +718,12 @@ def main():
     st.add_argument("--remote", action="store_true",
                     help="read the production log over ssh (default: local)")
 
+    wu = sub.add_parser("weather",
+                        help="external API usage vs the free-tier budget (Open-Meteo et al.)")
+    wu.add_argument("--days", type=int, default=30)
+    wu.add_argument("--remote", action="store_true",
+                    help="read the production usage log over ssh (default: local)")
+
     tp = sub.add_parser("terminal", help="terminal tackle KB (hooks, weights, jig heads)")
     tp.add_argument("--show", help="entry id to print")
     tp.add_argument("--category", help="hook|weight|jighead|terminal")
@@ -759,10 +767,13 @@ def main():
             t = card["turnover"]
             print(f"  turnover : trigger {t['trigger_f']}°F · surface bias {t['surface_bias_f']}°F")
             print(f"            ({t['basis']})")
-            reg = load_json(CONFIG / "lakes.json", {})
-            reg[card["id"]] = card
-            (CONFIG / "lakes.json").write_text(json.dumps(reg, indent=2))
-            print(f"  ✅ cached to registry as '{card['id']}' — report with: ./fishwitch report --lake {card['id']}")
+            if args.dry_run:
+                print("  dry run — registry not written")
+            else:
+                reg = load_json(CONFIG / "lakes.json", {})
+                reg[card["id"]] = card
+                (CONFIG / "lakes.json").write_text(json.dumps(reg, indent=2))
+                print(f"  ✅ cached to registry as '{card['id']}' — report with: ./fishwitch report --lake {card['id']}")
         else:
             for k, v in load_json(CONFIG / "lakes.json", {}).items():
                 auto = "auto-card" if v.get("turnover", {}).get("basis", "").startswith("morphology") else ""
@@ -935,6 +946,30 @@ def main():
         by_src = Counter(r.get("src") or "?" for r in rows)
         if by_src:
             print("  by section:", ", ".join(f"{k}={v}" for k, v in by_src.most_common()))
+
+    elif args.cmd == "weather":
+        from usagelog import FREE_LIMITS, parse, summarize
+        if args.remote:
+            host = _baromoon_host()
+            src = f"production — {host}:{REMOTE_DIR}/logs/usage.jsonl"
+            rows = parse(_remote_lines(f"{REMOTE_DIR}/logs/usage.jsonl"))
+        else:
+            src = "local — logs/usage.jsonl"
+            rows = None
+        s = summarize(days=args.days, rows=rows)
+        if not s["requests"]:
+            sys.exit(f"no external API calls logged yet ({src})")
+        print(f"  source: {src}")
+        print(f"  {s['requests']} requests · {s['calls']} location-calls in {s['days']} days"
+              f"  · today: {s['today_calls']} calls")
+        month_share = s["calls"] / FREE_LIMITS["per_month"] if s["days"] >= 28 else None
+        if month_share is not None:
+            print(f"  free-tier monthly cap: {FREE_LIMITS['per_month']:,} calls"
+                  f" ({month_share:.1%} used)")
+        print("  by service: " + ", ".join(f"{k}={v}" for k, v in s["by_service"]))
+        print("  by day:")
+        for day, n in s["by_day"][-14:]:
+            print(f"    {day}  {n:5d}")
 
     elif args.cmd == "stats":
         from telemetry import parse, summarize

@@ -283,6 +283,25 @@ def shared_weather(lat: float, lng: float, days: int = 7) -> Weather:
     return w
 
 
+def shared_weather_many(points: list[tuple[float, float]], days: int = 7) -> None:
+    """Prefetch several lakes' forecasts in ONE Open-Meteo call (the free-tier
+    budget lever), filling the shared cache. Best-effort: any caller that
+    misses the cache still falls back to its own single-location fetch."""
+    now = time.time()
+    missing = [(lat, lng) for lat, lng in points
+               if not (_WX.get((round(lat, 3), round(lng, 3), days))
+                       and now - _WX[(round(lat, 3), round(lng, 3), days)][1] < 1800)]
+    if len(missing) < 2:
+        return
+    try:
+        ws = Weather.many(missing, forecast_days=days)
+    except Exception:
+        return
+    stamp = time.time()
+    for (lat, lng), w in zip(missing, ws):
+        _WX[(round(lat, 3), round(lng, 3), days)] = (w, stamp)
+
+
 _HIST: dict[tuple, tuple] = {}
 
 
@@ -844,6 +863,12 @@ def _ledger(home: dict, days: int, species: str | None, profile: dict | None,
     Windows are deduped by clock — best-scoring water wins each slot — so the
     ledger reads as an edit, not a dump."""
     lakes = [home] if span == 0 else _nearest_lakes(home, span)
+    # One batched weather call for the whole scan (the free-tier budget lever);
+    # _horizon below then finds each lake's forecast already in the shared cache.
+    pts = [(lk.get("lat"), lk.get("lng")) for lk in lakes
+           if lk.get("lat") is not None and lk.get("lng") is not None]
+    if len(pts) > 1:
+        shared_weather_many(pts, days=days)
     best: dict[tuple, dict] = {}
     for lk in lakes:
         try:

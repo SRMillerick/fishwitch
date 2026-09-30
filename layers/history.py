@@ -13,6 +13,8 @@ from __future__ import annotations
 from datetime import datetime, timedelta
 import requests
 
+import usagelog
+
 ARCHIVE = "https://archive-api.open-meteo.com/v1/archive"
 UA = {"User-Agent": "fishwitch-mvp/1.0"}
 
@@ -23,12 +25,16 @@ def _fetch(params: dict, attempts: int = 3, timeout: int = 45):
     inference — and therefore the post-turnover pick suppression — with no
     trace in the report. Retry before giving up."""
     last: Exception | None = None
+    loc = str(params.get("latitude") or "").count(",") + 1
     for _ in range(attempts):
         try:
             r = requests.get(ARCHIVE, params=params, headers=UA, timeout=timeout)
+            usagelog.record("open-meteo", "archive", locations=loc,
+                            status=r.status_code)
             r.raise_for_status()
             return r
         except requests.RequestException as ex:
+            usagelog.record("open-meteo", "archive", locations=loc, status="error")
             last = ex
     raise last
 
