@@ -153,10 +153,9 @@ def main() -> int:
         h["cdfw_water"] = p.get("water")
 
     ranked = []
+    zero = dict(plants=0, weeks=set(), species=set(), last="", match_m=None, cdfw_water="")
     for w in waters:
-        h = hits.get(w["feature_id"])
-        if not h:
-            continue
+        h = hits.get(w["feature_id"]) or zero
         pop = pops.get((w.get("county") or "").strip().lower(), 0)
         near = _nearest_covered_km(w["lat"], w["lng"], reg_pts) or 0
         reach = math.log10(max(pop, 1000)) if pop else 3.0
@@ -166,7 +165,7 @@ def main() -> int:
             feature_id=w["feature_id"], name=w["name"],
             feature_class=w["feature_class"], county=w["county"],
             lat=w["lat"], lng=w["lng"], county_pop=pop,
-            lake_like=_lake_like(w["name"]),
+            lake_like=_lake_like(w["name"]), stocked=bool(h["plants"]),
             plants=h["plants"], weeks=len(h["weeks"]),
             species=sorted(s for s in h["species"] if s),
             last_plant=h["last"], cdfw_water=h["cdfw_water"],
@@ -176,11 +175,14 @@ def main() -> int:
 
     out = CANDIDATES / f"{args.state}_ranked.json"
     first = [r for r in ranked if r["lake_like"]]
+    metro_unstocked = sorted((r for r in first if not r["stocked"]),
+                             key=lambda r: -r["county_pop"])[:25]
     out.write_text(json.dumps(dict(
         state=args.state, generated_from=cand_path.name,
         stocking_rows=len(plants), matched_rows=matched_rows,
         ranked=ranked,
         ranked_lake_like=first,
+        unstocked_metro=metro_unstocked,
         unmatched=sorted(({**v, "water": k[0], "county": k[1],
                            "species": sorted(v["species"])}
                           for k, v in unmatched.items()),
@@ -189,8 +191,8 @@ def main() -> int:
 
     print(f"CDFW rows: {len(plants):,} · matched to candidates: {matched_rows:,} "
           f"({matched_rows / max(1, len(plants)):.0%})")
-    print(f"{len(ranked):,} candidates carry a plant; "
-          f"{len(first):,} look lake-like (of {len(waters):,})\n")
+    print(f"{len(ranked):,} candidates scored; {len(first):,} look lake-like; "
+          f"{sum(1 for r in first if r['stocked']):,} stocked\n")
     print(f"{'#':>3} {'name':36s} {'class':9s} {'county':14s} {'pop':>9} "
           f"{'pl':>3} {'wks':>4} {'last':10s} {'km':>6} {'score':>6}  species")
     for i, r in enumerate(first[:args.top], 1):
@@ -198,6 +200,10 @@ def main() -> int:
               f"{r['county_pop']:9,d} {r['plants']:3d} {r['weeks']:4d} "
               f"{r['last_plant'][:10]:10s} {r['nearest_covered_km']:6.0f} "
               f"{r['score']:6.2f}  {','.join(r['species'])}")
+    print("\nHigh-reach candidates with no CDFW plants (county population desc):")
+    for r in metro_unstocked[:12]:
+        print(f"     {r['name'][:36]:36s} {r['county'][:14]:14s} pop={r['county_pop']:9,d} "
+              f"{r['feature_class']:9s} near={r['nearest_covered_km']:5.0f} km")
     print(f"\nwrote {out.relative_to(ROOT)}")
     return 0
 

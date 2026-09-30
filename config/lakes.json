@@ -1124,5 +1124,37 @@
     "stocking_pattern": "CDFW planted Pine Flat Lake 48 weeks in the last year (trout).",
     "tz": "America/Los_Angeles",
     "coords_source": "OSM/Nominatim geocode 2026-09-30; shoreline containing-ring check passed"
+  },
+  "castaic-lake-ca": {
+    "name": "Castaic Lake",
+    "display": "Castaic Lake, Los Angeles County, California, United States",
+    "lat": 34.5406179,
+    "lng": -118.5870251,
+    "osm_type": "reservoir",
+    "area_m2": 8935467,
+    "alt_m": 453.0,
+    "depth_class": "deep (60 ft+)",
+    "est_max_depth_ft": 330,
+    "mixing": "weakly stratified \u2014 fall mixing front-driven",
+    "turnover": {
+      "trigger_f": 68.0,
+      "surface_bias_f": 4.0,
+      "basis": "morphology estimate \u2014 override in registry"
+    },
+    "id": "castaic-lake-ca",
+    "area_acres": 2208,
+    "area_source": "Wikipedia infobox (3.45 sq mi)",
+    "depth_source": "Wikipedia infobox (330 ft)",
+    "region": "Castaic, Los Angeles County, CA",
+    "county": "Los Angeles",
+    "species": [
+      "largemouth bass",
+      "striped bass",
+      "rainbow trout"
+    ],
+    "note": "species: castaiclake.com fishing page; area/depth Wikipedia; coords OSM/Nominatim; not in the CDFW statewide export (state recreation area / water agency fishery)",
+    "stocking_pattern": "Not in the CDFW statewide planting export; managed as part of the Castaic Lake State Recreation Area (verify the current county/agency program).",
+    "tz": "America/Los_Angeles",
+    "coords_source": "OSM/Nominatim geocode 2026-09-30; shoreline containing-ring check pending"
   }
 }
