@@ -16,7 +16,18 @@
     ],
     "county": "Lake",
     "stocking_pattern": "MAIN LAKE: trout planted annually Feb/March by HVLA (~$8-10.5k, Smith's Trout Farm) \u2014 bass spawn self-sustains, trout added for variety (HVLA board packets). SPILLWAY POND: ~300 trout each spring for the kids' derby. Not CDFW \u2014 no rows in the state planting feed, by design. When a plant happens, log it: stocking: [{date, species: rainbow trout}] \u2014 then the report lights up the stocker-forage window.",
-    "coords_source": "OSM water-body point (Nominatim 2026-09-30); was the community point ~250 m off"
+    "coords_source": "OSM water-body point (Nominatim 2026-09-30); was the community point ~250 m off",
+    "area_acres": 98,
+    "area_source": "OSM water polygon (98 acres, fetched 2026-09-30)",
+    "est_max_depth_ft": 67,
+    "depth_class": "deep (60 ft+)",
+    "depth_source": "HVLA board packet 2018-03-22 (Clean Lakes/BioBase 2017 bathymetric scan: max 66.86 ft near the dam)",
+    "mixing": "weakly stratified \u2014 small wind-mixed lake; deep pocket by the dam",
+    "turnover": {
+      "trigger_f": 68.0,
+      "surface_bias_f": 4.0,
+      "basis": "morphology estimate \u2014 small wind-mixed lake; override in registry"
+    }
   },
   "lake-berryessa": {
     "name": "Lake Berryessa",
@@ -49,7 +60,10 @@
       "panfish"
     ],
     "note": "species: CDFW-common list (editorial \u2014 verify locally)",
-    "county": "Napa"
+    "county": "Napa",
+    "region": "Napa County, CA",
+    "depth_source": "Wikipedia infobox (Lake Berryessa: max depth 275 ft)",
+    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed"
   },
   "lake-sonoma": {
     "name": "Lake Sonoma",
@@ -82,7 +96,10 @@
       "king salmon"
     ],
     "note": "species: CDFW-common list (editorial \u2014 verify locally); depth: USACE ~140 ft max at dam",
-    "county": "Sonoma"
+    "county": "Sonoma",
+    "region": "Sonoma County, CA",
+    "depth_source": "USACE \u2014 ~140 ft max at the dam (registry note)",
+    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed"
   },
   "lake-ralphine": {
     "name": "Lake Ralphine",
@@ -92,12 +109,12 @@
     "osm_type": "reservoir",
     "area_m2": null,
     "alt_m": 73.0,
-    "depth_class": "unknown",
-    "est_max_depth_ft": null,
-    "mixing": "weakly stratified \u2014 fall mixing front-driven",
+    "depth_class": "shallow (<20 ft)",
+    "est_max_depth_ft": 18,
+    "mixing": "polymictic \u2014 mixes on any strong front",
     "turnover": {
-      "trigger_f": 68.0,
-      "surface_bias_f": 4.0,
+      "trigger_f": 72.0,
+      "surface_bias_f": 3.0,
       "basis": "morphology estimate \u2014 override in registry"
     },
     "id": "lake-ralphine",
@@ -108,7 +125,12 @@
       "channel catfish"
     ],
     "note": "species: CDFW-common list (editorial \u2014 verify locally)",
-    "county": "Sonoma"
+    "county": "Sonoma",
+    "region": "Santa Rosa, Sonoma County, CA",
+    "area_acres": 19,
+    "area_source": "Wikipedia infobox (19 acres); OSM polygon reads 19 acres",
+    "depth_source": "morphology estimate from area (no surveyed depth found)",
+    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed"
   },
   "lake-hennessey": {
     "name": "Lake Hennessey",
@@ -118,12 +140,12 @@
     "osm_type": "reservoir",
     "area_m2": null,
     "alt_m": 95.0,
-    "depth_class": "unknown",
-    "est_max_depth_ft": null,
-    "mixing": "weakly stratified \u2014 fall mixing front-driven",
+    "depth_class": "deep (60 ft+)",
+    "est_max_depth_ft": 110,
+    "mixing": "warm-monomictic \u2014 one big fall turnover",
     "turnover": {
-      "trigger_f": 68.0,
-      "surface_bias_f": 4.0,
+      "trigger_f": 64.0,
+      "surface_bias_f": 6.0,
       "basis": "morphology estimate \u2014 override in registry"
     },
     "id": "lake-hennessey",
@@ -135,7 +157,12 @@
       "crappie"
     ],
     "note": "species: CDFW-common list (editorial \u2014 verify locally)",
-    "county": "Napa"
+    "county": "Napa",
+    "region": "Napa County, CA",
+    "area_acres": 790,
+    "area_source": "Wikipedia infobox (790 acres); OSM polygon reads 763 acres",
+    "depth_source": "estimate from the 125 ft Conn Creek Dam (Wikipedia); no surveyed depth found",
+    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed"
   },
   "clear-lake": {
     "name": "Clear Lake",
@@ -165,7 +192,10 @@
       "carp"
     ],
     "note": "species: CDFW-common list (editorial \u2014 verify locally); depth/mixing: manual override (agency/encyclopedic)",
-    "county": "Lake"
+    "county": "Lake",
+    "region": "Lakeport, Lake County, CA",
+    "depth_source": "registry override (shallow polymictic; Wikipedia infobox max depth 60 ft)",
+    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed"
   },
   "indian-valley-reservoir": {
     "name": "Indian Valley Reservoir",
@@ -175,12 +205,12 @@
     "osm_type": "reservoir",
     "area_m2": null,
     "alt_m": 440.0,
-    "depth_class": "unknown",
-    "est_max_depth_ft": null,
-    "mixing": "weakly stratified \u2014 fall mixing front-driven",
+    "depth_class": "deep (60 ft+)",
+    "est_max_depth_ft": 180,
+    "mixing": "warm-monomictic \u2014 one big fall turnover",
     "turnover": {
-      "trigger_f": 68.0,
-      "surface_bias_f": 4.0,
+      "trigger_f": 64.0,
+      "surface_bias_f": 6.0,
       "basis": "morphology estimate \u2014 override in registry"
     },
     "id": "indian-valley-reservoir",
@@ -191,7 +221,12 @@
       "spotted bass"
     ],
     "note": "species: CDFW-common list (editorial \u2014 verify locally)",
-    "county": "Lake"
+    "county": "Lake",
+    "region": "Lake County, CA",
+    "area_acres": 3635,
+    "area_source": "OSM water polygon (3,635 acres); Wikipedia infobox reads 4,000 acres",
+    "depth_source": "estimate from the 201 ft Indian Valley Dam (Wikipedia); no surveyed depth found",
+    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed"
   },
   "lake-pillsbury": {
     "name": "Lake Pillsbury",
@@ -202,12 +237,12 @@
     "area_m2": null,
     "alt_m": 554.0,
     "wikidata_id": "Q7348517",
-    "depth_class": "unknown",
-    "est_max_depth_ft": null,
-    "mixing": "weakly stratified \u2014 fall mixing front-driven",
+    "depth_class": "deep (60 ft+)",
+    "est_max_depth_ft": 120,
+    "mixing": "warm-monomictic \u2014 one big fall turnover",
     "turnover": {
-      "trigger_f": 68.0,
-      "surface_bias_f": 4.0,
+      "trigger_f": 64.0,
+      "surface_bias_f": 6.0,
       "basis": "morphology estimate \u2014 override in registry"
     },
     "id": "lake-pillsbury",
@@ -218,7 +253,12 @@
       "bluegill"
     ],
     "note": "species: CDFW-common list (editorial \u2014 verify locally)",
-    "county": "Lake"
+    "county": "Lake",
+    "region": "Lake County, CA",
+    "area_acres": 2000,
+    "area_source": "Wikipedia infobox (2,003 acres); OSM polygon reads 2,068 acres",
+    "depth_source": "estimate from the 138 ft Scott Dam (Wikipedia); no surveyed depth found",
+    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed"
   },
   "spring-lake": {
     "name": "Spring Lake",
@@ -249,7 +289,8 @@
     ],
     "note": "species: CDFW-common list (editorial \u2014 verify locally)",
     "county": "Sonoma",
-    "coords_source": "main-lake shoreline centroid (2026-09-30); was the swimming-lagoon point"
+    "coords_source": "main-lake shoreline centroid (2026-09-30); was the swimming-lagoon point",
+    "depth_source": "morphology estimate from area (no surveyed depth found)"
   },
   "blue-lake": {
     "name": "Blue Lake (Upper Blue Lakes)",
@@ -260,12 +301,12 @@
     "area_m2": 222585,
     "alt_m": 408,
     "wikidata_id": "Q2790756",
-    "depth_class": "unknown",
-    "est_max_depth_ft": null,
-    "mixing": "weakly stratified \u2014 fall mixing front-driven",
+    "depth_class": "shallow (<20 ft)",
+    "est_max_depth_ft": 18,
+    "mixing": "polymictic \u2014 mixes on any strong front",
     "turnover": {
-      "trigger_f": 68.0,
-      "surface_bias_f": 4.0,
+      "trigger_f": 72.0,
+      "surface_bias_f": 3.0,
       "basis": "morphology estimate \u2014 override in registry"
     },
     "id": "blue-lake",
@@ -278,7 +319,10 @@
       "rainbow trout"
     ],
     "note": "species: CDFW-common list (editorial \u2014 verify locally)",
-    "county": "Lake"
+    "county": "Lake",
+    "region": "Blue Lakes, Lake County, CA",
+    "depth_source": "morphology estimate from area (no surveyed depth found)",
+    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed"
   },
   "highland-springs-reservoir": {
     "id": "highland-springs-reservoir",
@@ -307,7 +351,8 @@
     ],
     "note": "hand-carded (geocode miss) \u2014 coords/area from Lake County Parks; verify locally",
     "county": "Lake",
-    "coords_source": "Nominatim (OpenStreetMap) \u2014 corrected 2026-09-19; prior auto-card point was 22 km off"
+    "coords_source": "Nominatim (OpenStreetMap) \u2014 corrected 2026-09-19; prior auto-card point was 22 km off",
+    "depth_source": "manual estimate (shallow reservoir; no surveyed depth found)"
   },
   "watson-lake-az": {
     "id": "watson-lake-az",
@@ -535,7 +580,7 @@
     "alt_m": 1527,
     "type": "pond cluster (managed)",
     "depth_class": "shallow (<20 ft)",
-    "est_max_depth_ft": null,
+    "est_max_depth_ft": 18,
     "mixing": "polymictic - mixes on any strong front",
     "turnover": {
       "trigger_f": 74.0,
@@ -551,7 +596,8 @@
     "coords_source": "GNIS/OSM 2026-09-20",
     "stocking_pattern": "No trout plants listed in the AZGFD winter schedules checked; special-regs limits imply a managed bass/panfish/trout pond.",
     "tz": "America/Phoenix",
-    "county": "Yavapai"
+    "county": "Yavapai",
+    "depth_source": "morphology estimate from surface area (no gauge)"
   },
   "lower-blue-lake": {
     "name": "Lower Blue Lake",
