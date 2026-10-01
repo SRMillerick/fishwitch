@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="narrow">
+<span class="eyebrow">conditions glossary</span>
+<h1>{{ t.question }}</h1>
+<p class="answer"><strong>{{ t.short }}</strong></p>
+
+{% for p in t.body or [] %}<p>{{ p }}</p>{% endfor %}
+
+{% if t.see %}
+<h2 class="rule-double">See it in the report</h2>
+<ul class="plain">
+  {% for s in t.see %}<li><a href="{{ s.href }}">{{ s.label }}</a></li>{% endfor %}
+</ul>
+{% endif %}
+
+<h2 class="rule-double">Sources <span class="fine">(quoted verbatim)</span></h2>
+<ul class="plain">
+  {% for cit in t.citations %}
+  <li><blockquote class="fine">“{{ cit.quote }}”
+    — {% if cit.url %}<a href="{{ cit.url }}" target="_blank" rel="noopener">{{ cit.source }}</a>{% else %}{{ cit.source }}{% endif %}
+    {% if cit.tier %}<span class="fine">· {{ cit.tier }}</span>{% endif %}
+    {% if cit.fetched_at %}<span class="fine">(checked {{ cit.fetched_at[:10] }})</span>{% endif %}
+  </blockquote></li>
+  {% endfor %}
+</ul>
+
+<p><a href="/report">Run a report with these conditions →</a> · <a href="/glossary">All explainers</a></p>
+</div>
+{% endblock %}

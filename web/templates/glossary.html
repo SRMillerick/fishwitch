@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="narrow">
+<span class="eyebrow">the why behind the report</span>
+<h1>Fishing conditions glossary</h1>
+<p>baromoon's report is built from conditions — water temperature, where the fish sit, light,
+clarity, cover. These are the plain-language explainers, and every factual claim quotes the
+agency or reference source it came from. Nothing here changes a ranking; it is the
+explanation layer.</p>
+{% for cat in cats %}
+<h2 class="rule-double">{{ cat.label }}</h2>
+<ul class="plain">
+  {% for t in cat.terms %}
+  <li><a href="/glossary/{{ t.id }}"><strong>{{ t.question }}</strong></a>
+    <div class="fine">{{ t.short }}</div></li>
+  {% endfor %}
+</ul>
+{% endfor %}
+<p><a href="/report">Run a free report with these conditions →</a></p>
+</div>
+{% endblock %}

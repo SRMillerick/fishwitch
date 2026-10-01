@@ -125,6 +125,10 @@ _STATIC_SEO = {
     "/tying": ("Fly tying for bass — vises, kits, and the materials behind our picks | baromoon",
                "The tying gear and exact materials behind baromoon's bass-fly picks: starter "
                "kits, vises, tools, and material assortments — disclosed, tracked links."),
+    "/glossary": ("Fishing conditions glossary — water temp, spawn, turnover, color | baromoon",
+                  "Plain-language explainers for the conditions baromoon scores: bass water "
+                  "temperature, spawn timing, summer position, turnover, feeding light, and "
+                  "lure color — each claim cited to an agency or reference source."),
     "/interview": ("Build your tackle profile | baromoon",
                    "Tell baromoon what you own and how you fish; the report then marks your "
                    "picks and your gaps. It stays in your browser."),
@@ -175,6 +179,7 @@ def _seo_meta(req) -> dict:
     crumbs, extra = [], []
 
     lake = resolve_lake(path[6:]) if path.startswith("/lake/") else None
+    gloss = tx.glossary_term(path[10:]) if path.startswith("/glossary/") else None
     ent = bait = None
     if path.startswith("/kb/") and path not in ("/kb",):
         ent = tx.find_entry(path[4:])
@@ -205,6 +210,13 @@ def _seo_meta(req) -> dict:
         if addr:
             place["address"] = {"@type": "PostalAddress", **addr}
         extra.append(place)
+    elif gloss:
+        title = f"{gloss['question']} | baromoon"
+        desc = (gloss.get("short") or "")[:160]
+        crumbs = [("Home", "/"), ("Glossary", "/glossary"), (gloss.get("term"), path)]
+        extra.append({"@type": "FAQPage", "mainEntity": [{
+            "@type": "Question", "name": gloss["question"],
+            "acceptedAnswer": {"@type": "Answer", "text": gloss["short"]}}]})
     elif ent:
         label = ent.get("label") or path.rsplit("/", 1)[-1]
         blurb = ((ent.get("note") if bait else ent.get("technique")) or "").strip()
@@ -242,6 +254,8 @@ def _seo_meta(req) -> dict:
             crumbs = [("Home", "/"), ("Tackle library", "/kb")]
         elif path == "/tying":
             crumbs = [("Home", "/"), ("Tackle library", "/kb"), ("Tying", "/tying")]
+        elif path == "/glossary":
+            crumbs = [("Home", "/"), ("Glossary", "/glossary")]
         elif path == "/method":
             crumbs = [("Home", "/"), ("How it works", "/method")]
         elif path == "/developers":
@@ -1186,6 +1200,32 @@ def tying_page():
                            entries=entries, flies=flies, local=LOCAL)
 
 
+@app.route("/glossary")
+def glossary_page():
+    """Plain-language condition explainers: the cited why behind the report's
+    vocabulary. Facts resolve to quotes already promoted in the KB."""
+    terms = tx.glossary_terms()
+    cats, known = [], set()
+    for cat in tx.load_glossary().get("categories", []):
+        known.add(cat["id"])
+        items = [t for t in terms if t.get("category") == cat["id"]]
+        if items:
+            cats.append(dict(id=cat["id"], label=cat["label"], terms=items))
+    rest = [t for t in terms if t.get("category") not in known]
+    if rest:
+        cats.append(dict(id="more", label="More", terms=rest))
+    return render_template("glossary.html", cats=cats, local=LOCAL)
+
+
+@app.route("/glossary/<term_id>")
+def glossary_term_page(term_id):
+    term_id = re.sub(r"[^a-z0-9_-]", "", (term_id or "").lower())[:48]
+    t = tx.glossary_term(term_id)
+    if not t:
+        abort(404)
+    return render_template("glossary_term.html", t=t, local=LOCAL)
+
+
 @app.route("/interview")
 def interview_page():
     sugg: set[str] = set()
@@ -1619,6 +1659,7 @@ def llms_txt():
         "- https://baromoon.com/lakes/az — Arizona hub (all covered AZ waters)",
         "- https://baromoon.com/kb — cited rigs, lures, knots, line, and baits",
         "- https://baromoon.com/tying — tying gear and materials for the bass-fly picks",
+        "- https://baromoon.com/glossary — cited condition explainers (water temp, spawn, turnover, color)",
         "- https://baromoon.com/method — how the deterministic engine works",
         "- https://baromoon.com/developers — anonymous JSON API, embed, and feeds",
         "- https://baromoon.com/report — session plan for a chosen water",
@@ -1627,6 +1668,10 @@ def llms_txt():
         "",
         "## Waters",
         *lakes,
+        "",
+        "## Glossary",
+        *[f"- https://baromoon.com/glossary/{t['id']} — {t['question']}"
+          for t in tx.glossary_terms()],
         "",
         "## Notes for assistants",
         "- Every factual claim is cited (T1 manufacturer / T2 agency quotes with URL and hash).",
@@ -1668,7 +1713,7 @@ def _xml_urlset(urls: list[tuple[str, str]]) -> Response:
 @app.route("/sitemap-pages.xml")
 def sitemap_pages():
     urls = [("/", ""), ("/report", ""), ("/outlook", ""), ("/lakes", ""), ("/kb", ""),
-            ("/tying", ""),
+            ("/tying", ""), ("/glossary", ""),
             ("/interview", ""), ("/about", ""), ("/method", ""), ("/developers", ""),
             ("/contact", ""), ("/privacy", ""), ("/disclosure", ""), ("/log", "")]
     for st in sorted({_state(v) for v in registry().values() if _state(v)}):
@@ -1676,6 +1721,7 @@ def sitemap_pages():
     urls += [(f"/kb/{c['id']}", "") for sp in ("bass", "trout", "catfish", "panfish")
              for c in tx.catalog(sp)]
     urls += [(f"/kb/{b['id']}", "") for b in tx.load_baits().get("baits", [])]
+    urls += [(f"/glossary/{t['id']}", "") for t in tx.glossary_terms()]
     return _xml_urlset(urls)
 
 

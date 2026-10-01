@@ -107,6 +107,8 @@ def save(path: str, body: str):
     body = body.replace('href="/lakes/az"', 'href="lakes-az.html"')
     body = body.replace('href="/lakes"', 'href="lakes.html"')
     body = body.replace('href="/tying"', 'href="tying.html"')
+    body = re.sub(r'href="/glossary/([\w-]+)"', r'href="glossary-\1.html"', body)
+    body = body.replace('href="/glossary"', 'href="glossary.html"')
     body = re.sub(r'href="/lake/([\w-]+)"', r'href="lake-\1.html"', body)
     body = body.replace('href="/about"', 'href="about.html"')
     body = body.replace('href="/privacy"', 'href="privacy.html"')
@@ -135,6 +137,9 @@ for pg in ("about", "privacy", "disclosure", "contact", "method", "developers"):
     save(f"{pg}.html", c.get(f"/{pg}").get_data(as_text=True))
 save("lakes.html", c.get("/lakes").get_data(as_text=True))
 save("tying.html", c.get("/tying").get_data(as_text=True))
+for _g in webapp.tx.glossary_terms():
+    save(f"glossary-{_g['id']}.html", c.get(f"/glossary/{_g['id']}").get_data(as_text=True))
+save("glossary.html", c.get("/glossary").get_data(as_text=True))
 for _st in ("ca", "az"):
     save(f"lakes-{_st}.html", c.get(f"/lakes/{_st}").get_data(as_text=True))
 for _lk in _reg:

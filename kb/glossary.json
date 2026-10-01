@@ -1,0 +1,228 @@
+{
+  "label": "Fishing conditions glossary",
+  "kind": "glossary",
+  "_note": "Plain-language explainers for the conditions baromoon scores. The `short`/`body` text is T5 editorial synthesis (the engine's own words); every factual claim resolves to a verbatim T2/T3 quote already promoted in the KB through the `sources` refs ({file, find}). tools/audit + tests/test_glossary.py fail if a ref stops resolving, so the prose can never outrun its sources. Nothing here is scored; it is the explanation layer for the report.",
+  "categories": [
+    {"id": "temperature", "label": "Water temperature & seasons"},
+    {"id": "position", "label": "Where the fish are"},
+    {"id": "feeding", "label": "Feeding & light"},
+    {"id": "color", "label": "Color & clarity"},
+    {"id": "rigs", "label": "Rig choice"},
+    {"id": "line", "label": "Line"},
+    {"id": "terminal", "label": "Terminal tackle"}
+  ],
+  "terms": [
+    {
+      "id": "bass-water-temperature",
+      "category": "temperature",
+      "term": "Bass water temperature",
+      "question": "What water temperature do bass prefer?",
+      "short": "Largemouth bass seek roughly 77–80°F in summer, spawn around 60–75°F, and slow sharply below 50°F.",
+      "body": [
+        "Bass are temperature-driven. In summer they avoid water warmer than 80°F and hold in the 77–80°F band; as a lake cools through the low-to-mid 50s in fall they slide to deeper water, and feeding drops off hard below 50°F.",
+        "baromoon models surface water temperature from the air-temperature history, then uses those bands for the spawn phase, the derived position state, and the cold-water feed."
+      ],
+      "sources": [
+        {"file": "position", "find": "avoid water that exceeds 80 degrees"},
+        {"file": "position", "find": "cools to the low to mid-50's, bass will return to deep waters"},
+        {"file": "position", "find": "feeding is greatly reduced below 50 degrees"},
+        {"file": "spawn", "find": "prefer water temperatures between 60-75 degrees for spawning"}
+      ],
+      "see": [
+        {"label": "How the water model works", "href": "/method"},
+        {"label": "Spawn temperature", "href": "/glossary/bass-spawn-temperature"}
+      ]
+    },
+    {
+      "id": "bass-spawn-temperature",
+      "category": "temperature",
+      "term": "Bass spawn temperature",
+      "question": "When do bass spawn, and where do they stage?",
+      "short": "Largemouth bass stage as the water nears about 55°F and spawn in the 60–75°F range; the male then guards the nest for 10–14 days.",
+      "body": [
+        "Staging begins as water warms to about 55°F, and between 55 and 62°F bass move shallow to feed aggressively. Nesting happens in the 60–75°F band; the guarding male stays on the nest 10 to 14 days while the eggs incubate and hatch.",
+        "After the spawn, females sometimes slide out to deeper edges and secondary points. baromoon's spawn layer supersedes the month-based season fits while a phase is active."
+      ],
+      "sources": [
+        {"file": "spawn", "find": "move closer to spawning areas as the water warms to about 55 degrees"},
+        {"file": "spawn", "find": "move into shallow water to actively feed when the water temperature is 55 to 62"},
+        {"file": "spawn", "find": "prefer water temperatures between 60-75 degrees for spawning"},
+        {"file": "spawn", "find": "guard the nest for 10 to 14 days"},
+        {"file": "spawn", "find": "move out on the deeper edges and secondary points"}
+      ],
+      "see": [
+        {"label": "How baromoon scores the spawn", "href": "/method"}
+      ]
+    },
+    {
+      "id": "cold-water-bass",
+      "category": "temperature",
+      "term": "Cold-water bass",
+      "question": "How do you catch bass in cold water?",
+      "short": "Below about 50°F bass feed little and sit deep; stay in contact with the bottom and move slowly.",
+      "body": [
+        "As a lake cools through the low-to-mid 50s, bass return to deep water, and feeding is greatly reduced below 50°F. Winter fish are slow, so the productive approach is a soft plastic that moves slowly along the bottom, fished with contact. Some winter bass suspend and will take smaller prey presented right in front of them.",
+        "baromoon's derived overwinter position state leads with bottom-oriented presentations once the water drops to about 55°F in the cold months."
+      ],
+      "sources": [
+        {"file": "position", "find": "cools to the low to mid-50's, bass will return to deep waters"},
+        {"file": "position", "find": "feeding is greatly reduced below 50 degrees"},
+        {"file": "position", "find": "move slowly along the bottom instead"},
+        {"file": "position", "find": "keep in contact with the bottom and give it slow, little hops"},
+        {"file": "position", "find": "Bass may be suspended during this time of year"}
+      ],
+      "see": [
+        {"label": "The position model", "href": "/method"},
+        {"label": "Texas rig", "href": "/kb/trig"},
+        {"label": "Drop shot", "href": "/kb/dropshot"}
+      ]
+    },
+    {
+      "id": "summer-bass-position",
+      "category": "position",
+      "term": "Summer bass position",
+      "question": "Where do bass go in summer?",
+      "short": "They move to cooler, shadier water near the bottom and hold in the 77–80°F band; below the stratification level there is no oxygen, so fish stay above it.",
+      "body": [
+        "In the heat of summer bass often move to cooler, shady areas near the bottom. Many lakes stratify in summer, and there is no oxygen or fish below the stratification level, so the catchable fish hold above it. Bass avoid water warmer than 80°F and seek 77–80°F.",
+        "baromoon derives a stratified position state from the lake's mixing type plus modeled water temperature, and favors suspended presentations that stay in the oxygenated layer."
+      ],
+      "sources": [
+        {"file": "position", "find": "Many Iowa lakes stratify at depths from 6 to 20 feet"},
+        {"file": "season", "find": "move to cooler, shady areas near the bottom"},
+        {"file": "position", "find": "avoid water that exceeds 80 degrees"}
+      ],
+      "see": [
+        {"label": "The position model", "href": "/method"},
+        {"label": "Drop shot", "href": "/kb/dropshot"}
+      ]
+    },
+    {
+      "id": "lake-stratification",
+      "category": "position",
+      "term": "Lake stratification and turnover",
+      "question": "What is lake stratification, and what does turnover do to the fishing?",
+      "short": "In summer many lakes split into layers and the water below the stratification level loses oxygen; fall cooling mixes them again and sends bass deep.",
+      "body": [
+        "Many lakes stratify at 6 to 20 feet in summer. There is no oxygen or fish below the stratification level, so the fishable water is the oxygenated layer above it. As fall progresses and the water cools to the low-to-mid 50s, bass return to deep water as the lake mixes.",
+        "That mixing event — turnover — is why post-turnover fishing shifts deep. baromoon watches for it and flags the lake state in the report."
+      ],
+      "sources": [
+        {"file": "position", "find": "There is no oxygen or fish below the stratification level"},
+        {"file": "position", "find": "cools to the low to mid-50's, bass will return to deep waters"}
+      ],
+      "see": [
+        {"label": "Why the report says post-turnover", "href": "/method"}
+      ]
+    },
+    {
+      "id": "best-time-of-day-bass",
+      "category": "feeding",
+      "term": "Best time of day for bass",
+      "question": "What time of day do bass feed best?",
+      "short": "Bass are most active at dawn and dusk; low light also changes how they see a lure.",
+      "body": [
+        "Largemouth bass are most active at dawn and dusk. The fish eye has rod cells for high sensitivity in low light and cone cells for higher resolution in bright conditions, so the low-light windows are prime feed times and color matters most in bright, clear water near the surface.",
+        "baromoon scores solunar majors and light bands into the window order; see the color and clarity explainer for how light changes lure choice."
+      ],
+      "sources": [
+        {"file": "bass", "find": "most active at dawn and dusk"},
+        {"file": "principles", "find": "rod cells that provide high visual sensitivity in low light"}
+      ],
+      "see": [
+        {"label": "Lure color by water clarity", "href": "/glossary/lure-color-water-clarity"}
+      ]
+    },
+    {
+      "id": "lure-color-water-clarity",
+      "category": "color",
+      "term": "Lure color by water clarity",
+      "question": "What color lure should I use in stained or clear water?",
+      "short": "Stained water or low light: contrast beats color (dark, chartreuse, black-and-blue). Clear water, bright light, near the surface: natural colors read true. Deep: reds disappear first, blue-green persists.",
+      "body": [
+        "Water absorbs long wavelengths first: red and orange are absorbed more than green and blue, and at depth blue and green are the only colors left. Objects show their real colours only near the surface where all wavelengths are available, and contrast against the background may matter more than colour for detection.",
+        "So match natural forage in clear, bright, shallow water; switch to high-contrast dark or chartreuse in stained water or low light; and lean green, blue, and chartreuse for anything deep."
+      ],
+      "sources": [
+        {"file": "principles", "find": "long wavelengths (e.g. red, orange) is absorbed more"},
+        {"file": "principles", "find": "Shorter wavelengths penetrate further"},
+        {"file": "principles", "find": "Blue is the only colour of light available at depth"},
+        {"file": "principles", "find": "appear as their real colours near the surface"},
+        {"file": "principles", "find": "contrast against the background, rather than colour"},
+        {"file": "principles", "find": "Colour vision is more useful in environments with a broader range"}
+      ],
+      "see": [
+        {"label": "Color & clarity principles", "href": "/kb"},
+        {"label": "How clarity is used in a report", "href": "/method"}
+      ]
+    },
+    {
+      "id": "texas-vs-carolina-rig",
+      "category": "rigs",
+      "term": "Texas rig vs Carolina rig",
+      "question": "When should I use a Texas rig vs a Carolina rig?",
+      "short": "Texas rig for shallow cover and vegetation; Carolina rig as a deep-water search lure.",
+      "body": [
+        "Both are soft-plastic worm rigs built to work through cover. The Texas rig is generally the better choice in shallow spots with heavy cover or vegetation, where it stays weedless; the Carolina rig excels in deep water as a search lure, with the leader keeping the bait off the bottom. Lighter sinkers help either rig pass through weeds and grass.",
+        "Both are warm-weather winners; in fall, slow bottom-crawling soft plastics lose some attention."
+      ],
+      "sources": [
+        {"file": "season", "find": "Texas rig is generally a better choice when fishing in shallow spots"},
+        {"file": "season", "find": "soft plastic worms, rigged either Texas or Carolina style , are warm weather winners"},
+        {"file": "substrate", "find": "Lighter sinkers help the rig pass through weeds or grass"},
+        {"file": "season", "find": "no longer attract the same attention"}
+      ],
+      "see": [
+        {"label": "Texas rig", "href": "/kb/trig"},
+        {"label": "Carolina rig", "href": "/kb/carolina"},
+        {"label": "Drop shot", "href": "/kb/dropshot"}
+      ]
+    },
+    {
+      "id": "braid-vs-fluoro-vs-mono",
+      "category": "line",
+      "term": "Braid vs fluorocarbon vs monofilament",
+      "question": "Braid vs fluorocarbon vs monofilament — which line should I use?",
+      "short": "Mono stretches and floats; fluoro sinks, is more abrasion-resistant and less visible; braid is thin and low-stretch but slippery to knot and can break on hard hits.",
+      "body": [
+        "Monofilament is nylon, buoyant, and stretches under load, which damps the force on the hookset and the fight. Fluorocarbon is denser and sinks faster, has greater surface hardness and abrasion resistance, and its refractive index is close to water's, making it less visible. Braid has roughly a third to a quarter the diameter of mono at the same breaking strength and almost no stretch, which is why it is so sensitive — but it is slippery and hard to knot, and its minimal stretch can break on hard-hitting fish.",
+        "baromoon lists line types in each report and marks whether a recommended line is one you already spool."
+      ],
+      "sources": [
+        {"file": "line", "find": "made from a single fiber of plastic material"},
+        {"file": "line", "find": "buoyant characteristics and its ability to stretch under load"},
+        {"file": "line", "find": "damping the force when setting the hook"},
+        {"file": "line", "find": "refractive index, which is similar to that of water"},
+        {"file": "line", "find": "It is denser than nylon, too, which makes it sink faster"},
+        {"file": "line", "find": "greater surface hardness than nylon lines"},
+        {"file": "line", "find": "1/3 to 1/4 the diameter"},
+        {"file": "line", "find": "very little stretch, making fishing rigs very sensitive"},
+        {"file": "line", "find": "hard to knot properly"},
+        {"file": "line", "find": "hard-hitting fish will frequently cause the line to break"}
+      ],
+      "see": [
+        {"label": "Line types in the report", "href": "/method"},
+        {"label": "Knots", "href": "/kb"}
+      ]
+    },
+    {
+      "id": "circle-hook-hookset",
+      "category": "terminal",
+      "term": "Circle hooks and the hookset",
+      "question": "Do you set the hook with a circle hook?",
+      "short": "No — let the fish load the rod and come tight. Circle hooks are shaped to rotate into the corner of the mouth and hook the fish themselves.",
+      "body": [
+        "A circle hook is designed to slide out of the throat and rotate into the corner of the fish's mouth, so there is no need to set the hook — it hooks the fish itself. That geometry significantly decreases the chance of gut-hooking, which is why circle hooks are popular with live and cut bait and for catch-and-release.",
+        "baromoon's terminal-tackle layer recommends circle hooks for live and cut bait and notes the no-hookset technique."
+      ],
+      "sources": [
+        {"file": "terminal", "find": "slide out of the throat and rotate into the corner"},
+        {"file": "terminal", "find": "designed to hook the fish themselves"},
+        {"file": "terminal", "find": "decrease the chances of fish becoming gut-hooked"}
+      ],
+      "see": [
+        {"label": "Hooks in the tackle library", "href": "/kb"}
+      ]
+    }
+  ]
+}

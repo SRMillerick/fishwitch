@@ -115,6 +115,7 @@ def load_line() -> dict:
 
 _TERMINAL: dict | None = None
 _PRINCIPLES: dict | None = None
+_GLOSSARY: dict | None = None
 _SUBSTRATE: dict | None = None
 _SEASON: dict | None = None
 _SPAWN: dict | None = None
@@ -267,6 +268,75 @@ def load_principles() -> dict:
         p = KB_DIR / "principles.json"
         _PRINCIPLES = json.loads(p.read_text()) if p.exists() else {"principles": []}
     return _PRINCIPLES
+
+
+def load_glossary() -> dict:
+    global _GLOSSARY
+    if _GLOSSARY is None:
+        p = KB_DIR / "glossary.json"
+        _GLOSSARY = json.loads(p.read_text()) if p.exists() else {"terms": [], "categories": []}
+    return _GLOSSARY
+
+
+# KB files whose citations the glossary may reference. The glossary stores only
+# `{file, find}` refs; `_walk_citations` flattens the real citation objects so
+# the quote, tier, url, fetched_at and sha256 always come from one source.
+_GLOSSARY_SOURCE_FILES = ("position", "spawn", "season", "principles", "line",
+                          "terminal", "bass", "substrate")
+
+
+def _walk_citations(o):
+    if isinstance(o, dict):
+        if "quote" in o and "url" in o:
+            yield o
+        for v in o.values():
+            yield from _walk_citations(v)
+    elif isinstance(o, list):
+        for v in o:
+            yield from _walk_citations(v)
+
+
+def _citation_index() -> dict[str, list[dict]]:
+    cached = getattr(_citation_index, "_cache", None)
+    if cached is not None:
+        return cached
+    out: dict[str, list[dict]] = {}
+    for name in _GLOSSARY_SOURCE_FILES:
+        p = KB_DIR / f"{name}.json"
+        if not p.exists():
+            continue
+        out[name] = list(_walk_citations(json.loads(p.read_text())))
+    _citation_index._cache = out
+    return out
+
+
+def glossary_terms() -> list[dict]:
+    """The glossary with every `{file, find}` source resolved to the canonical
+    KB citation (tier, sha256, fetched_at intact). A ref that no longer matches
+    resolves to nothing — tests/test_glossary.py fails so the prose can never
+    outrun its sources."""
+    index = _citation_index()
+    terms = []
+    for t in load_glossary().get("terms", []):
+        cits, seen = [], set()
+        for ref in t.get("sources", []):
+            needle = (ref.get("find") or "").lower()
+            for c in index.get(ref.get("file"), []):
+                if needle and needle in (c.get("quote") or "").lower():
+                    key = (c.get("url"), c.get("quote"))
+                    if key not in seen:
+                        seen.add(key)
+                        cits.append(c)
+                    break
+        terms.append(dict(t, citations=cits))
+    return terms
+
+
+def glossary_term(term_id: str) -> dict | None:
+    for t in glossary_terms():
+        if t["id"] == term_id:
+            return t
+    return None
 
 
 def load_substrate() -> dict:
