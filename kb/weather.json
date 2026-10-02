@@ -1,0 +1,68 @@
+{
+  "principles": [
+    {
+      "id": "barometric-pressure",
+      "label": "Barometric pressure",
+      "kind": "principle",
+      "when": {},
+      "rule": "Fish respond to pressure change: high pressure tends to produce feeding while low pressure sends fish to cover ahead of bad weather; the feed is often strongest just before a front and returns a few days after the pressure rises, while dramatic swings can shut fishing off.",
+      "citations": [
+        {
+          "claim": "high pressure feeds, low pressure sends fish to cover",
+          "tier": "T2",
+          "source": "Take Me Fishing (RBFF) \u2014 The Best Time to Fish? Read the Weather (July 2016)",
+          "url": "https://www.takemefishing.org/blog/july-2016/the-best-time-to-fish-read-the-weather/",
+          "quote": "High pressure, fish eat, low pressure, fish take cover due to impending bad weather.",
+          "found": true,
+          "fetched_at": "2026-10-01T15:19:44+00:00",
+          "sha256": "8a73aefc399f3aa0",
+          "hash_basis": "HTTP body with the ASP.NET __RequestVerificationToken value normalized to TOKEN (the rest is stable)"
+        },
+        {
+          "claim": "fish feed heavily ahead of bad weather",
+          "tier": "T2",
+          "source": "Take Me Fishing (RBFF) \u2014 The Best Time to Fish? Read the Weather (July 2016)",
+          "url": "https://www.takemefishing.org/blog/july-2016/the-best-time-to-fish-read-the-weather/",
+          "quote": "They know when bad weather is approaching so they feed heavily before it hits.",
+          "found": true,
+          "fetched_at": "2026-10-01T15:19:44+00:00",
+          "sha256": "8a73aefc399f3aa0",
+          "hash_basis": "HTTP body with the ASP.NET __RequestVerificationToken value normalized to TOKEN (the rest is stable)"
+        },
+        {
+          "claim": "feeding resumes a few days after the pressure rises",
+          "tier": "T2",
+          "source": "Take Me Fishing (RBFF) \u2014 The Best Time to Fish? Read the Weather (July 2016)",
+          "url": "https://www.takemefishing.org/blog/july-2016/the-best-time-to-fish-read-the-weather/",
+          "quote": "They'll sulk for a while, and a few days after the storm passes and the pressure rises they go back to feeding.",
+          "found": true,
+          "fetched_at": "2026-10-01T15:19:44+00:00",
+          "sha256": "8a73aefc399f3aa0",
+          "hash_basis": "HTTP body with the ASP.NET __RequestVerificationToken value normalized to TOKEN (the rest is stable)"
+        },
+        {
+          "claim": "dramatic pressure swings can shut off fishing",
+          "tier": "T2",
+          "source": "Take Me Fishing (RBFF) \u2014 The Best Time to Fish? Read the Weather (July 2016)",
+          "url": "https://www.takemefishing.org/blog/july-2016/the-best-time-to-fish-read-the-weather/",
+          "quote": "Dramatic pressure changes can shut off fishing.",
+          "found": true,
+          "fetched_at": "2026-10-01T15:19:44+00:00",
+          "sha256": "8a73aefc399f3aa0",
+          "hash_basis": "HTTP body with the ASP.NET __RequestVerificationToken value normalized to TOKEN (the rest is stable)"
+        }
+      ],
+      "provenance": {
+        "seed_author": "sourcing-pass/1.0",
+        "source": "Take Me Fishing (RBFF) \u2014 The Best Time to Fish? Read the Weather (July 2016)",
+        "source_url": "https://www.takemefishing.org/blog/july-2016/the-best-time-to-fish-read-the-weather/",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-10-02T15:53:54+00:00",
+        "note": "text sha 8a73aefc399f3aa0; fetched 2026-10-01T15:19:44+00:00; new entry from the 2026-10-01 sourcing pass; added for /glossary/barometric-pressure"
+      }
+    }
+  ],
+  "label": "Weather & pressure principles",
+  "_note": "Weather/pressure facts that explain the report's barometric logic. Citation quotes are T2 verbatim; the rule synthesis is editorial and lives only in the explanation layer (the glossary), not in ranking."
+}

@@ -4,6 +4,7 @@
   "_note": "Plain-language explainers for the conditions baromoon scores. The `short`/`body` text is T5 editorial synthesis (the engine's own words); every factual claim resolves to a verbatim T2/T3 quote already promoted in the KB through the `sources` refs ({file, find}). tools/audit + tests/test_glossary.py fail if a ref stops resolving, so the prose can never outrun its sources. Nothing here is scored; it is the explanation layer for the report.",
   "categories": [
     {"id": "temperature", "label": "Water temperature & seasons"},
+    {"id": "weather", "label": "Weather & pressure"},
     {"id": "position", "label": "Where the fish are"},
     {"id": "feeding", "label": "Feeding & light"},
     {"id": "color", "label": "Color & clarity"},
@@ -222,6 +223,28 @@
       ],
       "see": [
         {"label": "Hooks in the tackle library", "href": "/kb"}
+      ]
+    },
+    {
+      "id": "barometric-pressure",
+      "category": "weather",
+      "term": "Barometric pressure",
+      "question": "How does barometric pressure affect fishing?",
+      "short": "Fish feed as pressure changes: high pressure tends to produce feeding, low pressure sends fish to cover ahead of a front, and the best bite often comes just before the weather turns and again a few days after the pressure rises.",
+      "body": [
+        "Fish sense pressure changes and react to them. High pressure tends to produce feeding; low pressure sends fish to take cover ahead of bad weather. The strongest feed often comes just before a front arrives, then the fish sulk for a while, and a few days after the storm passes and the pressure rises they go back to feeding. Dramatic pressure swings can shut fishing off entirely.",
+        "baromoon computes a barometric trend (slowly falling, steady, slowly rising, fast rising, or fast falling) from the archive plus the forecast; the weather score weights the slowly falling and slowly rising phases highest and a fast-falling barometer lowest, and the report names the trend and tells you to work the first break line when the barometer is crashing.",
+        "The sharper trough-and-rising recipe stays an exploratory navigator lens (`fishwitch days`), not scoring, until the calibration ledger earns it a bigger role."
+      ],
+      "sources": [
+        {"file": "weather", "find": "High pressure, fish eat, low pressure, fish take cover"},
+        {"file": "weather", "find": "feed heavily before it hits"},
+        {"file": "weather", "find": "after the storm passes and the pressure rises they go back to feeding"},
+        {"file": "weather", "find": "Dramatic pressure changes can shut off fishing"}
+      ],
+      "see": [
+        {"label": "How pressure is scored", "href": "/method"},
+        {"label": "Cold-water bass", "href": "/glossary/cold-water-bass"}
       ]
     }
   ]

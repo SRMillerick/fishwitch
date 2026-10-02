@@ -282,7 +282,7 @@ def load_glossary() -> dict:
 # `{file, find}` refs; `_walk_citations` flattens the real citation objects so
 # the quote, tier, url, fetched_at and sha256 always come from one source.
 _GLOSSARY_SOURCE_FILES = ("position", "spawn", "season", "principles", "line",
-                          "terminal", "bass", "substrate")
+                          "terminal", "bass", "substrate", "weather")
 
 
 def _walk_citations(o):
