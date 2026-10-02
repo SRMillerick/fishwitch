@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en" data-theme="first-light" data-static="1">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How baromoon works — the deterministic fishing engine</title>
+<meta name="description" content="How weather, water, sky, and a cited tackle library become scored windows: the data sources, the tie-break caps, the calibration ledger, and the money rules.">
+<link rel="canonical" href="https://baromoon.com/method">
+
+
+
+<meta name="theme-color" content="#f7f5ef">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="baromoon">
+<meta property="og:title" content="How baromoon works — the deterministic fishing engine">
+<meta property="og:description" content="How weather, water, sky, and a cited tackle library become scored windows: the data sources, the tie-break caps, the calibration ledger, and the money rules.">
+<meta property="og:url" content="https://baromoon.com/method">
+<meta property="og:image" content="https://baromoon.com/static/og-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How baromoon works — the deterministic fishing engine">
+<meta name="twitter:description" content="How weather, water, sky, and a cited tackle library become scored windows: the data sources, the tie-break caps, the calibration ledger, and the money rules.">
+<meta name="twitter:image" content="https://baromoon.com/static/og-card.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@id": "https://baromoon.com/#organization", "@type": "Organization", "description": "baromoon reads your lake \u2014 barometer, water temp, wind, light, and cover \u2014 and hands you the window, the bank, and the rig. Cited, deterministic, free.", "name": "baromoon", "sameAs": ["https://github.com/SRMillerick/fishwitch"], "url": "https://baromoon.com/"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@id": "https://baromoon.com/#website", "@type": "WebSite", "inLanguage": "en", "name": "baromoon", "publisher": {"@id": "https://baromoon.com/#organization"}, "url": "https://baromoon.com/"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "item": "https://baromoon.com/", "name": "Home", "position": 1}, {"@type": "ListItem", "item": "https://baromoon.com/method", "name": "How it works", "position": 2}]}</script>
+
+<link rel="icon" type="image/svg+xml" href="static/favicon.svg?v=1790865472">
+<link rel="manifest" href="static/manifest.webmanifest?v=1790865472">
+<link rel="apple-touch-icon" href="static/apple-touch-icon-v2.png?v=1790865472">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="baromoon">
+<script>(function(){try{var r=document.documentElement,q=new URLSearchParams(location.search).get("theme"),s=null;try{s=localStorage.getItem("bm-theme-v2");}catch(e){}var t=q||s;if(t==="dark")t="crisp-dark";else if(t==="light")t="first-light";if(t==="system")t=null;if(!t&&window.matchMedia)t=matchMedia("(prefers-color-scheme: dark)").matches?"crisp-dark":"first-light";if(t)r.dataset.theme=t;var c={"first-light":"#f7f5ef","crisp-dark":"#0a0f12","loam":"#10140d","almanac":"#f3eddc"},m=document.querySelector('meta[name="theme-color"]'),tc=t||r.dataset.theme;if(m&&c[tc])m.setAttribute("content",c[tc]);}catch(e){}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/style.css?v=1790865472">
+
+</head>
+<body>
+<header>
+  <nav>
+    
+    
+    <a class="brand" href="index.html"><span class="triskele" aria-hidden="true"></span> baromoon</a>
+    <div class="nav-links" id="nav-links">
+      <a href="report-tonight.html" data-lake-link="/report" class="">Report</a>
+      <a href="outlook.html" data-lake-link="/outlook" class="">Outlook</a>
+      <a href="lakes.html" class="">Waters</a>
+      <a href="kb-bass.html" class="">Tackle Library</a>
+      <a href="interview.html" class="">Interview</a>
+      
+      
+      
+      
+    </div>
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-controls="nav-links"
+            aria-expanded="false" aria-label="Menu">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16"/>
+      </svg>
+    </button>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark theme" title="Switch light / dark">
+      <svg class="i-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3 17 7M7 17l-1.7 1.7"/></svg>
+      <svg class="i-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M20.2 14.5A8.2 8.2 0 0 1 9.5 3.8a8.3 8.3 0 1 0 10.7 10.7Z"/></svg>
+    </button>
+    <details id="profile-menu" class="menu">
+      <summary><span class="who">Anonymous</span><svg class="chev" width="9" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></summary>
+      <div class="menu-body"></div>
+    </details>
+  </nav>
+</header>
+
+<main><p class="fine snap">Static snapshot — built Friday Oct 2, 8:56 AM. The live pipe re-renders these in real time.</p>
+
+<div class="narrow">
+<h1>How baromoon works</h1>
+<p class="smallcaps">deterministic piping · cited facts · no AI in the report path</p>
+
+<p class="answer"><strong>The short version:</strong> baromoon reads the weather forecast, a
+75-day weather archive, the sun and moon's positions, and a cited tackle library — then scores
+every candidate window and tells you when to be on the water and what to throw. Same inputs,
+same report, every time.</p>
+
+<h2 class="rule-double">What goes in</h2>
+<ul class="plain">
+  <li><strong>Weather</strong> — Open-Meteo forecast (16-day cap) and archive (75 days):
+  temperature, wind, cloud, precipitation, barometric pressure and its trend.</li>
+  <li><strong>Water</strong> — a first-order water-temperature estimate from the air-temp
+  history (lag ≈ 4 days), plus a warming/cooling trend. A USGS gauge is used when one is live
+  within 30 km of the water; no registry lake currently has one, so the estimate is labelled as
+  such.</li>
+  <li><strong>Sky</strong> — Swiss Ephemeris: sunrise, sunset, civil dusk, moonrise and
+  moonset, moon phase, solunar majors (moon overhead/underfoot) and minors (rise/set),
+  planetary hours, and — for a profile — natal transits.</li>
+  <li><strong>Tackle library</strong> — every lure, rig, bait, knot, and line entry carries
+  cited provenance, quoted from manufacturer catalogs (T1) or state-agency guides (T2).</li>
+</ul>
+
+<h2 class="rule-double">What comes out</h2>
+<p>Each candidate window gets a score and a rank; the report shows the prime moment, the top
+picks with a cited why, and what you're missing that scores better for these conditions. A
+capped tie-break layer adjusts for declared cover, season, spawn phase, and a derived
+fish-position state — one raw fit is 0.25 points, each dimension caps at ±0.5, and the whole
+layer caps at ±1.0. Signal magnitudes come from cited sources where one exists and are labelled
+T5 (editorial) when it doesn't.</p>
+
+<h2 class="rule-double">What doesn't score</h2>
+<p>Multi-model forecast agreement (GFS/ECMWF/ICON spread), creator and tournament trend
+signals, and the tackle offers are display-only. They are shown after the ranking is set and
+never feed back into it.</p>
+
+<h2 class="rule-double">The calibration ledger</h2>
+<p>Every logged trip — catches and skunks alike — is replayed blind: the model sees the logbook
+only as of each session, and the weather comes from the archive. As of late September 2026 the
+ledger held <strong>14 sessions: 6 exact, 3 style, 2 miss, 1 ungraded</strong> on presentation
+(the ungraded trip was fly fishing, a discipline the tackle library doesn't cover yet); weighted
+by catch, 37% exact / 59% style / 3% miss / 1% ungraded, with score separation +0.3. When the
+data disagrees with the model, the model changes; the scoring rules live in the
+<a href="kb-bass.html">tackle library</a>'s condition contract.</p>
+
+<h2 class="rule-double">Money</h2>
+<p>Tackle links are added after the picks are set, always disclosed, and never influence the
+order. Manufacturer pages carry no commission; affiliate links do, and are marked. See the
+<a href="disclosure.html">affiliate disclosure</a>. baromoon is free to use — no account, no
+paywall.</p>
+
+<h2 class="rule-double">What it isn't</h2>
+<p>Conditions are estimates — a forecast, an inferred lake state, and an air-temp water model —
+so a report is a plan, not a promise. Access rules, licenses, and regulations are yours to
+manage; baromoon doesn't enforce them. And no AI writes the facts at runtime: the numbers are
+computed from the sources, every time.</p>
+
+<p class="fine">Looking for the machine-readable side? The <a href="developers.html">API and
+embed</a> expose the same deterministic rankings.</p>
+</div>
+
+</main>
+<footer>
+  <div class="footer-inner">
+    <div class="mark">
+      <span class="triskele" aria-hidden="true"></span>
+      <span class="wordmark">baromoon</span>
+    </div>
+    <p class="fine">Named for the two signals that survive calibration: barometric phase and moon.</p>
+    <p class="fine">Same sky, same weather, same lake — the same report
+    every time. No AI writes these facts: every tackle-library entry is cited, and a person
+    verifies each one.</p>
+    <p class="fine">Tackle links are added after the picks are set and never influence rankings.
+    Manufacturer pages carry no commission; affiliate links, when present, are always disclosed.
+    Profile data (birth place and time) lives only in your browser — <a href="interview.html">read how</a>.</p>
+    <nav class="foot-legal" aria-label="Site information">
+      <a href="about.html">About</a>
+      <a href="method.html">How it works</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="developers.html">API</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="disclosure.html">Affiliate disclosure</a>
+    </nav>
+    <p class="foot-install"><button type="button" id="install-app" class="install-btn" hidden>Install baromoon</button>
+      <span class="fine" id="install-hint" hidden></span></p>
+  </div>
+</footer>
+<script src="static/app.js?v=1790865472"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () =>
+    navigator.serviceWorker.register("/sw.js").catch(() => {}));
+}
+</script>
+</body>
+</html>
