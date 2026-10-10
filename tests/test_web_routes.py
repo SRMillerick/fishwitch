@@ -137,6 +137,56 @@ class SeoHeadTest(unittest.TestCase):
             self.assertEqual(r.get_data(as_text=True).strip(), webapp.INDEXNOW_KEY)
 
 
+class LegacyUrlRedirectTest(unittest.TestCase):
+    """The static GitHub Pages snapshot left /index.html, /lake-<id>.html and
+    friends in Google's index; they must 301 to the app routes, not 404."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.c = webapp.app.test_client()
+
+    def _assert_redirect(self, path, target):
+        r = self.c.get(path)
+        self.assertEqual(r.status_code, 301, path)
+        self.assertTrue(r.headers["Location"].endswith(target), (path, r.headers["Location"]))
+
+    def test_static_snapshot_paths_redirect(self):
+        for path, target in [
+            ("/index.html", "/"),
+            ("/index", "/"),
+            ("/about.html", "/about"),
+            ("/outlook.html", "/outlook"),
+            ("/report-tonight.html", "/report"),
+            ("/lake-lake-berryessa.html", "/lake/lake-berryessa"),
+            ("/lake-lake-berryessa", "/lake/lake-berryessa"),
+            ("/kb-bass.html", "/kb?species=bass"),
+            ("/kb-bait-abstract.html", "/kb/abstract"),
+            ("/glossary-barometric-pressure.html", "/glossary/barometric-pressure"),
+            ("/lakes-ca.html", "/lakes/ca"),
+            ("/lakes/", "/lakes"),
+            ("/lakes/CA", "/lakes/ca"),
+        ]:
+            self._assert_redirect(path, target)
+
+    def test_unknown_legacy_paths_stay_404(self):
+        self.assertEqual(self.c.get("/not-a-page.html").status_code, 404)
+        self.assertEqual(self.c.get("/lake-not-a-water.html").status_code, 404)
+
+    def test_favicon_probe_is_not_404(self):
+        r = self.c.get("/favicon.ico")
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.mimetype, "image/png")
+        r.close()
+
+    def test_log_query_variants_are_noindex(self):
+        h = self.c.get("/log?lake=hidden-valley-lake-ca").get_data(as_text=True)
+        self.assertIn('name="robots" content="noindex,follow"', h)
+
+    def test_robots_disallows_affiliate_redirects(self):
+        body = self.c.get("/robots.txt").get_data(as_text=True)
+        self.assertIn("Disallow: /out/", body)
+
+
 class LandingLedgerTest(unittest.TestCase):
     """The landing page accepts a lake and embeds the registry for the
     browser-side nearest-water pick. No network: the heavy report/ledger

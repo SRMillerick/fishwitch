@@ -71,6 +71,54 @@ app.config["JSON_SORT_KEYS"] = False
 app.config["MAX_CONTENT_LENGTH"] = 64 * 1024  # profiles are small; bigger bodies are abuse
 app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 31536000  # static assets are URL-versioned (?v=), cache hard
 
+_KB_SPECIES = ("bass", "trout", "catfish", "panfish")
+
+
+@app.before_request
+def _legacy_redirects():
+    """301 the pre-app URL spellings to their canonical routes.
+
+    baromoon.com served a static GitHub Pages snapshot before the app moved
+    behind gunicorn, so Google still holds /index.html, /lake-<id>.html and the
+    extensionless GitHub Pages forms — all of which 404 on the app now. This
+    hook redirects them (and drops trailing-slash/uppercase duplicates) so each
+    page has exactly one crawlable URL instead of a dead end."""
+    if request.method not in ("GET", "HEAD"):
+        return None
+    path = request.path
+    if path.startswith(("/static/", "/api/")):
+        return None
+    # GitHub Pages served the .html files extensionless too, so test both forms
+    base = path[:-5] if path.endswith(".html") else path
+    target = None
+    if path.endswith(".html") and base in _STATIC_SEO:
+        target = base
+    elif base in ("/index", ""):
+        target = "/"
+    if target is None and base.startswith("/lake-"):
+        slug = base[6:]
+        if slug and resolve_lake(slug):
+            target = f"/lake/{slug}"
+    if target is None and base.startswith("/kb-bait-"):
+        slug = base[9:]
+        if slug and (tx.find_entry(slug) or tx.bait_entry(slug)):
+            target = f"/kb/{slug}"
+    if target is None and base.startswith("/kb-") and base[4:] in _KB_SPECIES:
+        target = f"/kb?species={base[4:]}"
+    if target is None and base.startswith("/glossary-"):
+        slug = base[10:]
+        if slug and tx.glossary_term(slug):
+            target = f"/glossary/{slug}"
+    if target is None and base in ("/lakes-ca", "/lakes-az"):
+        target = f"/lakes/{base[-2:]}"
+    if target is None and base in ("/report-tonight", "/report-d2", "/report-d3"):
+        target = "/report"
+    if target is None and len(path) > 1 and path.endswith("/"):
+        target = path.rstrip("/") or "/"
+    if target and target != path:
+        return redirect(target, code=301)
+    return None
+
 
 @app.after_request
 def _count_page(resp):
@@ -275,6 +323,9 @@ def _seo_meta(req) -> dict:
             title = "Your water — session plan | baromoon"
             desc = ("An on-demand session plan for a dropped pin: windows, rigs, and the "
                     "cited why.")
+    elif path == "/log" and (params.get("lake") or params.get("at")):
+        # prefilled browser-only log form; the bare /log page stays indexable
+        robots = "noindex,follow"
 
     jsonld = [
         {"@context": "https://schema.org", "@type": "Organization", "@id": _ORG_ID,
@@ -1114,6 +1165,9 @@ def lakes_state_page(state):
     """State hub: every Featured water in one state, grouped by region. Static
     registry facts only — no weather compute on a browse page."""
     st = state.upper()
+    if state != st.lower():
+        # one crawlable spelling: /lakes/ca, never /lakes/CA
+        return redirect(f"/lakes/{st.lower()}", code=301)
     waters = [dict(id=k, name=v.get("name", k), region=_region(v),
                    species=v.get("species", []))
               for k, v in registry().items() if _state(v) == st]
@@ -1630,9 +1684,16 @@ INDEXNOW_KEY = _read_indexnow_key()
 
 @app.route("/robots.txt")
 def robots():
-    return ("User-agent: *\nDisallow: /api/\nAllow: /\n"
+    return ("User-agent: *\nDisallow: /api/\nDisallow: /out/\nAllow: /\n"
             "Sitemap: https://baromoon.com/sitemap.xml\n", 200,
             {"Content-Type": "text/plain"})
+
+
+@app.route("/favicon.ico")
+def favicon_ico():
+    """Browsers and crawlers still probe the classic path; serve the touch icon
+    instead of a 404 (the SVG favicon is declared in the page head)."""
+    return app.send_static_file("apple-touch-icon.png")
 
 
 if INDEXNOW_KEY:
