@@ -41,9 +41,18 @@ TAG = {"FISHWITCH_AMZ_TAG": "baromoon-20"}
 # /out/ src tokens as the page actually rendered them.
 _OUT_SRC = re.compile(r'/out/[^"]*?[?&]src=([a-z0-9_-]*)')
 
+# Internal hops that lead on toward the affiliate links.
+_INTERNAL = re.compile(r'href="(/(?:report|outlook)\?[^"]*)"')
+
 
 def _out_tokens(html: str) -> set:
     return set(_OUT_SRC.findall(html))
+
+
+def _internal_hops(html: str) -> list:
+    """`&amp;` is correct HTML in an attribute and the browser decodes it back
+    to `&`, so normalise before matching."""
+    return [h.replace("&amp;", "&") for h in _INTERNAL.findall(html)]
 
 
 class SubtagTest(unittest.TestCase):
@@ -176,6 +185,64 @@ class PageSourceTest(unittest.TestCase):
         with mock.patch.object(telemetry, "PAGES", self.log):
             self.c.get("/report?lat=38.9&lng=-122.6&src=fb-hvl")
         self.assertEqual(self._rows()[0]["src"], "fb-hvl")
+
+
+class InternalHopTest(unittest.TestCase):
+    """A tagged landing keeps its tag on the way to the affiliate links.
+
+    `report.html` is the only template that includes `_tackle.html`, so the
+    chain that matters is <landing> -> /report. A hop that drops `src` still
+    lands the visitor, but untagged: the session is counted and the click is
+    silently lost.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.c = webapp.app.test_client()
+        cls._pages = {}
+
+    def _hops(self, path):
+        # one fetch per path for the whole class: these routes compute a
+        # forecast, and re-requesting them dominates the suite's runtime
+        if path not in self._pages:
+            self._pages[path] = self.c.get(path).get_data(as_text=True)
+        return _internal_hops(self._pages[path])
+
+    def test_lake_cta_carries_the_tag(self):
+        """The 'Full report' / '10-day outlook' buttons sit outside the window
+        block, so this never depends on a live forecast."""
+        hops = self._hops("/lake/fain-lake-az?src=fb-w1-fain")
+        self.assertIn("/report?lake=fain-lake-az&src=fb-w1-fain", hops)
+        self.assertIn("/outlook?lake=fain-lake-az&src=fb-w1-fain", hops)
+
+    def test_untagged_lake_hops_are_unchanged(self):
+        hops = self._hops("/lake/fain-lake-az")
+        self.assertIn("/report?lake=fain-lake-az", hops)
+        for h in hops:
+            self.assertNotIn("src=", h)
+
+    def test_outlook_cta_carries_the_tag_to_the_report(self):
+        self.assertIn("/report?lake=fain-lake-az&src=fb-w1-fain",
+                      self._hops("/outlook?lake=fain-lake-az&src=fb-w1-fain"))
+
+    def test_window_rows_carry_the_tag_when_they_render(self):
+        """Window rows need a live forecast; assert only when present so the
+        suite still passes with no network."""
+        for h in [x for x in self._hops("/lake/fain-lake-az?src=fb-w1-fain")
+                  if "&at=" in x]:
+            self.assertIn("src=fb-w1-fain", h)
+
+    def test_home_hops_carry_the_tag_when_they_render(self):
+        for h in [x for x in self._hops("/?src=fb-w1-fain") if x.startswith("/report?")]:
+            self.assertIn("src=fb-w1-fain", h)
+
+    def test_no_hop_renders_a_malformed_src(self):
+        """`src_q()` is appended only where an href already has a query, so a
+        bare `/report` must never come out as `/report&src=`."""
+        for path in ("/lake/fain-lake-az?src=x1", "/outlook?lake=fain-lake-az&src=x1"):
+            html = self.c.get(path).get_data(as_text=True)
+            for bad in ("?&src=", "&src=&", '&src="', "/report&src=", "/outlook&src="):
+                self.assertNotIn(bad, html, f"{path} rendered {bad!r}")
 
 
 if __name__ == "__main__":

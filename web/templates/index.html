@@ -31,7 +31,7 @@
       <div><dt>First rod</dt><dd>{{ teaser.picks[0] }}</dd></div>
       {% endif %}
     </dl>
-    <a class="r-link" href="/report?lake={{ home.id }}">Open the full plan →</a>
+    <a class="r-link" href="/report?lake={{ home.id }}{{ src_q() }}">Open the full plan →</a>
   </aside>
   {% endif %}
 </section>
@@ -48,7 +48,7 @@
   — your browser picks the closest water; the location never leaves this page.<span id="near-me-note"></span></p>
   <ul class="tier-rows" id="ledger-rows">
     {% for r in ledger or [] %}
-    <li><a class="trow {{ r.tier }}" href="/report?lake={{ r.lake_id }}&at={{ r.start.strftime('%Y-%m-%d %H:%M') }}&hours=2&voice=almanac">
+    <li><a class="trow {{ r.tier }}" href="/report?lake={{ r.lake_id }}&at={{ r.start.strftime('%Y-%m-%d %H:%M') }}&hours=2&voice=almanac{{ src_q() }}">
       <span class="tier">{{ r.tier }}</span>
       <span class="when"><span class="day">{{ r.day }}</span><span class="clock">{{ r.start.strftime('%-I:%M %p') }}–{{ r.end.strftime('%-I %p') }}</span> <span class="lune">{{ r.moon | safe }}</span></span>
       <span class="where">{{ r.lake }}</span>

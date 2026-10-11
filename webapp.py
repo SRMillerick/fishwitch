@@ -144,6 +144,21 @@ def out_src(section: str) -> str:
     return f"{section}-{channel}" if channel else section
 
 
+@app.template_global()
+def src_q() -> str:
+    """`&src=<channel>` for an internal link that must carry the visitor's entry
+    channel across a navigation (`/lake/<id>` → `/report`), else `''`.
+
+    Without this the tag dies at the hop: the click still lands, but untagged —
+    so a posted lake-page link would show its session and silently lose its
+    click. Only append where the href already has a `?`."""
+    try:
+        channel = _src_token(request.args.get("src"))
+    except Exception:
+        channel = ""
+    return f"&src={channel}" if channel else ""
+
+
 @app.after_request
 def _count_page(resp):
     """Aggregate page counts (telemetry.py): path + lake key + external

@@ -39,7 +39,7 @@
 {% if windows %}
 <ul class="tier-rows">
   {% for r in windows %}
-  <li><a class="trow {{ r.tier }}" href="/report?lake={{ r.lake_id }}&at={{ r.start.strftime('%Y-%m-%d %H:%M') }}&hours=2&voice=almanac">
+  <li><a class="trow {{ r.tier }}" href="/report?lake={{ r.lake_id }}&at={{ r.start.strftime('%Y-%m-%d %H:%M') }}&hours=2&voice=almanac{{ src_q() }}">
     <span class="tier">{{ r.tier }}</span>
     <span class="when"><span class="day">{{ r.day }}</span><span class="clock">{{ r.start.strftime('%-I:%M %p') }}–{{ r.end.strftime('%-I %p') }}</span> <span class="lune">{{ r.moon | safe }}</span></span>
     <span class="where">{% if r.prime %}prime {{ r.prime.strftime('%-I:%M %p') }} · {% endif %}{{ r.conf }} confidence</span>
@@ -55,8 +55,8 @@ C — the fish have other plans.</p>
 {% endif %}
 
 <p class="cta">
-  <a class="btn primary" href="/report?lake={{ lake.id }}">Full report →</a>
-  <a class="btn ghost" href="/outlook?lake={{ lake.id }}">10-day outlook</a>
+  <a class="btn primary" href="/report?lake={{ lake.id }}{{ src_q() }}">Full report →</a>
+  <a class="btn ghost" href="/outlook?lake={{ lake.id }}{{ src_q() }}">10-day outlook</a>
 </p>
 
 {% if faq %}

@@ -398,22 +398,30 @@ def cmd_best(args):
     print()
 
 
-def cmd_outlook(args):
-    """Rank days+windows across an N-day horizon (16-day free weather cap)."""
-    from datetime import timedelta, date as _date
+def _scan_horizon(lake: dict, profile: dict, n_days: int, species=None,
+                  daylight: bool = False, dark: bool = False, time_from=None,
+                  time_to=None, enforce_access: bool = False,
+                  window_h: float = 2.0):
+    """Score every candidate session across an N-day horizon for one water.
+
+    Shared by `outlook` (ranked listing) and `digest` (the community post): one
+    weather fetch, then a `generate()` per candidate start — the expensive part,
+    so it lives in one place. Returns (results, moon_by_day); results are sorted
+    best-first. Each row carries the engine's own reason strings (`why`) and the
+    top pick's `technique`, so callers can show the work without inventing copy.
+    """
+    from datetime import timedelta
+    from types import SimpleNamespace
     from weather import Weather
     from layers.history import History
-    from skycalc import Sky, phase_name
+    from skycalc import Sky
     from report import generate as gen
 
-    profile = load_json(Path(args.profile)) or {}
-    lake = resolve_lake(args.lake or profile.get("home_lake") or "hidden-valley-lake-ca")
-    if lake is None:
-        sys.exit("lake not found")
+    # the arg-reading helpers below expect attribute access; a shim lets the
+    # shared scan reuse them without a parser.
+    opts = SimpleNamespace(daylight=daylight, dark=dark, time_from=time_from,
+                           time_to=time_to, enforce_access=enforce_access)
     today = datetime.now().replace(hour=0, minute=0)
-    n_days = min(int(args.days), 16)
-
-    print(f"\n📅 {n_days}-DAY OUTLOOK — {profile.get('name', 'you')} @ {lake['name']}")
     wx = Weather(lake["lat"], lake["lng"], forecast_days=n_days)
     hist = None
     try:
@@ -427,40 +435,62 @@ def cmd_outlook(args):
         day = today + timedelta(days=d)
         ms = sky.moon_state(sky.jd(day.replace(hour=12)))
         moon_by_day[day.date()] = (ms["phase"], ms["illum"])
-        t_from, t_to = _session_bounds(args, sky, day, 2.0)
-        starts = _candidate_starts(t_from, t_to, 2.0) \
-            if (getattr(args, 'daylight', False) or getattr(args, 'dark', False)
-                or getattr(args, 'time_from', None) or getattr(args, 'time_to', None)) \
-            else [day.replace(hour=h, minute=30 if h == 17 else 0) for h in (5, 9, 12, 15, 17, 20)]
-        if getattr(args, 'enforce_access', False):
+        t_from, t_to = _session_bounds(opts, sky, day, window_h)
+        starts = _candidate_starts(t_from, t_to, window_h) \
+            if (daylight or dark or time_from or time_to) \
+            else [day.replace(hour=h, minute=30 if h == 17 else 0)
+                  for h in (5, 9, 12, 15, 17, 20)]
+        if enforce_access:
             acc = _access_window(sky, day, lake)
             if acc:
                 starts = [s for s in starts
-                          if acc[0] <= s and s + timedelta(hours=2) <= acc[1]]
+                          if acc[0] <= s and s + timedelta(hours=window_h) <= acc[1]]
         for start in starts:
             try:
-                m = gen(profile, lake, start, hours=2.0,
-                        species=args.species or profile.get("species"), wx=wx, hist=hist)
+                m = gen(profile, lake, start, hours=window_h,
+                        species=species or profile.get("species"), wx=wx, hist=hist)
             except Exception:
                 continue
             if not m["blocks"]:
                 continue
             prime = m["prime"]
+            top = prime["picks"][0] if prime and prime["picks"] else None
             conf = "high" if d <= 3 else ("med" if d <= 7 else "low")
             results.append(dict(
-                day=day.date(), start=start, end=start + timedelta(hours=2),
+                day=day.date(), start=start, end=start + timedelta(hours=window_h),
                 overall=m["scores"]["overall"], ps=m.get("prime_score") or 0,
                 prime_t=prime["start"] if prime else None,
                 prime_ev="; ".join(prime["events"][:2]) if prime else "",
                 picks=[c["label"] for c, _, _ in prime["picks"]][:2] if prime else [],
+                why=[str(w) for w in (top[2] if top else [])],
+                technique=(top[0].get("technique") or "") if top else "",
                 solunar=next((f"{e['label'].split()[0]} {e['peak']:%-I:%M %p}"
                               for e in m["solunar"]
-                              if e["end"] >= start and e["start"] <= start + timedelta(hours=2)), ""),
+                              if e["end"] >= start
+                              and e["start"] <= start + timedelta(hours=window_h)), ""),
                 conf=conf, state=m.get("lake_state") or ""))
+    results.sort(key=lambda r: (-r["overall"], -r["ps"]))
+    return results, moon_by_day
+
+
+def cmd_outlook(args):
+    """Rank days+windows across an N-day horizon (16-day free weather cap)."""
+    profile = load_json(Path(args.profile)) or {}
+    lake = resolve_lake(args.lake or profile.get("home_lake") or "hidden-valley-lake-ca")
+    if lake is None:
+        sys.exit("lake not found")
+    n_days = min(int(args.days), 16)
+
+    print(f"\n📅 {n_days}-DAY OUTLOOK — {profile.get('name', 'you')} @ {lake['name']}")
+    results, moon_by_day = _scan_horizon(
+        lake, profile, n_days, species=args.species,
+        daylight=getattr(args, "daylight", False), dark=getattr(args, "dark", False),
+        time_from=getattr(args, "time_from", None),
+        time_to=getattr(args, "time_to", None),
+        enforce_access=getattr(args, "enforce_access", False))
     if not results:
         sys.exit("no scorable windows in range")
 
-    results.sort(key=lambda r: (-r["overall"], -r["ps"]))
     print("\n  TOP SESSIONS OF THE HORIZON")
     for i, r in enumerate(results[:8], 1):
         print(f"  {i}) {r['day']:%a %b %-d} · {r['start']:%-I:%M %p}–{r['end']:%-I %p} · "
@@ -490,6 +520,167 @@ def cmd_outlook(args):
             print(f"  {dd:%a %b %-d} — {ph} ({il:.0f}%)")
     print("\n  (weather confidence: ≤3d high · 4-7d med · 8+d low; "
           "astro/solunar timing holds at all ranges)\n")
+
+
+# plan §10 — the distribution test's communities: the CA cluster (densest registry,
+# local knowledge) plus the AZ lakes, where competition is thinnest.
+DIGEST_PRIORITY = [
+    "hidden-valley-lake-ca", "lake-berryessa", "lake-sonoma", "clear-lake",
+    "goldwater-lake-az", "watson-lake-az", "willow-lake-az", "lynx-lake-az",
+    "fain-lake-az", "yavapai-lakes-az",
+]
+
+
+def _post_src(channel: str, lake_id: str, limit: int = 24) -> str:
+    """`{channel}-{short lake slug}` for a post's landing link. The slug is
+    derived from the registry key so it stays stable week to week.
+
+    The result must live inside `webapp._src_token`'s alphabet and length cap:
+    it is stored in the page log and rides on into Amazon's `ascsubtag` beside
+    the entry id (`fb-w1-hidden-valley-offset-hook`)."""
+    slug = re.sub(r"^lake-", "", lake_id.lower())
+    while True:                       # strip stacked suffixes: -ca, -lake, -az…
+        trimmed = re.sub(r"-(?:[a-z]{2}|lake|lakes)$", "", slug)
+        if trimmed == slug:
+            break
+        slug = trimmed
+    slug = re.sub(r"[^a-z0-9]+", "-", slug).strip("-")
+    room = limit - len(channel) - 1
+    return f"{channel}-{slug[:room]}".strip("-") if room > 0 else channel[:limit]
+
+
+def _weekend_dates(n_days: int) -> set:
+    """The upcoming Sat/Sun dates inside the horizon (today included)."""
+    from datetime import timedelta
+    today = datetime.now().date()
+    return {today + timedelta(days=i) for i in range(n_days + 1)
+            if (today + timedelta(days=i)).weekday() in (5, 6)}
+
+
+def _post_body(lake: dict, r: dict, url: str, n_days: int) -> str:
+    """The post text. Assembled only from engine fields — the score, the pick,
+    its `technique` and its own reason strings. Nothing here is authored, so the
+    post cannot outrun what the pipe computed."""
+    when = f"{r['day']:%a %b %-d}, {r['start']:%-I:%M %p}\u2013{r['end']:%-I %p}"
+    head = (f"{lake['name']} \u2014 best window in the next {n_days} days: {when} "
+            f"\u00b7 {r['overall']}/10 \u00b7 {r['conf']} confidence.")
+    if r["prime_t"]:
+        head += f" Prime lands ~{r['prime_t']:%-I:%M %p}."
+    lines = [head, ""]
+    top = f"Top pick: {r['picks'][0]}" if r["picks"] else ""
+    if r["technique"]:
+        top += f" \u2014 {r['technique'].rstrip('.')}"
+    if top:
+        lines.append(top + ".")
+    if r["why"]:
+        lines.append("Why: " + "; ".join(r["why"]) + ".")
+    if r["prime_ev"]:
+        lines.append(f"On the sky: {r['prime_ev']}.")
+    if len(r["picks"]) > 1:
+        lines += ["", f"Also worth rigging: {r['picks'][1]}."]
+    lines += ["", "Free, no account, and every pick shows its source:", url]
+    return "\n".join(lines)
+
+
+def _registry_lake(name: str) -> dict | None:
+    """Registry-only lake lookup — the digest must never geocode.
+
+    `resolve_lake` falls back to Nominatim, which would happily turn a typo into
+    some other state's water body and then advertise a `/lake/<id>` page that
+    does not exist. A post must only ever link a water the site actually has.
+    """
+    lakes = load_json(CONFIG / "lakes.json", {})
+    key = (name or "").strip().lower()
+    if not key:
+        return None
+    for k, lk in lakes.items():
+        if k.lower() == key or (lk.get("name") or "").lower() == key:
+            return dict(lk, id=k)
+    for k, lk in lakes.items():                     # partial, e.g. `sonoma`
+        if key in (lk.get("name") or "").lower():
+            return dict(lk, id=k)
+    return None
+
+
+def cmd_digest(args):
+    """Ready-to-paste community post(s) for the distribution test (plan §10).
+
+    Emits the computed window, the top pick with the engine's own reasons, and a
+    channel-tagged landing link — one block per lake. The tag is what makes the
+    post attributable in the page log and in Amazon's Sub-Tag report, so do not
+    hand-edit it out of the link: it is the only reason the test is measurable.
+    """
+    import json as _json
+    n_days = max(1, min(int(args.days), 16))
+    if args.lakes:
+        ids = [x.strip() for x in args.lakes.split(",") if x.strip()]
+    elif args.priority:
+        ids = list(DIGEST_PRIORITY)
+    else:
+        sys.exit("no lakes \u2014 pass --lakes a,b,c or --priority")
+    keep_days = _weekend_dates(n_days) if getattr(args, "weekend", False) else None
+    profile = load_json(Path(PROFILES / "default.json")) or {}
+    channel = re.sub(r"[^a-z0-9_-]", "", (args.tag or "community").lower())[:16] or "community"
+
+    blocks, used = [], {}
+    for lake_id in ids:
+        lake = _registry_lake(lake_id)
+        if lake is None:
+            print(f"\u26a0 {lake_id}: not in the registry \u2014 skipped", file=sys.stderr)
+            continue
+        lid = lake.get("id") or lake_id
+        src = _post_src(channel, lid)
+        if src in used:
+            print(f"\u26a0 {lake_id}: tag `{src}` already used by {used[src]} \u2014 "
+                  "pass a distinct --tag", file=sys.stderr)
+            continue
+        used[src] = lake_id
+        try:
+            results, _moon = _scan_horizon(lake, profile, n_days)
+        except Exception as exc:
+            print(f"\u26a0 {lake_id}: scan failed ({exc}) \u2014 skipped", file=sys.stderr)
+            continue
+        if keep_days:
+            results = [r for r in results if r["day"] in keep_days]
+        if not results:
+            print(f"\u26a0 {lake_id}: no scorable window \u2014 skipped", file=sys.stderr)
+            continue
+        # Link the session report, not the lake page: report.html is the only
+        # template that includes _tackle.html, so /report is where the picks,
+        # their reasons AND the affiliate links live. One hop, and every /out/
+        # link on it inherits `src` — the lake page would leave the visitor with
+        # nothing to click, so the click half of the test could never fire.
+        url = f"https://baromoon.com/report?lake={lid}&src={src}"
+        blocks.append(dict(lake=lake["name"], lake_id=lid, src=src, url=url,
+                           window=results[0], alternates=results[1:4],
+                           body=_post_body(lake, results[0], url, n_days)))
+
+    if not blocks:
+        sys.exit("nothing to post")
+    if getattr(args, "json", False):
+        print(_json.dumps(blocks, indent=2, default=str))
+        return
+
+    for i, b in enumerate(blocks, 1):
+        w = b["window"]
+        print(f"\n{'\u2500' * 66}")
+        print(f"{i}/{len(blocks)}  {b['lake'].upper()}  \u00b7  {b['lake_id']}")
+        print(f"src:  {b['src']}   (page log + Amazon Sub-Tag report)")
+        print(f"link: {b['url']}")
+        print(f"{'\u2500' * 66}")
+        print(b["body"])
+        if b["alternates"]:
+            alts = "; ".join(
+                f"{a['day']:%a} {a['start']:%-I:%M %p} ({a['overall']}/10)"
+                for a in b["alternates"])
+            print(f"\n(if that window sours: {alts})")
+    print(f"\n{'\u2500' * 66}")
+    print(f"{len(blocks)} post{'s' if len(blocks) != 1 else ''} ready. "
+          "Tag every link \u2014 the tag is the measurement.")
+    print("Useful first, link second; follow each community's self-promo rules; "
+          "disclose the affiliation (plan \u00a710).")
+    print("Read it back: fishwitch stats --remote (social + by source), "
+          "clicks --remote, Amazon Sub-Tag report.\n")
 
 
 def cmd_days(args):
@@ -639,6 +830,19 @@ def main():
     op.add_argument("--species")
     _add_time_filters(op)
 
+    dg = sub.add_parser("digest",
+                        help="ready-to-paste community post(s) — the distribution test (plan §10)")
+    dg.add_argument("--lakes", help="comma-separated registry ids")
+    dg.add_argument("--priority", action="store_true",
+                    help="the plan §10 priority waters (CA + AZ clusters)")
+    dg.add_argument("--tag", default="community",
+                    help="channel/post tag for the landing link (default: community)")
+    dg.add_argument("--days", type=int, default=3,
+                    help="horizon in days (default 3, max 16)")
+    dg.add_argument("--weekend", action="store_true",
+                    help="restrict to the upcoming Sat/Sun")
+    dg.add_argument("--json", action="store_true", help="machine-readable output")
+
     lg = sub.add_parser("log", help="log a catch (feeds the report feedback loop)")
     lg.add_argument("--angler", help="who caught it (default: default profile's name)")
     lg.add_argument("--lake", help="lake name (default home lake)")
@@ -745,6 +949,8 @@ def main():
         cmd_best(args)
     elif args.cmd == "outlook":
         cmd_outlook(args)
+    elif args.cmd == "digest":
+        cmd_digest(args)
     elif args.cmd == "interview":
         interview(Path(args.out) if args.out else None)
     elif args.cmd == "report":

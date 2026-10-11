@@ -79,9 +79,9 @@
       <li class="{% if here == '/' or here == '/lakes' or here.startswith('/lake/') %}on{% endif %}">
         <a href="/lake/{{ nav_lake.id }}"><i>1</i>Water</a></li>
       <li class="{% if here == '/report' %}on{% endif %}">
-        <a href="/report?lake={{ nav_lake.id }}" data-lake-link="/report"><i>2</i>Plan</a></li>
+        <a href="/report?lake={{ nav_lake.id }}{{ src_q() }}" data-lake-link="/report"><i>2</i>Plan</a></li>
       <li class="{% if here == '/outlook' %}on{% endif %}">
-        <a href="/outlook?lake={{ nav_lake.id }}" data-lake-link="/outlook"><i>3</i>Look ahead</a></li>
+        <a href="/outlook?lake={{ nav_lake.id }}{{ src_q() }}" data-lake-link="/outlook"><i>3</i>Look ahead</a></li>
       <li class="{% if here == '/log' %}on{% endif %}">
         <a href="/log?lake={{ nav_lake.id }}" data-lake-link="/log"><i>4</i>Log it</a></li>
     </ol>

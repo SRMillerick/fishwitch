@@ -29,7 +29,7 @@
     <td data-label="confidence" class="nowrap">{{ r.conf }}</td>
     <td data-label="prime" class="nowrap">{{ r.prime.strftime('%-I:%M %p') if r.prime else '—' }}</td>
     <td data-label="approach">{{ ' + '.join(r.picks) }}</td>
-    <td data-label="plan" class="nowrap"><a href="/report?lake={{ lake.id }}&at={{ r.start.strftime('%Y-%m-%d %H:%M') }}&hours={{ ((r.end - r.start).total_seconds() / 3600) | round(1) | string | replace('.0', '') }}{% if species %}&species={{ species | urlencode }}{% endif %}">Plan →</a></td>
+    <td data-label="plan" class="nowrap"><a href="/report?lake={{ lake.id }}&at={{ r.start.strftime('%Y-%m-%d %H:%M') }}&hours={{ ((r.end - r.start).total_seconds() / 3600) | round(1) | string | replace('.0', '') }}{% if species %}&species={{ species | urlencode }}{% endif %}{{ src_q() }}">Plan →</a></td>
   </tr>
   {% endfor %}
   </tbody>
@@ -39,7 +39,7 @@
 range). Sky timing holds at all ranges. Windows scored anonymously; a profile
 re-ranks them against your natal chart and arsenal on the report page.</p>
 <p class="cta no-print">
-  {% if lake %}<a class="btn primary" href="/report?lake={{ lake.id }}{% if species %}&species={{ species | urlencode }}{% endif %}">Tonight's full plan →</a>{% endif %}
+  {% if lake %}<a class="btn primary" href="/report?lake={{ lake.id }}{% if species %}&species={{ species | urlencode }}{% endif %}{{ src_q() }}">Tonight's full plan →</a>{% endif %}
   <a class="btn ghost" href="/ledger.ics?lake={{ lake.id if lake else '' }}&days={{ days }}{% if species %}&species={{ species | urlencode }}{% endif %}">Subscribe (.ics)</a>
   <a class="btn ghost" href="/outlook.rss?lake={{ lake.id if lake else '' }}&days={{ days }}{% if species %}&species={{ species | urlencode }}{% endif %}">RSS</a>
 </p>

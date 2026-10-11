@@ -10,7 +10,7 @@ This would have flagged HVL as post-turnover on Sep 9 using only data that
 existed before the trip (cold bout Aug 28–Sep 3, est surface 75→64°F).
 """
 from __future__ import annotations
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import requests
 
 import usagelog
@@ -44,8 +44,10 @@ def _c2f(c): return c * 9 / 5 + 32
 
 class History:
     def __init__(self, lat: float, lng: float, end: datetime, days: int = 75):
-        # the ERA5 archive lags ~5 days behind — clamp to what exists
-        max_end = datetime.utcnow().date() - timedelta(days=5)
+        # the ERA5 archive lags ~5 days behind — clamp to what exists.
+        # `now(timezone.utc)`, not the deprecated `utcnow()`: the harness runs with
+        # warnings-as-errors, so a deprecated call raises at import time.
+        max_end = datetime.now(timezone.utc).date() - timedelta(days=5)
         end_d = min(end.date(), max_end)
         start_d = end_d - timedelta(days=days)
         r = _fetch(dict(
