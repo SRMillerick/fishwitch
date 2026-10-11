@@ -48,7 +48,7 @@
 ranking. Manufacturer pages carry no commission; affiliate links are labelled.</p>
 <ul class="plain">
   {% for o in offers_list %}
-  <li><a href="/out/{{ b.id }}/{{ o.retailer }}?src=kb" target="_blank" rel="sponsored noopener">{{ o.retailer_label or o.retailer }}</a>
+  <li><a href="/out/{{ b.id }}/{{ o.retailer }}?src={{ out_src('kb') }}" target="_blank" rel="sponsored noopener">{{ o.retailer_label or o.retailer }}</a>
     <span class="fine">({{ o.disclosure }})</span></li>
   {% endfor %}
 </ul>

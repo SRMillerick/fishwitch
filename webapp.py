@@ -120,6 +120,30 @@ def _legacy_redirects():
     return None
 
 
+def _src_token(raw: str | None, limit: int = 24) -> str:
+    """Coarse source token: lowercase `[a-z0-9_-]` only, capped. One shape for
+    both the page log (`telemetry.record`'s `src`) and `/out/`'s click log — a
+    fixed short token, never free text. `?src=` is visitor-supplied, so it is
+    stripped to that alphabet before it is stored or echoed onward.
+
+    This is what makes a community post attributable: Facebook strips referrers
+    on outbound links, so an untagged shared link is indistinguishable from
+    direct traffic."""
+    return re.sub(r"[^a-z0-9_-]", "", (raw or "").lower())[:limit]
+
+
+@app.template_global()
+def out_src(section: str) -> str:
+    """The `/out/` `src` token for a link in `section`, carrying the visitor's
+    entry channel when the landing URL had one: `tackle` or `tackle-fb-hvl`.
+    Absent a request (the static snapshot) it degrades to the bare section."""
+    try:
+        channel = _src_token(request.args.get("src"))
+    except Exception:
+        channel = ""
+    return f"{section}-{channel}" if channel else section
+
+
 @app.after_request
 def _count_page(resp):
     """Aggregate page counts (telemetry.py): path + lake key + external
@@ -130,11 +154,14 @@ def _count_page(resp):
         if (request.method == "GET" and resp.status_code == 200
                 and request.args.get("warm") != "1"
                 and telemetry.should_count(request.path)):
-            # dropped-pin reports have no registry lake; tag them so on-demand
-            # catalog usage is separable from registry traffic
-            src = ("ondemand" if request.path in ("/report", "/outlook")
-                   and not request.args.get("lake")
-                   and request.args.get("lat") and request.args.get("lng") else None)
+            # an explicit ?src= on the landing URL wins — it is the channel tag a
+            # posted/shared link carries; otherwise dropped-pin reports have no
+            # registry lake, so tag them to keep on-demand usage separable
+            src = _src_token(request.args.get("src")) or None
+            if not src and (request.path in ("/report", "/outlook")
+                            and not request.args.get("lake")
+                            and request.args.get("lat") and request.args.get("lng")):
+                src = "ondemand"
             telemetry.record(request.path, lake=request.args.get("lake"),
                              ref=request.referrer, ua=request.user_agent.string, src=src)
     except Exception:
@@ -1810,7 +1837,7 @@ def out_click(entry, retailer):
     never from a user-supplied URL — so this cannot be an open redirect. Logs
     only {ts, entry, retailer, kind, section}: no IP, no UA, no cookies."""
     retailer = re.sub(r"[^a-z0-9_-]", "", retailer.lower())[:24]
-    src = re.sub(r"[^a-z0-9_-]", "", (request.args.get("src") or "").lower())[:16]
+    src = _src_token(request.args.get("src"))
     entry = re.sub(r"[^a-z0-9_-]", "", entry.lower())[:40]
     comp = re.sub(r"[^a-z0-9_-]", "", (request.args.get("comp") or "").lower())[:32]
     target, kind = None, "manufacturer"
@@ -1821,7 +1848,7 @@ def out_click(entry, retailer):
     else:
         if comp:
             pool = []
-            for c in offers.components(entry):
+            for c in offers.components(entry, src=src):
                 if c["id"] == comp:
                     pool = c.get("offers", [])
                     break
@@ -1829,9 +1856,9 @@ def out_click(entry, retailer):
                 # The shopping list stamps every link with the row id as `comp`,
                 # including product-entry offers (entry == component id, e.g.
                 # egg-sinker) — those carry no component bundle of their own.
-                pool = offers.resolve_any(entry)
+                pool = offers.resolve_any(entry, src=src)
         else:
-            pool = offers.resolve_any(entry)
+            pool = offers.resolve_any(entry, src=src)
         for o in pool:
             if o.get("retailer") == retailer and o.get("url"):
                 target, kind = o["url"], o.get("kind", "offer")

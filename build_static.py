@@ -20,6 +20,7 @@ import sys
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
+from urllib.parse import parse_qs, urlsplit
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
@@ -52,16 +53,36 @@ shutil.copytree(ROOT / "web" / "static", OUT / "static", dirs_exist_ok=True)
 
 
 def _resolve_out(path: str):
-    """Resolve a /out/<entry>/<retailer> link back to its destination so the
-    static snapshot (no server) still links correctly."""
+    """Resolve a /out/<entry>/<retailer>[?comp=..&src=..] link back to its
+    destination so the static snapshot (no server) still links correctly.
+
+    Component links carry `comp=<bundle id>`: that offer lives in the rig's
+    component bundle, not in the entry's own offer list, so resolving through
+    `resolve_any` alone left them unrewritten — which failed `check_links.py`
+    and aborted the publish, leaving gh-pages stale from the fly-tying pass
+    until this was fixed. `src` is carried so the snapshot's `ascsubtag`
+    matches what the live `/out/` route builds."""
     m = re.match(r"/out/([^/?#]+)/([^/?#]+)", path)
     if not m:
         return None
     entry, retailer = m.group(1), m.group(2)
-    if retailer == "manufacturer":
+    q = parse_qs(urlsplit(path).query)
+    comp = (q.get("comp") or [None])[0]
+    src = webapp._src_token((q.get("src") or [None])[0]) or None
+    if retailer == "manufacturer" and not comp:
         cat = webapp.tx.find_entry(entry)
         return (cat or {}).get("manufacturer_specs", {}).get("product_url")
-    for o in webapp.offers.resolve_any(entry):
+    pool = []
+    if comp:
+        for c in webapp.offers.components(entry, src=src):
+            if c.get("id") == comp:
+                pool = c.get("offers", [])
+                break
+    if not pool:
+        # product-entry offers are stamped with a row id as `comp` and carry no
+        # bundle of their own — the same fallback the live /out/ route uses
+        pool = webapp.offers.resolve_any(entry, src=src)
+    for o in pool:
         if o.get("retailer") == retailer and o.get("url"):
             return o["url"]
     return None

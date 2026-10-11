@@ -44,15 +44,25 @@ def retailers() -> dict:
     return _load().get("retailers", {})
 
 
-def _offer_url(entry_id: str, o: dict, reg: dict) -> str | None:
+def _subtag(src: str | None, entry_id: str) -> str:
+    """Amazon `ascsubtag` value: the click's section/channel token then the
+    entry id — e.g. `tackle-fb-hvl-wacky`. This is the only place a community
+    post can be tied to a click/sale, because Amazon's Sub-Tag report is the
+    arbiter: `/out/`'s own log sees its redirect, never whether the visitor
+    reached the retailer."""
+    return "-".join(p for p in (src, entry_id) if p)
+
+
+def _offer_url(entry_id: str, o: dict, reg: dict, src: str | None = None) -> str | None:
     """Build the final URL, in preference order:
 
     1. `deeplink_template` — network tracked deep links (Rakuten/LinkShare,
        Affiliatly, ...). `{url}` is the merchant product URL, URL-encoded into
        the redirect; `subtag_param` (e.g. `u1`) carries the entry id for
-       per-entry reporting.
+       per-entry reporting. No live program yet, so `src` is not threaded here.
     2. `dp_template` + `tag_env` — Amazon-style catalog links built from an
-       ASIN, with the tag read from the environment and an `ascsubtag`.
+       ASIN, with the tag read from the environment and an `ascsubtag` carrying
+       `src` (section + entry channel) and the entry id.
     3. the stored `url` — manufacturer pages and pre-built tracked links.
     """
     r = reg.get(o.get("retailer"), {})
@@ -77,35 +87,38 @@ def _offer_url(entry_id: str, o: dict, reg: dict) -> str | None:
         if tag:
             url += ("&" if "?" in url else "?") + f"tag={tag}"
             if r.get("subtag"):
-                url += f"&ascsubtag={entry_id}"
+                url += f"&ascsubtag={quote(_subtag(src, entry_id))}"
         return url
     return o.get("url") or None
 
 
-def _resolve(entry_id: str, o: dict, reg: dict, comp: str | None = None) -> dict:
+def _resolve(entry_id: str, o: dict, reg: dict, comp: str | None = None,
+             src: str | None = None) -> dict:
     r = reg.get(o.get("retailer"), {})
     kind = r.get("kind", o.get("kind", "manufacturer"))
     out = dict(o)
     out["retailer_label"] = r.get("label", o.get("retailer", "retailer"))
     out["kind"] = kind
-    out["url"] = _offer_url(entry_id, o, reg)
+    out["url"] = _offer_url(entry_id, o, reg, src=src)
     out["disclosure"] = DISCLOSURE.get(kind, "")
     if comp:
         out["comp"] = comp
     return out
 
 
-def resolve(entry_id: str) -> list[dict]:
-    """Resolved product offers for an entry (the tackle-block / gap-lane rows)."""
+def resolve(entry_id: str, src: str | None = None) -> list[dict]:
+    """Resolved product offers for an entry (the tackle-block / gap-lane rows).
+    `src` only feeds the Amazon sub-tag — see `_subtag`."""
     d = _load()
     reg = d.get("retailers", {})
     e = d.get("entries", {}).get(entry_id, {})
     offers = e.get("offers", []) if isinstance(e, dict) else (e or [])
-    return [_resolve(entry_id, o, reg) for o in offers]
+    return [_resolve(entry_id, o, reg, src=src) for o in offers]
 
 
-def components(entry_id: str) -> list[dict]:
-    """Resolved component bundles for a rig entry — what it takes to build it."""
+def components(entry_id: str, src: str | None = None) -> list[dict]:
+    """Resolved component bundles for a rig entry — what it takes to build it.
+    `src` only feeds the Amazon sub-tag — see `_subtag`."""
     d = _load()
     reg = d.get("retailers", {})
     e = d.get("entries", {}).get(entry_id, {})
@@ -113,7 +126,8 @@ def components(entry_id: str) -> list[dict]:
     out = []
     for c in comps:
         cc = dict(c)
-        cc["offers"] = [_resolve(entry_id, o, reg, comp=c["id"]) for o in c.get("offers", [])]
+        cc["offers"] = [_resolve(entry_id, o, reg, comp=c["id"], src=src)
+                        for o in c.get("offers", [])]
         out.append(cc)
     return out
 
@@ -237,24 +251,25 @@ def category_entries(cat_id: str) -> list[dict]:
     return cat.get("entries", [])
 
 
-def resolve_category(cat_id: str, entry_id: str) -> list[dict]:
-    """Resolved offers for one high-AOV category entry (electronics, kayaks…)."""
+def resolve_category(cat_id: str, entry_id: str, src: str | None = None) -> list[dict]:
+    """Resolved offers for one high-AOV category entry (electronics, kayaks…).
+    `src` only feeds the Amazon sub-tag — see `_subtag`."""
     reg = _load().get("retailers", {})
     for e in category_entries(cat_id):
         if e.get("id") == entry_id:
-            return [_resolve(entry_id, o, reg) for o in e.get("offers", [])]
+            return [_resolve(entry_id, o, reg, src=src) for o in e.get("offers", [])]
     return []
 
 
-def resolve_any(entry_id: str) -> list[dict]:
+def resolve_any(entry_id: str, src: str | None = None) -> list[dict]:
     """Resolved offers for an entry anywhere in the registry: product/rig
     entries first, then high-AOV category entries. `/out/` and the static
     snapshot use this so gear blocks are tracked like everything else."""
-    rows = resolve(entry_id)
+    rows = resolve(entry_id, src=src)
     if rows:
         return rows
     for cat_id in categories():
-        rows = resolve_category(cat_id, entry_id)
+        rows = resolve_category(cat_id, entry_id, src=src)
         if rows:
             return rows
     return []
