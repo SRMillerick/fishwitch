@@ -156,8 +156,8 @@ _DEFAULT_DESC = ("baromoon reads your lake — barometer, water temp, wind, ligh
 
 _STATIC_SEO = {
     "/": ("Fishing plan: when to go and what to throw | baromoon",
-          "Free, cited fishing plans for 18 lakes: live weather, water, and sky scored into "
-          "time-blocked windows with the rigs that fit. No account, no app."),
+          "Free, cited fishing plans: live weather, water, and sky scored into time-blocked "
+          "windows with the rigs that fit. No account, no app."),
     "/report": ("Fishing report — windows, rigs, and the why | baromoon",
                 "Pick a water and see its best windows, the rigs that score for them, and a "
                 "cited why — computed deterministically from weather, water, and sky."),
@@ -245,7 +245,11 @@ def _seo_meta(req) -> dict:
                 + (f": live windows and top rigs for {species}" if species
                    else ": live windows and top rigs")
                 + ", plus species, depth, and access. Free, cited, no account.")
-        crumbs = [("Home", "/"), ("Waters", "/lakes"), (lake.get("name"), path)]
+        crumbs = [("Home", "/"), ("Waters", "/lakes")]
+        st = _state(lake)
+        if st in ("CA", "AZ"):
+            crumbs.append(({"CA": "California", "AZ": "Arizona"}[st], f"/lakes/{st.lower()}"))
+        crumbs.append((lake.get("name"), path))
         place = {"@type": "Place", "name": lake.get("name"), "url": canonical}
         if lake.get("lat") is not None and lake.get("lng") is not None:
             place["geo"] = {"@type": "GeoCoordinates",
@@ -296,6 +300,11 @@ def _seo_meta(req) -> dict:
             crumbs = [("Home", "/"), ("Waters", "/lakes"), (full, path)]
     elif path in _STATIC_SEO:
         title, desc = _STATIC_SEO[path]
+        if path == "/":
+            # the registry grows; the count in the snippet must not go stale
+            desc = (f"Free, cited fishing plans for {len(registry())} lakes: live weather, water, "
+                    "and sky scored into time-blocked windows with the rigs that fit. "
+                    "No account, no app.")
         if path == "/lakes":
             crumbs = [("Home", "/"), ("Waters", "/lakes")]
         elif path == "/kb":
@@ -1083,11 +1092,11 @@ def _lake_answers(lake: dict, windows: list[dict]):
                     "The registry lists " + ", ".join(species) + "."))
     size = []
     if lake.get("area_acres"):
-        size.append(f"about {lake['area_acres']} acres of surface")
+        faq.append((f"How big is {name}?",
+                    f"It covers about {lake['area_acres']} acres of surface."))
     if lake.get("est_max_depth_ft"):
-        size.append(f"a maximum depth of roughly {lake['est_max_depth_ft']} ft")
-    if size:
-        faq.append((f"How big is {name}?", "It is " + " and ".join(size) + "."))
+        faq.append((f"How deep is {name}?",
+                    f"Its maximum depth is roughly {lake['est_max_depth_ft']} ft."))
     jsonld = None
     if faq:
         jsonld = {"@type": "FAQPage", "mainEntity": [
@@ -1146,8 +1155,10 @@ def lake_page(lake_id):
         if nid:
             nearby.append(dict(id=nid, name=v.get("name", nid), region=_region(v)))
     short, faq, faq_jsonld = _lake_answers(lake, windows)
+    state_full = {"CA": "California", "AZ": "Arizona"}.get(lake.get("state"), lake.get("state"))
     return render_template("lake.html", lake=lake, windows=windows, nearby=nearby,
-                           short=short, faq=faq, faq_jsonld=faq_jsonld, local=LOCAL)
+                           short=short, faq=faq, faq_jsonld=faq_jsonld,
+                           state_full=state_full, local=LOCAL)
 
 
 @app.route("/lakes")

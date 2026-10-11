@@ -246,6 +246,30 @@
         {"label": "How pressure is scored", "href": "/method"},
         {"label": "Cold-water bass", "href": "/glossary/cold-water-bass"}
       ]
+    },
+    {
+      "id": "solunar-periods",
+      "category": "feeding",
+      "term": "Solunar periods",
+      "question": "What are solunar periods, and do they matter for fishing?",
+      "short": "Solunar theory predicts stronger feeding in \"major\" periods (moon overhead or underfoot) and \"minor\" periods (moonrise and moonset), strongest around the new and full moon — but only when weather and water are stable.",
+      "body": [
+        "Solunar theory is a hypothesis about animal movement, not a settled law: John Alden Knight laid it out in 1926 and published the first solunar table in 1936. Major periods fall when the moon is overhead or underfoot; minor periods at moonrise and moonset.",
+        "The practical version anglers use is conditional. The guidance is to plan trips around the major or minor feeding periods that land near sunrise or sunset and coincide with a new or full moon — with the caveat that a cold front or muddy water can cancel the effect. Around the new and full moon the theory expects the strongest activity, and the weakest at the quarter moons.",
+        "baromoon computes the moon's position with Swiss Ephemeris and scores solunar majors and minors as one input in the condition layer, next to barometric trend, light, water temperature, and wind. It can tilt a window; it never overrides the lake state — same inputs, same report."
+      ],
+      "sources": [
+        {"file": "weather", "find": "The solunar theory is a hypothesis"},
+        {"file": "weather", "find": "there were major periods (moon up - moon down) and minor periods"},
+        {"file": "weather", "find": "Knight published the first Solunar table in 1936"},
+        {"file": "weather", "find": "strongest activity occurs when there is a full moon"},
+        {"file": "weather", "find": "periods of a full or new moon tend to be the best"},
+        {"file": "weather", "find": "major or minor feeding periods that occur near times of sunrise"}
+      ],
+      "see": [
+        {"label": "How the sky layer works", "href": "/method"},
+        {"label": "Best time of day", "href": "/glossary/best-time-of-day-bass"}
+      ]
     }
   ]
 }

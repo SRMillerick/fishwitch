@@ -95,6 +95,21 @@ class SeoHeadTest(unittest.TestCase):
         self.assertIn('name="robots" content="noindex,follow"', h)
         self.assertIn('<link rel="canonical" href="https://baromoon.com/report">', h)
 
+    def test_homepage_description_tracks_registry_size(self):
+        h = self._body("/")
+        self.assertIn(f"plans for {len(webapp.registry())} lakes", h)
+
+    def test_solunar_glossary_term_is_live(self):
+        h = self._body("/glossary/solunar-periods")
+        self.assertIn("Solunar theory", h)
+        self.assertIn("en.wikipedia.org/wiki/Solunar_theory", h)
+        self.assertIn("takemefishing.org", h)
+
+    def test_lake_breadcrumbs_and_depth_faq(self):
+        h = self._body("/lake/hidden-valley-lake-ca")
+        self.assertIn('href="/lakes/ca"', h)
+        self.assertIn("How deep is", h)
+
     def test_structured_data_entities(self):
         self.assertIn('"@type": "Organization"', self._body("/"))
         self.assertIn('"@type": "WebSite"', self._body("/"))

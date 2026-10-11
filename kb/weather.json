@@ -61,6 +61,89 @@
         "verified_at": "2026-10-02T15:53:54+00:00",
         "note": "text sha 8a73aefc399f3aa0; fetched 2026-10-01T15:19:44+00:00; new entry from the 2026-10-01 sourcing pass; added for /glossary/barometric-pressure"
       }
+    },
+    {
+      "id": "solunar-periods",
+      "label": "Solunar periods",
+      "kind": "principle",
+      "when": {},
+      "rule": "Solunar theory holds that animals move with the moon's position: major periods occur when the moon is overhead or underfoot, minor periods at moonrise and moonset, and activity is strongest around the new and full moon — conditional on stable weather and water.",
+      "citations": [
+        {
+          "claim": "solunar theory: fish and animals move with the moon's position",
+          "tier": "T3",
+          "source": "Wikipedia — Solunar theory",
+          "url": "https://en.wikipedia.org/wiki/Solunar_theory",
+          "quote": "The solunar theory is a hypothesis that fish and other animals move according to the location of the moon in comparison to their bodies.",
+          "found": true,
+          "fetched_at": "2026-10-11T01:11:35+00:00",
+          "sha256": "7f350ca108e66683",
+          "hash_basis": "raw HTTP response body, first 16 hex"
+        },
+        {
+          "claim": "Knight split the day into major (moon up/down) and minor periods",
+          "tier": "T3",
+          "source": "Wikipedia — Solunar theory",
+          "url": "https://en.wikipedia.org/wiki/Solunar_theory",
+          "quote": "there were major periods (moon up - moon down) and minor periods.",
+          "found": true,
+          "fetched_at": "2026-10-11T01:11:35+00:00",
+          "sha256": "7f350ca108e66683",
+          "hash_basis": "raw HTTP response body, first 16 hex"
+        },
+        {
+          "claim": "the first solunar table was published in 1936",
+          "tier": "T3",
+          "source": "Wikipedia — Solunar theory",
+          "url": "https://en.wikipedia.org/wiki/Solunar_theory",
+          "quote": "Knight published the first Solunar table in 1936.",
+          "found": true,
+          "fetched_at": "2026-10-11T01:11:35+00:00",
+          "sha256": "7f350ca108e66683",
+          "hash_basis": "raw HTTP response body, first 16 hex"
+        },
+        {
+          "claim": "strongest around the new and full moon, weakest at the quarters",
+          "tier": "T3",
+          "source": "Wikipedia — Solunar theory",
+          "url": "https://en.wikipedia.org/wiki/Solunar_theory",
+          "quote": "The strongest activity occurs when there is a full moon or a new moon, and is weakest when there is a quarter moon or a three quarter moon.",
+          "found": true,
+          "fetched_at": "2026-10-11T01:11:35+00:00",
+          "sha256": "7f350ca108e66683",
+          "hash_basis": "raw HTTP response body, first 16 hex"
+        },
+        {
+          "claim": "full/new moon periods are best when weather and water are stable",
+          "tier": "T2",
+          "source": "Take Me Fishing (RBFF) — Fishing Moon Phase",
+          "url": "https://www.takemefishing.org/how-to-fish/when-to-fish/fishing-moon-phase/",
+          "quote": "periods of a full or new moon tend to be the best, provided that the weather and water conditions are stable.",
+          "found": true,
+          "fetched_at": "2026-10-11T01:11:35+00:00",
+          "sha256": "7ccf38e5592f603d",
+          "hash_basis": "HTTP body with the ASP.NET __RequestVerificationToken value normalized to TOKEN (the rest is stable)"
+        },
+        {
+          "claim": "plan trips around major/minor feeding periods near sunrise or sunset that coincide with a new or full moon",
+          "tier": "T2",
+          "source": "Take Me Fishing (RBFF) — Fishing Moon Phase",
+          "url": "https://www.takemefishing.org/how-to-fish/when-to-fish/fishing-moon-phase/",
+          "quote": "try to plan your fishing trips during the major or minor feeding periods that occur near times of sunrise or sunset that also coincide with a full or new moon.",
+          "found": true,
+          "fetched_at": "2026-10-11T01:11:35+00:00",
+          "sha256": "7ccf38e5592f603d",
+          "hash_basis": "HTTP body with the ASP.NET __RequestVerificationToken value normalized to TOKEN (the rest is stable)"
+        }
+      ],
+      "provenance": {
+        "seed_author": "seo-pass/1.0",
+        "source": "Wikipedia (Solunar theory) + Take Me Fishing (RBFF) — Fishing Moon Phase",
+        "confidence": "sourced",
+        "verified_by": "sean",
+        "verified_at": "2026-10-11T01:11:35+00:00",
+        "note": "added for /glossary/solunar-periods: T3 for the theory, periods, and 1936 history; T2 for the practical fishing guidance. Quotes verbatim; sha256 stamps the fetched bodies (TMF token normalized)."
+      }
     }
   ],
   "label": "Weather & pressure principles",

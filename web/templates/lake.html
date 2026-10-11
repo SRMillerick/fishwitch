@@ -4,6 +4,12 @@
 {% if faq_jsonld %}<script type="application/ld+json">{{ faq_jsonld | tojson }}</script>{% endif %}
 {% endblock %}
 {% block content %}
+{% if lake.state %}
+<nav class="fine" aria-label="Breadcrumb">
+  <a href="/">Home</a> · <a href="/lakes">Waters</a> ·
+  <a href="/lakes/{{ lake.state | lower }}">{{ state_full }}</a> · {{ lake.name }}
+</nav>
+{% endif %}
 <p class="smallcaps">water · {{ lake.region }}</p>
 <h1>{{ lake.name }}</h1>
 
