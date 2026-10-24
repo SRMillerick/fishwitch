@@ -67,6 +67,22 @@ class WindowRouteTest(unittest.TestCase):
                 self.assertEqual(response.headers["Cache-Control"], "no-store")
             get.assert_not_called()
 
+    def test_out_of_range_dates_are_actionable_before_weather_acquisition(self):
+        clock = mock.Mock()
+        clock.now.return_value = NOW
+        payload = dict(self.payload(), availability=[dict(start="2026-10-28T08:00", end="2026-10-28T16:00")])
+        with mock.patch.object(webapp, "registry", return_value=WATERS), \
+                mock.patch.object(webapp, "datetime", clock), \
+                mock.patch.object(webapp.window_weather, "get") as get:
+            response = self.client.post("/api/window", json=payload)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.headers["Cache-Control"], "no-store")
+        self.assertEqual(response.json["field"], "availability")
+        self.assertIn("2026-10-21 through 2026-10-27", response.json["error"])
+        self.assertIn("both dates included", response.json["error"])
+        self.assertNotIn(BIRTH["date"], response.get_data(as_text=True))
+        get.assert_not_called()
+
     def test_provider_and_calculation_errors_are_redacted(self):
         clock = mock.Mock()
         clock.now.return_value = NOW

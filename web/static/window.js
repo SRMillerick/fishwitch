@@ -8,11 +8,36 @@ function addCalendarDays(value, count) {
   return day.toISOString().slice(0, 10);
 }
 
-function buildAvailability(first, last, from, until) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(first) || !/^\d{4}-\d{2}-\d{2}$/.test(last)
-      || !/^\d{2}:\d{2}$/.test(from) || !/^\d{2}:\d{2}$/.test(until)
-      || last < first || last > addCalendarDays(first, 6)) {
-    throw new Error("Choose up to seven dates and confirm your available hours.");
+function calendarLabel(value) {
+  return new Intl.DateTimeFormat("en-US", {timeZone:"UTC", weekday:"short", month:"short", day:"numeric"})
+    .format(new Date(value + "T12:00:00Z"));
+}
+
+function isCalendarDay(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const day = new Date(value + "T12:00:00Z");
+  return !Number.isNaN(day.getTime()) && day.toISOString().slice(0, 10) === value;
+}
+
+function availabilityError(input, message) {
+  const error = new Error(message); error.input = input;
+  return error;
+}
+
+function buildAvailability(first, last, from, until, today = null) {
+  if (!isCalendarDay(first)) throw availabilityError("first-date", "Choose a valid first date.");
+  if (!isCalendarDay(last)) throw availabilityError("last-date", "Choose a valid last date.");
+  if (!/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(from)) throw availabilityError("from-time", "Choose a valid available-from time.");
+  if (!/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(until)) throw availabilityError("until-time", "Choose a valid available-until time.");
+  if (last < first) throw availabilityError("last-date", "The last date must be on or after the first date.");
+  const latest = today ? addCalendarDays(today, 6) : addCalendarDays(first, 6);
+  if (today && first < today) throw availabilityError("first-date", `That first date has passed at this water. Choose ${calendarLabel(today)} or later, through ${calendarLabel(latest)}.`);
+  if (today && first > latest) throw availabilityError("first-date", `The first date is beyond the forecast range. Choose ${calendarLabel(today)} through ${calendarLabel(latest)}.`);
+  const count = Math.round((Date.parse(last + "T12:00:00Z") - Date.parse(first + "T12:00:00Z")) / 86400000) + 1;
+  if (count > 7) throw availabilityError("last-date", `That range includes ${count} dates. The limit is 7, counting both the first and last date. Choose a last date no later than ${calendarLabel(latest)}.`);
+  if (today && last > latest) throw availabilityError("last-date", `Forecasts currently end ${calendarLabel(latest)}. Set the last date to ${calendarLabel(latest)} or earlier; the seven forecast dates include today.`);
+  if (today && last === latest && until <= from && until !== "00:00") {
+    throw availabilityError("until-time", `On ${calendarLabel(latest)}, these hours run into the next day, beyond the forecast range. Choose an earlier last date or end at midnight (00:00).`);
   }
   const rows = [];
   for (let day = first; day <= last; day = addCalendarDays(day, 1)) {
@@ -93,7 +118,7 @@ if (typeof document !== "undefined") (function () {
     document.querySelectorAll(".error").forEach(node => { node.hidden = true; node.textContent = ""; });
     form.querySelectorAll("[aria-invalid]").forEach(node => node.removeAttribute("aria-invalid"));
   }
-  function error(field, message) {
+  function error(field, message, inputId = null, focus = true) {
     let name = field.replaceAll(".", "-").replaceAll("_", "-");
     if (name.startsWith("birth-") && !["birth-date", "birth-time"].includes(name)) name = "birth-place";
     if (["daylight", "duration"].includes(name)) name = "availability";
@@ -103,9 +128,13 @@ if (typeof document !== "undefined") (function () {
     $("setup").open = true;
     const group = node.closest("details.group");
     if (group) group.open = true;
-    const input = ({"birth-date":"birth-date", "birth-time":"birth-time", "birth-place":"birth-place",
+    const input = inputId || ({"birth-date":"birth-date", "birth-time":"birth-time", "birth-place":"birth-place",
                     "water-id":"water", "availability":"first-date", "duration-minutes":"duration"})[name];
-    if (input) { $(input).setAttribute("aria-invalid", "true"); $(input).focus(); }
+    if (input) $(input).setAttribute("aria-invalid", "true");
+    if (focus) {
+      if (input) $(input).focus();
+      node.scrollIntoView({block:"nearest"});
+    }
   }
   function capture() {
     return {version:1, precision:precision(), birthDate:$("birth-date").value, birthTime:$("birth-time").value,
@@ -137,19 +166,42 @@ if (typeof document !== "undefined") (function () {
     $("submit-window").disabled = false;
     $("submit-window").textContent = "Find my window";
     clearErrors();
+    refreshAvailability();
     save();
+  }
+  function refreshAvailability(showErrors = true) {
+    const today = waterNow()?.slice(0, 10);
+    const latest = today ? addCalendarDays(today, 6) : null;
+    $("forecast-dates").textContent = today
+      ? `Available forecast dates: ${calendarLabel(today)} – ${calendarLabel(latest)}. Today counts as day 1; both the first and last date are included.`
+      : "Choose a water to see the available forecast dates. Both the first and last date count toward the seven-day limit.";
+    for (const id of ["first-date", "last-date"]) {
+      if (today) { $(id).min = today; $(id).max = latest; }
+      else { $(id).removeAttribute("min"); $(id).removeAttribute("max"); }
+    }
+    $("date-range-status").textContent = "";
+    for (const id of ["first-date", "last-date", "from-time", "until-time"]) $(id).removeAttribute("aria-invalid");
+    $("error-availability").hidden = true; $("error-availability").textContent = "";
+    if (!["first-date", "last-date", "from-time", "until-time"].every(id => $(id).value)) return;
+    try {
+      const rows = buildAvailability($("first-date").value, $("last-date").value, $("from-time").value, $("until-time").value, today);
+      $("date-range-status").textContent = `${rows.length} ${rows.length === 1 ? "date" : "dates"} selected.`;
+    } catch (err) {
+      if (showErrors) error("availability", err.message, err.input, false);
+    }
   }
   function refreshWater() {
     const zone = waterZone();
     $("water-zone").textContent = zone ? "All trip times: " + zone : "All trip times use the water’s timezone.";
     if (!zone) {
       if ($("water").value) error("water_id", "This water needs a confirmed timezone. Choose another listed water.");
+      refreshAvailability(false);
       return;
     }
     const today = waterNow().slice(0, 10);
-    for (const id of ["first-date", "last-date"]) { $(id).min = today; $(id).max = addCalendarDays(today, 6); }
     if (!$("first-date").value) $("first-date").value = today;
     if (!$("last-date").value) $("last-date").value = addCalendarDays(today, 2);
+    refreshAvailability(!restoring);
   }
   function restore(data) {
     if (!data || data.version !== 1) return false;
@@ -367,9 +419,10 @@ if (typeof document !== "undefined") (function () {
     const task = requests.next();
     $("result").hidden = true;
     if (!$("water").value) { error("water_id", "Choose a listed water first."); return; }
+    refreshAvailability(false);
     let availability;
-    try { availability = buildAvailability($("first-date").value, $("last-date").value, $("from-time").value, $("until-time").value); }
-    catch (err) { error("availability", err.message); return; }
+    try { availability = buildAvailability($("first-date").value, $("last-date").value, $("from-time").value, $("until-time").value, waterNow()?.slice(0, 10)); }
+    catch (err) { error("availability", err.message, err.input); return; }
     let birth = null;
     if (precision() === "known") {
       if (!place) {
@@ -438,7 +491,7 @@ if (typeof document !== "undefined") (function () {
     $("birth-summary").textContent = "1. Your birth details"; $("water-summary").textContent = "2. Your water";
     $("water-zone").textContent = "All trip times use the water’s timezone.";
     $("submit-window").disabled = false; $("submit-window").textContent = "Find my window";
-    clearErrors(); birthFields(); restoring = false;
+    clearErrors(); refreshAvailability(false); birthFields(); restoring = false;
     $("status").textContent = "Your active birth details and this page’s saved settings have been forgotten.";
   });
 
@@ -457,11 +510,11 @@ if (typeof document !== "undefined") (function () {
   refreshWater(); birthFields(); restoring = false;
   if (restored && waterZone()) {
     try {
-      const rows = buildAvailability($("first-date").value, $("last-date").value, $("from-time").value, $("until-time").value);
+      const rows = buildAvailability($("first-date").value, $("last-date").value, $("from-time").value, $("until-time").value, waterNow().slice(0, 10));
       if (rows.every(row => row.end <= waterNow())) {
         error("availability", "Your saved trip has passed. Choose new availability; your other settings are here.");
       } else { form.requestSubmit(); }
-    } catch { error("availability", "Confirm new availability; your other settings are here."); }
+    } catch (err) { error("availability", err.message, err.input); }
   }
   // Update an existing legacy worker so its old homepage cache is retired.
   // This page does not install a service worker or cache personal results.

@@ -64,14 +64,17 @@
         <summary id="availability-summary">3. When you can go</summary>
         <fieldset><legend class="sr-only">Confirm dates, hours, and session length</legend>
           <p class="hint">The next three days are a suggestion. Edit these dates and hours to match your plans; submitting confirms this availability.</p>
-          <div class="pair"><label>First date<input id="first-date" type="date" aria-describedby="error-availability"></label>
-            <label>Last date<input id="last-date" type="date" aria-describedby="error-availability"></label></div>
-          <div class="pair"><label>Available from<input id="from-time" type="time" value="06:00"></label>
-            <label>Available until<input id="until-time" type="time" value="20:00"></label></div>
-          <p class="hint">An end time at or before the start means the following morning. Up to seven days.</p>
+          <p id="forecast-dates" class="hint">Choose a water to see the available forecast dates. Both the first and last date count toward the seven-day limit.</p>
+          <div class="pair"><label>First date<input id="first-date" type="date" aria-describedby="forecast-dates date-range-status error-availability"></label>
+            <label>Last date (included)<input id="last-date" type="date" aria-describedby="forecast-dates date-range-status error-availability"></label></div>
+          <p id="date-range-status" class="hint" role="status" aria-live="polite"></p>
+          <p id="error-availability" class="error" role="alert" hidden></p>
+          <div class="pair"><label>Available from<input id="from-time" type="time" value="06:00" aria-describedby="hours-help error-availability"></label>
+            <label>Available until<input id="until-time" type="time" value="20:00" aria-describedby="hours-help error-availability"></label></div>
+          <p id="hours-help" class="hint">An end time at or before the start means the next day. Overnight availability must also end within the forecast range.</p>
           <div class="pair"><label>Session length<select id="duration"><option value="60">1 hour</option><option value="90">1½ hours</option><option value="120" selected>2 hours</option><option value="180">3 hours</option><option value="240">4 hours</option></select></label>
             <label class="check"><input id="daylight" type="checkbox" checked> Daylight only</label></div>
-          <p id="error-availability" class="error" hidden></p><p id="error-duration-minutes" class="error" hidden></p>
+          <p id="error-duration-minutes" class="error" hidden></p>
         </fieldset>
       </details>
       <label class="check remember"><input id="remember" type="checkbox"> Remember on this device</label>

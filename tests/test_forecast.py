@@ -70,6 +70,34 @@ class InputContractTest(unittest.TestCase):
         req = request(availability=[dict(start="2026-10-23T08:00", end="2026-10-23T09:00")])
         self.assertEqual(fc.calculate(req, snapshot(req), sky(req))["status"], "no_session")
 
+    def test_seven_calendar_dates_and_exact_midnight_deadline_are_allowed(self):
+        from zoneinfo import ZoneInfo
+        zone = ZoneInfo(WATERS["synthetic"]["tz"])
+        today = NOW.astimezone(zone).date()
+        last = today + timedelta(days=6)
+        intervals = [dict(start=f"{today + timedelta(days=i)}T08:00", end=f"{today + timedelta(days=i)}T20:00")
+                     for i in range(7)]
+        req = request(availability=intervals, birth=None)
+        self.assertEqual(len(req.availability), 7)
+        self.assertEqual(req.availability[-1].end.astimezone(zone).date(), last)
+        deadline = last + timedelta(days=1)
+        overnight = request(availability=[dict(start=f"{last}T22:00", end=f"{deadline}T00:00")], birth=None)
+        self.assertEqual(overnight.availability[-1].end.astimezone(zone).isoformat(), f"{deadline}T00:00:00-07:00")
+
+    def test_forecast_horizon_errors_name_dates_timezone_and_overnight_deadline(self):
+        from zoneinfo import ZoneInfo
+        zone = ZoneInfo(WATERS["synthetic"]["tz"])
+        today = NOW.astimezone(zone).date()
+        last = today + timedelta(days=6)
+        deadline = today + timedelta(days=7)
+        for start, end in ((f"{deadline}T08:00", f"{deadline}T10:00"),
+                           (f"{last}T22:00", f"{deadline}T00:01")):
+            with self.subTest(start=start, end=end), self.assertRaises(fc.InputError) as caught:
+                request(availability=[dict(start=start, end=end)], birth=None)
+            self.assertEqual(caught.exception.field, "availability")
+            for text in (str(today), str(last), "both dates included", zone.key, f"{deadline} at 00:00", "overnight"):
+                self.assertIn(text, caught.exception.message)
+
     def test_dst_gap_fold_offsets_and_elapsed_duration(self):
         from zoneinfo import ZoneInfo
         zone = ZoneInfo("America/Los_Angeles")

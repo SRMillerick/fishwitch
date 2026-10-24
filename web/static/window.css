@@ -36,7 +36,7 @@ input[type=checkbox],input[type=radio] { width:1.1rem; height:1.1rem; accent-col
 .error { color:var(--error); font-size:.94rem; }
 [aria-invalid=true] { border-color:var(--error)!important; }
 .message { padding:.8rem 1rem; background:var(--panel); border-left:3px solid var(--water); }
-#status:empty { display:none; }
+#status:empty,#date-range-status:empty { display:none; }
 #status { color:var(--dim); }
 #result { padding:2rem 0 1.5rem; }
 .has-result header { margin-bottom:1rem; }

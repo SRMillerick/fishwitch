@@ -36,4 +36,32 @@ assert.match(personalTimingLabel({...best,personal_events:[],personal_contributi
 assert.match(personalTimingLabel(best, true), /Supportive/);
 assert.match(personalTimingLabel({...best,personal_contribution:-1,personal_events:[{contribution:-1}]}, true), /Challenging/);
 assert.match(personalTimingLabel({...best,personal_contribution:0,personal_events:[{contribution:-1},{contribution:1}]}, true), /Mixed/);
-console.log('20 window calendar, request-state, and comparison scenarios passed');
+const validRanges = [
+  [['2026-10-24', '2026-10-30', '06:00', '20:00', '2026-10-24'], 7, '2026-10-30T20:00'],
+  [['2026-10-30', '2026-10-30', '06:00', '20:00', '2026-10-24'], 1, '2026-10-30T20:00'],
+  [['2026-12-29', '2027-01-04', '06:00', '20:00', '2026-12-29'], 7, '2027-01-04T20:00'],
+  [['2026-11-01', '2026-11-07', '06:00', '20:00', '2026-11-01'], 7, '2026-11-07T20:00'],
+  [['2026-10-24', '2026-10-30', '22:00', '00:00', '2026-10-24'], 7, '2026-10-31T00:00'],
+  [['2026-10-24', '2026-10-29', '22:00', '03:00', '2026-10-24'], 6, '2026-10-30T03:00'],
+];
+for (const [args, count, end] of validRanges) {
+  const rows = buildAvailability(...args);
+  assert.equal(rows.length, count);
+  assert.equal(rows.at(-1).end, end);
+}
+const invalidRanges = [
+  [['2026-10-24', '2026-10-31', '06:00', '20:00', '2026-10-24'], 'last-date', /8 dates.*limit is 7/],
+  [['2026-10-23', '2026-10-25', '06:00', '20:00', '2026-10-24'], 'first-date', /passed/],
+  [['2026-10-31', '2026-10-31', '06:00', '20:00', '2026-10-24'], 'first-date', /beyond the forecast range/],
+  [['2026-10-25', '2026-10-31', '06:00', '20:00', '2026-10-24'], 'last-date', /Forecasts currently end Fri, Oct 30/],
+  [['2026-10-26', '2026-10-25', '06:00', '20:00', '2026-10-24'], 'last-date', /on or after the first/],
+  [['2026-02-30', '2026-03-01', '06:00', '20:00'], 'first-date', /valid first date/],
+  [['2026-02-28', '2026-02-30', '06:00', '20:00'], 'last-date', /valid last date/],
+  [['2026-10-24', '2026-10-24', '24:00', '20:00'], 'from-time', /available-from/],
+  [['2026-10-24', '2026-10-24', '06:00', '20:60'], 'until-time', /available-until/],
+  [['2026-10-24', '2026-10-30', '22:00', '03:00', '2026-10-24'], 'until-time', /earlier last date or end at midnight/],
+];
+for (const [args, input, message] of invalidRanges) {
+  assert.throws(() => buildAvailability(...args), error => error.input === input && message.test(error.message));
+}
+console.log(`20 existing window scenarios plus ${validRanges.length + invalidRanges.length} date-range scenarios passed`);

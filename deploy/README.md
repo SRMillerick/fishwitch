@@ -5,7 +5,53 @@ archive is the development/rollback history and must never be pushed publicly.
 Initial provisioning instructions below are historical setup guidance, not a
 reason to reprovision or upgrade the running site.
 
-## Technical release preparation — 2026-10-24
+## Live release — 2026-10-24
+
+Deployed at **13:45:48 UTC** through `./deploy/deploy.sh`:
+
+| Role | Revision |
+| --- | --- |
+| Private source checkpoint | `f062af2719c62846cfaa42acda4a6c240e924c1f` |
+| Sanitized public mirror / deployed pinned HEAD | `4606bcc270bb2d7ac5178c32bcf76777ea22db53` |
+| Previous public revision / rollback target | `b399628afa376ad8b882a7af1427437d43b553be` |
+| Unchanged static gh-pages | `320c3bb59e24b5b46a1167683f6c43fcecbe2760` |
+
+**Initial production acceptance passed; no recovery was needed.** HTTPS serves
+the new calculation-free form. Synthetic personal/shared calculations and place
+lookup pass; results/errors are `no-store`, and invalid/oversized requests return
+400/413. The real production v3 worker was installed in a disposable browser
+before cutover; afterward v4 updated, purged old caches, preserved the synthetic
+vault, imported it explicitly and rendered a result at 375px without birth data
+in URLs or third-party new-page requests. Home/API are absent from Cache Storage.
+
+Active proxy/service configuration and synthetic log probes show no request-body
+capture; ordinary IP/path/status/UA access logging remains. A spoofed forwarded-IP
+probe confirms the single trusted proxy hop. Venv/profile hashes and inodes and
+log inodes survived; Caddy's PID is unchanged, all three services/timer are active,
+and production still has no tracked edits (preserve untracked `venv/`).
+
+Small performance samples: HTTPS form **144.3 ms median** (n=5); personal API
+**197.2 ms median, 941.4 ms max** (n=4); frozen six-day core **61.58 ms median,
+109.10 ms max** on the VPS (n=12). Not a load test, SLA or controlled cold-cache
+audit. Unavailable/excluded, redacted 503 and 429 states were tested separately in
+an isolated process using deployed code with network blocked, **not by injecting
+faults into live workers**. The retained `/legacy` route still takes ~15 seconds
+cold and still uses old enrichment; do not conflate it with new-core latency.
+
+Both private and exact sanitized release trees pass **374 offline Python tests,
+20 window JS scenarios, eight legacy JS scenarios and real Chromium acceptance**.
+Check exclusions on the pristine prepared tree, before tests generate synthetic
+runtime logs. The release ran the existing IndexNow ping (200, 130 URLs), but did
+not publish the static snapshot, change DNS, add dependencies/services/spending or
+retire legacy consumers. The first natural warmer ran **13:56:06–13:56:32 UTC**,
+exit 0, with **all six HTTP responses confirmed 200** in the access log. The new
+form stayed healthy and no worker traceback/timeout appeared through that run.
+Continue observation; this is not long-running stability/privacy proof.
+
+The post-release record is a private documentation checkpoint, not another deploy.
+See the latest private handoff for full evidence and future stabilization notes.
+
+## Release and rollback procedure — prepared 2026-10-24
 
 `deploy.sh` now supports a pinned public-revision rollback, with local HTTP/service
 health checks and automatic recovery to the preceding deployed revision. The
@@ -45,7 +91,7 @@ runtime data/non-example profiles. Public-history isolation, dotfile removal and
 no-op publication are tested using a local synthetic public repo. Failed commits
 are no longer treated as successful no-ops; temporary clone cleanup is automatic.
 
-Production read-only verification: still public `b399628`, no tracked edits, untracked
+Pre-cutover read-only verification: public `b399628`, no tracked edits, untracked
 `venv/` retained; two gunicorn workers × four threads, loopback bind, 120-second
 legacy timeout, unchanged 15-minute warmer. Six pinned dependencies match. Caddy's
 **active configuration** has no access/body logging or extra trusted proxy hops;
@@ -63,8 +109,8 @@ The historical ~$6/month estimate is not a newly audited invoice total.
 Worktree verification: **374 offline Python tests, 20 window JS scenarios, eight
 legacy JS scenarios and real Chromium acceptance**, including v3→v4 worker update,
 old-cache purge, no home/API caching, offline behavior and saved-data preservation.
-Final sanitized-tree and production acceptance remain separate gates.
-This preparation itself has not published or deployed anything.
+Sanitized-tree and initial production acceptance subsequently passed as recorded
+above. Preparation tests themselves did not touch production services.
 
 ## Prior release preflight — 2026-10-23
 

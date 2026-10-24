@@ -214,7 +214,9 @@ def normalize_request(payload: dict, waters: dict, evaluated_at: datetime) -> Fo
         if start >= end:
             raise InputError("availability", "The end must follow the start, including overnight trips.")
         if start.astimezone(zone).date() < today or end > limit:
-            raise InputError("availability", "Choose dates from today through the next seven days.")
+            last_date = today + timedelta(days=6)
+            deadline = today + timedelta(days=7)
+            raise InputError("availability", f"Choose availability from {today.isoformat()} through {last_date.isoformat()}, both dates included, in {zone.key}. End no later than {deadline.isoformat()} at 00:00; choose an earlier last date for an overnight trip.")
         if end > now:
             intervals.append(Interval(max(start, now), end))
     if not intervals:
