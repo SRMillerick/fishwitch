@@ -233,7 +233,7 @@ class InternalHopTest(unittest.TestCase):
             self.assertIn("src=fb-w1-fain", h)
 
     def test_home_hops_carry_the_tag_when_they_render(self):
-        for h in [x for x in self._hops("/?src=fb-w1-fain") if x.startswith("/report?")]:
+        for h in [x for x in self._hops("/legacy?src=fb-w1-fain") if x.startswith("/report?")]:
             self.assertIn("src=fb-w1-fain", h)
 
     def test_no_hop_renders_a_malformed_src(self):

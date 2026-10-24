@@ -86,7 +86,7 @@ function profileError(p) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(b.date || "")) return "birth.date: YYYY-MM-DD";
   const y = +b.date.slice(0, 4);
   if (y < 1850 || y > 2100) return "birth.date: between 1850 and 2100";
-  if (!/^\d{2}:\d{2}$/.test(b.time || "")) return "birth.time: HH:MM (24h)";
+  if (b.time_known !== false && !/^\d{2}:\d{2}$/.test(b.time || "")) return "birth.time: HH:MM (24h)";
   if (!(Math.abs(+b.lat) <= 90 && Math.abs(+b.lng) <= 180)) return "birth lat/lng out of range";
   if (p.arsenal !== undefined && (!Array.isArray(p.arsenal) || p.arsenal.length > 30
       || p.arsenal.some(a => typeof a !== "string" || a.length > 60)))
@@ -310,7 +310,7 @@ if (ledgerRows) {
         `<span class="rig">${esc(r.rig)}</span>` +
         `<span class="score">${r.overall}<i>/10</i></span></a></li>`).join("");
       if (note) note.textContent = j.rows.length
-        ? `Best upcoming windows for ${p.name} — transits + tackle, nearest waters.`
+        ? (j.personalized ? `Personal windows for ${p.name}.` : "Shared-only windows — no precise birth timing used.")
         : "no scorable windows in range";
     }).catch(() => { ledgerRows.innerHTML = ""; });
   }
@@ -434,30 +434,50 @@ if (ledgerRows && watersEl) {
 // ── report form: POST the active profile with the query ────────────────────
 const form = document.getElementById("report-form");
 if (form) {
-  { // whose profile will this render use? say so up front
+  let reportSequence = 0;
+  let reportController = null;
+  { // A server-rendered GET is always shared-only, even with an active profile.
     const note = document.getElementById("profile-note");
     const p0 = getActive();
-    if (note) note.className = "pill " + (p0 ? "on" : "");
     if (note) note.textContent = p0
-      ? "Rendering as " + p0.name + " — transits + tackle · profile stays in this browser"
-      : "Rendering anonymously — build a profile for transits + your tackle →";
+      ? "Shared-only report shown. Calculating with your saved details uses a server request."
+      : "Shared-only report — no birth details used.";
   }
+  function invalidateReport() {
+    ++reportSequence;
+    if (reportController) reportController.abort();
+    document.getElementById("report-out").textContent = "Inputs changed. Generate to calculate this selection.";
+    const note = document.getElementById("profile-note");
+    if (note) note.textContent = "No result for the current selection yet.";
+  }
+  form.addEventListener("input", invalidateReport);
+  form.addEventListener("change", invalidateReport);
   form.addEventListener("submit", async (ev) => {
     ev.preventDefault();
+    const sequence = ++reportSequence;
+    if (reportController) reportController.abort();
+    reportController = new AbortController();
     const f = new FormData(form);
-    const date = f.get("date") || new Date().toISOString().slice(0, 10);
+    const date = f.get("date");
+    if (!date) {
+      document.getElementById("report-out").textContent = "Choose your available date first.";
+      return;
+    }
     const time = f.get("time") || "18:00";
     const payload = {
       lake: f.get("lake"), at: date + " " + time,
+      lat: f.get("lat"), lng: f.get("lng"),
       hours: f.get("hours"), voice: f.get("voice"), species: f.get("species"),
       bottom: f.get("bottom"), clarity: f.get("clarity"),
       profile: getActive() || undefined,
     };
     // The water is now the workflow's water: remember it and put it in the URL
     // so nav, the step rail, and a refresh all keep the same lake.
-    try { localStorage.setItem("bm-lake-v1", f.get("lake") || ""); } catch (e) {}
+    if (f.get("lake")) {
+      try { localStorage.setItem("bm-lake-v1", f.get("lake")); } catch (e) {}
+    }
     const keep = new URLSearchParams();
-    for (const k of ["lake", "hours", "voice", "species", "bottom", "clarity"])
+    for (const k of ["lake", "lat", "lng", "hours", "voice", "species", "bottom", "clarity"])
       if (f.get(k)) keep.set(k, f.get(k));
     keep.set("at", date + " " + time);
     history.replaceState(null, "", "/report?" + keep.toString());
@@ -482,22 +502,25 @@ if (form) {
     }
     const out = document.getElementById("report-out");
     out.innerHTML = '<p class="fine">casting…</p>';
+    const note = document.getElementById("profile-note");
+    if (note) note.textContent = "Calculating the current selection…";
     try {
       const r = await fetch("/api/report", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
+        signal: reportController.signal,
       });
       const j = await r.json();
+      if (sequence !== reportSequence) return;
       if (j.error) {
+        if (note) note.textContent = "No result — check the details below.";
         out.innerHTML = '<p class="error">' + esc(j.error)
           + (j.details ? "<br>" + esc(j.details.join("; ")) : "") + "</p>";
         return;
       }
-      const p = getActive();
-      const note = document.getElementById("profile-note");
-      if (note) note.textContent = p
-        ? `Rendered with ${p.name}'s profile (transits + tackle) — profile stays in this browser.`
-        : "Rendering anonymously — pick or create a profile for transits + tackle.";
+      if (note) note.textContent = j.personalized
+        ? "Personal timing calculated from your birth details."
+        : "Shared-only report — no precise birth timing used.";
       out.innerHTML =
         '<div class="scorebar">overall <strong>' + j.overall + "/10</strong> · " + esc(j.lake) + "</div>"
         + j.html + renderTackle(j.rods) + renderTrends(j.trends) + renderShopping(j.shopping) + renderGap(j.gap)
@@ -510,9 +533,15 @@ if (form) {
         }).toString();
       }
     } catch (e) {
-      out.innerHTML = '<p class="error">render failed: ' + esc(String(e)) + "</p>";
+      if (sequence !== reportSequence || e.name === "AbortError") return;
+      if (note) note.textContent = "No current result. Try generating again.";
+      out.innerHTML = '<p class="error">Calculation unavailable. Please try again.</p>';
     }
   });
+  // Personal links carry public trip state only. Recompute via POST once the
+  // browser has restored its profile; never relabel the anonymous GET result.
+  if (getActive() && new URLSearchParams(location.search).get("at")
+      && form.querySelector('[name="date"]').value) form.requestSubmit();
 }
 
 function buildList(entryId, comps, src) {

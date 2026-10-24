@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ seo.title }}</title>
+  <meta name="description" content="{{ seo.description }}">
+  <link rel="canonical" href="https://baromoon.com/">
+  <meta property="og:title" content="{{ seo.title }}">
+  <meta property="og:description" content="{{ seo.description }}">
+  <meta property="og:image" content="{{ seo.og_image }}">
+  {% for block in seo.jsonld %}<script type="application/ld+json">{{ block | tojson }}</script>{% endfor %}
+  <meta name="theme-color" content="#f7f5ef">
+  <link rel="icon" href="/static/favicon.svg?v={{ asset_v }}" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/window.css?v={{ asset_v }}">
+  <script src="/static/window.js?v={{ asset_v }}" defer></script>
+</head>
+<body>
+<main>
+  <header>
+    <a href="/" class="brand"><span class="mark" aria-hidden="true"></span>baromoon</a>
+    <h1>Your next fishing window.</h1>
+    <p class="intro">Personal fishing times, calculated from your birth chart.<br>Your water. Your available time. One clear reason.</p>
+  </header>
+  <noscript><p class="message">Enable JavaScript to calculate a window on this page. Your birth details are sent in a private request, never in a URL.</p></noscript>
+  <p id="status" role="status" aria-live="polite"></p>
+  <details id="setup" open>
+    <summary id="setup-summary">Choose your water, birth details, and availability</summary>
+    <form id="window-form" novalidate>
+      <details class="group" id="birth-group" open>
+        <summary id="birth-summary">1. Your birth details</summary>
+        <fieldset>
+          <legend class="sr-only">Birth details and precision</legend>
+          <p class="hint">Your birth chart changes the timing calculation. No name needed. Astrology is an interpretation, not a promise of more fish.</p>
+          <div class="choice"><label><input type="radio" name="precision" value="known" checked> I know my birth time</label>
+          <label><input type="radio" name="precision" value="unknown"> I don’t know my birth time</label>
+          <label><input type="radio" name="precision" value="none"> Continue without birth details</label></div>
+          <p id="shared-hint" class="hint" hidden>Shared local almanac only. No precise birth personalization will be calculated.</p>
+          <div id="birth-fields">
+            <div class="pair"><label>Birth date<input id="birth-date" type="date" autocomplete="bday" aria-describedby="error-birth-date"></label>
+            <label>Birth time<input id="birth-time" type="time" aria-describedby="error-birth-time"></label></div>
+            <p class="error" id="error-birth-date" hidden></p><p class="error" id="error-birth-time" hidden></p>
+            <label for="birth-place">Birthplace city or town</label>
+            <input id="birth-place" type="search" autocomplete="off" maxlength="120" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="place-suggestions" aria-describedby="place-help place-confirmed error-birth-place">
+            <ul id="place-suggestions" role="listbox" aria-label="Matching birthplaces" hidden></ul>
+            <p class="hint" id="place-help">Start typing, then choose your city. Only the place name is sent to the lookup service.</p>
+            <p id="place-confirmed" class="hint" role="status" aria-live="polite"></p><p id="error-birth-place" class="error" hidden></p>
+          </div>
+          <button type="button" id="use-legacy" class="text-button" hidden>Use birth details saved in the earlier version</button>
+        </fieldset>
+      </details>
+      <details class="group" id="water-group" open>
+        <summary id="water-summary">2. Your water</summary>
+        <fieldset><legend class="sr-only">Choose an existing water</legend>
+          <label>Water<select id="water" aria-describedby="water-zone error-water-id" data-selected="{{ selected }}">
+            <option value="">Choose a water</option>
+            {% for water in waters %}<option value="{{ water.id }}" data-tz="{{ water.tz }}">{{ water.name }}</option>{% endfor %}
+          </select></label>
+          <p id="water-zone" class="hint">All trip times use the water’s timezone.</p>
+          <p id="error-water-id" class="error" hidden></p>
+        </fieldset>
+      </details>
+      <details class="group" id="availability-group" open>
+        <summary id="availability-summary">3. When you can go</summary>
+        <fieldset><legend class="sr-only">Confirm dates, hours, and session length</legend>
+          <p class="hint">The next three days are a suggestion. Edit these dates and hours to match your plans; submitting confirms this availability.</p>
+          <div class="pair"><label>First date<input id="first-date" type="date" aria-describedby="error-availability"></label>
+            <label>Last date<input id="last-date" type="date" aria-describedby="error-availability"></label></div>
+          <div class="pair"><label>Available from<input id="from-time" type="time" value="06:00"></label>
+            <label>Available until<input id="until-time" type="time" value="20:00"></label></div>
+          <p class="hint">An end time at or before the start means the following morning. Up to seven days.</p>
+          <div class="pair"><label>Session length<select id="duration"><option value="60">1 hour</option><option value="90">1½ hours</option><option value="120" selected>2 hours</option><option value="180">3 hours</option><option value="240">4 hours</option></select></label>
+            <label class="check"><input id="daylight" type="checkbox" checked> Daylight only</label></div>
+          <p id="error-availability" class="error" hidden></p><p id="error-duration-minutes" class="error" hidden></p>
+        </fieldset>
+      </details>
+      <label class="check remember"><input id="remember" type="checkbox"> Remember on this device</label>
+      <p id="storage-note" class="hint" role="status" hidden></p>
+      <p class="hint">Otherwise, settings last only for this browser tab. Birth details are sent to the server to calculate your window, with no intentional server retention.</p>
+      <button id="submit-window" type="submit">Find my window</button>
+      <p id="error-request" class="error" role="alert" hidden></p>
+    </form>
+  </details>
+  <section id="result" aria-label="Recommended fishing window" hidden tabindex="-1">
+    <p class="eyebrow"><span id="result-water"></span><span aria-hidden="true"> · </span><span id="result-mode"></span></p>
+    <h2 id="result-day"></h2>
+    <p id="result-time" class="session-time"></p>
+    <p id="result-duration" class="hint"></p>
+    <p id="result-reason" class="reason"></p>
+    <p id="result-weather"></p>
+    <div class="disclosures">
+      <details id="why"><summary>Why this window?</summary><div id="why-content"></div></details>
+      <details id="other"><summary>Compare windows</summary><div id="other-content"></div></details>
+    </div>
+    <p id="result-updated" class="hint"></p>
+  </section>
+  <footer>
+    <details id="privacy"><summary>Privacy &amp; method</summary>
+      <p>Your birth details travel to this server in a POST request, not a URL. The application does not intentionally retain personal requests or results. The shared cache contains weather only. No account, analytics, or third-party browser requests are used by this page.</p>
+      <p>Optional device storage remembers settings, never calculated results. “Forget my details” clears this page’s settings and the active older profile; other older profiles are retained.</p>
+      <p>Weather: <a href="https://open-meteo.com/" rel="noreferrer">Open-Meteo</a>, with data attribution under <a href="https://creativecommons.org/licenses/by/4.0/" rel="noreferrer">CC BY 4.0</a>. Astronomy: Swiss Ephemeris through pyswisseph and Kerykeion, with an explicit Moshier backend. Calculation and timezone versions appear with each result.</p>
+      <p>Moon sextiles and trines to your natal Moon, Venus, or Jupiter add one personal contribution; squares and oppositions subtract one. Only exact events during the session count, capped at ±2. Weather bands come first, then personal timing, shared Moon timing, gusts, rainfall, and earlier start.</p>
+      <p>Birthplace lookup sends the typed city name to Open-Meteo’s geocoder. No birth date or birth time is sent to the lookup provider.</p>
+      <details id="calculation-details" hidden><summary>Calculation details</summary><div id="calculation-content"></div></details>
+    </details>
+    <button type="button" id="forget" class="text-button">Forget my details</button>
+    <div id="forget-confirm" hidden><p>Clear this page’s saved settings and the active older profile on this device?</p><button id="confirm-forget" type="button" class="secondary">Forget on this device</button> <button id="cancel-forget" type="button" class="text-button">Cancel</button></div>
+    <p class="hint">An astrological almanac, not a catch prediction. Check local weather warnings and access before going.</p>
+  </footer>
+</main>
+</body>
+</html>

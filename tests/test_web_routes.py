@@ -202,8 +202,8 @@ class LegacyUrlRedirectTest(unittest.TestCase):
         self.assertIn("Disallow: /out/", body)
 
 
-class LandingLedgerTest(unittest.TestCase):
-    """The landing page accepts a lake and embeds the registry for the
+class LegacyLandingLedgerTest(unittest.TestCase):
+    """The retained /legacy page accepts a lake and embeds the registry for the
     browser-side nearest-water pick. No network: the heavy report/ledger
     builders are mocked."""
 
@@ -222,7 +222,8 @@ class LandingLedgerTest(unittest.TestCase):
 
         with mock.patch.object(webapp, "_report_response", side_effect=fake_report), \
                 mock.patch.object(webapp, "_ledger", return_value=[]):
-            html = self.c.get(path).get_data(as_text=True)
+            route = "/legacy" + path[1:] if path == "/" or path.startswith("/?") else path
+            html = self.c.get(route).get_data(as_text=True)
         return html, seen
 
     def test_lake_param_selects_the_water(self):

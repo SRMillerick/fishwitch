@@ -71,11 +71,22 @@ class PostSrcTest(unittest.TestCase):
 
 
 class WeekendDatesTest(unittest.TestCase):
-    def test_only_saturday_and_sunday(self):
-        days = cli._weekend_dates(14)
-        self.assertTrue(days, "a 14-day horizon should contain a weekend")
-        for d in days:
-            self.assertIn(d.weekday(), (5, 6))
+    def test_returns_a_saturday_and_sunday(self):
+        sat, sun = cli._upcoming_weekend()
+        self.assertEqual(sat.weekday(), 5)
+        self.assertEqual(sun.weekday(), 6)
+        self.assertEqual((sun - sat).days, 1)
+
+    def test_the_weekend_is_still_reachable_by_a_forward_scan(self):
+        """The scan starts tomorrow, so a Sunday that has already arrived is not
+        scannable — on a Sunday the target must be the following weekend."""
+        from datetime import date as _date
+        tomorrow = _date.today() + timedelta(days=1)
+        for today in (_date(2026, 10, 12) + timedelta(days=i) for i in range(14)):
+            _sat, sun = cli._upcoming_weekend(today)
+            self.assertGreaterEqual(sun, tomorrow if today == _date.today() else
+                                    today + timedelta(days=1),
+                                    f"weekend not reachable from {today}")
 
 
 class PostBodyTest(unittest.TestCase):
@@ -172,12 +183,36 @@ class DigestCommandTest(unittest.TestCase):
             with self.assertRaises(SystemExit):
                 self._run(self._ns(lakes="clear-lake"), results=[])
 
-    def test_weekend_filter_drops_weekday_windows(self):
-        monday = (datetime.now() + timedelta(days=(7 - datetime.now().weekday()) % 7)).date()
-        off_day = next(d for d in (monday + timedelta(days=i) for i in range(1, 8))
-                       if d.weekday() not in (5, 6))
+    def test_weekend_filter_is_not_silently_disabled(self):
+        """Regression: a short horizon starting on a Monday contains no weekend
+        day, so the day-set was empty and `if keep_days:` skipped the filter
+        entirely — `--weekend` posted weekday windows."""
+        sat, _sun = cli._upcoming_weekend()
         row = _row()
-        row["day"] = off_day
+        row["day"] = sat - timedelta(days=1)          # a Friday, never the weekend
+        with contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(SystemExit):
+                self._run(self._ns(lakes="clear-lake", weekend=True, days=1),
+                          results=[row])
+
+    def test_weekend_widens_the_horizon_to_reach_the_weekend(self):
+        seen = {}
+
+        def fake(lake, profile, n_days, **kw):
+            seen["n_days"] = n_days
+            return [], {}
+
+        with mock.patch.object(cli, "_scan_horizon", fake):
+            with contextlib.redirect_stderr(io.StringIO()):
+                with self.assertRaises(SystemExit):
+                    cli.cmd_digest(self._ns(lakes="clear-lake", weekend=True, days=1))
+        _sat, sun = cli._upcoming_weekend()
+        self.assertGreaterEqual(seen["n_days"], (sun - datetime.now().date()).days)
+
+    def test_weekend_filter_drops_weekday_windows(self):
+        sat, _sun = cli._upcoming_weekend()
+        row = _row()
+        row["day"] = sat - timedelta(days=1)          # Friday
         with contextlib.redirect_stderr(io.StringIO()):
             with self.assertRaises(SystemExit):
                 self._run(self._ns(lakes="clear-lake", weekend=True), results=[row])

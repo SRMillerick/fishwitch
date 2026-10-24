@@ -13,11 +13,14 @@
     <input type="hidden" name="lng" value="{{ q.lng }}">
     {% else %}
     <select name="lake">
+      {% if q.lake and q.lake not in lakes | map(attribute='id') | list %}
+      <option value="{{ q.lake }}" selected>Unsupported water — choose a listed water</option>
+      {% endif %}
       {% for l in lakes %}<option value="{{ l.id }}" {% if q.lake == l.id %}selected{% endif %}>{{ l.name }}</option>{% endfor %}
     </select>
     {% endif %}
   </label>
-  <label>Date <input type="date" name="date" value="{{ q.date or '' }}"></label>
+  <label>Date <input type="date" name="date" value="{{ q.date or '' }}" required></label>
   <label>Time <input type="time" name="time" value="{{ q.time or '18:00' }}"></label>
   <label>Hours <input type="number" name="hours" min="0.5" max="8" step="0.5" value="{{ q.hours or '2.5' }}"></label>
   <label>Voice
@@ -46,8 +49,9 @@
   <button type="submit">Generate</button>
   </form>
 </details>
-<p class="fine" id="profile-note">Rendering anonymously — with a profile (browser-only),
-reports add your natal transits and your arsenal. <a href="/interview">Build one →</a></p>
+<p class="fine" id="profile-note">Shared-only report. A known birth time enables natal
+timing. Birth details are sent to the server for calculation, without intentional retention.
+<a href="/interview">Edit birth details →</a></p>
 <p class="fine no-print" id="pin-tip">My water isn't listed?
   {% if q.lat %}<a href="/report">Pick a registry water</a>{% else %}<a href="/lakes">Drop a pin on the map</a>
   or <a href="#" id="use-my-location">use my location</a>{% endif %}

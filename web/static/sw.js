@@ -2,7 +2,7 @@
    Network-first for pages (always prefer fresh forecasts/sky math), falling
    back to the cached copy when service is gone; cache-first for the
    URL-versioned static assets. Affiliate /out/ redirects are never cached. */
-const V = "baromoon-v3";
+const V = "baromoon-v4";
 
 self.addEventListener("install", () => self.skipWaiting());
 
@@ -19,6 +19,7 @@ self.addEventListener("fetch", (e) => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
   if (url.origin !== location.origin) return;        // fonts/tiles stay live
+  if (url.pathname === "/" || url.pathname.startsWith("/api/")) return;
   if (url.pathname.startsWith("/out/")) return;      // never cache redirects
 
   if (req.mode === "navigate") {

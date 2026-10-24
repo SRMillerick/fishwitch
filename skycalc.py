@@ -78,7 +78,8 @@ class Sky:
         """naive local -> JD(UT)."""
         ut = local - timedelta(seconds=self.off * 86400)
         return swe.julday(ut.year, ut.month, ut.day,
-                          ut.hour + ut.minute / 60 + ut.second / 3600)
+                          ut.hour + ut.minute / 60 + ut.second / 3600
+                          + ut.microsecond / 3_600_000_000)
 
     def loc(self, jd: float) -> datetime:
         y, m, d, h = swe.revjul(jd)

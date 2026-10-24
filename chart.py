@@ -5,10 +5,13 @@ Almanac framing is honored but always labeled: fruitful/barren moon signs are
 traditional lore, presented alongside the computed chart data.
 """
 from __future__ import annotations
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
+from zoneinfo import ZoneInfoNotFoundError
+import math
+import re
 
-from kerykeion import AstrologicalSubject
+from kerykeion import AstrologicalSubjectFactory
 from fishwitch.skycalc import (Sky, SIGNS, SYM, ABBR, planet_lon, fmt_sign,
                         phase_name, illum_pct)
 
@@ -70,21 +73,104 @@ DETRIMENT_OF = {"Aquarius": "Sun", "Capricorn": "Moon", "Sagittarius": "Mercury"
                 "Virgo": "Jupiter", "Cancer": "Saturn", "Leo": "Saturn"}
 
 
+def precise_birth(birth: dict | None) -> bool:
+    """Require a clock time; honor unknown precision, including legacy profiles."""
+    return bool(birth and birth.get("time") and birth.get("time_known", True) is True)
+
+
+def normalize_birth(raw: dict) -> dict:
+    """One validation contract for legacy profiles and canonical forecasts."""
+    if not isinstance(raw, dict):
+        raise ValueError("birth: expected an object")
+    result = {}
+    date = raw.get("date")
+    try:
+        if not isinstance(date, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date):
+            raise ValueError
+        parsed = datetime.strptime(date, "%Y-%m-%d")
+        if not 1850 <= parsed.year <= 2100:
+            raise ValueError
+    except (TypeError, ValueError):
+        raise ValueError("birth.date: YYYY-MM-DD between 1850 and 2100") from None
+    result["date"] = date
+    known = raw.get("time_known", True)
+    if type(known) is not bool:
+        raise ValueError("birth.time_known: boolean")
+    result["time_known"] = known
+    clock = raw.get("time")
+    if known:
+        try:
+            if not isinstance(clock, str) or not re.fullmatch(r"\d{2}:\d{2}", clock):
+                raise ValueError
+            datetime.strptime(clock, "%H:%M")
+        except (TypeError, ValueError):
+            raise ValueError("birth.time: HH:MM (24h)") from None
+    result["time"] = clock if known else None
+    for field, lo, hi in (("lat", -90, 90), ("lng", -180, 180)):
+        try:
+            value = float(raw[field])
+            if not math.isfinite(value) or not lo <= value <= hi:
+                raise ValueError
+        except (KeyError, ValueError, TypeError):
+            raise ValueError(f"birth.{field}: a resolved coordinate between {lo} and {hi} is required") from None
+        result[field] = value
+    tz = raw.get("tz")
+    try:
+        if not isinstance(tz, str) or not tz or len(tz) > 64:
+            raise ValueError
+        ZoneInfo(tz)
+    except (ValueError, ZoneInfoNotFoundError):
+        raise ValueError("birth.tz: a resolved IANA timezone is required") from None
+    result["tz"] = tz
+    place = raw.get("place")
+    if place is not None:
+        if not isinstance(place, str) or len(place) > 120:
+            raise ValueError("birth.place: string up to 120 characters")
+        result["place"] = place.strip()
+    if known:
+        birth_datetime(result)
+    return result
+
+
+def birth_datetime(birth: dict) -> datetime:
+    """Resolve the historical offset; reject clock gaps and unresolved folds."""
+    if not precise_birth(birth):
+        raise ValueError("birth.time: a known birth time is required")
+    local = datetime.fromisoformat(f"{birth['date']}T{birth['time']}")
+    if local.tzinfo is not None:
+        raise ValueError("birth.time: use local HH:MM without an offset")
+    zone = ZoneInfo(birth["tz"])
+    choices = []
+    for fold in (0, 1):
+        candidate = local.replace(tzinfo=zone, fold=fold)
+        if candidate.astimezone(timezone.utc).astimezone(zone).replace(tzinfo=None) == local:
+            if not choices or candidate.utcoffset() != choices[0].utcoffset():
+                choices.append(candidate)
+    if not choices:
+        raise ValueError("birth.time: this local time did not exist; check the clock time")
+    if len(choices) > 1:
+        raise ValueError("birth.time: ambiguous local time; confirm the time or use shared-only")
+    return choices[0]
+
+
 class NatalChart:
     def __init__(self, birth: dict):
         """birth = {name, date:'YYYY-MM-DD', time:'HH:MM'|None, time_known:bool,
                    place:str, lat, lng, tz}"""
+        local = birth_datetime(birth)
         self.birth = birth
-        t = birth.get("time") or "12:00"
-        hh, mm = map(int, t.split(":"))
-        y, mo, d = map(int, birth["date"].split("-"))
-        local = datetime(y, mo, d, hh, mm, tzinfo=ZoneInfo(birth["tz"]))
         self.birth_local = local
-        subj = AstrologicalSubject(birth.get("name", "Angler"), y, mo, d, hh, mm,
-                                   city=birth.get("place", "?").split(",")[0],
-                                   nation=birth.get("country", ""),
-                                   lng=birth["lng"], lat=birth["lat"],
-                                   tz_str=birth["tz"], online=False)
+        # Resolve once with ZoneInfo, then give Kerykeion that exact UTC instant.
+        # Historical offsets can include seconds, which the old wall-time/pytz
+        # compatibility wrapper rounded differently. The pinned factory accepts
+        # seconds and avoids a second, potentially different timezone resolution.
+        utc = local.astimezone(timezone.utc)
+        subj = AstrologicalSubjectFactory.from_birth_data(
+            birth.get("name", "Angler"), utc.year, utc.month, utc.day, utc.hour, utc.minute,
+            seconds=utc.second, city=birth.get("place", "?").split(",")[0],
+            nation=birth.get("country", ""), lng=birth["lng"], lat=birth["lat"],
+            tz_str="Etc/UTC", online=False, active_points=BODIES + ["Ascendant", "Medium_Coeli"],
+            calculate_lunar_phase=False)
         self.points = {}
         for b in BODIES:
             self.points[b] = getattr(subj, b.lower()).abs_pos % 360
@@ -99,7 +185,7 @@ class NatalChart:
                   int(local.utcoffset().total_seconds()))
         self.sun_alt_birth = sky.sun_alt(sky.jd(local.replace(tzinfo=None)))
         self.sect = "day" if self.sun_alt_birth > 0 else "night"
-        self.time_known = birth.get("time_known", True)
+        self.time_known = True
 
     def dignity_notes(self, symbols: bool = True) -> list[str]:
         out = []
@@ -128,17 +214,24 @@ def _sep(t_lon, n_lon):
     return ((t_lon - n_lon + 180) % 360) - 180
 
 
+def _aspect_delta(t_lon: float, n_lon: float, angle: float) -> float:
+    """Signed error to the nearer orientation of an undirected aspect."""
+    return min((_sep(t_lon, n_lon + angle), _sep(t_lon, n_lon - angle)), key=abs)
+
+
 def transit_aspects(natal: NatalChart, jd: float,
                     window_hours: float = 3.0) -> list[dict]:
     """Transit→natal aspects near jd. Each dict: planets, aspect, orb,
     applying, perfect_jd (if it perfects within the window, scan-refined)."""
+    if not natal.time_known:
+        return []
     out = []
     win = window_hours / 24
 
     def g(tp, n_lon, angle, t):
         """wrap-safe signed distance from exact aspect, in (-180,180]."""
         lon, _ = planet_lon(t, tp)
-        return (((lon - n_lon - angle) + 180) % 360) - 180
+        return _aspect_delta(lon, n_lon, angle)
 
     for tp in BODIES:
         for np_ in BODIES + ANGLES:
@@ -153,12 +246,12 @@ def transit_aspects(natal: NatalChart, jd: float,
                     continue
                 # scan forward for the wrap-safe zero crossing
                 perfect = None
-                horizon = jd + win + 0.5
+                horizon = jd + win
                 step = 0.25 / 24
                 t_prev, g_prev = jd, g0
                 t = jd
                 while t < horizon:
-                    t += step
+                    t = min(t + step, horizon)
                     g_cur = g(tp, n_lon, angle, t)
                     if g_prev * g_cur <= 0 and abs(g_prev) < 45 and abs(g_cur) < 45:
                         a, b, fa = t_prev, t, g_prev
@@ -169,7 +262,10 @@ def transit_aspects(natal: NatalChart, jd: float,
                                 b = m
                             else:
                                 a, fa = m, fm
-                        perfect = (a + b) / 2
+                        root = t if g_cur == 0 else (t_prev if g_prev == 0 else (a + b) / 2)
+                        # Exact perfections use [start, end), including launch.
+                        if jd <= root < horizon and abs(g(tp, n_lon, angle, root)) < 1e-7:
+                            perfect = root
                         break
                     t_prev, g_prev = t, g_cur
                     if t - jd > 2.0 and perfect is None and orb > 2.5:
@@ -177,7 +273,7 @@ def transit_aspects(natal: NatalChart, jd: float,
                 # applying = orb shrinking over the next hour
                 g1 = g(tp, n_lon, angle, jd + 1 / 24)
                 out.append(dict(transit=tp, natal=np_, aspect=name, sym=sym,
-                                orb=round(orb, 2), applying=abs(g1) < abs(g0),
+                                orb=orb, applying=abs(g1) < abs(g0),
                                 perfect_jd=perfect))
     out.sort(key=lambda a: (a["perfect_jd"] is None, a["orb"]))
     return out
@@ -192,30 +288,29 @@ def voc_moon(jd: float, sky: Sky, horizon_hours: float = 36) -> dict:
     t = jd
     prev = {p: _sep(planet_lon(jd, "Moon")[0], planet_lon(jd, p)[0]) for p in BODIES if p != "Moon"}
     while t < min(ingress, jd + horizon_hours / 24):
-        t += step
+        t_prev = t
+        t = min(t + step, ingress, jd + horizon_hours / 24)
         cur = {p: _sep(planet_lon(t, "Moon")[0], planet_lon(t, p)[0]) for p in BODIES if p != "Moon"}
         for p, s in cur.items():
             for _n, angle, sym in ASPECTS:
-                if angle == 0 and p == "Sun" and False:
+                g0 = _aspect_delta(prev[p], 0, angle)
+                g1 = _aspect_delta(s, 0, angle)
+                if abs(g0) >= 45 or abs(g1) >= 45:
                     continue
-                g0 = prev[p] - angle
-                g1 = s - angle
-                if abs(g0 - g1) > 180:  # wrapped
-                    continue
-                if g0 * g1 <= 0 and abs(g0) < 60:
-                    a, b = t - step, t
+                if g0 * g1 <= 0:
+                    a, b = t_prev, t
                     for _ in range(50):
                         m = (a + b) / 2
-                        gm = _sep(planet_lon(m, "Moon")[0],
-                                  planet_lon(m, p)[0]) - angle
-                        g_a = _sep(planet_lon(a, "Moon")[0],
-                                   planet_lon(a, p)[0]) - angle
+                        gm = _aspect_delta(planet_lon(m, "Moon")[0],
+                                           planet_lon(m, p)[0], angle)
+                        g_a = _aspect_delta(planet_lon(a, "Moon")[0],
+                                            planet_lon(a, p)[0], angle)
                         if g_a * gm <= 0:
                             b = m
                         else:
                             a = m
                     pjd = (a + b) / 2
-                    if pjd > jd:
+                    if jd < pjd < ingress:
                         return dict(void=False, ends=None,
                                     next_aspect=f"{sym} {p} at {sky.loc(pjd):%H:%M}",
                                     note="moon is applying — the schedule holds")
@@ -238,6 +333,8 @@ def moon_note(jd: float) -> dict:
 
 def phase_resonance(natal: NatalChart, jd: float) -> str | None:
     """Does tonight's lunar phase echo the angler's natal phase?"""
+    if not natal.time_known:
+        return None
     elong = (planet_lon(jd, "Moon")[0] - planet_lon(jd, "Sun")[0]) % 360
     diff = min((elong - natal.natal_elong) % 360,
                (natal.natal_elong - elong) % 360)

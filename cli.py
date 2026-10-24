@@ -549,12 +549,16 @@ def _post_src(channel: str, lake_id: str, limit: int = 24) -> str:
     return f"{channel}-{slug[:room]}".strip("-") if room > 0 else channel[:limit]
 
 
-def _weekend_dates(n_days: int) -> set:
-    """The upcoming Sat/Sun dates inside the horizon (today included)."""
+def _upcoming_weekend(today=None) -> tuple:
+    """The Sat/Sun of the coming weekend, as dates the *forward* scan can reach.
+
+    On a Sunday this is next week's (today's weekend is already ending), which
+    is also what `(5 - weekday) % 7` gives naturally.
+    """
     from datetime import timedelta
-    today = datetime.now().date()
-    return {today + timedelta(days=i) for i in range(n_days + 1)
-            if (today + timedelta(days=i)).weekday() in (5, 6)}
+    today = today or datetime.now().date()
+    sat = today + timedelta(days=(5 - today.weekday()) % 7)
+    return sat, sat + timedelta(days=1)
 
 
 def _post_body(lake: dict, r: dict, url: str, n_days: int) -> str:
@@ -618,7 +622,15 @@ def cmd_digest(args):
         ids = list(DIGEST_PRIORITY)
     else:
         sys.exit("no lakes \u2014 pass --lakes a,b,c or --priority")
-    keep_days = _weekend_dates(n_days) if getattr(args, "weekend", False) else None
+    keep_days = None
+    if getattr(args, "weekend", False):
+        # `--weekend` means "the coming weekend", so widen the horizon until the
+        # scan can actually reach it: a 3-day horizon starting on a Monday
+        # contains no weekend day at all, and an empty day-set would make the
+        # filter below a no-op — posting weekday windows under a --weekend flag.
+        sat, sun = _upcoming_weekend()
+        n_days = max(n_days, min((sun - datetime.now().date()).days, 16))
+        keep_days = {sat, sun}
     profile = load_json(Path(PROFILES / "default.json")) or {}
     channel = re.sub(r"[^a-z0-9_-]", "", (args.tag or "community").lower())[:16] or "community"
 
@@ -640,7 +652,7 @@ def cmd_digest(args):
         except Exception as exc:
             print(f"\u26a0 {lake_id}: scan failed ({exc}) \u2014 skipped", file=sys.stderr)
             continue
-        if keep_days:
+        if keep_days is not None:
             results = [r for r in results if r["day"] in keep_days]
         if not results:
             print(f"\u26a0 {lake_id}: no scorable window \u2014 skipped", file=sys.stderr)

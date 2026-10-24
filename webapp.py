@@ -33,6 +33,7 @@ from pathlib import Path
 from urllib.parse import urlencode
 
 from flask import Flask, Response, abort, jsonify, redirect, render_template, request
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))          # script-style imports (import logbook)
@@ -49,6 +50,9 @@ import viz  # noqa: E402
 from layers.history import History  # noqa: E402
 from report import generate as gen, to_markdown  # noqa: E402
 from weather import Weather  # noqa: E402
+from chart import normalize_birth, precise_birth  # noqa: E402
+from fishwitch import forecast as window_engine  # noqa: E402
+from fishwitch.forecast_weather import weather_store as window_weather  # noqa: E402
 
 LOCAL = os.environ.get("FISHWITCH_LOCAL", "") == "1"
 CONFIG = ROOT / "config"
@@ -70,6 +74,20 @@ app = Flask(__name__, template_folder=str(ROOT / "web" / "templates"),
 app.config["JSON_SORT_KEYS"] = False
 app.config["MAX_CONTENT_LENGTH"] = 64 * 1024  # profiles are small; bigger bodies are abuse
 app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 31536000  # static assets are URL-versioned (?v=), cache hard
+
+# Production gunicorn is loopback-only behind one Caddy hop. Caddy replaces
+# untrusted X-Forwarded-For values. Without this boundary every visitor shares
+# the proxy's rate-limit bucket. Never trust forwarded headers from direct peers.
+_direct_wsgi = app.wsgi_app
+_proxy_wsgi = ProxyFix(_direct_wsgi, x_for=1, x_proto=1)
+
+
+def _trusted_proxy(environ, start_response):
+    handler = _proxy_wsgi if environ.get("REMOTE_ADDR") in ("127.0.0.1", "::1") else _direct_wsgi
+    return handler(environ, start_response)
+
+
+app.wsgi_app = _trusted_proxy
 
 _KB_SPECIES = ("bass", "trout", "catfish", "panfish")
 
@@ -167,6 +185,7 @@ def _count_page(resp):
     a page."""
     try:
         if (request.method == "GET" and resp.status_code == 200
+                and request.path != "/"  # The new personal-window page has no analytics.
                 and request.args.get("warm") != "1"
                 and telemetry.should_count(request.path)):
             # an explicit ?src= on the landing URL wins — it is the channel tag a
@@ -193,13 +212,12 @@ WEB_BASE = "https://baromoon.com"
 _ORG_ID = f"{WEB_BASE}/#organization"
 _SITE_ID = f"{WEB_BASE}/#website"
 _OG_IMAGE = f"{WEB_BASE}/static/og-card.png"
-_DEFAULT_DESC = ("baromoon reads your lake — barometer, water temp, wind, light, and cover — "
-                 "and hands you the window, the bank, and the rig. Cited, deterministic, free.")
+_DEFAULT_DESC = ("baromoon is a personal fishing almanac: birth details, a water, and availability "
+                 "become one calculated window with a clear reason. No account or runtime AI.")
 
 _STATIC_SEO = {
-    "/": ("Fishing plan: when to go and what to throw | baromoon",
-          "Free, cited fishing plans: live weather, water, and sky scored into time-blocked "
-          "windows with the rigs that fit. No account, no app."),
+    "/": ("baromoon — your personal fishing window",
+          "One fishing window from your birth details, water, and availability. No account."),
     "/report": ("Fishing report — windows, rigs, and the why | baromoon",
                 "Pick a water and see its best windows, the rigs that score for them, and a "
                 "cited why — computed deterministically from weather, water, and sky."),
@@ -343,10 +361,9 @@ def _seo_meta(req) -> dict:
     elif path in _STATIC_SEO:
         title, desc = _STATIC_SEO[path]
         if path == "/":
-            # the registry grows; the count in the snippet must not go stale
-            desc = (f"Free, cited fishing plans for {len(registry())} lakes: live weather, water, "
-                    "and sky scored into time-blocked windows with the rigs that fit. "
-                    "No account, no app.")
+            title = "baromoon — your personal fishing window"
+            desc = (f"Personal fishing plans for {len(registry())} lakes: your birth details, "
+                    "water, and availability become one window with a clear reason. No account.")
         if path == "/lakes":
             crumbs = [("Home", "/"), ("Waters", "/lakes")]
         elif path == "/kb":
@@ -467,16 +484,23 @@ _RCACHE: dict[str, tuple] = {}
 
 
 def _cached(key: str, fn):
-    """In-memory render cache, 20 min TTL, 128 entries. Keys are hashes —
-    profile contents are never stored, only a digest of them."""
+    """Public-data render cache, 20 min TTL, at most 128 entries.
+
+    Personal or natal-derived results must bypass this shared cache.
+    """
     hit = _RCACHE.get(key)
     if hit and time.time() - hit[1] < 1200:
         return hit[0]
     val = fn()
-    if len(_RCACHE) > 128:
+    if len(_RCACHE) >= 128:
         _RCACHE.pop(min(_RCACHE.items(), key=lambda kv: kv[1][1])[0], None)
     _RCACHE[key] = (val, time.time())
     return val
+
+
+def _outlook_key(lake: dict, days: int, species: str | None) -> str:
+    """Public data dependencies, including coordinates and timezone, not a label."""
+    return "outlook:v2:" + json.dumps([lake, days, species], sort_keys=True, default=str)
 
 
 # ── helpers ──────────────────────────────────────────────────────────────────
@@ -547,6 +571,7 @@ def _clamp_at(s: str | None) -> datetime:
     hi = (now + timedelta(days=16)).replace(hour=23, minute=59)
     at = now.replace(hour=18, minute=0, second=0, microsecond=0)
     if s:
+        s = s.replace("T", " ")
         try:
             at = datetime.strptime(s, "%Y-%m-%d %H:%M")
         except ValueError:
@@ -634,48 +659,10 @@ def _client_profile(payload: dict) -> tuple[dict, list[str]]:
             out["astro_display"] = ad
     b = p.get("birth")
     if b is not None:
-        if not isinstance(b, dict):
-            errs.append("birth: object")
-        else:
-            bd = {}
-            date = b.get("date")
-            try:
-                d = datetime.strptime(str(date), "%Y-%m-%d")
-                if not (1850 <= d.year <= 2100):
-                    raise ValueError
-                bd["date"] = str(date)
-            except (TypeError, ValueError):
-                errs.append("birth.date: YYYY-MM-DD between 1850 and 2100")
-            t = b.get("time")
-            try:
-                datetime.strptime(str(t), "%H:%M")
-                bd["time"] = str(t)
-            except (TypeError, ValueError):
-                errs.append("birth.time: HH:MM (24h)")
-            tk = b.get("time_known")
-            bd["time_known"] = bool(tk) if tk is not None else True
-            for k, lo, hi in (("lat", -90, 90), ("lng", -180, 180)):
-                v = b.get(k, 0)
-                try:
-                    v = float(v)
-                    if not (lo <= v <= hi):
-                        raise ValueError
-                    bd[k] = v
-                except (TypeError, ValueError):
-                    errs.append(f"birth.{k}: number {lo}…{hi}")
-            tz = b.get("tz")
-            if tz is not None:
-                if not isinstance(tz, str) or len(tz) > 64:
-                    errs.append("birth.tz: string ≤ 64 chars")
-                else:
-                    bd["tz"] = tz
-            pl = b.get("place")
-            if pl is not None:
-                if not isinstance(pl, str) or len(pl) > 120:
-                    errs.append("birth.place: string ≤ 120 chars")
-                else:
-                    bd["place"] = pl
-            out["birth"] = bd
+        try:
+            out["birth"] = normalize_birth(b)
+        except ValueError as exc:
+            errs.append(str(exc))
     return out, errs
 
 
@@ -773,6 +760,7 @@ def _render_report(profile: dict, lake: dict, at: datetime, hours: float,
                         offers=offers.resolve(c["id"]),
                         components=offers.components(c["id"])))
     return dict(html=body, timeline=viz.session_timeline_svg(m),
+                personalized=m.get("natal") is not None,
                 overall=m["scores"]["overall"],
                 lake=lake["name"], at=at, rods=rods, gap=gap,
                 shopping=offers.build_shopping(
@@ -825,16 +813,35 @@ def _pin_lake(raw_lat, raw_lng) -> dict | None:
 
 
 def _report_response(payload: dict, anonymous: bool) -> dict:
+    if not isinstance(payload, dict):
+        return dict(error="request: expected a JSON object")
+    for field in ("lake", "at", "species"):
+        if payload.get(field) is not None and not isinstance(payload[field], str):
+            return dict(error=f"{field}: expected text")
     if payload.get("lake"):
         lake = resolve_lake(payload.get("lake"))
-    elif payload.get("lat") and payload.get("lng"):
+    elif (payload.get("lat") not in (None, "") or payload.get("lng") not in (None, "")):
         lake = _pin_lake(payload.get("lat"), payload.get("lng"))
     else:
         lake = resolve_lake(None)   # the demo water, as before
     if lake is None:
         return dict(error="unknown lake")
-    at = _clamp_at(payload.get("at"))
-    hours = min(8.0, max(0.5, float(payload.get("hours") or 2.5)))
+    raw_at = payload.get("at")
+    at = _clamp_at(raw_at)
+    if raw_at:
+        try:
+            requested = datetime.fromisoformat(raw_at)
+        except (TypeError, ValueError):
+            return dict(error="at: choose a valid local date and time")
+        if requested.tzinfo is not None or requested != at:
+            return dict(error="at: this session is outside the supported date range; choose new availability")
+    try:
+        raw_hours = payload.get("hours")
+        hours = 2.5 if raw_hours in (None, "") else float(raw_hours)
+        if not 0.5 <= hours <= 8:
+            raise ValueError
+    except (ValueError, TypeError):
+        return dict(error="hours: choose a duration between 0.5 and 8 hours")
     voice = payload.get("voice")
     if voice not in ("fisher", "almanac", "astro"):
         voice = None
@@ -850,16 +857,21 @@ def _report_response(payload: dict, anonymous: bool) -> dict:
     def run():
         return _render_report(profile, lake, at, hours, voice, species, bottom, clarity)
 
-    if anonymous:  # cacheable — no personal data involved
-        key = "anon:" + json.dumps([str(payload.get("lake")), at.isoformat(),
-                                    hours, voice, species, bottom, clarity,
-                                    payload.get("lat"), payload.get("lng")], default=str)
-        return _cached(key, run)
-    return run()
+    try:
+        if anonymous:  # cacheable — no personal data involved
+            key = "anon:" + json.dumps([lake, at.isoformat(),
+                                        hours, voice, species, bottom, clarity],
+                                       sort_keys=True, default=str)
+            return _cached(key, run)
+        return run()
+    except Exception:
+        # Third-party chart errors may contain birth details. Do not echo or log
+        # their exception text, even when a provider or ephemeris is unavailable.
+        return dict(error="Calculation unavailable; please try again.", unavailable=True)
 
 
 # ── pages ────────────────────────────────────────────────────────────────────
-@app.route("/")
+@app.route("/legacy")
 def index():
     """The landing ledger. Anonymous visitors get a demo water (Hidden Valley)
     unless `?lake=<id>` names one — the browser layer uses that param to
@@ -893,6 +905,46 @@ def index():
                            waters_json=json.dumps(waters))
 
 
+@app.route("/")
+def window_page():
+    """The new front door is a form, with no forecast or enrichment on GET."""
+    waters = [dict(id=key, name=lake["name"], tz=lake.get("tz", ""))
+              for key, lake in registry().items()]
+    return render_template("window.html", waters=waters,
+                           selected=request.args.get("lake", ""))
+
+
+@app.route("/api/window", methods=["POST"])
+def api_window():
+    if not _rate_ok(f"window:{request.remote_addr}", 30):
+        return jsonify(error="Please wait before calculating again.", field="request"), 429
+    if request.content_length and request.content_length > 16384:
+        return jsonify(error="Choose a smaller availability request.", field="request"), 413
+    try:
+        req = window_engine.normalize_request(request.get_json(silent=True), registry(), datetime.now(timezone.utc))
+        snapshot = window_weather.get(req)
+        return jsonify(window_engine.calculate(req, snapshot))
+    except window_engine.InputError as exc:
+        return jsonify(error=exc.message, field=exc.field), 400
+    except Exception:
+        # Never log or return exception text from requests containing birth data.
+        return jsonify(error="Calculation unavailable. Your details were not saved on the server. Try again shortly.",
+                       field="request"), 503
+
+
+@app.route("/api/window/place", methods=["POST"])
+def api_window_place():
+    if not _rate_ok(f"window-place:{request.remote_addr}", 60):
+        return jsonify(error="Please wait before searching again.", field="birth.place"), 429
+    payload = request.get_json(silent=True)
+    query = payload.get("query") if isinstance(payload, dict) else None
+    if not isinstance(query, str) or not 2 <= len(query.strip()) <= 120:
+        return jsonify(error="Enter a city or town, then select a matching place.", field="birth.place"), 400
+    from fishwitch import geo
+    places = geo.geocode_city(query.strip(), bounded=True)
+    return jsonify(places=places)
+
+
 @app.route("/report")
 def report_page():
     q = dict(lake=request.args.get("lake") or "",
@@ -904,6 +956,16 @@ def report_page():
              clarity=request.args.get("clarity") or "",
              lat=request.args.get("lat") or "",
              lng=request.args.get("lng") or "")
+    # The linked trip and the form must describe the same session. Native GET
+    # form submissions send date/time, whereas ledger links send `at`.
+    if not q["at"] and request.args.get("date"):
+        q["at"] = request.args["date"] + " " + (request.args.get("time") or "18:00")
+    if q["at"]:
+        try:
+            trip = datetime.fromisoformat(q["at"])
+            q["date"], q["time"] = trip.strftime("%Y-%m-%d"), trip.strftime("%H:%M")
+        except ValueError:
+            pass
     out = None
     if q["lake"] or q["at"] or q["species"] or q["lat"]:
         out = _report_response(q, anonymous=True)
@@ -927,7 +989,7 @@ def outlook_page():
     if lake:
         try:
             rows, moon = _cached(
-                f"outlook:{lake['name']}:{days}:{species}",
+                _outlook_key(lake, days, species),
                 lambda: _horizon(lake, days, species))
         except Exception as ex:
             err = str(ex)
@@ -950,7 +1012,7 @@ def ledger_ics():
         days = 10
     species = (request.args.get("species") or "").strip() or None
     try:
-        rows, _ = _cached(f"outlook:{lake['name']}:{days}:{species}",
+        rows, _ = _cached(_outlook_key(lake, days, species),
                           lambda: _horizon(lake, days, species))
     except Exception:
         rows = []
@@ -973,7 +1035,7 @@ def outlook_rss():
         days = 10
     species = (request.args.get("species") or "").strip() or None
     try:
-        rows, _ = _cached(f"outlook:{lake['name']}:{days}:{species}",
+        rows, _ = _cached(_outlook_key(lake, days, species),
                           lambda: _horizon(lake, days, species))
     except Exception:
         rows = []
@@ -1583,7 +1645,7 @@ def embed_ledger():
         days = 7
     species = (request.args.get("species") or "").strip()[:40] or None
     try:
-        rows, _ = _cached(f"outlook:{lake['name']}:{days}:{species}",
+        rows, _ = _cached(_outlook_key(lake, days, species),
                           lambda: _horizon(lake, days, species))
     except Exception:
         rows = []
@@ -1652,7 +1714,7 @@ def api_v1_windows():
     except ValueError:
         days = 7
     species = (request.args.get("species") or "").strip()[:40] or None
-    rows, moon = _cached(f"outlook:{lake['name']}:{days}:{species}",
+    rows, moon = _cached(_outlook_key(lake, days, species),
                          lambda: _horizon(lake, days, species))
     body = public_api.windows(rows, moon, lake.get("id"))
     r = jsonify(public_api.envelope(body))
@@ -1669,7 +1731,14 @@ def api_outlook():
     if not _rate_ok(f"outlook:{request.remote_addr}", 20):
         return jsonify(error="rate limit — 20 ledger builds/hour"), 429
     payload = request.get_json(silent=True) or {}
-    days = max(1, min(7, int(payload.get("days") or 5)))
+    if not isinstance(payload, dict):
+        return jsonify(error="request: expected a JSON object"), 400
+    try:
+        days = int(payload.get("days", 5))
+        if not 1 <= days <= 7:
+            raise ValueError
+    except (ValueError, TypeError):
+        return jsonify(error="days: choose 1–7 days"), 400
     profile, errs = ({}, []) if not payload.get("profile") else _client_profile(payload)
     if errs:
         return jsonify(error="profile rejected", details=errs), 400
@@ -1677,13 +1746,14 @@ def api_outlook():
     if home is None:
         return jsonify(error="unknown lake"), 400
     species = profile.get("species")
-    import hashlib as _h
-    ph = _h.sha256(json.dumps(profile, sort_keys=True).encode()).hexdigest()[:10]
     try:
-        rows = _cached(f"ledger:{home['name']}:{days}:{species}:{ph}",
-                       lambda: _ledger(home, days, species, profile or None))
-    except Exception as ex:
-        return jsonify(error=f"ledger failed: {ex}"), 500
+        if profile:
+            rows = _ledger(home, days, species, profile)
+        else:
+            rows = _cached("ledger:" + _outlook_key(home, days, species),
+                           lambda: _ledger(home, days, species, None))
+    except Exception:
+        return jsonify(error="Window calculation unavailable; please try again."), 503
     out = []
     for r in rows:
         d = dict(r)  # never mutate the cached row objects
@@ -1692,7 +1762,7 @@ def api_outlook():
         d["clock"] = f"{s:%-I:%M %p}–{e:%-I %p}"
         d["prime"] = d["prime"].strftime("%-I:%M %p") if d["prime"] else None
         out.append(d)
-    return jsonify(rows=out, personalized=bool(profile))
+    return jsonify(rows=out, personalized=precise_birth(profile.get("birth")))
 
 
 @app.route("/api/report", methods=["POST"])
@@ -1702,7 +1772,7 @@ def api_report():
     payload = request.get_json(silent=True) or {}
     out = _report_response(payload, anonymous=False)
     if "error" in out:
-        return jsonify(out), 400
+        return jsonify(out), 503 if out.get("unavailable") else 400
     return jsonify(out)
 
 
@@ -1899,6 +1969,8 @@ def out_click(entry, retailer):
 def resp_headers(resp):
     resp.headers["Referrer-Policy"] = "no-referrer"
     resp.headers["X-Content-Type-Options"] = "nosniff"
+    if request.method == "POST" and request.path.startswith("/api/"):
+        resp.headers["Cache-Control"] = "no-store"
     # Anonymous, deterministic HTML renders — let browsers reuse them so the $6
     # droplet serves repeat views without re-rendering. /api is never cached.
     if (request.method == "GET" and resp.status_code == 200

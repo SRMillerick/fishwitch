@@ -12,23 +12,24 @@ GEO_URL = "https://geocoding-api.open-meteo.com/v1/search"
 NOMINATIM = "https://nominatim.openstreetmap.org/search"
 
 
-def geocode_city(name: str) -> list[dict]:
+def geocode_city(name: str, bounded: bool = False) -> list[dict]:
     """City/town lookup for birth places. Returns dicts with lat/lng/tz.
     Open-Meteo's geocoder matches on the place NAME — a full 'City, State,
     Country' string usually works, but if it whiffs we retry with the bare
     city segment (state/country suffixes can defeat name matching)."""
     queries = [name.strip()]
-    if "," in name:
+    if "," in name and not bounded:
         head = name.split(",")[0].strip()
         if head and head.lower() != name.strip().lower():
             queries.append(head)
     out: list[dict] = []
     for q in queries:
-        for attempt in (1, 2):  # one retry on transient failure
+        attempts = (1,) if bounded else (1, 2)
+        for attempt in attempts:
             try:
                 r = requests.get(GEO_URL, params={"name": q, "count": 5,
                                                   "language": "en", "format": "json"},
-                                 headers=UA, timeout=8)
+                                 headers=UA, timeout=(2, 5) if bounded else 8)
                 r.raise_for_status()
                 out = [dict(
                     name=res.get("name", "?"),
@@ -39,7 +40,7 @@ def geocode_city(name: str) -> list[dict]:
                 ) for res in (r.json().get("results") or [])]
                 break
             except Exception:
-                if attempt == 2:
+                if attempt == attempts[-1]:
                     out = []
         if out:
             return out

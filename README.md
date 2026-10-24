@@ -1,8 +1,93 @@
-# fishwitch
+# baromoon · fishwitch
 
-The fishing report apparatus. MVP: questions asked in the terminal (or by your
-agent), report generated locally. UI comes later — `report.py::generate()`
-is the clean entry point for it.
+A personal fishing almanac: birth details + one water + confirmed availability
+produce one window, one personal reason, and a short conditions sentence.
+The local replacement is implemented; no release or deployment is implied.
+
+## Current application
+
+Run `./webapp` and open `http://127.0.0.1:7700/`. Birth details, water, availability,
+and results share one page. The first visit computes nothing until submission.
+Defaults are next three days, daylight, and two-hour sessions, visibly editable
+before submission. Seven days is the maximum. All trip times use the selected
+water's IANA timezone, including DST changes. Unknown birth time or no birth data
+uses the shared almanac, without a placeholder natal chart.
+
+`forecast.py` is the canonical, network-free calculation. `forecast_weather.py`
+acquires one current hourly forecast, with bounded timeouts and a bounded public
+weather cache. The new path never calls `report.generate()`, archives, gauges,
+stocking, shoreline analysis, model agreement, catch calibration, or commerce.
+The new page has one small JS/CSS pair and no third-party font, UI, map, or
+analytics requests. Existing deployment machinery and dependencies are retained.
+
+**Approved rules (`window-1`):** Moon sextile/trine natal Moon, Venus, or Jupiter
+adds 1 per exact event; square/opposition subtracts 1. Only events in the session's
+`[start, end)` interval count; total personal contribution is capped at ±2.
+No houses, angles, returns, lunar-phase resonance, sign lore, or planetary-hour
+bonuses participate. Weather bands precede personal timing, shared solunar-major
+overlap, minor overlap, lower gusts, lower precipitation, and earlier absolute
+start. Missing/stale weather is explicit; weather screening is no safety guarantee.
+Interpretation is not established catch probability. Identical personal scores
+use shared conditions; zero may also win by avoiding negative alignments.
+
+The existing installed ephemeris backend is **Moshier through Swiss Ephemeris**.
+It is now explicit and checked, with binary/package/timezone fingerprints in
+the result. Standard Swiss planetary/lunar files are not bundled here; the code
+does not silently switch backend. Kerykeion remains pinned and supplies one
+natal chart per request, using an exact historically resolved UTC birth instant.
+Restart and revalidate workers after dependency or timezone-data changes.
+
+**Privacy:** optional local device persistence; otherwise settings last for the
+tab. Birth details are sent to the server in transient POST bodies, never URLs.
+The application does not intentionally retain personal requests or results;
+responses use `no-store`, and errors redact computation exceptions. Saved results
+are never written to browser storage. Earlier profiles can be explicitly imported;
+forgetting clears this page and the active earlier profile, preserving other profiles.
+
+## Canonical API and CLI
+
+`POST /api/window` takes JSON with an existing `water_id`, `availability` intervals
+(`start`/`end`, ISO local times), `duration_minutes`, `daylight`, optional `birth`,
+and a non-personal `request_id`. Known birth requires date, clock time, resolved
+place/coordinates/timezone, and `time_known: true`. Unknown time can be sent as
+`{"time_known": false}`. DST gaps/folds require correction or a confirmed explicit
+offset. Birthplace lookup is `POST /api/window/place` with just a `query`; the
+provider receives no birth date/time.
+
+`./fishwitch window --request request.json` (or stdin with `--request -`) uses
+the same operation and ordering. `--weather snapshot.json --evaluated-at ISO`
+replays frozen UTC weather and an explicit evaluation time. Request JSON and
+frozen snapshots must remain private when they contain personal data; do not
+commit real profiles or calculated personal results.
+
+## Validation and release boundaries
+
+```sh
+~/.astro-venv/bin/python tests/run_offline.py
+node tests/window_state.test.cjs
+node tests/report_state.test.cjs
+node tests/browser_window.cjs  # installed Chromium + synthetic local fixture server
+```
+
+The offline runner blocks HTTP/TCP and supplies legacy retailer test configuration.
+The real-browser harness checks returning/expired trips, races, privacy, forgotten
+details, keyboard focus, phone widths, and the request deadline. It does not fetch
+real weather or use real profiles. No new test/runtime dependencies are required.
+
+Public release still requires a viable weather-service/commercial-use basis and
+Swiss Ephemeris/Kerykeion/pyswisseph license review. No license purchase or hosting
+change is authorized by this implementation. Existing scheduled warmers, static
+snapshots, legacy routes/APIs/feeds, and saved data need an explicit cutover plan;
+none were deleted or deployed. Rollback is the prior source revision and retained
+legacy routes; do not push private repository history to the public mirror.
+
+## Retained legacy reference
+
+Everything below describes the parked layered-report application. Its `/legacy`,
+`/report`, `/outlook`, public API v1, feeds, maps, interviews, and existing CLI
+commands remain available for compatibility and use their historical ranking.
+They are not dependencies of the new page or the canonical `window` operation.
+Do not build new product features on this path. Retirement is a release decision.
 
 ## Layers
 1. **Weather** — Open-Meteo: temps, wind, cloud, precipitation, barometer
@@ -80,7 +165,7 @@ fishwitch lakes                         # registry of known water bodies
 fishwitch arsenal --species bass        # lure categories it understands
 ```
 
-## Data flow for a future UI
+## Legacy layered-report data flow
 ```python
 from fishwitch.report import generate, to_markdown
 profile = {...birth: {date, time, time_known, place, lat, lng, tz},

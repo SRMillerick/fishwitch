@@ -1,5 +1,24 @@
 # baromoon — Design System
 
+*Current contract, 2026-10-22:* the new `/` experience is one personal fishing
+window, using `window.html`, `window.css`, and `window.js`. First use has three
+inline groups (birth, water, availability) and “Find my window.” After calculation,
+inputs collapse to editable summaries. One result has its day/time in the water's
+timezone, an honest computed reason, and one conditions sentence. “Why this
+window?” and up to two non-overlapping alternatives are inline disclosures.
+
+Paper `#f7f5ef`, ink `#14232a`, water `#17606f`, the existing small triskelion,
+system body fonts, Georgia headings, visible labels, keyboard focus, and one
+column remain. There are no theme controls, score gauges/tiers, natal chart
+wheels, report detours, tackle offers, interviews, or navigation requirements in
+the new flow. First use may scroll; returning use stays short. Shared-only and
+pending states must never be labeled personal. Device persistence is optional;
+expired availability must be reconfirmed without resetting birth or water.
+
+The v1.0 description below is a retained legacy reference for the old URLs,
+not instructions to rebuild their ledger → report → interview journey. Its
+Google Fonts, themes, tiers, and commerce controls do not apply to the new page.
+
 *v1.0 — 2026-09-15. Structure owes a debt to adoraway's UI doc; the soul is
 deliberately nothing like it. Baromoon is not a SaaS product wearing a theme —
 it is a moon-ledger: an old field journal kept by someone who fishes by the

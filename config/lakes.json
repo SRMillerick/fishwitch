@@ -63,7 +63,9 @@
     "county": "Napa",
     "region": "Napa County, CA",
     "depth_source": "Wikipedia infobox (Lake Berryessa: max depth 275 ft)",
-    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed"
+    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed",
+    "tz": "America/Los_Angeles",
+    "tz_source": "Open-Meteo forecast timezone=auto at registry coordinates; verified 2026-10-22"
   },
   "lake-sonoma": {
     "name": "Lake Sonoma",
@@ -99,7 +101,9 @@
     "county": "Sonoma",
     "region": "Sonoma County, CA",
     "depth_source": "USACE \u2014 ~140 ft max at the dam (registry note)",
-    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed"
+    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed",
+    "tz": "America/Los_Angeles",
+    "tz_source": "Open-Meteo forecast timezone=auto at registry coordinates; verified 2026-10-22"
   },
   "lake-ralphine": {
     "name": "Lake Ralphine",
@@ -130,7 +134,9 @@
     "area_acres": 19,
     "area_source": "Wikipedia infobox (19 acres); OSM polygon reads 19 acres",
     "depth_source": "morphology estimate from area (no surveyed depth found)",
-    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed"
+    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed",
+    "tz": "America/Los_Angeles",
+    "tz_source": "Open-Meteo forecast timezone=auto at registry coordinates; verified 2026-10-22"
   },
   "lake-hennessey": {
     "name": "Lake Hennessey",
@@ -162,7 +168,9 @@
     "area_acres": 790,
     "area_source": "Wikipedia infobox (790 acres); OSM polygon reads 763 acres",
     "depth_source": "estimate from the 125 ft Conn Creek Dam (Wikipedia); no surveyed depth found",
-    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed"
+    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed",
+    "tz": "America/Los_Angeles",
+    "tz_source": "Open-Meteo forecast timezone=auto at registry coordinates; verified 2026-10-22"
   },
   "clear-lake": {
     "name": "Clear Lake",
@@ -195,7 +203,9 @@
     "county": "Lake",
     "region": "Lakeport, Lake County, CA",
     "depth_source": "registry override (shallow polymictic; Wikipedia infobox max depth 60 ft)",
-    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed"
+    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed",
+    "tz": "America/Los_Angeles",
+    "tz_source": "Open-Meteo forecast timezone=auto at registry coordinates; verified 2026-10-22"
   },
   "indian-valley-reservoir": {
     "name": "Indian Valley Reservoir",
@@ -226,7 +236,9 @@
     "area_acres": 3635,
     "area_source": "OSM water polygon (3,635 acres); Wikipedia infobox reads 4,000 acres",
     "depth_source": "estimate from the 201 ft Indian Valley Dam (Wikipedia); no surveyed depth found",
-    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed"
+    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed",
+    "tz": "America/Los_Angeles",
+    "tz_source": "Open-Meteo forecast timezone=auto at registry coordinates; verified 2026-10-22"
   },
   "lake-pillsbury": {
     "name": "Lake Pillsbury",
@@ -258,7 +270,9 @@
     "area_acres": 2000,
     "area_source": "Wikipedia infobox (2,003 acres); OSM polygon reads 2,068 acres",
     "depth_source": "estimate from the 138 ft Scott Dam (Wikipedia); no surveyed depth found",
-    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed"
+    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed",
+    "tz": "America/Los_Angeles",
+    "tz_source": "Open-Meteo forecast timezone=auto at registry coordinates; verified 2026-10-22"
   },
   "spring-lake": {
     "name": "Spring Lake",
@@ -290,7 +304,9 @@
     "note": "species: CDFW-common list (editorial \u2014 verify locally)",
     "county": "Sonoma",
     "coords_source": "main-lake shoreline centroid (2026-09-30); was the swimming-lagoon point",
-    "depth_source": "morphology estimate from area (no surveyed depth found)"
+    "depth_source": "morphology estimate from area (no surveyed depth found)",
+    "tz": "America/Los_Angeles",
+    "tz_source": "Open-Meteo forecast timezone=auto at registry coordinates; verified 2026-10-22"
   },
   "blue-lake": {
     "name": "Blue Lake (Upper Blue Lakes)",
@@ -322,7 +338,9 @@
     "county": "Lake",
     "region": "Blue Lakes, Lake County, CA",
     "depth_source": "morphology estimate from area (no surveyed depth found)",
-    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed"
+    "coords_source": "OSM/Nominatim geocode; OSM shoreline containing-ring check passed",
+    "tz": "America/Los_Angeles",
+    "tz_source": "Open-Meteo forecast timezone=auto at registry coordinates; verified 2026-10-22"
   },
   "highland-springs-reservoir": {
     "id": "highland-springs-reservoir",
@@ -352,7 +370,9 @@
     "note": "hand-carded (geocode miss) \u2014 coords/area from Lake County Parks; verify locally",
     "county": "Lake",
     "coords_source": "Nominatim (OpenStreetMap) \u2014 corrected 2026-09-19; prior auto-card point was 22 km off",
-    "depth_source": "manual estimate (shallow reservoir; no surveyed depth found)"
+    "depth_source": "manual estimate (shallow reservoir; no surveyed depth found)",
+    "tz": "America/Los_Angeles",
+    "tz_source": "Open-Meteo forecast timezone=auto at registry coordinates; verified 2026-10-22"
   },
   "watson-lake-az": {
     "id": "watson-lake-az",

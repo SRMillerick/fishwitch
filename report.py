@@ -22,7 +22,8 @@ from pathlib import Path
 
 from weather import Weather, model_agreement
 from skycalc import Sky, phase_name, illum_pct, fmt_sign, planet_lon, SIGNS, SYM
-from chart import NatalChart, transit_aspects, voc_moon, moon_note, phase_resonance, HOUR_MEANINGS
+from chart import (NatalChart, transit_aspects, voc_moon, moon_note,
+                   phase_resonance, precise_birth, HOUR_MEANINGS)
 import tactics as tx
 import logbook as lb
 import glyphs
@@ -176,10 +177,17 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
     # natal chart, so compute these for every profile — anonymous included.
     voc = voc_moon(sky.jd(start), sky)
     mn = moon_note(sky.jd(start))
-    if profile.get("birth"):
+    if precise_birth(profile.get("birth")):
         natal = NatalChart(profile["birth"])
-        aspects = transit_aspects(natal, sky.jd(start), hours + 2)
+        aspects = transit_aspects(natal, sky.jd(start), (end - start).total_seconds() / 3600)
         resonance = phase_resonance(natal, sky.jd(start))
+
+    # Use exact numeric timestamps for eligibility, including an event at launch
+    # and excluding pack-out. Display rounding never decides which events score.
+    perfecting = [a for a in (aspects or []) if a["perfect_jd"] is not None
+                  and sky.jd(start) <= a["perfect_jd"] < sky.jd(end)]
+    aspect_events = [(start if a["perfect_jd"] == sky.jd(start) else sky.loc(a["perfect_jd"]), a)
+                     for a in perfecting]
 
     arsenal = profile.get("arsenal") or []
     baits = profile.get("baits") or []
@@ -221,35 +229,31 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
     for h in sky.planetary_hours(start):
         if start < h["start"] < end:
             events.append((h["start"], f"{h['ruler']} hour", "hour"))
-    if aspects:
-        for a in aspects:
-            if a["perfect_jd"] is None:
-                continue
-            t = sky.loc(a["perfect_jd"])
-            if start - timedelta(minutes=120) <= t <= end + timedelta(hours=12):
-                events.append((t, f"{a['transit']} {a['sym']} natal {a['natal']} perfects", "aspect"))
+    for t, a in aspect_events:
+        events.append((t, f"{a['transit']} {a['sym']} natal {a['natal']} perfects", "aspect"))
     if voc and voc["void"] and voc["ends"] and start <= voc["ends"] <= end:
         events.append((voc["ends"], "moon leaves void-of-course", "moon"))
 
     events.sort(key=lambda e: e[0])
-    merged = []
-    for t, lab, kind in events:
-        if merged and (t - merged[-1][0]).total_seconds() < 300:
-            merged[-1] = (merged[-1][0], merged[-1][1] + f" + {lab}", kind)
-        else:
-            merged.append((t, lab, kind))
-    pts = sorted(set([start] + [t for t, _, _ in merged if start < t < end] + [end]))
+    # Keep usable report blocks without moving or dropping nearby events.
+    # Suppress only boundaries that would create a block shorter than eight
+    # minutes; the original event timestamp still belongs to exactly one block.
+    pts = [start]
+    for t in sorted({t for t, _, _ in events if start < t < end}):
+        if (t - pts[-1]).total_seconds() >= 8 * 60 and (end - t).total_seconds() >= 8 * 60:
+            pts.append(t)
+    pts.append(end)
     blocks = []
     for a, b in zip(pts, pts[1:]):
-        if (b - a).total_seconds() < 8 * 60:
-            continue
         mid = a + (b - a) / 2
         light, sun_alt = sky.light_level(sky.jd(mid))
         w = wx.at(mid)
         hour = sky.hour_at(mid)
         sol = next((e["kind"] for e in solunar if e["start"] <= mid <= e["end"]), None)
-        ev_notes = [lab for t, lab, k in merged if a <= t <= b and k != "session"
-                    and not (k == "hour" and lab.split()[0] == hour["ruler"])]
+        event_data = [event for event in events if a <= event[0] < b and event[2] != "session"]
+        block_aspects = [aspect for t, aspect in aspect_events if a <= t < b]
+        ev_notes = [lab for t, lab, k in event_data
+                    if not (k == "hour" and lab.split()[0] == hour["ruler"])]
         ctx = dict(light=light, cloud=w["cloud"], wind_mph=w["wind_mph"],
                    temp_f=w["temp_f"], water_f=water_f, hour_ruler=hour["ruler"],
                    solunar=sol, moon_fruitful=(mn["fruitful"] if mn else None),
@@ -258,7 +262,8 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
                    lake_state=lake_state, bottom=bottom, position=position)
         picks = tx.recommend(ctx, candidates, top_n=2)
         blocks.append(dict(start=a, end=b, light=light, sun_alt=round(sun_alt, 1),
-                           hour=hour, solunar=sol, events=ev_notes, picks=picks, wx=w))
+                           hour=hour, solunar=sol, events=ev_notes,
+                           event_data=event_data, aspects=block_aspects, picks=picks, wx=w))
 
     major_in = any(e["kind"] == "major" and e["start"] <= end and e["end"] >= start
                    for e in solunar)
@@ -270,7 +275,6 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
                     + (1 if dusk_major else 0))
 
     astro_score, astro_notes = 5.0, []
-    perfecting = [a for a in (aspects or []) if a["perfect_jd"]]
     if perfecting:
         good = [a for a in perfecting if a["natal"] in ("Moon", "Venus", "Jupiter", "Sun")
                 or a["transit"] in ("Venus", "Jupiter")]
@@ -316,15 +320,13 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         s = sum(p[1] for p in blk["picks"]) or 0
         if blk["solunar"] == "major": s += 2
         if blk["light"] in ("golden", "dusk/dawn", "sunset/sunrise", "night"): s += 2
-        # a transit perfecting INSIDE the block outranks generic light favor —
-        # that's the event the whole session is pointed at (validated 9/9/26:
-        # Moon ☍ natal Venus perfected 7:41 PM, fish at 7:45 PM)
-        for lab in blk["events"]:
-            if "perfects" in lab:
-                s += 3
-                if any(b in lab for b in ("Venus", "Jupiter", "Moon", "Sun")):
-                    s += 1
-                break
+        # Preserve the legacy bonus policy while deciding eligibility from
+        # structured events, rather than rendered labels or rounded clock times.
+        for aspect in blk["aspects"]:
+            s += 3
+            if {aspect["transit"], aspect["natal"]} & {"Venus", "Jupiter", "Moon", "Sun"}:
+                s += 1
+            break
         return s
     prime = max(blocks, key=prime_score) if blocks else None
     prime_s = round(prime_score(prime), 1) if prime else None
@@ -416,7 +418,8 @@ def generate(profile: dict, lake: dict, at_local: datetime, hours: float = 2.5,
         moon=dict(ms, moonrise=moonrise, moonset=moonset, phase_quality=phase_q_label),
         solunar=solunar, weather=dict(score=wscore, start=wxs, tmax=tmax, tmin=tmin,
                                       water_f=water_f),
-        natal=natal, aspects=(aspects or [])[:8], perfecting=perfecting,
+        natal=natal, personalized=natal is not None,
+        aspects=(aspects or [])[:8], perfecting=perfecting, events=events,
         voc=voc, moon_note=mn, resonance=resonance, match=baseline,
         blocks=blocks, rods=rods, prime=prime, prime_score=prime_s, utc_off=wx.utc_offset,
         knots=knots, knot_notes=knot_notes, angler_knots=angler_knots, line=line, color=color, gap=gap,

@@ -1,36 +1,52 @@
-#!/bin/sh
-# publish-mirror — sync a CLEAN snapshot of the working tree to the public repo.
-#
-# The public repo (SRMillerick/fishwitch) carries its own linear history of
-# mirror commits. NEVER push the private history (archive) to it — the archive
-# contains generated natal-derived reports in old commits. This script is the
-# only sanctioned path:
-#   1. git archive HEAD → tree (tracked files only, PII never tracked)
-#   2. strip: reports/, HANDOFF.md, STATE.md, START.md
-#   3. scrub: lakes.json lore/access/structure (club-lake intel stays local)
-#   4. commit as one mirror commit on top of public main, push
-set -e
+#!/usr/bin/env bash
+# Public repo has its OWN linear history. Never push private archive history.
+# --prepare NEW_DIR produces the exact sanitized HEAD tree without any network.
+# --revision-file FILE records the exact public commit published (for deploy.sh).
+set -euo pipefail
 DIR="$(dirname "$(readlink -f "$0")")"
 SRC_SHA="$(git -C "$DIR" rev-parse --short HEAD)"
 PUB=git@github.com:SRMillerick/fishwitch.git
-
+MODE=publish
+REVISION_FILE=
+DEST=
+case "${1:-}" in
+  '') [[ $# == 0 ]] || exit 2 ;;
+  --prepare) [[ $# == 2 ]] || exit 2; MODE=prepare; DEST=$2 ;;
+  --revision-file) [[ $# == 2 ]] || exit 2; REVISION_FILE=$(realpath -m "$2") ;;
+  *) echo 'Usage: ./publish-mirror [--prepare NEW_DIR | --revision-file FILE]' >&2; exit 2 ;;
+esac
+if [[ $MODE == publish && -n $(git -C "$DIR" status --porcelain) ]]; then
+  echo 'Review and commit the working tree before public mirroring' >&2; exit 1
+fi
 WORK=$(mktemp -d)
-git clone -q "$PUB" "$WORK/repo"
-mkdir "$WORK/tree"
-git -C "$DIR" archive HEAD | tar -x -C "$WORK/tree" \
+trap 'rm -rf "$WORK"' EXIT
+TREE="$WORK/tree"
+if [[ $MODE == prepare ]]; then TREE=$DEST; fi
+# Refuse existing destinations rather than delete/overwrite anything there.
+mkdir "$TREE"
+git -C "$DIR" archive HEAD | tar -x -C "$TREE" \
     --exclude=reports --exclude=HANDOFF.md --exclude=STATE.md --exclude=START.md \
     --exclude=ASSOCIATES.md --exclude=submissions --exclude=SEO.md --exclude=COVERAGE.md \
-    --exclude=baromoon_prelim_plan.md --exclude=config/candidates
-"$HOME/.astro-venv/bin/python" - "$WORK/tree/config/lakes.json" <<'EOF'
+    --exclude=baromoon_prelim_plan.md --exclude=PRODUCT_RESET.md --exclude=config/candidates
+"${BAROMOON_PYTHON:-$HOME/.astro-venv/bin/python}" - "$TREE" <<'PY'
 import json, sys
-p = sys.argv[1]
-d = json.load(open(p))
-for k, v in d.items():
-    for f in ("lore", "access", "structure"):
-        v.pop(f, None)
-json.dump(d, open(p, "w"), indent=2)
-EOF
-cat > "$WORK/tree/PUBLIC-NOTES.md" <<EOF
+from pathlib import Path
+root = Path(sys.argv[1])
+p = root / 'config/lakes.json'
+d = json.loads(p.read_text())
+for v in d.values():
+    for field in ('lore', 'access', 'structure'):
+        v.pop(field, None)
+p.write_text(json.dumps(d, indent=2))
+# Fail closed if runtime/private paths ever become tracked accidentally.
+for name in ('logs', 'reports', 'venv', '.cache', 'config/logbook.jsonl'):
+    if (root / name).exists():
+        raise SystemExit('Refusing private/runtime path in mirror: ' + name)
+profiles = root / 'config/profiles'
+if profiles.exists() and any(p.name != 'example.json' for p in profiles.iterdir()):
+    raise SystemExit('Refusing non-example profiles in mirror')
+PY
+cat > "$TREE/PUBLIC-NOTES.md" <<EOF
 # Public mirror
 
 Clean public mirror of fishwitch — mirrored from the private development
@@ -41,11 +57,21 @@ logbooks are gitignored by policy in both repos (identity-grade PII).
 Rendered showcase: GitHub Pages (gh-pages branch), built by \`build_static.py\`
 (anonymous snapshots only — no profiles, no natal data, no logbook data).
 EOF
-rm -rf "$WORK/repo"/*
-cp -r "$WORK/tree"/. "$WORK/repo"/
-cd "$WORK/repo"
-git add -A
-git -c user.name="fishwitch mirror bot" -c user.email="noreply@localhost" \
-    commit -qm "mirror of archive@$SRC_SHA" || { echo "no changes to mirror"; exit 0; }
-git push -q origin main
-echo "✅ public main updated (mirror of archive@$SRC_SHA)"
+if [[ $MODE == prepare ]]; then
+  echo "Prepared sanitized archive@$SRC_SHA in $TREE (not published)"
+  exit 0
+fi
+git clone -q --single-branch --branch main "$PUB" "$WORK/repo"
+# Remove tracked dotfiles too, without touching the cloned .git history.
+git -C "$WORK/repo" rm -rq --ignore-unmatch .
+cp -r "$TREE"/. "$WORK/repo"/
+git -C "$WORK/repo" add -A
+if ! git -C "$WORK/repo" diff --cached --quiet; then
+  git -C "$WORK/repo" -c user.name="fishwitch mirror bot" -c user.email="noreply@localhost" \
+      commit -qm "mirror of archive@$SRC_SHA"
+  git -C "$WORK/repo" push -q origin HEAD:main
+fi
+REVISION=$(git -C "$WORK/repo" rev-parse HEAD)
+# A commit failure is no longer mistaken for a successful no-op publication.
+if [[ -n $REVISION_FILE ]]; then printf '%s\n' "$REVISION" > "$REVISION_FILE"; fi
+echo "Public revision: $REVISION (mirror of archive@$SRC_SHA)"
