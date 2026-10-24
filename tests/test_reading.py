@@ -69,15 +69,16 @@ class ContactGeometryTest(unittest.TestCase):
 
 
 class SelectionTest(unittest.TestCase):
-    def test_midpoint_cue_leads_then_recurring_contact(self):
-        sessions = [transits(moon=160.0, sun=70.0),
+    def test_two_tightest_contacts_lead_regardless_of_recurrence(self):
+        sessions = [transits(moon=160.6, sun=70.0),
                     transits(moon=46.0, sun=70.5),
                     transits(moon=47.0, sun=71.0)]
         readings = reading.select(sessions, NATAL)
         first = readings[0]
         self.assertEqual([(e["transit"], e["natal"], e["scope"]) for e in first["entries"]],
-                         [("Moon", "Mercury", "midpoint"), ("Sun", "Moon", "recurring")])
-        self.assertEqual(first["entries"][0]["orb"], 0.0)
+                         [("Sun", "Moon", "recurring"), ("Moon", "Mercury", "midpoint")])
+        self.assertEqual([e["orb"] for e in first["entries"]], [0.0, 0.6])
+        # Recurrence still labels the details; it no longer outranks a tighter contact.
         self.assertEqual(len(readings[1]["entries"]), 1)
         self.assertEqual(readings[1]["entries"][0]["scope"], "recurring")
         self.assertEqual(readings[1]["entries"][0]["orb"], 0.5)

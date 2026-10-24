@@ -6,8 +6,8 @@ Rules (PRODUCT_RESET.md §19, still under review):
     midpoint;
   - a contact is "recurring" only when the same transit-target-aspect is present
     at two or more displayed midpoints; everything else is a midpoint cue;
-  - at most two paired entries: the tightest midpoint cue, then the tightest
-    recurring contact, then the next tightest contact if a category is empty.
+  - at most two paired entries, simply the two tightest contacts at the
+    midpoint; recurrence is reported in the details, not used to pick them.
 
 This module is pure: callers supply already-computed longitudes. It never ranks
 sessions, and nothing here is a claim about measured mental states.
@@ -181,17 +181,9 @@ def select(sessions: list, natal_targets: dict, orb: float = ORB) -> list:
     readings = []
     for contacts in per_session:
         recurring = {c.key for c in contacts if seen[c.key] >= 2}
-        chosen = []
-        midpoints = [c for c in contacts if c.key not in recurring]
-        themes = [c for c in contacts if c.key in recurring]
-        for group in (midpoints, themes):
-            if group and len(chosen) < MAX_ENTRIES:
-                chosen.append(group[0])
-        for contact in contacts:
-            if len(chosen) == MAX_ENTRIES:
-                break
-            if contact not in chosen:
-                chosen.append(contact)
+        # Two tightest contacts, whatever their recurrence: picking a looser
+        # non-recurring contact first paired near-duplicate facets and read worse.
+        chosen = contacts[:MAX_ENTRIES]
         entries = []
         for contact in chosen:
             mindset, approach = COPY[(contact.transit, contact.natal)][
