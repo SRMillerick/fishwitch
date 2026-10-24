@@ -105,6 +105,14 @@ async function control(data) {
   assert.equal(await evaluate(`document.getElementById('why-content').textContent.includes('Personal contribution:')`), false);
   assert.equal(await evaluate(`document.getElementById('calculation-details').open`), false);
   assert.equal(await evaluate(`document.body.classList.contains('has-result')`), true);
+  assert.equal(await evaluate(`document.getElementById('reading').hidden`), false);
+  assert.match(await evaluate(`document.getElementById('reading-entries').innerText`), /Suggested approach:/);
+  assert.match(await evaluate(`document.getElementById('reading-entries').innerText`), /from exact at the session midpoint/);
+  assert.match(await evaluate(`document.getElementById('reading-note').textContent`), /do not affect which time ranks first/);
+  await evaluate(`document.querySelector('#other > summary').click()`);
+  assert.match(await evaluate(`document.getElementById('other-content').innerText`), /Possible mindset and suggested approach/);
+  assert.equal(await evaluate(`document.getElementById('other-content').innerText.includes('undefined')`), false);
+  await evaluate(`document.querySelector('#other > summary').click()`);
   assert.match(await evaluate(`document.getElementById('result-weather').textContent`), /no precipitation forecast/);
   assert.equal(await evaluate(`(() => {const t=document.getElementById('result-weather').textContent;
     const m=t.match(/Wind up to (\d+) mph(?:, gusting to (\d+) mph)?/);
@@ -224,6 +232,7 @@ async function control(data) {
   await change('first-date', current); await change('last-date', current);
   await submit(); await ready();
   assert.equal(await evaluate(`document.getElementById('result-mode').textContent`), 'Shared local almanac');
+  assert.equal(await evaluate(`document.getElementById('reading').hidden`), true, 'Shared-only results have no personal reading');
   const lastRequest = network.filter(r => r.url.endsWith('/api/window')).at(-1);
   assert.deepEqual(JSON.parse(lastRequest.postData).birth, {time_known:false});
   await control({mode:'offline'}); await submit(); await ready();

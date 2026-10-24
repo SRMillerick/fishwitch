@@ -6,6 +6,13 @@ header { margin-bottom:2rem; }
 .brand { display:inline-flex; gap:.7rem; align-items:center; color:var(--ink); text-decoration:none; font:600 1.35rem Georgia,serif; }
 .mark { width:1.6rem; height:1.6rem; background:var(--water); mask:url('/static/triskelion-bold.svg') center/contain no-repeat; }
 h1,h2 { font-family:Georgia,"Times New Roman",serif; font-weight:500; line-height:1.2; text-wrap:balance; }
+#reading { margin:1.5rem 0 .5rem; padding:1rem 0 0; border-top:1px solid var(--line); }
+#reading h3,.alt-reading h3 { font-family:Georgia,"Times New Roman",serif; font-weight:500; font-size:1.05rem; margin:0 0 .5rem; }
+#reading ul { list-style:none; padding:0; margin:0; }
+#reading li + li,.alt-reading li + li { margin-top:1rem; padding-top:1rem; border-top:1px solid var(--line); }
+#reading p,.alt-reading p { margin:.3rem 0; }
+.mindset { font-weight:600; }
+.contact { font-size:.8rem; color:var(--dim); }
 h1 { font-size:clamp(2rem,6vw,3rem); margin:1.5rem 0 .8rem; }
 h2 { font-size:clamp(1.6rem,5vw,2.25rem); margin:.5rem 0 1.2rem; }
 p { margin:.75rem 0; }
@@ -57,8 +64,7 @@ input[type=checkbox],input[type=radio] { width:1.1rem; height:1.1rem; accent-col
 .alternative { padding:.5rem 0; }
 .alternative + .alternative { border-top:1px solid var(--line); }
 .alternative p { margin:.4rem 0; }
-.personal-comparison { font-weight:600; color:var(--water); }
-footer { margin-top:1.5rem; padding-top:1rem; border-top:1px solid var(--line); font-size:.875rem; color:var(--dim); }
+.personal-comparison { font-weight:600; color:var(--water); }footer { margin-top:1.5rem; padding-top:1rem; border-top:1px solid var(--line); font-size:.875rem; color:var(--dim); }
 footer summary { font-weight:400; color:var(--water); }
 pre { white-space:pre-wrap; overflow-wrap:anywhere; font:inherit; font-size:.8rem; }
 ul { padding-left:1.4rem; }

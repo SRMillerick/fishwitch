@@ -251,6 +251,25 @@ if (typeof document !== "undefined") (function () {
     if (!events.length) return "";
     return `It overlaps a local Moon window around ${localClock(events[0].exact, zone)}.`;
   }
+  function contactText(contact, suffix = "") {
+    return `${contact.transit} ${contact.aspect} natal ${contact.natal}, ${contact.orb.toFixed(2)}° from exact at the session midpoint${suffix}`;
+  }
+  function readingNodes(reading) {
+    const list = document.createElement("ul"), fragment = document.createDocumentFragment();
+    if (reading.empty) {
+      append(list, "p", "No notable contact in this reading method at the session midpoint. No specific mindset suggested.");
+    }
+    for (const entry of reading.entries) {
+      const li = document.createElement("li");
+      append(li, "p", entry.mindset, "mindset");
+      append(li, "p", "Suggested approach: " + entry.approach);
+      append(li, "p", contactText(entry) + (entry.scope === "recurring"
+        ? " Recurring across these sessions." : " Only at this session’s midpoint."), "contact");
+      list.append(li);
+    }
+    fragment.append(list);
+    return fragment;
+  }
   function render(data) {
     const result = $("result"), row = data.recommended;
     const zone = data.water.timezone;
@@ -267,6 +286,12 @@ if (typeof document !== "undefined") (function () {
       ? "Forecast updated " + new Intl.DateTimeFormat("en-US", {timeZone:zone, month:"short", day:"numeric", hour:"numeric", minute:"2-digit", timeZoneName:"short"}).format(new Date(data.weather_acquired_at))
       : "Current weather unavailable.";
     const why = $("why-content"); why.replaceChildren();
+    const reading = row && row.reading;
+    $("reading").hidden = !reading;
+    if (reading) {
+      $("reading-entries").replaceChildren(readingNodes(reading));
+      $("reading-note").textContent = "Authored interpretations of computed contacts, not measured states or a catch forecast. They do not affect which time ranks first.";
+    }
     if (row) {
       if (!row.personal_events.length) append(why, "p", data.personalized
         ? "No exact personal alignment falls inside this session. Your birth chart was checked; it adds no timing advantage here."
@@ -276,6 +301,13 @@ if (typeof document !== "undefined") (function () {
       }
       for (const event of row.shared.events) append(why, "p", `${event.kind === "major" ? "Major" : "Minor"} Moon window: ${localClock(event.start, zone)} – ${localClock(event.end, zone)}, centered on ${localClock(event.exact, zone)}.`);
       if (row.shared.events.length) append(why, "p", "These Moon windows are shared by everyone at this water. Major windows surround the Moon’s upper or lower meridian passage; minor windows surround moonrise or moonset.", "hint");
+      if (reading) {
+        const unused = reading.contacts.filter(contact => !contact.used);
+        if (unused.length) append(why, "p", "Other contacts at this midpoint, not used for the short reading: " +
+          unused.map(contact => `${contact.transit} ${contact.aspect} natal ${contact.natal} (${contact.orb.toFixed(2)}°)`).join("; ") + ".", "hint");
+        append(why, "p", "The reading is taken at each displayed session’s midpoint. “Recurring” means the same contact is within the chosen orb at two or more of those midpoints; it does not mean the contact was continuous between them, and a midpoint can miss a contact active near a session’s start or end.", "hint");
+        if (reading.empty) append(why, "p", "Finding nothing in this selected method is not a claim that nothing is happening in the chart.", "hint");
+      }
       append(why, "p", `Compared sessions within your selected dates and hours. Weather comes first, then your birth chart timing, shared Moon windows, gusts, rainfall, and earlier start.`, "hint");
     }
     for (const limitation of data.limitations || []) {
@@ -291,6 +323,12 @@ if (typeof document !== "undefined") (function () {
       const div = document.createElement("div"); div.className = "alternative";
       append(div, "p", tripLabel(alternative, data.water.timezone));
       append(div, "p", personalTimingLabel(alternative, data.personalized), "personal-comparison");
+      if (alternative.reading) {
+        const block = document.createElement("div"); block.className = "alt-reading";
+        append(block, "h3", "Possible mindset and suggested approach");
+        block.append(readingNodes(alternative.reading));
+        div.append(block);
+      }
       for (const event of alternative.personal_events) append(div, "p", event.explanation, "hint");
       append(div, "p", "Why the recommended window leads: " + compareSessions(row, alternative), "hint");
       append(div, "p", weatherLabel(alternative), "hint"); other.append(div);

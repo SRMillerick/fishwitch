@@ -57,6 +57,8 @@ class WindowRouteTest(unittest.TestCase):
         self.assertEqual(response.json, window_cli.execute(self.payload(), WATERS, NOW, snapshot()))
         self.assertEqual(response.headers["Cache-Control"], "no-store")
         self.assertNotIn(BIRTH["date"], response.get_data(as_text=True))
+        self.assertEqual(response.json["reading_version"], "mindset-0")
+        self.assertTrue(response.json["recommended"]["reading"]["entries"])
         record.assert_not_called()
 
     def test_invalid_requests_fail_before_weather(self):

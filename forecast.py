@@ -17,6 +17,7 @@ from zoneinfo import TZPATH, ZoneInfo, ZoneInfoNotFoundError
 
 import swisseph as swe
 from fishwitch.chart import NatalChart, birth_datetime, normalize_birth
+from fishwitch import reading as reading_engine
 from fishwitch.skycalc import Sky, PLANETS
 
 UTC = timezone.utc
@@ -117,6 +118,8 @@ class SkyData:
     shared: tuple[SharedEvent, ...]
     personal: tuple[PersonalEvent, ...]
     environment: dict
+    # Natal longitudes, present only when a birth chart was actually built.
+    points: dict | None = None
 
 
 @dataclass(frozen=True)
@@ -394,6 +397,7 @@ def compute_sky(req: ForecastRequest) -> SkyData:
             shared.append(SharedEvent(kind, Interval(exact - delta, exact + delta), exact))
             cursor = exact + timedelta(seconds=1)
     personal = ()
+    points = None
     if req.birth and feasible:
         natal = NatalChart(req.birth)  # Exactly once, never once per candidate.
         birth_jd = clock.jd(birth_datetime(req.birth).astimezone(UTC).replace(tzinfo=None))
@@ -401,7 +405,8 @@ def compute_sky(req: ForecastRequest) -> SkyData:
             if abs(angular_error(natal.points[body], longitude(birth_jd, body))) > 1e-7:
                 raise CalculationError("Natal chart and explicit ephemeris backend disagree.")
         personal = personal_events(start, end, natal.points)
-    return SkyData(tuple(feasible), tuple(sorted(set(shared), key=lambda e: (e.exact, e.kind))), personal, env)
+        points = dict(natal.points)
+    return SkyData(tuple(feasible), tuple(sorted(set(shared), key=lambda e: (e.exact, e.kind))), personal, env, points)
 
 
 def candidates(req: ForecastRequest, sky: SkyData) -> tuple[Interval, ...]:
@@ -484,7 +489,7 @@ def event_reason(event: PersonalEvent, zone: ZoneInfo) -> str:
     return f"The Moon's {event.aspect} to your natal {event.body} is exact at {clock}; this rule treats it as a challenging alignment."
 
 
-def _serialize(session: Session, zone: ZoneInfo) -> dict:
+def _serialize(session: Session, zone: ZoneInfo, reading: dict | None = None) -> dict:
     event_data = [dict(rule=e.rule, transit="Moon", natal=e.body, aspect=e.aspect,
                        exact=e.exact.astimezone(zone).isoformat(), contribution=e.contribution,
                        explanation=event_reason(e, zone)) for e in session.events]
@@ -505,7 +510,7 @@ def _serialize(session: Session, zone: ZoneInfo) -> dict:
                 weather=dict(band="calmer" if session.band == 0 else "less calm",
                              wind_mph=session.wind_mph, gust_mph=session.gust_mph,
                              precipitation_mm=session.precipitation_mm, temperature_f=session.temperature_f),
-                practical=practical)
+                practical=practical, reading=reading)
 
 
 def calculate(req: ForecastRequest, snapshot: WeatherSnapshot | None, sky: SkyData | None = None) -> dict:
@@ -562,8 +567,19 @@ def calculate(req: ForecastRequest, snapshot: WeatherSnapshot | None, sky: SkyDa
     else:
         event = min(winner.events, key=lambda e: (-abs(e.contribution), e.exact, e.rule, e.body, e.aspect))
         reason = event_reason(event, zone)
-    result.update(status="ok", recommended=_serialize(winner, zone),
-                  alternatives=[_serialize(s, zone) for s in picked[1:]], reason=reason)
+    readings = []
+    if req.precision == "known" and sky.points:
+        clock = Sky(0, 0, 0, 0)
+        midpoints = [s.interval.start + (s.interval.end - s.interval.start) / 2 for s in picked]
+        transits = [{body: longitude(clock.jd(mid.replace(tzinfo=None)), body)
+                     for body in reading_engine.TRANSITS} for mid in midpoints]
+        readings = reading_engine.select(transits, {target: sky.points[target]
+                                                    for target in reading_engine.TARGETS})
+        result["reading_version"] = reading_engine.VERSION
+    readings += [None] * (len(picked) - len(readings))
+    result.update(status="ok", recommended=_serialize(winner, zone, readings[0]),
+                  alternatives=[_serialize(s, zone, r) for s, r in zip(picked[1:], readings[1:])],
+                  reason=reason)
     if len({s.contribution for s in winner.events}) > 1:
         result["limitations"].append("This session has both favorable and challenging personal alignments; their contributions are combined.")
     if len(ranked) < len(generated):
