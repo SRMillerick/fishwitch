@@ -21,7 +21,7 @@ const best = {personal_contribution:1, personal_events:[{contribution:1}],
   shared:{major_overlap_seconds:120,minor_overlap_seconds:60}};
 for (const [modify, reason] of [
   [row => {row.weather.band='less calm';row.personal_contribution=2;}, /calmer weather/],
-  [row => {row.personal_contribution=0;row.shared.major_overlap_seconds=240;}, /higher personal timing/],
+  [row => {row.personal_contribution=0;row.shared.major_overlap_seconds=240;}, /chart contact weighs better/],
   [row => {row.shared.major_overlap_seconds=60;row.weather.gust_mph=7;}, /more of a major/],
   [row => {row.shared.minor_overlap_seconds=30;}, /more of a minor/],
   [row => {row.weather.gust_mph=8.001;}, /lower forecast gusts/],
@@ -31,11 +31,11 @@ for (const [modify, reason] of [
   const other = structuredClone(best); modify(other);
   assert.match(compareSessions(best, other), reason);
 }
-assert.match(personalTimingLabel(best, false), /no birth chart input/);
-assert.match(personalTimingLabel({...best,personal_events:[],personal_contribution:0}, true), /No selected/);
-assert.match(personalTimingLabel(best, true), /Supportive/);
-assert.match(personalTimingLabel({...best,personal_contribution:-1,personal_events:[{contribution:-1}]}, true), /Challenging/);
-assert.match(personalTimingLabel({...best,personal_contribution:0,personal_events:[{contribution:-1},{contribution:1}]}, true), /Mixed/);
+assert.match(personalTimingLabel(best, false), /without your birth chart/);
+assert.match(personalTimingLabel({...best,personal_events:[],personal_contribution:0}, true), /No exact chart contact/);
+assert.match(personalTimingLabel(best, true), /favorable chart contact/);
+assert.match(personalTimingLabel({...best,personal_contribution:-1,personal_events:[{contribution:-1}]}, true), /demanding chart contact/);
+assert.match(personalTimingLabel({...best,personal_contribution:0,personal_events:[{contribution:-1},{contribution:1}]}, true), /easier and harder/);
 const validRanges = [
   [['2026-10-24', '2026-10-30', '06:00', '20:00', '2026-10-24'], 7, '2026-10-30T20:00'],
   [['2026-10-30', '2026-10-30', '06:00', '20:00', '2026-10-24'], 1, '2026-10-30T20:00'],

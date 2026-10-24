@@ -58,20 +58,20 @@ class WindowRequests {
 }
 
 function personalTimingLabel(row, personalized) {
-  if (!personalized) return "Shared timing; no birth chart input.";
-  if (!row.personal_events.length) return "No selected personal timing event.";
+  if (!personalized) return "Shared almanac timing, without your birth chart.";
+  if (!row.personal_events.length) return "No exact chart contact falls inside this session.";
   const mixed = row.personal_events.some(event => event.contribution > 0) && row.personal_events.some(event => event.contribution < 0);
-  if (mixed) return "Mixed personal timing: supportive and challenging alignments.";
-  return row.personal_contribution > 0 ? "Supportive personal timing." : "Challenging personal timing.";
+  if (mixed) return "Both easier and harder chart contacts overlap this session.";
+  return row.personal_contribution > 0 ? "A favorable chart contact falls inside this session." : "A demanding chart contact falls inside this session.";
 }
 
 // Describe the first actual ranking distinction. Display rounding must never
 // invent a tie or substitute a different explanation for the engine's decision.
 function compareSessions(best, other) {
   if (best.weather.band !== other.weather.band) return "It has calmer weather; weather takes priority over chart timing.";
-  if (best.personal_contribution !== other.personal_contribution) return "It has a higher personal timing contribution in similar weather.";
-  if (best.shared.major_overlap_seconds !== other.shared.major_overlap_seconds) return "It overlaps more of a major Moon window after personal timing ties.";
-  if (best.shared.minor_overlap_seconds !== other.shared.minor_overlap_seconds) return "It overlaps more of a minor Moon window after the preceding timing factors tie.";
+  if (best.personal_contribution !== other.personal_contribution) return "Its chart contact weighs better in similar weather.";
+  if (best.shared.major_overlap_seconds !== other.shared.major_overlap_seconds) return "It overlaps more of a major Moon window once the chart timing ties.";
+  if (best.shared.minor_overlap_seconds !== other.shared.minor_overlap_seconds) return "It overlaps more of a minor Moon window after the earlier factors tie.";
   if (best.weather.gust_mph !== other.weather.gust_mph) return "The timing factors tie; it has lower forecast gusts.";
   if (best.weather.precipitation_mm !== other.weather.precipitation_mm) return "Timing and gusts tie; it has less forecast precipitation.";
   return "The other factors tie; it starts earlier.";
@@ -251,20 +251,21 @@ if (typeof document !== "undefined") (function () {
     if (!events.length) return "";
     return `It overlaps a local Moon window around ${localClock(events[0].exact, zone)}.`;
   }
-  function contactText(contact, suffix = "") {
-    return `${contact.transit} ${contact.aspect} natal ${contact.natal}, ${contact.orb.toFixed(2)}° from exact at the session midpoint${suffix}`;
+  function contactText(contact) {
+    return `${contact.transit} ${contact.aspect} natal ${contact.natal}, ${contact.orb.toFixed(2)}° from exact at the session midpoint`;
+  }
+  function actionText(approach) {
+    return "Try this: " + approach.charAt(0).toLowerCase() + approach.slice(1);
   }
   function readingNodes(reading) {
     const list = document.createElement("ul"), fragment = document.createDocumentFragment();
     if (reading.empty) {
-      append(list, "p", "No notable contact in this reading method at the session midpoint. No specific mindset suggested.");
+      append(list, "p", "No specific frame of mind stands out for this time in this method. That is not a claim that your chart says nothing.");
     }
     for (const entry of reading.entries) {
       const li = document.createElement("li");
       append(li, "p", entry.mindset, "mindset");
-      append(li, "p", "Suggested approach: " + entry.approach);
-      append(li, "p", contactText(entry) + (entry.scope === "recurring"
-        ? " Recurring across these sessions." : " Only at this session’s midpoint."), "contact");
+      append(li, "p", actionText(entry.approach), "approach");
       list.append(li);
     }
     fragment.append(list);
@@ -290,7 +291,7 @@ if (typeof document !== "undefined") (function () {
     $("reading").hidden = !reading;
     if (reading) {
       $("reading-entries").replaceChildren(readingNodes(reading));
-      $("reading-note").textContent = "Authored interpretations of computed contacts, not measured states or a catch forecast. They do not affect which time ranks first.";
+      $("reading-note").textContent = "A possible frame of mind and one way to work with it. Not a forecast, not a personality judgment, and not a reason this time ranks first.";
     }
     if (row) {
       if (!row.personal_events.length) append(why, "p", data.personalized
@@ -305,7 +306,10 @@ if (typeof document !== "undefined") (function () {
         const unused = reading.contacts.filter(contact => !contact.used);
         if (unused.length) append(why, "p", "Other contacts at this midpoint, not used for the short reading: " +
           unused.map(contact => `${contact.transit} ${contact.aspect} natal ${contact.natal} (${contact.orb.toFixed(2)}°)`).join("; ") + ".", "hint");
-        append(why, "p", "The reading is taken at each displayed session’s midpoint. “Recurring” means the same contact is within the chosen orb at two or more of those midpoints; it does not mean the contact was continuous between them, and a midpoint can miss a contact active near a session’s start or end.", "hint");
+        const basis = reading.entries.map(entry => contactText(entry) +
+          (entry.scope === "recurring" ? " (also present at your other displayed midpoints)" : " (only at this midpoint)"));
+        if (basis.length) append(why, "p", "What the wording rests on: " + basis.join("; ") + ".", "hint");
+        append(why, "p", "The wording is authored interpretation of a computed contact, not a measured state. Each session is read at its midpoint, so a contact active near a session’s start or end can be missed, and “recurring” only means the same contact appears at two or more of your displayed midpoints — not that it was continuous.", "hint");
         if (reading.empty) append(why, "p", "Finding nothing in this selected method is not a claim that nothing is happening in the chart.", "hint");
       }
       append(why, "p", `Compared sessions within your selected dates and hours. Weather comes first, then your birth chart timing, shared Moon windows, gusts, rainfall, and earlier start.`, "hint");

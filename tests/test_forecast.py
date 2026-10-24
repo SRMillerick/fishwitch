@@ -319,13 +319,13 @@ class RankingPolicyTest(unittest.TestCase):
         data = sky(req, [event(req)], [fc.SharedEvent("major", fc.Interval(exact, exact + timedelta(hours=2)), exact)])
         narrow = replace(req, availability=(fc.Interval(exact, exact + req.duration),))
         got = fc.calculate(narrow, snapshot(req), fc.SkyData(narrow.availability, data.shared, (), {}))
-        self.assertIn("does not distinguish", got["reason"])
+        self.assertIn("about equal weight", got["reason"])
 
     def test_zero_can_win_by_avoiding_negative_events_without_false_tie_claim(self):
         req = request()
         got = fc.calculate(req, snapshot(req), sky(req, [event(req, minutes=0, contribution=-1, aspect="square")]))
         self.assertEqual(got["recommended"]["personal_contribution"], 0)
-        self.assertIn("more challenging", got["reason"])
+        self.assertIn("demanding contact", got["reason"])
 
 
 class WeatherAcquisitionTest(unittest.TestCase):

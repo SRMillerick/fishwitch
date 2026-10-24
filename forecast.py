@@ -485,8 +485,8 @@ def rank_candidates(req: ForecastRequest, snapshot: WeatherSnapshot, sky: SkyDat
 def event_reason(event: PersonalEvent, zone: ZoneInfo) -> str:
     clock = event.exact.astimezone(zone).strftime("%a %b %-d, %-I:%M %p %Z")
     if event.contribution > 0:
-        return f"The Moon forms a {event.aspect} to your natal {event.body} at {clock}; this astrology rule favors that alignment."
-    return f"The Moon's {event.aspect} to your natal {event.body} is exact at {clock}; this rule treats it as a challenging alignment."
+        return f"The Moon is {event.aspect} your natal {event.body}, exact at {clock}. This method counts that as a favorable contact."
+    return f"The Moon is {event.aspect} your natal {event.body}, exact at {clock}. This method counts that as a demanding contact."
 
 
 def _serialize(session: Session, zone: ZoneInfo, reading: dict | None = None) -> dict:
@@ -561,9 +561,9 @@ def calculate(req: ForecastRequest, snapshot: WeatherSnapshot | None, sky: SkyDa
     if req.precision != "known":
         reason = "A shared local almanac window, ranked by weather and Moon timing; no birth personalization."
     elif not distinguishes:
-        reason = "Your birth chart does not distinguish these sessions in similar weather. Local Moon windows and conditions determine the time."
+        reason = "Your chart gives these times about equal weight. Weather and Moon timing decide between them."
     elif winner.personal == 0:
-        reason = "No net personal alignment favors this session; the policy prefers it to more challenging alignments in comparable weather."
+        reason = "Your chart adds nothing here, but the other times carry a demanding contact. In comparable weather this one is the calmer choice."
     else:
         event = min(winner.events, key=lambda e: (-abs(e.contribution), e.exact, e.rule, e.body, e.aspect))
         reason = event_reason(event, zone)
