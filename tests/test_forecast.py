@@ -2,6 +2,7 @@
 from dataclasses import replace
 from datetime import datetime, timedelta, timezone
 import json
+import re
 import unittest
 from unittest import mock
 
@@ -272,6 +273,30 @@ class RankingPolicyTest(unittest.TestCase):
             bad = replace(wx, hours=tuple(replace(row, **{field: value}) for row in wx.hours))
             self.assertEqual(fc.calculate(req, bad, data)["status"], "excluded")
 
+    def test_reported_peak_is_never_below_sustained_wind(self):
+        req = request()
+        data = sky(req)
+        for wind, gust, excluded, gust_phrase in ((6, 5, False, False), (5, 3, False, False),
+                                                  (6, 12, False, True), (25, 23, True, None),
+                                                  (24.6, 24.4, False, False)):
+            with self.subTest(wind=wind, gust=gust):
+                wx = snapshot(req)
+                wx = replace(wx, hours=tuple(replace(row, wind_mph=wind, gust_mph=gust) for row in wx.hours))
+                session = fc.weather_for(req.availability[0], wx)
+                self.assertGreaterEqual(session["gust_mph"], session["wind_mph"])
+                result = fc.calculate(req, wx, data)
+                self.assertEqual(result["status"], "excluded" if excluded else "ok")
+                if excluded:
+                    continue
+                shown = result["recommended"]["weather"]
+                self.assertGreaterEqual(shown["gust_mph"], shown["wind_mph"])
+                practical = result["recommended"]["practical"]
+                match = re.fullmatch(r"Wind up to (\d+) mph(?:, gusting to (\d+) mph|, with no stronger gusts(?: forecast)?); .*", practical)
+                self.assertIsNotNone(match, practical)
+                wind_text, gust_text = match.group(1), match.group(2) or match.group(1)
+                self.assertGreaterEqual(int(gust_text), int(wind_text))
+                self.assertEqual(bool(match.group(2)), gust_phrase, practical)
+
     def test_stale_missing_null_and_wrong_location_weather_are_explicit(self):
         req = request()
         wx = snapshot(req)
@@ -338,19 +363,45 @@ class WeatherAcquisitionTest(unittest.TestCase):
             self.assertEqual(get.call_count, 3)
             self.assertEqual(len(store.cache), 2)
 
-    def test_gust_and_rain_use_the_preceding_hour_not_the_following_hour(self):
+    def test_hourly_values_align_with_the_hour_they_are_stamped_on(self):
         store = fw.WeatherStore()
         data = self.payload()
-        data["hourly"]["wind_gusts_10m"][:3] = [99, 8, 25]
-        data["hourly"]["precipitation"][:3] = [99, .2, 4]
+        data["hourly"]["wind_gusts_10m"][:4] = [99, 8, 25, 6]
+        data["hourly"]["precipitation"][:4] = [99, .2, 4, 0]
+        data["hourly"]["wind_speed_10m"][:4] = [7, 5, 20, 9]
         response = mock.Mock()
         response.json.return_value = data
         with mock.patch.object(fw.requests, "get", return_value=response):
             got = store.get(request())
-        self.assertEqual(got.hours[0].gust_mph, 8)
-        self.assertEqual(got.hours[0].precipitation_mm, .2)
-        self.assertEqual(got.hours[1].gust_mph, 25)
-        self.assertEqual(got.hours[1].precipitation_mm, 4)
+        # Same index as wind, temperature and weather code: no one-hour shift.
+        self.assertEqual([h.gust_mph for h in got.hours[:4]], [99, 8, 25, 6])
+        self.assertEqual([h.precipitation_mm for h in got.hours[:4]], [99, .2, 4, 0])
+        self.assertEqual([h.start for h in got.hours[:4]],
+                         [datetime.fromtimestamp(t, timezone.utc) for t in data["hourly"]["time"][:4]])
+        # The ending date's last hour is retained; a shift previously dropped it.
+        self.assertEqual(len(got.hours), len(data["hourly"]["time"]))
+        self.assertEqual(got.hours[-1].start, datetime.fromtimestamp(data["hourly"]["time"][-1], timezone.utc))
+
+    def test_day_boundary_hour_belongs_to_its_own_date(self):
+        # Open-Meteo's daily precipitation_sum equals the sum of hourly values
+        # sharing that calendar date; a midnight value shifted into the previous
+        # day was the live bug.
+        store = fw.WeatherStore()
+        data = self.payload()
+        times = data["hourly"]["time"]
+        midnight = next(i for i, t in enumerate(times)
+                        if datetime.fromtimestamp(t, timezone.utc).hour == 0)
+        data["hourly"]["precipitation"][midnight - 1] = 0.0
+        data["hourly"]["precipitation"][midnight] = 0.4
+        response = mock.Mock()
+        response.json.return_value = data
+        with mock.patch.object(fw.requests, "get", return_value=response):
+            got = store.get(request())
+        day = datetime.fromtimestamp(times[midnight], timezone.utc).date()
+        total = sum(h.precipitation_mm for h in got.hours if h.start.date() == day)
+        self.assertAlmostEqual(total, 0.4)
+        self.assertAlmostEqual(got.hours[midnight].precipitation_mm, 0.4)
+        self.assertAlmostEqual(got.hours[midnight - 1].precipitation_mm, 0.0)
 
     def test_duplicate_hours_and_provider_failures_are_unavailable(self):
         store = fw.WeatherStore()

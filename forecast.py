@@ -444,8 +444,12 @@ def weather_for(interval: Interval, snapshot: WeatherSnapshot) -> dict | None:
         rows.append(row)
     if coverage < interval.end or not rows:
         return None
-    gust = max(r.gust_mph for r in rows)
     wind = max(r.wind_mph for r in rows)
+    # Gusts are a separate model parameter and can land a few tenths of a mph
+    # below the sustained sample. The reported peak must never be lower than
+    # the reported wind, so ranking, exclusions and the displayed sentence all
+    # use one monotonic value.
+    gust = max(max(r.gust_mph for r in rows), wind)
     rain = max(r.precipitation_mm for r in rows)
     excluded = any(r.code in (95, 96, 99) for r in rows) or gust >= 25 or rain >= 4
     total = sum(r.precipitation_mm * overlap(interval, Interval(r.start, r.start + timedelta(hours=1))) / 3600 for r in rows)
@@ -487,8 +491,12 @@ def _serialize(session: Session, zone: ZoneInfo) -> dict:
     shared_data = [dict(kind=e.kind, exact=e.exact.astimezone(zone).isoformat(),
                         start=e.interval.start.astimezone(zone).isoformat(),
                         end=e.interval.end.astimezone(zone).isoformat()) for e in session.shared_events]
-    rain = f"about {session.precipitation_mm:.1f} mm of precipitation (hourly estimate)"
-    practical = f"Wind up to {session.wind_mph:.0f} mph, gusts {session.gust_mph:.0f} mph; {rain}."
+    rain = ("no precipitation forecast (hourly estimate)" if session.precipitation_mm == 0
+            else f"about {session.precipitation_mm:.1f} mm of precipitation (hourly estimate)")
+    if round(session.gust_mph) > round(session.wind_mph):
+        practical = f"Wind up to {session.wind_mph:.0f} mph, gusting to {session.gust_mph:.0f} mph; {rain}."
+    else:
+        practical = f"Wind up to {session.wind_mph:.0f} mph, with no stronger gusts forecast; {rain}."
     return dict(start=session.interval.start.astimezone(zone).isoformat(),
                 end=session.interval.end.astimezone(zone).isoformat(),
                 personal_contribution=session.personal, personal_events=event_data,

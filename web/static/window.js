@@ -238,10 +238,12 @@ if (typeof document !== "undefined") (function () {
   }
   function weatherLabel(row) {
     const wx = row.weather;
-    const wind = `Wind up to ${Math.round(wx.wind_mph)} mph, gusting to ${Math.round(wx.gust_mph)} mph`;
+    const wind = Math.round(wx.wind_mph), gust = Math.round(wx.gust_mph);
+    // The engine reports peak = max(gust, wind); never print a gust below the wind.
+    const air = gust > wind ? `Wind up to ${wind} mph, gusting to ${gust} mph` : `Wind up to ${wind} mph, with no stronger gusts`;
     const rain = wx.precipitation_mm === 0 ? "no precipitation forecast" : wx.precipitation_mm < 0.1
       ? "a trace of precipitation forecast" : `about ${wx.precipitation_mm.toFixed(1)} mm of precipitation forecast`;
-    return `${wind}; ${rain}.`;
+    return `${air}; ${rain}.`;
   }
   function sharedSummary(row, zone) {
     const kind = row.shared.major_overlap_seconds > 0 ? "major" : "minor";

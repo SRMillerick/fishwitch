@@ -106,6 +106,9 @@ async function control(data) {
   assert.equal(await evaluate(`document.getElementById('calculation-details').open`), false);
   assert.equal(await evaluate(`document.body.classList.contains('has-result')`), true);
   assert.match(await evaluate(`document.getElementById('result-weather').textContent`), /no precipitation forecast/);
+  assert.equal(await evaluate(`(() => {const t=document.getElementById('result-weather').textContent;
+    const m=t.match(/Wind up to (\d+) mph(?:, gusting to (\d+) mph)?/);
+    return !m || !m[2] || Number(m[2]) >= Number(m[1]);})()`), true, 'Displayed gusts must never be below the displayed wind');
   await evaluate(`document.querySelector('#other > summary').click()`);
   assert.equal(await evaluate(`document.getElementById('other').open`), true);
   assert.match(await evaluate(`document.getElementById('other-content').innerText`), /Why the recommended window leads:/);

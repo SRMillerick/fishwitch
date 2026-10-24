@@ -34,9 +34,15 @@ class WeatherStore:
 
     def get(self, req: ForecastRequest) -> WeatherSnapshot | None:
         start = req.availability[0].start.date().isoformat()
-        # Gust maxima and precipitation sums are stamped at the *end* of their
-        # preceding hour (https://open-meteo.com/en/docs). Include the ending
-        # boundary, including midnight, so the final session hour has coverage.
+        # Every hourly value is stamped at the start of the hour it describes:
+        # precipitation is that hour's sum, gusts its maximum, and wind/temperature/
+        # weather code the sample at its start. Verified against Open-Meteo's own
+        # daily precipitation sums, which regroup exactly under this alignment and
+        # not under a one-hour shift, and against wind/gust consistency (shifting
+        # gust by one index inverted gust below wind more often and by more).
+        # Do not reintroduce an index shift: it printed "wind up to 6 mph,
+        # gusting to 5 mph" and moved rain across midnight.
+        # The ending date's final hour is a real hour, so keep it for coverage.
         end = req.availability[-1].end.date().isoformat()
         params = dict(latitude=req.water.lat, longitude=req.water.lng,
                       start_date=start, end_date=end, timezone="UTC", timeformat="unixtime",
@@ -74,11 +80,10 @@ class WeatherStore:
             if len(set(stamps)) != len(stamps) or stamps != sorted(stamps):
                 return None
             rows = []
-            for i, at in enumerate(stamps[:-1]):
-                contiguous = stamps[i + 1] - at == timedelta(hours=1)
+            for i, at in enumerate(stamps):
                 rows.append(WeatherHour(at, number(data["wind_speed_10m"][i]),
-                                        number(data["wind_gusts_10m"][i + 1]) if contiguous else None,
-                                        number(data["precipitation"][i + 1]) if contiguous else None,
+                                        number(data["wind_gusts_10m"][i]),
+                                        number(data["precipitation"][i]),
                                         number(data["weather_code"][i]),
                                         number(data["temperature_2m"][i])))
             snapshot = WeatherSnapshot(req.water.lat, req.water.lng, req.evaluated_at,
