@@ -109,10 +109,11 @@ async function control(data) {
   assert.match(await evaluate(`document.getElementById('reading-entries').innerText`), /Try this:/);
   assert.equal(await evaluate(`/°|natal|midpoint|orb/i.test(document.getElementById('reading-entries').innerText)`), false,
     'Visible reading must carry the mindset and the action, not the mechanics');
-  assert.match(await evaluate(`document.getElementById('reading-note').textContent`), /not a reason this time ranks first/);
+  assert.match(await evaluate(`document.getElementById('reading-note').textContent`), /A personal astrological reading for your time on the water/);
   assert.match(await evaluate(`document.getElementById('why-content').textContent`), /What the wording rests on: .*from exact at the session midpoint/);
+  assert.match(await evaluate(`document.getElementById('why-content').textContent`), /doesn't predict what you'll catch or decide which time we recommend/);
   await evaluate(`document.querySelector('#other > summary').click()`);
-  assert.match(await evaluate(`document.getElementById('other-content').innerText`), /Possible mindset and suggested approach/);
+  assert.match(await evaluate(`document.getElementById('other-content').innerText`), /Your fishing horoscope/);
   assert.match(await evaluate(`document.getElementById('other-content').innerText`), /Try this:/);
   assert.equal(await evaluate(`document.getElementById('other-content').innerText.includes('undefined')`), false);
   await evaluate(`document.querySelector('#other > summary').click()`);

@@ -260,7 +260,7 @@ if (typeof document !== "undefined") (function () {
   function readingNodes(reading) {
     const list = document.createElement("ul"), fragment = document.createDocumentFragment();
     if (reading.empty) {
-      append(list, "p", "No specific frame of mind stands out for this time in this method. That is not a claim that your chart says nothing.");
+      append(list, "p", "No particular mood stands out in this reading for your session.");
     }
     for (const entry of reading.entries) {
       const li = document.createElement("li");
@@ -291,7 +291,7 @@ if (typeof document !== "undefined") (function () {
     $("reading").hidden = !reading;
     if (reading) {
       $("reading-entries").replaceChildren(readingNodes(reading));
-      $("reading-note").textContent = "A possible frame of mind and one way to work with it. Not a forecast, not a personality judgment, and not a reason this time ranks first.";
+      $("reading-note").textContent = "A personal astrological reading for your time on the water.";
     }
     if (row) {
       if (!row.personal_events.length) append(why, "p", data.personalized
@@ -303,6 +303,7 @@ if (typeof document !== "undefined") (function () {
       for (const event of row.shared.events) append(why, "p", `${event.kind === "major" ? "Major" : "Minor"} Moon window: ${localClock(event.start, zone)} – ${localClock(event.end, zone)}, centered on ${localClock(event.exact, zone)}.`);
       if (row.shared.events.length) append(why, "p", "These Moon windows are shared by everyone at this water. Major windows surround the Moon’s upper or lower meridian passage; minor windows surround moonrise or moonset.", "hint");
       if (reading) {
+        append(why, "p", "This reading uses your birth chart and the planets' positions during this session to suggest how you might feel while fishing. It doesn't predict what you'll catch or decide which time we recommend.", "hint");
         const unused = reading.contacts.filter(contact => !contact.used);
         if (unused.length) append(why, "p", "Other contacts at this midpoint, not used for the short reading: " +
           unused.map(contact => `${contact.transit} ${contact.aspect} natal ${contact.natal} (${contact.orb.toFixed(2)}°)`).join("; ") + ".", "hint");
@@ -310,7 +311,7 @@ if (typeof document !== "undefined") (function () {
           (entry.scope === "recurring" ? " (also present at your other displayed midpoints)" : " (only at this midpoint)"));
         if (basis.length) append(why, "p", "What the wording rests on: " + basis.join("; ") + ".", "hint");
         append(why, "p", "The wording is authored interpretation of a computed contact, not a measured state. Each session is read at its midpoint, so a contact active near a session’s start or end can be missed, and “recurring” only means the same contact appears at two or more of your displayed midpoints — not that it was continuous.", "hint");
-        if (reading.empty) append(why, "p", "Finding nothing in this selected method is not a claim that nothing is happening in the chart.", "hint");
+        if (reading.empty) append(why, "p", "This reading checks a limited set of chart connections; it isn't a reading of your whole chart.", "hint");
       }
       append(why, "p", `Compared sessions within your selected dates and hours. Weather comes first, then your birth chart timing, shared Moon windows, gusts, rainfall, and earlier start.`, "hint");
     }
@@ -329,7 +330,7 @@ if (typeof document !== "undefined") (function () {
       append(div, "p", personalTimingLabel(alternative, data.personalized), "personal-comparison");
       if (alternative.reading) {
         const block = document.createElement("div"); block.className = "alt-reading";
-        append(block, "h3", "Possible mindset and suggested approach");
+        append(block, "h3", "Your fishing horoscope");
         block.append(readingNodes(alternative.reading));
         div.append(block);
       }
