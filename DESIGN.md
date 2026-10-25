@@ -15,6 +15,14 @@ the new flow. First use may scroll; returning use stays short. Shared-only and
 pending states must never be labeled personal. Device persistence is optional;
 expired availability must be reconfirmed without resetting birth or water.
 
+*2026-10-25 local revision:* the fishing horoscope includes a time slider and
+proximity lines spanning the whole session. Use plain direction/time labels;
+never present proximity as a measured mood intensity or catch probability.
+The separate timing calculation uses gradually weighted lunar contacts averaged
+over the session. Its detailed timeline belongs under Why. Keep exact-event
+absence out of the headline and comparison labels; it no longer implies zero
+personal timing weight. Weather still takes precedence in recommendations.
+
 The v1.0 description below is a retained legacy reference for the old URLs,
 not instructions to rebuild their ledger → report → interview journey. Its
 Google Fonts, themes, tiers, and commerce controls do not apply to the new page.

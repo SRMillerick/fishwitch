@@ -20,15 +20,26 @@ stocking, shoreline analysis, model agreement, catch calibration, or commerce.
 The new page has one small JS/CSS pair and no third-party font, UI, map, or
 analytics requests. Existing deployment machinery and dependencies are retained.
 
-**Approved rules (`window-1`):** Moon sextile/trine natal Moon, Venus, or Jupiter
-adds 1 per exact event; square/opposition subtracts 1. Only events in the session's
-`[start, end)` interval count; total personal contribution is capped at ±2.
+**Approved rules (`window-2`):** Moon sextile/trine natal Moon, Venus, or Jupiter
+contributes positively; square/opposition contributes negatively. Each weight
+fades linearly from 1 at exact to 0 at 2° away, equally before and after exact.
+Average each signed weight across the complete elapsed session, sum, then cap
+at ±2. A peak outside the trip can still contribute. Exact-event timestamps are
+metadata, not scoring gates. Five-minute positions and refined crossings provide
+the integration samples; overlapping candidates share only request-local work.
 No houses, angles, returns, lunar-phase resonance, sign lore, or planetary-hour
 bonuses participate. Weather bands precede personal timing, shared solunar-major
 overlap, minor overlap, lower gusts, lower precipitation, and earlier absolute
 start. Missing/stale weather is explicit; weather screening is no safety guarantee.
 Interpretation is not established catch probability. Identical personal scores
 use shared conditions; zero may also win by avoiding negative alignments.
+
+The `horoscope-1` reading follows the whole session and shows its two closest
+approaches within 2°, using the existing authored mindset/action wording. Its
+slider shows alignment closeness, not mood intensity. A separate timeline under
+Why shows the lunar contacts used for timing. Horoscope interpretations do not
+participate in ranking. These versions are implemented locally; production
+release status is recorded separately.
 
 The existing installed ephemeris backend is **Moshier through Swiss Ephemeris**.
 It is now explicit and checked, with binary/package/timezone fingerprints in

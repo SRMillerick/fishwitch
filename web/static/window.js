@@ -59,17 +59,17 @@ class WindowRequests {
 
 function personalTimingLabel(row, personalized) {
   if (!personalized) return "Shared almanac timing, without your birth chart.";
-  if (!row.personal_events.length) return "No exact chart contact falls inside this session.";
-  const mixed = row.personal_events.some(event => event.contribution > 0) && row.personal_events.some(event => event.contribution < 0);
-  if (mixed) return "Both easier and harder chart contacts overlap this session.";
-  return row.personal_contribution > 0 ? "A favorable chart contact falls inside this session." : "A demanding chart contact falls inside this session.";
+  if (!row.personal_timing.length) return "Your chart adds no timing preference during these hours.";
+  const mixed = row.personal_timing.some(contact => contact.contribution > 0) && row.personal_timing.some(contact => contact.contribution < 0);
+  if (mixed) return "Both favorable and demanding alignments contribute across this session.";
+  return row.personal_contribution > 0 ? "Your chart timing is favorable on average across this session." : "Your chart timing is demanding on average across this session.";
 }
 
 // Describe the first actual ranking distinction. Display rounding must never
 // invent a tie or substitute a different explanation for the engine's decision.
 function compareSessions(best, other) {
   if (best.weather.band !== other.weather.band) return "It has calmer weather; weather takes priority over chart timing.";
-  if (best.personal_contribution !== other.personal_contribution) return "Its chart contact weighs better in similar weather.";
+  if (best.personal_contribution !== other.personal_contribution) return "Its chart timing is more favorable when averaged across the trip, in similar weather.";
   if (best.shared.major_overlap_seconds !== other.shared.major_overlap_seconds) return "It overlaps more of a major Moon window once the chart timing ties.";
   if (best.shared.minor_overlap_seconds !== other.shared.minor_overlap_seconds) return "It overlaps more of a minor Moon window after the earlier factors tie.";
   if (best.weather.gust_mph !== other.weather.gust_mph) return "The timing factors tie; it has lower forecast gusts.";
@@ -77,7 +77,21 @@ function compareSessions(best, other) {
   return "The other factors tie; it starts earlier.";
 }
 
-if (typeof module !== "undefined") module.exports = {addCalendarDays, buildAvailability, WindowRequests, personalTimingLabel, compareSessions};
+function timelineValue(samples, at) {
+  const time = +new Date(at);
+  if (time <= +new Date(samples[0].at)) return samples[0];
+  for (let i = 1; i < samples.length; i++) {
+    const left = samples[i - 1], right = samples[i];
+    if (time <= +new Date(right.at)) {
+      const fraction = (time - new Date(left.at)) / (new Date(right.at) - new Date(left.at));
+      return {orb:left.orb + fraction * (right.orb - left.orb),
+              weight:left.weight + fraction * (right.weight - left.weight)};
+    }
+  }
+  return samples.at(-1);
+}
+
+if (typeof module !== "undefined") module.exports = {addCalendarDays, buildAvailability, WindowRequests, personalTimingLabel, compareSessions, timelineValue};
 
 if (typeof document !== "undefined") (function () {
   const $ = id => document.getElementById(id);
@@ -252,23 +266,86 @@ if (typeof document !== "undefined") (function () {
     return `It overlaps a local Moon window around ${localClock(events[0].exact, zone)}.`;
   }
   function contactText(contact) {
-    return `${contact.transit} ${contact.aspect} natal ${contact.natal}, ${contact.orb.toFixed(2)}° from exact at the session midpoint`;
+    return `${contact.transit} ${contact.aspect} natal ${contact.natal}, closest approach ${contact.orb.toFixed(2)}° from exact`;
   }
   function actionText(approach) {
     return "Try this: " + approach.charAt(0).toLowerCase() + approach.slice(1);
   }
-  function readingNodes(reading) {
+  function readingNodes(reading, zone, timing = false) {
     const list = document.createElement("ul"), fragment = document.createDocumentFragment();
+    const updates = [];
+    const start = +new Date(reading.start), end = +new Date(reading.end);
     if (reading.empty) {
       append(list, "p", "No particular mood stands out in this reading for your session.");
+    }
+    let slider, selectedTime;
+    if (reading.entries.length && reading.start) {
+      const controls = document.createElement("div"); controls.className = "timeline-controls";
+      append(controls, "p", timing ? "Timing across your session" : "Through your session", "timeline-heading");
+      append(controls, "p", timing
+        ? "A higher line means a closer alignment. Favorable and demanding contributions are averaged across the trip to compare sessions."
+        : "Move through the trip to see each alignment draw closer or move apart. A higher line means a closer alignment, not a stronger feeling.", "hint");
+      const label = document.createElement("label");
+      label.append(document.createTextNode("Explore time "));
+      selectedTime = document.createElement("output"); label.append(selectedTime);
+      slider = document.createElement("input"); slider.type = "range";
+      slider.min = "0"; slider.max = String((end - start) / 60000); slider.step = "1"; slider.value = "0";
+      slider.setAttribute("aria-label", "Time within this fishing session");
+      label.append(slider); controls.append(label);
+      const axis = document.createElement("div"); axis.className = "timeline-axis";
+      append(axis, "span", localClock(reading.start, zone)); append(axis, "span", localClock(reading.end, zone));
+      controls.append(axis); fragment.append(controls);
     }
     for (const entry of reading.entries) {
       const li = document.createElement("li");
       append(li, "p", entry.mindset, "mindset");
-      append(li, "p", actionText(entry.approach), "approach");
+      if (entry.approach) append(li, "p", actionText(entry.approach), "approach");
+      if (entry.samples && slider) {
+        const ns = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(ns, "svg");
+        svg.setAttribute("viewBox", "0 0 600 92"); svg.setAttribute("aria-hidden", "true");
+        svg.classList.add("timeline-curve");
+        const x = at => 8 + 584 * (+new Date(at) - start) / (end - start);
+        const y = weight => 76 - 60 * weight;
+        const element = (name, attrs) => {
+          const node = document.createElementNS(ns, name);
+          for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, value);
+          svg.append(node); return node;
+        };
+        element("line", {x1:8, x2:592, y1:76, y2:76, class:"timeline-baseline"});
+        element("polyline", {points:entry.samples.map(p => `${x(p.at)},${y(p.weight)}`).join(" "), class:"timeline-path"});
+        const cursor = element("line", {x1:8, x2:8, y1:8, y2:84, class:"timeline-cursor"});
+        const dot = element("circle", {cx:8, cy:y(entry.samples[0].weight), r:5, class:"timeline-dot"});
+        li.append(svg);
+        const note = document.createElement("p"); note.className = "hint timeline-state"; li.append(note);
+        const first = entry.samples[0], last = entry.samples.at(-1);
+        const closest = +new Date(entry.closest_at);
+        let summary;
+        if (Math.max(...entry.samples.map(p => p.orb)) - entry.orb < .01) summary = "Changes very little during this session.";
+        else if (closest > start + 60000 && closest < end - 60000) summary = `Closest around ${localClock(entry.closest_at, zone)}.`;
+        else summary = last.orb < first.orb ? "Closer toward the end of the session." : "Closer at the start of the session.";
+        append(li, "p", summary, "hint timeline-summary");
+        updates.push(at => {
+          const value = timelineValue(entry.samples, at), before = timelineValue(entry.samples, Math.max(start, at - 300000)), after = timelineValue(entry.samples, Math.min(end, at + 300000));
+          const delta = after.orb - before.orb;
+          const state = value.orb > 2 ? "Outside the alignment range" : value.orb < .01 ? "Near exact alignment" : Math.abs(delta) < .001 ? "Changing very little" : delta < 0 ? "Drawing closer" : "Moving apart";
+          note.textContent = `${localClock(at, zone)} · ${state}`;
+          cursor.setAttribute("x1", x(at)); cursor.setAttribute("x2", x(at));
+          dot.setAttribute("cx", x(at)); dot.setAttribute("cy", y(value.weight));
+        });
+      }
       list.append(li);
     }
     fragment.append(list);
+    if (slider) {
+      const update = () => {
+        const at = start + Number(slider.value) * 60000;
+        selectedTime.textContent = localClock(at, zone);
+        slider.setAttribute("aria-valuetext", localClock(at, zone));
+        updates.forEach(fn => fn(at));
+      };
+      slider.addEventListener("input", update); update();
+    }
     return fragment;
   }
   function render(data) {
@@ -277,7 +354,7 @@ if (typeof document !== "undefined") (function () {
     result.hidden = false;
     document.body.classList.toggle("has-result", !!row);
     $("result-water").textContent = data.water.name;
-    $("result-reason").textContent = data.reason + (row && !row.personal_events.length ? " " + sharedSummary(row, zone) : "");
+    $("result-reason").textContent = data.reason + (row && !row.personal_timing.length ? " " + sharedSummary(row, zone) : "");
     $("result-mode").textContent = row ? (data.personalized ? "Birth chart checked" : "Shared local almanac") : "No recommendation yet";
     $("result-day").textContent = row ? new Intl.DateTimeFormat("en-US", {timeZone:zone, weekday:"long", month:"short", day:"numeric"}).format(new Date(row.start)) : "Try different availability.";
     $("result-time").textContent = row ? tripLabel(row, zone).split(" · ").slice(1).join(" · ") : "";
@@ -290,13 +367,22 @@ if (typeof document !== "undefined") (function () {
     const reading = row && row.reading;
     $("reading").hidden = !reading;
     if (reading) {
-      $("reading-entries").replaceChildren(readingNodes(reading));
+      $("reading-entries").replaceChildren(readingNodes(reading, zone));
       $("reading-note").textContent = "A personal astrological reading for your time on the water.";
     }
     if (row) {
-      if (!row.personal_events.length) append(why, "p", data.personalized
-        ? "No exact personal alignment falls inside this session. Your birth chart was checked; it adds no timing advantage here."
-        : "This uses the local almanac, without birth chart timing.");
+      append(why, "p", personalTimingLabel(row, data.personalized));
+      if (data.personalized) append(why, "p", "Timing follows the Moon’s alignments throughout the trip. Each counts most at exact alignment and fades gradually to zero at 2° away. We average the favorable and demanding contributions across the whole session, including alignments whose exact peak falls outside it.", "hint");
+      for (const contact of row.personal_timing) {
+        append(why, "p", `${contact.favorable ? "Favorable" : "Demanding"}: Moon ${contact.aspect} natal ${contact.natal}. Closest during this session around ${localClock(contact.closest_at, zone)}; average contribution ${contact.contribution > 0 ? "+" : ""}${contact.contribution.toFixed(3)}.`, "hint");
+      }
+      if (row.personal_timing.length) {
+        const details = document.createElement("details"); details.className = "timing-details";
+        append(details, "summary", "See how the timing changes");
+        details.append(readingNodes({start:row.start, end:row.end, entries:row.personal_timing.map(contact => ({...contact,
+          mindset:`${contact.favorable ? "Favorable" : "Demanding"}: Moon ${contact.aspect} natal ${contact.natal}`}))}, zone, true));
+        why.append(details);
+      }
       for (const event of row.personal_events) {
         append(why, "p", event.explanation);
       }
@@ -305,12 +391,13 @@ if (typeof document !== "undefined") (function () {
       if (reading) {
         append(why, "p", "This reading uses your birth chart and the planets' positions during this session to suggest how you might feel while fishing. It doesn't predict what you'll catch or decide which time we recommend.", "hint");
         const unused = reading.contacts.filter(contact => !contact.used);
-        if (unused.length) append(why, "p", "Other contacts at this midpoint, not used for the short reading: " +
+        if (unused.length) append(why, "p", "Other contacts during this session, not used for the short reading: " +
           unused.map(contact => `${contact.transit} ${contact.aspect} natal ${contact.natal} (${contact.orb.toFixed(2)}°)`).join("; ") + ".", "hint");
         const basis = reading.entries.map(entry => contactText(entry) +
-          (entry.scope === "recurring" ? " (also present at your other displayed midpoints)" : " (only at this midpoint)"));
+          ` around ${localClock(entry.closest_at, zone)}` +
+          (entry.scope === "recurring" ? " (also present during another displayed session)" : " (only in this displayed session)"));
         if (basis.length) append(why, "p", "What the wording rests on: " + basis.join("; ") + ".", "hint");
-        append(why, "p", "The wording is authored interpretation of a computed contact, not a measured state. Each session is read at its midpoint, so a contact active near a session’s start or end can be missed, and “recurring” only means the same contact appears at two or more of your displayed midpoints — not that it was continuous.", "hint");
+        append(why, "p", "The wording is authored interpretation, not a measured state. The reading follows planetary positions through the whole session and selects the two closest alignments that come within 2°. Lines taper from exact alignment to zero at 2°; this shows geometry, not mood intensity. Positions are sampled every five minutes, with reversals and crossings refined. “Recurring” means present during at least two displayed sessions, not necessarily continuously between them. A line reaching the session’s edge does not mean the alignment starts or ends there.", "hint");
         if (reading.empty) append(why, "p", "This reading checks a limited set of chart connections; it isn't a reading of your whole chart.", "hint");
       }
       append(why, "p", `Compared sessions within your selected dates and hours. Weather comes first, then your birth chart timing, shared Moon windows, gusts, rainfall, and earlier start.`, "hint");
@@ -322,19 +409,17 @@ if (typeof document !== "undefined") (function () {
     $("calculation-details").hidden = !row;
     append(calculation, "p", `Rules ${data.rule_version} · calculation ${data.calculation_version}.`);
     if (row) append(calculation, "pre", JSON.stringify({weather_band:row.weather.band, personal_contribution:row.personal_contribution,
-      personal_events:row.personal_events, shared:row.shared, environment:data.environment}, null, 2));
+      personal_events:row.personal_events, personal_timing:row.personal_timing, shared:row.shared, environment:data.environment}, null, 2));
     const other = $("other-content"); other.replaceChildren();
     for (const alternative of data.alternatives || []) {
       const div = document.createElement("div"); div.className = "alternative";
       append(div, "p", tripLabel(alternative, data.water.timezone));
-      append(div, "p", personalTimingLabel(alternative, data.personalized), "personal-comparison");
       if (alternative.reading) {
         const block = document.createElement("div"); block.className = "alt-reading";
         append(block, "h3", "Your fishing horoscope");
-        block.append(readingNodes(alternative.reading));
+        block.append(readingNodes(alternative.reading, zone));
         div.append(block);
       }
-      for (const event of alternative.personal_events) append(div, "p", event.explanation, "hint");
       append(div, "p", "Why the recommended window leads: " + compareSessions(row, alternative), "hint");
       append(div, "p", weatherLabel(alternative), "hint"); other.append(div);
     }

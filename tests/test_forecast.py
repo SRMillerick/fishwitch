@@ -1,4 +1,4 @@
-"""Approved window policy: frozen synthetic data, no provider or real profiles."""
+"""Gradual window policy: frozen synthetic data, no provider or real profiles."""
 from dataclasses import replace
 from datetime import datetime, timedelta, timezone
 import json
@@ -29,7 +29,15 @@ def snapshot(req=None):
 
 
 def sky(req, personal=(), shared=()):
-    return fc.SkyData(req.availability, tuple(shared), tuple(personal), {"fixture": "synthetic-v1"})
+    points = None
+    if personal:
+        # Analytic Moon path used by RankingPolicyTest: 1 degree per hour.
+        base = (req.availability[0].start - NOW).total_seconds() / 3600
+        points = {body: base for body in ('Moon', 'Mercury', 'Mars', 'Venus', 'Jupiter')}
+        angles = {name: angle for name, angle, sign in fc.ASPECTS}
+        for e in personal:
+            points[e.body] = ((e.exact - NOW).total_seconds() / 3600 - angles[e.aspect]) % 360
+    return fc.SkyData(req.availability, tuple(shared), tuple(personal), {"fixture": "synthetic-v1"}, points)
 
 
 def event(req, minutes=60, contribution=1, body="Venus", aspect="sextile"):
@@ -207,12 +215,19 @@ class EventScanTest(unittest.TestCase):
 
 
 class RankingPolicyTest(unittest.TestCase):
+    def setUp(self):
+        patcher = mock.patch.object(fc, 'position_at', side_effect=lambda body, at:
+                                    (((at - NOW).total_seconds() / 3600) % 360, 24)
+                                    if body == 'Moon' else (45, 0))
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
     def test_same_data_produces_same_ranking_and_text(self):
         req = request()
         data = sky(req, [event(req)])
         self.assertEqual(fc.calculate(req, snapshot(req), data), fc.calculate(req, snapshot(req), data))
 
-    def test_half_open_event_membership_and_conflicts_caps(self):
+    def test_half_open_exact_metadata_does_not_gate_gradual_scoring(self):
         req = request()
         base = req.availability[0].start
         intervals = (fc.Interval(base, base + timedelta(hours=2)),
@@ -220,10 +235,76 @@ class RankingPolicyTest(unittest.TestCase):
         events = [event(req, minutes=120), event(req, minutes=0),
                   event(req, minutes=1, contribution=-1, aspect="square")]
         ranked = fc.rank_candidates(req, snapshot(req), sky(req, events), intervals)
-        self.assertEqual([s.personal for s in ranked], [1, 0])
         self.assertEqual(sum(len(s.events) for s in ranked), 3)
-        many = [event(req, minutes=i) for i in range(4)]
-        self.assertEqual(fc.rank_candidates(req, snapshot(req), sky(req, many), intervals)[0].personal, 2)
+        # The exact at 120 minutes belongs only to the second session; both
+        # sessions nevertheless contain nearby geometry and can receive weight.
+        boundary = sky(req, [event(req, minutes=120)])
+        rows = fc.rank_candidates(req, snapshot(req), boundary, intervals)
+        self.assertEqual([len(s.events) for s in rows], [0, 1])
+        self.assertEqual([s.personal for s in rows], [.5, .5])
+
+    def test_signed_averages_combine_and_final_score_is_capped(self):
+        req = request()
+        points = dict(Moon=0, Venus=0, Jupiter=0)
+        data = replace(sky(req), points=points)
+        with mock.patch.object(fc, 'position_at', return_value=(60, 0)):
+            self.assertEqual(fc.rank_candidates(req, snapshot(req), data)[0].personal, 2)
+            mixed = replace(data, points=dict(Moon=0, Venus=0, Jupiter=150))
+            row = fc.rank_candidates(req, snapshot(req), mixed)[0]
+            self.assertEqual(row.personal, 1)
+            self.assertEqual(len(row.timing_contacts), 3)
+            negative = replace(data, points=dict(Moon=150, Venus=150, Jupiter=150))
+            self.assertEqual(fc.rank_candidates(req, snapshot(req), negative)[0].personal, -2)
+
+    def test_peak_just_outside_session_counts_without_a_score_jump(self):
+        req = request()
+        base = req.availability[0].start
+        interval = (fc.Interval(base, base + req.duration),)
+        scores = []
+        for seconds in (-1, 0, 1):
+            peak = replace(event(req, minutes=120), exact=base + req.duration + timedelta(seconds=seconds))
+            row, = fc.rank_candidates(req, snapshot(req), sky(req, [peak]), interval)
+            scores.append(row.personal)
+            if seconds >= 0:
+                self.assertEqual(row.events, ())
+                self.assertTrue(row.timing_contacts)
+                self.assertGreater(row.personal, .49)
+        self.assertLess(max(scores) - min(scores), .001)
+        self.assertAlmostEqual(scores[1], .5, places=8)
+
+    def test_winner_can_have_no_exact_events_anywhere_in_availability(self):
+        req = request()
+        result = fc.calculate(req, snapshot(req), sky(req, [event(req, minutes=481)]))
+        winner = result['recommended']
+        self.assertGreater(winner['personal_contribution'], 0)
+        self.assertEqual(winner['personal_events'], [])
+        self.assertTrue(winner['personal_timing'])
+        self.assertIn('average chart timing', result['reason'])
+
+    def test_sustained_closeness_beats_brief_exact_peak_and_duration_is_normalized(self):
+        req = request()
+        base = req.availability[0].start
+        data = replace(sky(req), points=dict(Moon=0, Venus=60, Jupiter=60))
+        sessions = (fc.Interval(base, base + timedelta(hours=2)),
+                    fc.Interval(base + timedelta(hours=4), base + timedelta(hours=6)))
+        def position(body, at):
+            hours = (at - base).total_seconds() / 3600
+            return (59, 0) if hours <= 2 else (52 + 8 * (hours - 4), 192)
+        with mock.patch.object(fc, 'position_at', side_effect=position):
+            first, second = fc.rank_candidates(req, snapshot(req), data, sessions)
+            self.assertEqual(first.interval, sessions[0])
+            self.assertAlmostEqual(first.personal, .5)
+            self.assertAlmostEqual(second.personal, .125)
+            shorter, = fc.rank_candidates(req, snapshot(req), data,
+                                          (fc.Interval(base, base + timedelta(hours=1)),))
+            self.assertAlmostEqual(shorter.personal, first.personal)
+
+    def test_unknown_birth_does_not_compute_personal_timing_even_with_points(self):
+        req = request(birth=None)
+        data = replace(sky(req), points=dict(Moon=0, Venus=0, Jupiter=0))
+        with mock.patch.object(fc, 'position_at', side_effect=AssertionError('personal positions')):
+            rows = fc.rank_candidates(req, snapshot(req), data)
+        self.assertTrue(all(s.personal == 0 and not s.timing_contacts for s in rows))
 
     def test_personal_difference_and_legitimate_identical_recommendation(self):
         req = request()
@@ -325,7 +406,7 @@ class RankingPolicyTest(unittest.TestCase):
         req = request()
         got = fc.calculate(req, snapshot(req), sky(req, [event(req, minutes=0, contribution=-1, aspect="square")]))
         self.assertEqual(got["recommended"]["personal_contribution"], 0)
-        self.assertIn("demanding contact", got["reason"])
+        self.assertIn("demanding chart timing", got["reason"])
 
 
 class WeatherAcquisitionTest(unittest.TestCase):

@@ -29,7 +29,7 @@ def execute(payload, waters, evaluated_at, snapshot=None):
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="One personal fishing window; canonical window-1 rules.")
+    parser = argparse.ArgumentParser(description="One personal fishing window; canonical window-2 rules.")
     parser.add_argument("--request", default="-", help="request JSON file, or - for stdin")
     parser.add_argument("--weather", help="frozen UTC weather snapshot JSON; omitting it fetches current weather")
     parser.add_argument("--evaluated-at", help="explicit ISO timestamp with UTC offset for reproducibility")

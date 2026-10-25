@@ -1,18 +1,13 @@
-"""Deterministic personal-disposition prototype: geometry only, no scoring.
+"""Personal horoscope: whole-session geometry, authored copy, no ranking.
 
-Rules (PRODUCT_RESET.md §19, still under review):
-  - transits Sun/Moon/Mercury/Venus/Mars/Jupiter/Saturn against natal Moon,
-    Mercury and Mars, four aspects, absolute orb <= 2 degrees at a session
-    midpoint;
-  - a contact is "recurring" only when the same transit-target-aspect is present
-    at two or more displayed midpoints; everything else is a midpoint cue;
-  - at most two paired entries, simply the two tightest contacts at the
-    midpoint; recurrence is reported in the details, not used to pick them.
-
-This module is pure: callers supply already-computed longitudes. It never ranks
-sessions, and nothing here is a claim about measured mental states.
+horoscope-1 follows the existing planet/aspect vocabulary across a session,
+selecting its two closest approaches within 2 degrees. Recurrence means the
+same contact occurs in at least two displayed sessions. Timeline proximity is
+geometry, not measured mood intensity. Snapshot helpers remain available for
+the earlier prototype's geometry checks; production uses session_readings.
 """
 from dataclasses import dataclass
+from fishwitch import session_timeline
 
 TRANSITS = ("Moon", "Mercury", "Venus", "Sun", "Mars", "Jupiter", "Saturn")
 TARGETS = ("Moon", "Mercury", "Mars")
@@ -20,7 +15,7 @@ ASPECTS = (("sextile", 60, True), ("square", 90, False), ("trine", 120, True),
            ("opposition", 180, False))
 ORB = 2.0
 MAX_ENTRIES = 2
-VERSION = "mindset-0"
+VERSION = "horoscope-1"
 
 # Transit -> natal target. "easy" copy covers sextile and trine, "hard" covers
 # square and opposition. Every phrase is authored interpretation, not a
@@ -201,4 +196,36 @@ def select(sessions: list, natal_targets: dict, orb: float = ORB) -> list:
                            scope="recurring" if c.key in recurring else "midpoint")
                       for c in contacts],
             empty=not contacts))
+    return readings
+
+
+def session_readings(sessions, natal_targets, position, zone):
+    """Read whole sessions, selecting the two closest approaches in each.
+
+    Existing authored interpretations remain unchanged. Proximity varies along
+    the timeline; it never changes the wording into a stronger mental claim.
+    """
+    paths = [session_timeline.contacts(s.start, s.end, natal_targets, TRANSITS, TARGETS,
+                                      ASPECTS, position) for s in sessions]
+    key = lambda c: (c['transit'], c['natal'], c['aspect'])
+    counts = {}
+    for contacts in paths:
+        for identity in {key(c) for c in contacts}:
+            counts[identity] = counts.get(identity, 0) + 1
+    readings = []
+    for session, contacts in zip(sessions, paths):
+        public = []
+        for index, contact in enumerate(contacts):
+            entry = session_timeline.serialize(contact, session.start, zone)
+            entry.update(used=index < MAX_ENTRIES, supportive=bool(contact['contribution']),
+                         scope='recurring' if counts[key(contact)] >= 2 else 'session')
+            public.append(entry)
+        entries = []
+        for contact in public[:MAX_ENTRIES]:
+            mindset, approach = COPY[(contact['transit'], contact['natal'])][
+                'easy' if contact['supportive'] else 'hard']
+            entries.append(dict(contact, mindset=mindset, approach=approach))
+        readings.append(dict(entries=entries, contacts=public, empty=not public,
+                             start=session.start.astimezone(zone).isoformat(),
+                             end=session.end.astimezone(zone).isoformat()))
     return readings

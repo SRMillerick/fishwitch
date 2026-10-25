@@ -92,7 +92,7 @@
     <p id="result-reason" class="reason"></p>
     <div id="reading" hidden>
       <h3 id="reading-heading">Your fishing horoscope</h3>
-      <ul id="reading-entries"></ul>
+      <div id="reading-entries"></div>
       <p id="reading-note" class="hint"></p>
     </div>
     <p id="result-weather"></p>
@@ -107,8 +107,8 @@
       <p>Your birth details travel to this server in a POST request, not a URL. The application does not intentionally retain personal requests or results. The shared cache contains weather only. No account, analytics, or third-party browser requests are used by this page.</p>
       <p>Optional device storage remembers settings, never calculated results. “Forget my details” clears this page’s settings and the active older profile; other older profiles are retained.</p>
       <p>Weather: <a href="https://open-meteo.com/" rel="noreferrer">Open-Meteo</a>, with data attribution under <a href="https://creativecommons.org/licenses/by/4.0/" rel="noreferrer">CC BY 4.0</a>. Astronomy: Swiss Ephemeris through pyswisseph and Kerykeion, with an explicit Moshier backend. Calculation and timezone versions appear with each result.</p>
-      <p>Moon sextiles and trines to your natal Moon, Venus, or Jupiter add one personal contribution; squares and oppositions subtract one. Only exact events during the session count, capped at ±2. Weather bands come first, then personal timing, shared Moon timing, gusts, rainfall, and earlier start.</p>
-      <p>Your fishing horoscope offers authored interpretations of computed contacts to your natal Moon, Mercury and Mars, read at each displayed session’s midpoint within 2°. They are not measured mental states, they do not predict catches, and they do not affect which time ranks first. “Recurring” only means the same contact appears at two or more displayed midpoints.</p>
+      <p>Moon sextiles and trines to your natal Moon, Venus, or Jupiter contribute favorably; squares and oppositions contribute demandingly. Each contribution fades linearly from full weight at exact alignment to zero at 2° away, equally before and after exact. We average each contribution across the whole elapsed session, sum them, and cap the result at ±2. An alignment can count without becoming exact during the trip. Weather bands come first, then personal timing, shared Moon timing, gusts, rainfall, and earlier start.</p>
+      <p>Your fishing horoscope follows contacts to your natal Moon, Mercury and Mars across each displayed session, showing the two closest approaches within 2°. The timeline shows alignment closeness, not mood intensity. Interpretations do not predict catches or affect which time ranks first. “Recurring” means the same contact appears during at least two displayed sessions.</p>
       <p>Birthplace lookup sends the typed city name to Open-Meteo’s geocoder. No birth date or birth time is sent to the lookup provider.</p>
       <details id="calculation-details" hidden><summary>Calculation details</summary><div id="calculation-content"></div></details>
     </details>

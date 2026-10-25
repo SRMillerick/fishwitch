@@ -1,5 +1,14 @@
 const assert = require('node:assert/strict');
-const {addCalendarDays, buildAvailability, WindowRequests, personalTimingLabel, compareSessions} = require('../web/static/window.js');
+const {addCalendarDays, buildAvailability, WindowRequests, personalTimingLabel, compareSessions, timelineValue} = require('../web/static/window.js');
+
+// Interpolation uses elapsed time across the repeated hour at DST fall-back.
+const curve = [{at:'2026-11-01T01:30:00-07:00',orb:2,weight:0},
+               {at:'2026-11-01T01:30:00-08:00',orb:0,weight:1},
+               {at:'2026-11-01T02:30:00-08:00',orb:2,weight:0}];
+assert.equal(timelineValue(curve, '2026-11-01T01:00:00-08:00').weight, .5);
+assert.equal(timelineValue(curve, '2026-11-01T01:30:00-08:00').weight, 1);
+assert.equal(timelineValue(curve, '2026-11-01T02:00:00-08:00').weight, .5);
+assert.equal(timelineValue(curve, '2026-11-01T03:00:00-08:00').weight, 0);
 
 assert.equal(addCalendarDays('2026-12-31', 1), '2027-01-01');
 assert.equal(addCalendarDays('2028-02-28', 1), '2028-02-29');
@@ -16,12 +25,12 @@ assert.equal(state.current(first.sequence), false);
 assert.equal(state.current(second.sequence), true);
 state.next();
 assert.equal(second.controller.signal.aborted, true);
-const best = {personal_contribution:1, personal_events:[{contribution:1}],
+const best = {personal_contribution:1, personal_events:[], personal_timing:[{contribution:1}],
   weather:{band:'calmer',gust_mph:8,precipitation_mm:0},
   shared:{major_overlap_seconds:120,minor_overlap_seconds:60}};
 for (const [modify, reason] of [
   [row => {row.weather.band='less calm';row.personal_contribution=2;}, /calmer weather/],
-  [row => {row.personal_contribution=0;row.shared.major_overlap_seconds=240;}, /chart contact weighs better/],
+  [row => {row.personal_contribution=0;row.shared.major_overlap_seconds=240;}, /chart timing is more favorable.*averaged/],
   [row => {row.shared.major_overlap_seconds=60;row.weather.gust_mph=7;}, /more of a major/],
   [row => {row.shared.minor_overlap_seconds=30;}, /more of a minor/],
   [row => {row.weather.gust_mph=8.001;}, /lower forecast gusts/],
@@ -32,10 +41,10 @@ for (const [modify, reason] of [
   assert.match(compareSessions(best, other), reason);
 }
 assert.match(personalTimingLabel(best, false), /without your birth chart/);
-assert.match(personalTimingLabel({...best,personal_events:[],personal_contribution:0}, true), /No exact chart contact/);
-assert.match(personalTimingLabel(best, true), /favorable chart contact/);
-assert.match(personalTimingLabel({...best,personal_contribution:-1,personal_events:[{contribution:-1}]}, true), /demanding chart contact/);
-assert.match(personalTimingLabel({...best,personal_contribution:0,personal_events:[{contribution:-1},{contribution:1}]}, true), /easier and harder/);
+assert.match(personalTimingLabel({...best,personal_timing:[],personal_contribution:0}, true), /no timing preference/);
+assert.match(personalTimingLabel(best, true), /favorable on average/);
+assert.match(personalTimingLabel({...best,personal_contribution:-1,personal_timing:[{contribution:-1}]}, true), /demanding on average/);
+assert.match(personalTimingLabel({...best,personal_contribution:0,personal_timing:[{contribution:-1},{contribution:1}]}, true), /favorable and demanding/);
 const validRanges = [
   [['2026-10-24', '2026-10-30', '06:00', '20:00', '2026-10-24'], 7, '2026-10-30T20:00'],
   [['2026-10-30', '2026-10-30', '06:00', '20:00', '2026-10-24'], 1, '2026-10-30T20:00'],

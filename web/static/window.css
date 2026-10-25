@@ -9,10 +9,22 @@ h1,h2 { font-family:Georgia,"Times New Roman",serif; font-weight:500; line-heigh
 #reading { margin:1.5rem 0 .5rem; padding:1rem 0 0; border-top:1px solid var(--line); }
 #reading h3,.alt-reading h3 { font-family:Georgia,"Times New Roman",serif; font-weight:500; font-size:1.05rem; margin:0 0 .5rem; }
 #reading ul { list-style:none; padding:0; margin:0; }
-#reading li + li,.alt-reading li + li { margin-top:1rem; padding-top:1rem; border-top:1px solid var(--line); }
+#reading li + li,.alt-reading li + li,.timing-details li + li { margin-top:1rem; padding-top:1rem; border-top:1px solid var(--line); }
 #reading p,.alt-reading p { margin:.3rem 0; }
 .mindset { font-weight:600; }
 .contact { font-size:.8rem; color:var(--dim); }
+.timeline-controls { margin:.75rem 0 1.25rem; padding:.75rem; background:var(--panel); border:1px solid var(--line); border-radius:4px; }
+.timeline-heading { font-weight:600; }
+.timeline-controls label { margin:.5rem 0 0; }
+.timeline-controls output { float:right; font-weight:400; }
+.timeline-controls input[type=range] { padding:0; border:0; background:transparent; accent-color:var(--water); cursor:pointer; }
+.timeline-axis { display:flex; justify-content:space-between; gap:1rem; font-size:.75rem; color:var(--dim); }
+.timeline-curve { display:block; width:100%; height:92px; margin:.5rem 0 0; }
+.timeline-path { fill:none; stroke:var(--water); stroke-width:2.5; vector-effect:non-scaling-stroke; }
+.timeline-baseline { stroke:var(--line); stroke-width:1; }
+.timeline-cursor { stroke:var(--dim); stroke-dasharray:3 3; }
+.timeline-dot { fill:var(--water); }
+.alt-reading ul,.timing-details ul { list-style:none; padding:0; }
 h1 { font-size:clamp(2rem,6vw,3rem); margin:1.5rem 0 .8rem; }
 h2 { font-size:clamp(1.6rem,5vw,2.25rem); margin:.5rem 0 1.2rem; }
 p { margin:.75rem 0; }

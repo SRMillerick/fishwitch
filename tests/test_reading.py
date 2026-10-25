@@ -124,7 +124,14 @@ class IntegrationTest(unittest.TestCase):
         without = fc.calculate(req, wx, replace(data, points=None))
         self.assertNotIn("reading_version", without)
         self.assertIsNone(without["recommended"]["reading"])
-        self.assertEqual([r["start"] for r in rows], [r["start"] for r in [without["recommended"], *without["alternatives"]]])
+        # Removing natal points now also removes continuous ranking geometry.
+        # Instead disable only the horoscope to verify it cannot change ranking.
+        from unittest import mock
+        with mock.patch.object(fc.reading_engine, 'session_readings',
+                               side_effect=lambda sessions, *args: [None] * len(sessions)):
+            no_horoscope = fc.calculate(req, wx, data)
+        self.assertEqual([r['start'] for r in rows],
+                         [r['start'] for r in [no_horoscope['recommended'], *no_horoscope['alternatives']]])
 
     def test_shared_only_requests_get_no_reading(self):
         for birth in (None, dict(time_known=False)):
@@ -138,7 +145,9 @@ class IntegrationTest(unittest.TestCase):
         req = request()
         data = fc.compute_sky(req)
         result = json.dumps(fc.calculate(req, snapshot(req), data))
-        for secret in ("1990-01-15", "08:30"):
+        # A session sample can legitimately be at 08:30; don't confuse an ISO
+        # trip timestamp with an echoed standalone birth-time field.
+        for secret in ("1990-01-15", '"08:30"', '"birth"', '"birth_time"', '"birth_date"'):
             self.assertNotIn(secret, result)
         # Natal longitudes stay server-side; only contacts and orbs are returned.
         for value in data.points.values():

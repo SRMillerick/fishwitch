@@ -2,7 +2,7 @@
 
 All intervals are UTC, half-open, and retain precision until presentation.
 Acquisition belongs in forecast_weather.py; neither report.py nor layers/ is
-part of this path. Policy window-1 implements PRODUCT_RESET.md §12 as approved.
+part of this path. Policy window-2 uses the approved gradual timing weights.
 """
 from __future__ import annotations
 
@@ -18,11 +18,12 @@ from zoneinfo import TZPATH, ZoneInfo, ZoneInfoNotFoundError
 import swisseph as swe
 from fishwitch.chart import NatalChart, birth_datetime, normalize_birth
 from fishwitch import reading as reading_engine
+from fishwitch import session_timeline
 from fishwitch.skycalc import Sky, PLANETS
 
 UTC = timezone.utc
-RULE_VERSION = "window-1"
-CALC_VERSION = "window-calc-1"
+RULE_VERSION = "window-2"
+CALC_VERSION = "window-calc-2"
 BACKEND = swe.FLG_MOSEPH  # Explicit existing backend; never an implicit fallback.
 MAX_CANDIDATES = 1024
 GRID = timedelta(minutes=30)
@@ -126,7 +127,7 @@ class SkyData:
 class Session:
     interval: Interval
     band: int
-    personal: int
+    personal: float
     events: tuple[PersonalEvent, ...]
     shared_events: tuple[SharedEvent, ...]
     major_seconds: float
@@ -136,6 +137,7 @@ class Session:
     precipitation_mm: float
     max_rain_mm: float
     temperature_f: float | None
+    timing_contacts: tuple[dict, ...] = ()
 
     @property
     def rank(self):
@@ -286,6 +288,15 @@ def longitude(jd: float, body: str) -> float:
     if flags & (swe.FLG_JPLEPH | swe.FLG_SWIEPH | swe.FLG_MOSEPH) != BACKEND:
         raise CalculationError("The ephemeris backend changed; calculation stopped.")
     return values[0] % 360
+
+
+def position_at(body: str, at: datetime) -> tuple[float, float]:
+    clock = Sky(0, 0, 0, 0)
+    jd = clock.jd(at.astimezone(UTC).replace(tzinfo=None))
+    values, flags = swe.calc_ut(jd, PLANETS[body], BACKEND | swe.FLG_SPEED)
+    if flags & (swe.FLG_JPLEPH | swe.FLG_SWIEPH | swe.FLG_MOSEPH) != BACKEND:
+        raise CalculationError("The ephemeris backend changed; calculation stopped.")
+    return values[0] % 360, values[3]
 
 
 def angular_error(lon: float, target: float) -> float:
@@ -467,16 +478,24 @@ def weather_for(interval: Interval, snapshot: WeatherSnapshot) -> dict | None:
 def rank_candidates(req: ForecastRequest, snapshot: WeatherSnapshot, sky: SkyData,
                     sessions: tuple[Interval, ...] | None = None) -> tuple[Session, ...]:
     ranked = []
+    # Reuse overlapping candidates' samples only during this calculation.
+    position = lru_cache(maxsize=None)(position_at)
     for interval in candidates(req, sky) if sessions is None else sessions:
         wx = weather_for(interval, snapshot)
         if wx is None or wx["band"] == 2:
             continue
         events = tuple(e for e in sky.personal if interval.start <= e.exact < interval.end)
         shared = tuple(e for e in sky.shared if overlap(interval, e.interval) > 0)
-        personal = max(-2, min(2, sum(e.contribution for e in events)))
+        contacts = tuple(session_timeline.contacts(
+            interval.start, interval.end, sky.points, ('Moon',), NATAL_BODIES,
+            ASPECTS, position)) if req.precision == 'known' and sky.points else ()
+        # Average each signed proximity over the complete elapsed session.
+        # Exact event membership is explanatory metadata, never a scoring gate.
+        personal = max(-2.0, min(2.0, math.fsum(c['contribution'] * c['mean_weight'] for c in contacts)))
         # Union within each kind: overlapping shared windows never double-count.
         spans = {kind: merge_intervals(e.interval for e in shared if e.kind == kind) for kind in ("major", "minor")}
         ranked.append(Session(interval, personal=personal, events=events, shared_events=shared,
+                              timing_contacts=contacts,
                               major_seconds=sum(overlap(interval, s) for s in spans["major"]),
                               minor_seconds=sum(overlap(interval, s) for s in spans["minor"]), **wx))
     return tuple(sorted(ranked, key=lambda session: session.rank))
@@ -496,6 +515,10 @@ def _serialize(session: Session, zone: ZoneInfo, reading: dict | None = None) ->
     shared_data = [dict(kind=e.kind, exact=e.exact.astimezone(zone).isoformat(),
                         start=e.interval.start.astimezone(zone).isoformat(),
                         end=e.interval.end.astimezone(zone).isoformat()) for e in session.shared_events]
+    timing_data = [dict(session_timeline.serialize(c, session.interval.start, zone),
+                        contribution=c['contribution'] * c['mean_weight'],
+                        favorable=c['contribution'] > 0)
+                   for c in session.timing_contacts if c['mean_weight'] > 0]
     rain = ("no precipitation forecast (hourly estimate)" if session.precipitation_mm == 0
             else f"about {session.precipitation_mm:.1f} mm of precipitation (hourly estimate)")
     if round(session.gust_mph) > round(session.wind_mph):
@@ -505,6 +528,7 @@ def _serialize(session: Session, zone: ZoneInfo, reading: dict | None = None) ->
     return dict(start=session.interval.start.astimezone(zone).isoformat(),
                 end=session.interval.end.astimezone(zone).isoformat(),
                 personal_contribution=session.personal, personal_events=event_data,
+                personal_timing=timing_data,
                 shared=dict(major_overlap_seconds=session.major_seconds,
                             minor_overlap_seconds=session.minor_seconds, events=shared_data),
                 weather=dict(band="calmer" if session.band == 0 else "less calm",
@@ -563,24 +587,21 @@ def calculate(req: ForecastRequest, snapshot: WeatherSnapshot | None, sky: SkyDa
     elif not distinguishes:
         reason = "Your chart gives these times about equal weight. Weather and Moon timing decide between them."
     elif winner.personal == 0:
-        reason = "Your chart adds nothing here, but the other times carry a demanding contact. In comparable weather this one is the calmer choice."
+        reason = "In similar weather, this session avoids the net demanding chart timing of the lower-scoring options."
+    elif winner.personal < 0:
+        reason = "Of the options with similar weather, this session has the least demanding chart timing averaged across the trip."
     else:
-        event = min(winner.events, key=lambda e: (-abs(e.contribution), e.exact, e.rule, e.body, e.aspect))
-        reason = event_reason(event, zone)
+        reason = "This session has the best average chart timing across the trip among options with similar weather."
     readings = []
     if req.precision == "known" and sky.points:
-        clock = Sky(0, 0, 0, 0)
-        midpoints = [s.interval.start + (s.interval.end - s.interval.start) / 2 for s in picked]
-        transits = [{body: longitude(clock.jd(mid.replace(tzinfo=None)), body)
-                     for body in reading_engine.TRANSITS} for mid in midpoints]
-        readings = reading_engine.select(transits, {target: sky.points[target]
-                                                    for target in reading_engine.TARGETS})
+        readings = reading_engine.session_readings(
+            [s.interval for s in picked], sky.points, position_at, zone)
         result["reading_version"] = reading_engine.VERSION
     readings += [None] * (len(picked) - len(readings))
     result.update(status="ok", recommended=_serialize(winner, zone, readings[0]),
                   alternatives=[_serialize(s, zone, r) for s, r in zip(picked[1:], readings[1:])],
                   reason=reason)
-    if len({s.contribution for s in winner.events}) > 1:
+    if len({c['contribution'] for c in winner.timing_contacts if c['mean_weight'] > 0}) > 1:
         result["limitations"].append("This session has both favorable and challenging personal alignments; their contributions are combined.")
     if len(ranked) < len(generated):
         result["limitations"].append("Some sessions were omitted because weather was incomplete or met an exclusion.")
